@@ -1,4 +1,4 @@
-import type { AuditData, CheckResult, PageCheck, StatusCheck } from "./types";
+import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona } from "./types";
 
 const FETCH_TIMEOUT = 12000;
 const MAX_PAGES = 50;
@@ -660,6 +660,107 @@ function computeOverallScore(
   return Math.round(weights.reduce((acc, w) => acc + w.score * w.weight, 0));
 }
 
+// ── Conversie / bani pierduti (PPC) ──────────────────────────────────────────
+
+function computeConversieAudit(pages: PageData[], mobile: PSIResult | null): ConversieAudit {
+  const homepage = pages[0];
+  const corpus = pages.map(p => p.html).join("\n").toLowerCase();
+  const has = (...n: string[]) => n.some(x => corpus.includes(x));
+
+  const isWoo = has("woocommerce", "wp-content/plugins/woocommerce", "add_to_cart", "add-to-cart");
+  const isShopify = has("cdn.shopify.com", "myshopify", "/cart.js", "shopify.theme");
+  const isEcom = isWoo || isShopify || has("adauga in cos", "adaugă în coș", "add to cart", "/cart", "/cos", "/checkout", "/comanda");
+
+  const leaks: MoneyLeak[] = [];
+  const add = (id: string, label: string, zona: ConvZona, present: Presence, pierdere: string, fix: string) =>
+    leaks.push({ id, label, zona, present, pierdere, fix });
+
+  // ---- TRACKING & PPC (carligul de vanzare) ----
+  const hasGA4 = /gtag\/js\?id=g-/i.test(corpus) || /["']g-[a-z0-9]{6,}["']/i.test(corpus) || has("googletagmanager.com/gtag");
+  const hasAds = /aw-\d{6,}/i.test(corpus) || has("google_conversion", "googleads.g.doubleclick", "gtag_report_conversion");
+  const hasPixel = has("fbq(", "connect.facebook.net", "facebook.com/tr");
+  const hasConsent = has("gtag('consent'", 'gtag("consent"', "'consent', 'default'", "cookiebot", "onetrust", "cookieyes", "complianz", "consentmanager");
+
+  add("ga4", "Google Analytics 4", "Tracking & PPC", hasGA4 ? "da" : "nu",
+    "Fara analytics nu stii ce pagini si ce reclame aduc vanzari — optimizezi pe ghicit, nu pe date.",
+    "Instalam GA4 cu evenimente ecommerce (view_item, add_to_cart, purchase).");
+  add("ads_conv", "Google Ads — urmarire conversii", "Tracking & PPC", hasAds ? "da" : (hasGA4 ? "necunoscut" : "nu"),
+    "Daca dai bani pe Google Ads fara urmarirea conversiilor, Google liciteaza orb — ajungi sa platesti de 2-3x mai mult per vanzare.",
+    "Conectam conversiile reale (Purchase) la Google Ads si licitam pe valoare, nu pe clicuri.");
+  add("pixel", "Meta Pixel", "Tracking & PPC", hasPixel ? "da" : "nu",
+    "Fara Pixel, reclamele Meta nu pot gasi cumparatori si nu poti face retargeting — cea mai profitabila audienta a ta.",
+    "Instalam Meta Pixel + evenimente standard + audiente de retargeting.");
+  add("capi", "Meta Conversion API (server-side)", "Tracking & PPC", "necunoscut",
+    "Fara CAPI se pierd ~10-30% din conversii (iOS, blocare cookies) → Meta optimizeaza pe date incomplete si arde buget.",
+    "Configuram CAPI cu deduplicare web + server pentru date complete.");
+  add("consent", "Consent Mode v2", "Tracking & PPC", hasConsent ? "da" : "nu",
+    "Fara Consent Mode v2 pierzi date de conversie din UE, iar reclamele Google pierd din eficienta (si e obligatoriu legal).",
+    "Implementam banner de consimtamant conectat la Consent Mode v2.");
+
+  // ---- INCREDERE ----
+  const hasReviews = has("aggregaterating", "trustpilot", "yotpo", "judge.me", "stamped.io", "reviews.io", "okendo", '"reviewcount"', "stele verificate");
+  const hasPolicies = ["retur", "return", "livrare", "shipping", "termeni", "terms", "confidentialitate", "privacy", "gdpr", "anpc"]
+    .filter(k => corpus.includes(k)).length >= 3;
+  const hasPay = has("visa", "mastercard", "netopia", "paypal", "stripe", "mobilpay", "plata securizata", "apple pay", "google pay");
+  add("reviews", "Recenzii / dovada sociala", "Incredere", hasReviews ? "da" : "necunoscut",
+    "92% dintre cumparatori citesc recenzii inainte sa comande. Fara ele, traficul (inclusiv cel platit) pleaca fara sa cumpere.",
+    "Activam recenzii pe produse + cerere automata dupa livrare + afisare rating in Google.");
+  add("policies", "Pagini Retur / Livrare / Termeni", "Incredere", hasPolicies ? "da" : "nu",
+    "Lipsa politicilor clare = neincredere + risc legal (ANPC). Vizitatorul nu cumpara daca nu vede cum returneaza.",
+    "Adaugam pagini de Retur, Livrare, Termeni si Confidentialitate vizibile in footer.");
+  add("pay", "Metode de plata vizibile", "Incredere", hasPay ? "da" : "necunoscut",
+    "Cand metodele de plata (card, ramburs, rate) nu sunt vizibile, o parte din cumparatori abandoneaza din nesiguranta.",
+    "Afisam clar metodele de plata + badge de plata securizata langa butonul de comanda.");
+
+  // ---- FUNCTII MAGAZIN (doar ecom) ----
+  if (isEcom) {
+    const hasSearch = /type=["']search["']/i.test(corpus) || /role=["']search["']/i.test(corpus) || has("search-field", "/?s=", "search-form", "cauta produse");
+    const hasFilters = has("woocommerce-widget-layered-nav", "wc-block-attribute-filter", "yith-wcan", "filtreaza", "facet", "filter-options", "price_slider");
+    const hasStock = has("in stoc", "in stock", "schema.org/instock", "stoc epuizat", "out of stock", "disponibilitate");
+    const hasRelated = has("produse similare", "related", "s-ar putea sa-ti placa", "recomandate", "you may also like", "complete the look");
+    add("search", "Cautare pe site", "Functii magazin", hasSearch ? "da" : "necunoscut",
+      "Vizitatorii care folosesc cautarea convertesc de pana la 2x mai mult. Fara ea, cei care nu gasesc rapid pleaca.",
+      "Adaugam cautare cu sugestii instant pe produse.");
+    add("filters", "Filtre produse (marime/culoare/pret)", "Functii magazin", hasFilters ? "da" : "necunoscut",
+      "Catalog mare fara filtre = frustrare si abandon. Clientul nu sapa prin 20 de pagini ca sa-si gaseasca marimea.",
+      "Implementam filtre pe categorii (marime, culoare, pret, brand).");
+    add("product_info", "Pagina produs completa (stoc, livrare, recenzii)", "Functii magazin", hasStock ? "da" : "necunoscut",
+      "Pagina de produs e locul deciziei. Fara stoc, estimare livrare si recenzii, cumparatorul ezita si pleaca.",
+      "Completam pagina de produs: stoc, estimare livrare, recenzii, ghid marimi.");
+    add("related", "Produse similare / recomandate", "Functii magazin", hasRelated ? "da" : "necunoscut",
+      "Recomandarile cresc valoarea cosului cu 10-30%. Fara ele, lasi bani pe masa la fiecare comanda.",
+      "Adaugam blocuri de produse similare si 'cumparate impreuna'.");
+  }
+
+  // ---- UX & MOBIL ----
+  const hasViewport = /<meta[^>]+name=["']viewport["']/i.test(homepage?.html ?? "");
+  const speedSlow = mobile != null && mobile.score < 50;
+  add("mobile", "Optimizare mobil", "UX & Mobil", hasViewport ? "da" : "nu",
+    "~70% din trafic e pe telefon. Un site care nu e gandit pentru mobil pierde majoritatea cumparatorilor — si a bugetului de reclama.",
+    "Optimizam experienta pe mobil: layout, butoane, viteza de incarcare.");
+  add("speed", "Viteza pe mobil", "UX & Mobil", mobile == null ? "necunoscut" : (speedSlow ? "nu" : "da"),
+    "Fiecare secunda de incarcare in plus inseamna pana la -7% conversii. Pe trafic platit, asta e buget aruncat direct.",
+    "Optimizam imaginile, scripturile si serverul pentru incarcare sub 2.5s.");
+
+  // ---- COS & CHECKOUT ----
+  const hasFreeShip = has("livrare gratuita", "transport gratuit", "livrare gratis", "free shipping");
+  add("freeship", "Prag livrare gratuita afisat", "Cos & checkout", hasFreeShip ? "da" : "necunoscut",
+    "Costurile-surpriza de livrare sunt motivul #1 de abandon al cosului. Un prag de livrare gratuita afisat creste si valoarea comenzii.",
+    "Afisam o bara de progres spre livrarea gratuita (ex: 'mai ai 40 lei pana la livrare gratuita').");
+
+  // scor PPC: ponderam tracking-ul (vinde PPC), ignoram necunoscut
+  const w = (l: MoneyLeak) => (l.zona === "Tracking & PPC" ? 2 : 1);
+  let num = 0, den = 0;
+  for (const l of leaks) {
+    if (l.present === "necunoscut") continue;
+    den += w(l);
+    if (l.present === "da") num += w(l);
+  }
+  const scorPpc = den ? Math.round((num / den) * 100) : 0;
+
+  return { isEcom, ruleazaReclame: (hasAds || hasPixel) ? "da" : "nu", scorPpc, leaks };
+}
+
 // ── Main entry point ─────────────────────────────────────────────────────────
 
 export async function runAudit(rawUrl: string): Promise<AuditData> {
@@ -741,6 +842,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const securitate = computeSecurityChecks(homepageData, analyzedPages);
 
   const scor = computeOverallScore(viteza, seoChecks, continutChecks, keywordsChecks, structuraChecks, schema, social, securitate);
+  const conversie = computeConversieAudit(analyzedPages, mobile);
 
   return {
     url: origin,
@@ -752,5 +854,6 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     continutChecks,
     keywordsChecks,
     structuraChecks,
+    conversie,
   };
 }

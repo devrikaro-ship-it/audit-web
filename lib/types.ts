@@ -23,6 +23,25 @@ export type AuditData = {
   continutChecks: PageCheck[];
   keywordsChecks: PageCheck[];
   structuraChecks: PageCheck[];
+  conversie?: ConversieAudit;
+};
+
+// ── Conversie / bani pierduti (instrument de vanzare PPC) ──
+export type Presence = "da" | "nu" | "necunoscut";
+export type ConvZona = "Tracking & PPC" | "Incredere" | "Functii magazin" | "UX & Mobil" | "Cos & checkout";
+export type MoneyLeak = {
+  id: string;
+  label: string;
+  zona: ConvZona;
+  present: Presence;
+  pierdere: string; // ce te costa (benchmark de industrie)
+  fix: string;
+};
+export type ConversieAudit = {
+  isEcom: boolean;
+  ruleazaReclame: Presence; // detectat tag Ads/Pixel
+  scorPpc: number;          // 0-100 pregatire PPC
+  leaks: MoneyLeak[];
 };
 
 export type AuditJob = {

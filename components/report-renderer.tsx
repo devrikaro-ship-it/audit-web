@@ -1,7 +1,7 @@
 "use client";
 
 import { CHECKS, SECTIUNI_CONFIG, CHECK_TO_PROBLEM, PROBLEMS, type StatusCheck, type Sectiune } from "@/lib/problems-db";
-import type { AuditData, CheckResult, PageCheck } from "@/lib/types";
+import type { AuditData, CheckResult, PageCheck, MoneyLeak } from "@/lib/types";
 
 export type { AuditData };
 
@@ -182,6 +182,83 @@ function SectionBlock({ sectiune, data }: { sectiune: Sectiune; data: AuditData 
   );
 }
 
+/* ---------- Conversie / bani pierduti (PPC) ---------- */
+function LeakCard({ l }: { l: MoneyLeak }) {
+  const unknown = l.present === "necunoscut";
+  const fg = unknown ? C.yellow : C.red, bg = unknown ? C.yellowBg : C.redBg;
+  const lab = unknown ? "DE VERIFICAT" : "LIPSESTE";
+  return (
+    <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
+        <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: fg, background: bg }}>{lab}</span>
+        <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{l.label}</h4>
+      </div>
+      <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "0 0 9px" }}>{l.pierdere}</p>
+      <p style={{ fontSize: 13, color: C.gray800, lineHeight: 1.5, margin: 0 }}>
+        <span style={{ fontWeight: 700, color: C.indigo }}>Ce facem: </span>{l.fix}
+      </p>
+    </div>
+  );
+}
+
+function ConversieSection({ c }: { c: import("@/lib/types").ConversieAudit }) {
+  const zone: import("@/lib/types").ConvZona[] = ["Tracking & PPC", "Incredere", "Functii magazin", "UX & Mobil", "Cos & checkout"];
+  const gaps = c.leaks.filter(l => l.present !== "da");
+  const have = c.leaks.filter(l => l.present === "da");
+  const ppcColor = c.scorPpc >= 70 ? C.green : c.scorPpc >= 40 ? C.orange : C.red;
+  return (
+    <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
+      <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Bani pierduti din site si reclame</h2>
+      <p style={{ color: C.gray500, margin: "0 0 22px", fontSize: 15.5 }}>Fiecare vizitator — mai ales cel platit din reclame — care nu cumpara e buget aruncat. Uite unde se scurg banii.</p>
+
+      {/* banner pregatire PPC */}
+      <div style={{ background: `radial-gradient(120% 140% at 0% 0%, ${C.navyMid} 0%, ${C.navy} 70%)`, color: C.white, borderRadius: 18, padding: "22px 26px", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", marginBottom: 26 }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontFamily: sora, fontSize: 40, fontWeight: 800, color: ppcColor, lineHeight: 1 }}>{c.scorPpc}<span style={{ fontSize: 18, color: C.gray400 }}>/100</span></div>
+          <div style={{ fontSize: 11.5, color: C.gray400, marginTop: 4, letterSpacing: "0.04em" }}>pregatire pentru reclame</div>
+        </div>
+        <div style={{ flex: 1, minWidth: 240 }}>
+          <div style={{ fontFamily: sora, fontWeight: 700, fontSize: 17, marginBottom: 4 }}>
+            {c.ruleazaReclame === "da" ? "Rulezi reclame — dar pe o fundatie care pierde bani" : "Inca nu rulezi reclame — iar fundatia nu e pregatita"}
+          </div>
+          <p style={{ fontSize: 14, color: "#C7D2E8", lineHeight: 1.5, margin: 0 }}>
+            {c.ruleazaReclame === "da"
+              ? "Cheltui pe reclame, dar lipsurile de mai jos fac ca o parte din buget sa se duca pe vizitatori care nu cumpara. Reparam fundatia si gestionam campaniile ca fiecare leu sa aduca vanzari."
+              : "Inainte sa pui bani in reclame, site-ul trebuie sa converteasca si sa masoare. Altfel platesti trafic care pleaca. Construim fundatia si pornim campaniile corect."}
+          </p>
+        </div>
+      </div>
+
+      {zone.map(z => {
+        const items = gaps.filter(l => l.zona === z);
+        if (!items.length) return null;
+        return (
+          <div key={z} style={{ marginBottom: 26 }}>
+            <h3 style={{ fontFamily: sora, fontSize: 18, fontWeight: 800, color: C.navy, margin: "0 0 12px" }}>{z}</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {items.map(l => <LeakCard key={l.id} l={l} />)}
+            </div>
+          </div>
+        );
+      })}
+
+      {have.length > 0 && (
+        <div style={{ marginTop: 4 }}>
+          <h3 style={{ fontFamily: sora, fontSize: 15, fontWeight: 700, color: C.gray600, margin: "0 0 10px" }}>Ai deja, bine ca stam pe asta:</h3>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {have.map(l => (
+              <span key={l.id} style={{ display: "inline-flex", alignItems: "center", gap: 7, background: C.greenBg, border: "1px solid #D6EFE0", borderRadius: 10, padding: "8px 13px", fontSize: 13.5, color: C.gray800 }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg>
+                <span style={{ fontWeight: 600 }}>{l.label}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 /* ============================ RAPORT ============================ */
 export function ReportRenderer({ data }: { data: AuditData }) {
   const sectiuni: Sectiune[] = ["viteza", "seo", "continut", "keywords", "structura", "schema", "social", "securitate"];
@@ -232,9 +309,12 @@ export function ReportRenderer({ data }: { data: AuditData }) {
         </div>
       </section>
 
+      {/* ---------- BANI PIERDUTI / PPC ---------- */}
+      {data.conversie && <ConversieSection c={data.conversie} />}
+
       {/* ---------- TOP PROBLEME ---------- */}
       <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
-        <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Ce te tine pe loc</h2>
+        <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Ce te tine pe loc in Google</h2>
         <p style={{ color: C.gray500, margin: "0 0 26px", fontSize: 15.5 }}>Cele mai importante {top.length} probleme, in ordinea impactului asupra clientilor tai.</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {top.map((f, i) => <FindingCard key={i} f={f} index={i} showArea />)}
@@ -269,9 +349,9 @@ export function ReportRenderer({ data }: { data: AuditData }) {
       {/* ---------- CTA ---------- */}
       <section style={{ maxWidth: 920, margin: "28px auto 0", padding: "0 24px 56px" }}>
         <div style={{ borderRadius: 24, overflow: "hidden", background: `linear-gradient(135deg, ${C.indigo}, ${C.cyan})`, color: C.white, padding: "52px 32px", textAlign: "center" }}>
-          <h2 style={{ fontFamily: sora, fontSize: 32, fontWeight: 800, margin: "0 0 12px" }}>Hai sa reparam tot ce ai vazut aici</h2>
-          <p style={{ fontSize: 18, color: "rgba(255,255,255,0.92)", maxWidth: 620, margin: "0 auto 28px", lineHeight: 1.55 }}>
-            Prima discutie e gratuita: iti aratam exact ce reparam primul si ce inseamna in clienti. Fara obligatii.
+          <h2 style={{ fontFamily: sora, fontSize: 32, fontWeight: 800, margin: "0 0 12px" }}>Hai sa transformam traficul in vanzari</h2>
+          <p style={{ fontSize: 18, color: "rgba(255,255,255,0.92)", maxWidth: 640, margin: "0 auto 28px", lineHeight: 1.55 }}>
+            Reparam fundatia (site + masurare) si iti gestionam reclamele pe Google si Meta, ca fiecare leu de buget sa aduca vanzari. Prima discutie e gratuita, fara obligatii.
           </p>
           <a href="https://devrika.ro/contact" style={{ display: "inline-block", background: C.white, color: C.indigo, fontFamily: sora, fontWeight: 700, fontSize: 17, padding: "16px 34px", borderRadius: 12, textDecoration: "none", boxShadow: "0 12px 30px rgba(0,0,0,0.18)" }}>
             Vreau o discutie gratuita
