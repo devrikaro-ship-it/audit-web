@@ -11,8 +11,10 @@ if (!global.__auditStore) {
 }
 const store = global.__auditStore;
 
-export function createJob(id: string, url: string, tipBusiness?: string, platforma?: string): AuditJob {
-  const job: AuditJob = { id, url, tipBusiness, platforma, status: "pending", createdAt: Date.now() };
+type JobMeta = { tipBusiness?: string; platforma?: string; nume?: string; email?: string; telefon?: string; probleme?: string[] };
+
+export function createJob(id: string, url: string, meta: JobMeta = {}): AuditJob {
+  const job: AuditJob = { id, url, ...meta, status: "pending", createdAt: Date.now() };
   store.set(id, job);
   return job;
 }

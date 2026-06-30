@@ -30,6 +30,10 @@ export type AuditJob = {
   url: string;
   tipBusiness?: string;
   platforma?: string;
+  nume?: string;
+  email?: string;
+  telefon?: string;
+  probleme?: string[];
   status: AuditStatus;
   createdAt: number;
   data?: AuditData;
