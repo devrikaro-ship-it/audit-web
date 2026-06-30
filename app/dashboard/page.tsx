@@ -23,21 +23,27 @@ export default async function DashboardPage() {
 
   return (
     <div style={{ fontFamily: inter, background: C.slate, minHeight: "100vh" }}>
-      <header style={{ background: `radial-gradient(120% 120% at 50% -30%, #23265F 0%, ${C.navy} 60%)`, color: "#fff", padding: "28px 24px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-          <div>
-            <span style={{ fontFamily: sora, fontWeight: 800, letterSpacing: "0.18em", fontSize: 14, color: C.cyan }}>DEVRIKA</span>
-            <h1 style={{ fontFamily: sora, fontSize: 26, fontWeight: 800, margin: "4px 0 0" }}>Dashboard audituri</h1>
+      <header style={{ background: `radial-gradient(120% 120% at 50% -30%, #23265F 0%, ${C.navy} 60%)`, color: "#fff", padding: "28px 24px 32px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+            <div>
+              <span style={{ fontFamily: sora, fontWeight: 800, letterSpacing: "0.18em", fontSize: 14, color: C.cyan }}>DEVRIKA</span>
+              <h1 style={{ fontFamily: sora, fontSize: 26, fontWeight: 800, margin: "4px 0 0" }}>Dashboard audituri</h1>
+            </div>
+            <div style={{ display: "flex", gap: 12 }}>
+              <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "10px 18px", textAlign: "center" }}>
+                <div style={{ fontFamily: sora, fontSize: 22, fontWeight: 800, color: C.cyan }}>{audits.length}</div>
+                <div style={{ fontSize: 11, color: C.gray400 }}>audituri</div>
+              </div>
+              <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "10px 18px", textAlign: "center" }}>
+                <div style={{ fontFamily: sora, fontSize: 22, fontWeight: 800, color: "#fff" }}>{cuContact}</div>
+                <div style={{ fontSize: 11, color: C.gray400 }}>cu contact</div>
+              </div>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 12 }}>
-            <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "10px 18px", textAlign: "center" }}>
-              <div style={{ fontFamily: sora, fontSize: 22, fontWeight: 800, color: C.cyan }}>{audits.length}</div>
-              <div style={{ fontSize: 11, color: C.gray400 }}>audituri</div>
-            </div>
-            <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "10px 18px", textAlign: "center" }}>
-              <div style={{ fontFamily: sora, fontSize: 22, fontWeight: 800, color: "#fff" }}>{cuContact}</div>
-              <div style={{ fontSize: 11, color: C.gray400 }}>cu contact</div>
-            </div>
+          <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+            <a href="/dashboard" style={{ fontFamily: sora, fontSize: 13.5, fontWeight: 700, padding: "9px 18px", borderRadius: 10, textDecoration: "none", background: "#fff", color: C.navy }}>Audituri site (rece)</a>
+            <a href="/dashboard/cald" style={{ fontFamily: sora, fontSize: 13.5, fontWeight: 700, padding: "9px 18px", borderRadius: 10, textDecoration: "none", background: "rgba(255,255,255,0.08)", color: "#C7D2E8", border: "1px solid rgba(255,255,255,0.14)" }}>Clienti cu acces (cald)</a>
           </div>
         </div>
       </header>

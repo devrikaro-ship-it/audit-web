@@ -1,0 +1,98 @@
+<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Audit cont — Modlet — Devrika</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0} body{font-family:'Inter',sans-serif;background:#F4F6FB;color:#1E2D42}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+h1,h2,h3,h4{font-family:'Sora',sans-serif}
+header{background:radial-gradient(120% 120% at 50% -10%, #23265F 0%, #13163A 60%);color:#fff;padding:30px 0 56px}
+.htop{display:flex;justify-content:space-between;align-items:center}
+.brand{font-family:'Sora';font-weight:800;letter-spacing:.18em;font-size:15px;color:#0ABECF}
+.date{font-size:13px;color:#8FA3C0}
+.badge{display:inline-block;font-family:'Sora';font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#0ABECF;background:rgba(71,73,158,.45);border:1px solid rgba(10,190,207,.3);padding:6px 14px;border-radius:999px}
+.hero-c{text-align:center;margin-top:38px} .hero-c h1{font-size:44px;font-weight:800;margin:14px 0 6px}
+.hero-sub{font-size:18px;color:#C7D2E8}
+.verdict{max-width:760px;margin:26px auto 0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px 24px;font-size:16px;line-height:1.55;color:#EAF0FA}
+.verdict b{color:#0ABECF}
+.tgts{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.tgt{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 24px;text-align:center}
+.tgt-v{font-family:'Sora';font-size:26px;font-weight:800;color:#0ABECF} .tgt-l{font-size:12px;color:#8FA3C0;margin-top:2px}
+.method{max-width:720px;margin:20px auto 0;text-align:center;font-size:12.5px;color:#8FA3C0;line-height:1.5}
+.chans{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:-32px}
+@media(max-width:760px){.chans{grid-template-columns:1fr}}
+.chan{background:#fff;border:1px solid #E6EBF4;border-radius:18px;padding:22px;box-shadow:0 8px 30px rgba(19,22,58,.08)}
+.chan-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px} .chan-h h3{font-size:18px;font-weight:800;color:#13163A}
+.chan-vd{color:#fff;font-family:'Sora';font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;border-radius:7px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:#F4F6FB;border-radius:11px;padding:12px} .kpi-v{font-family:'Sora';font-size:21px;font-weight:800;color:#1E2D42} .kpi-l{font-size:11.5px;color:#64748b;margin-top:1px}
+.chan-note{font-size:13.5px;color:#4A5E7A;line-height:1.5;margin-top:13px}
+.sec{padding:48px 0 0} .sec h2{font-size:27px;font-weight:800;color:#13163A} .sub{color:#64748b;font-size:15px;margin:6px 0 22px}
+.fc{background:#fff;border:1px solid #E6EBF4;border-radius:16px;padding:22px 26px;box-shadow:0 6px 24px rgba(19,22,58,.05);display:flex;gap:18px;margin-bottom:14px}
+.fc-num{font-family:'Sora';font-size:22px;font-weight:800;color:#C9D2E3;width:30px;flex-shrink:0}
+.fc-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.fc-badge{font-family:'Sora';font-weight:800;font-size:11px;letter-spacing:.06em;padding:3px 9px;border-radius:6px}
+.fc-meta{font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+.fc-title{font-size:17px;font-weight:700;color:#1E2D42;margin:0 0 7px}
+.fc-prob{font-size:14.5px;color:#4A5E7A;line-height:1.55;margin:0 0 10px}
+.fc-fix{font-size:13.5px;color:#1E2D42;line-height:1.5} .fc-fix b{color:#47499E}
+.plan{background:#fff;border:1px solid #E6EBF4;border-radius:18px;padding:26px;margin-top:18px}
+.step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid #E6EBF4} .step:last-child{border:0}
+.step-n{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#47499E,#0ABECF);color:#fff;font-family:'Sora';font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step b{font-family:'Sora';font-size:15px;color:#1E2D42;display:block} .step span{font-size:13.5px;color:#4A5E7A}
+footer{text-align:center;color:#8FA3C0;font-size:13px;padding:36px 0 48px}
+</style></head><body>
+<header><div class="wrap">
+  <div class="htop"><span class="brand">DEVRIKA</span><span class="date">30 iunie 2026</span></div>
+  <div class="hero-c"><span class="badge">Audit cont · Google + Meta</span>
+    <h1>Modlet</h1><p class="hero-sub">Un canal duce toata afacerea, celalalt e aproape neatins</p></div>
+  <div class="verdict">Invers fata de majoritatea conturilor: aici <b>Meta chiar vinde</b> — GA4 confirma 45.809 lei si 264 comenzi in 90 de zile din reclamele Meta. Problema e in alta parte: contul Meta s-a umflat la <b>200 de campanii</b> (balast + scurgeri pe trafic si awareness), iar Google e aproape neexploatat — <b>o singura campanie</b>, fara brand, pe bidding gresit. Cresterea vine din curatarea Meta si construirea Google, nu din mai mult buget aruncat.</div>
+  <div class="tgts">
+    <div class="tgt"><div class="tgt-v">20 RON</div><div class="tgt-l">CPA target</div></div>
+    <div class="tgt"><div class="tgt-v">8</div><div class="tgt-l">tROAS target</div></div>
+    <div class="tgt"><div class="tgt-v">~165 RON</div><div class="tgt-l">AOV (GA4)</div></div>
+  </div>
+  <p class="method">Evaluat punct cu punct vs standardul Devrika — playbook Google Ads + Meta Ads (conversii curate · PMax Value+tROAS · Search brand · OUTCOME_SALES · ROAS real din GA4).</p>
+</div></header>
+<div class="wrap"><div class="chans"><div class="chan">
+      <div class="chan-h"><h3>Meta Ads</h3><span class="chan-vd" style="background:#1A7A4A">functioneaza</span></div>
+      <div class="kpis"><div class="kpi"><div class="kpi-v" style="color:#1E2D42">988k</div><div class="kpi-l">cheltuit (lifetime)</div></div><div class="kpi"><div class="kpi-v" style="color:#1A7A4A">~3,8</div><div class="kpi-l">ROAS raportat (sanatos)</div></div><div class="kpi"><div class="kpi-v" style="color:#1A7A4A">45.809 lei</div><div class="kpi-l">venit real GA4 / 90 zile</div></div><div class="kpi"><div class="kpi-v" style="color:#D45B00">200</div><div class="kpi-l">campanii (balast)</div></div></div>
+      <p class="chan-note">Canalul care duce afacerea. Se vede si in GA4, nu doar in Ads Manager. De curatat si calibrat, nu de reconstruit.</p></div><div class="chan">
+      <div class="chan-h"><h3>Google Ads</h3><span class="chan-vd" style="background:#C0392B">neexploatat</span></div>
+      <div class="kpis"><div class="kpi"><div class="kpi-v" style="color:#D45B00">1</div><div class="kpi-l">singura campanie activa (PMax)</div></div><div class="kpi"><div class="kpi-v" style="color:#1E2D42">~4.000 lei</div><div class="kpi-l">cheltuit in 365 zile (minuscul)</div></div><div class="kpi"><div class="kpi-v" style="color:#C0392B">Lipsa</div><div class="kpi-l">brand [BP] + Search</div></div><div class="kpi"><div class="kpi-v" style="color:#C0392B">MC plain</div><div class="kpi-l">bidding gresit (nu Value+tROAS)</div></div></div>
+      <p class="chan-note">Aici e cresterea. Meta duce 988k, Google sub 1% din asta. Cu o structura corecta, Google poate scala vanzarile fara sa depinzi de un singur canal.</p></div></div>
+<section class="sec"><h2>Google Ads — ce e in neregula</h2><p class="sub">Aproape inexistent. Cea mai mare oportunitate de crestere a contului.</p><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#C0392B;background:#FEF2F2">CRITIC</span><span class="fc-meta">Oportunitate 1</span></div>
+      <h4 class="fc-title">O singura campanie, fara structura</h4>
+      <p class="fc-prob">Google duce ~4.000 lei in 365 de zile pe o singura campanie PMax, in timp ce Meta duce 988.000. Niciun Search, nicio campanie de brand, niciun Shopping dedicat. Toata afacerea sta pe un singur canal.</p><p class="fc-fix"><b>Ce facem:</b> Construieste stackul: PMax (Max Conversion Value + tROAS) pe categoriile top din GA4 — Sandale dama, Pantofi dama, Papuci — + Shopping target ROAS + Search de brand.</p></div></div><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#C0392B;background:#FEF2F2">CRITIC</span><span class="fc-meta">Bidding</span></div>
+      <h4 class="fc-title">PMax pe strategie gresita</h4>
+      <p class="fc-prob">Singura campanie activa ruleaza pe &quot;Maximize Conversions&quot; simplu — optimizeaza numarul de conversii, nu valoarea vanzarilor. Doctrina cere Max Conversion Value + target ROAS.</p><p class="fc-fix"><b>Ce facem:</b> Trecere pe Max Conversion Value + tROAS 8.</p></div></div><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#B45309;background:#FFFBEB">MEDIU</span><span class="fc-meta">Lipsa</span></div>
+      <h4 class="fc-title">Fara campanie de brand</h4>
+      <p class="fc-prob">Cand cineva cauta &quot;modlet&quot;, concurentii pot licita pe numele tau si platesti scump trafic care era oricum al tau.</p><p class="fc-fix"><b>Ce facem:</b> Search de brand always-on, buget mic, exact + phrase pe nume.</p></div></div><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#B45309;background:#FFFBEB">MEDIU</span><span class="fc-meta">Tracking</span></div>
+      <h4 class="fc-title">Conversii de tip &quot;contact&quot; setate principale</h4>
+      <p class="fc-prob">&quot;Clicks to call&quot; si &quot;Contact&quot; sunt setate ca principale alaturi de Purchase. Asta umfla numarul de conversii si ROAS-ul cu actiuni care nu sunt vanzari.</p><p class="fc-fix"><b>Ce facem:</b> Principala = doar Purchase (+ apeluri reale, separat, cu valoare = cos mediu). Contact trece pe secundar.</p></div></div><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#1A7A4A;background:#F0FFF4">OK</span><span class="fc-meta">De pastrat</span></div>
+      <h4 class="fc-title">Fundatia tehnica e curata</h4>
+      <p class="fc-prob">Purchase e setat corect, auto-tagging activ, 30 de audiente de retargeting populate si lista de negative aplicata. Nu trebuie reparat, doar construit peste.</p></div></div></section><section class="sec"><h2>Meta Ads — ce e in neregula</h2><p class="sub">Canalul merge — dar lasa bani pe masa din dezordine, nu din performanta.</p><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#B45309;background:#FFFBEB">MEDIU</span><span class="fc-meta">Igiena + buget</span></div>
+      <h4 class="fc-title">200 de campanii = balast</h4>
+      <p class="fc-prob">Contul s-a umflat in timp: winneri reali amestecati cu zeci de teste vechi pornite si uitate. Bugetul se fragmenteaza, algoritmul nu iese stabil din faza de invatare, iar deciziile devin imposibil de luat.</p><p class="fc-fix"><b>Ce facem:</b> Consolidare pe cateva campanii CBO de Vanzari (All-site + retargeting dinamic + categoriile top), restul la arhiva.</p></div></div><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#B45309;background:#FFFBEB">MEDIU</span><span class="fc-meta">Scurgeri buget</span></div>
+      <h4 class="fc-title">Bani pe trafic si awareness, nu pe vanzari</h4>
+      <p class="fc-prob">In istoric ruleaza 16 campanii de awareness, 9 de engagement, 6 de trafic, 4 de clicuri — unele cu ROAS sub 1 (o campanie de trafic la 0,14). La un magazin, astea sunt bani aruncati.</p><p class="fc-fix"><b>Ce facem:</b> Doar campanii de Vanzari optimizate pe Purchase. Stop trafic / awareness / engagement / mesaje.</p></div></div><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#B45309;background:#FFFBEB">MEDIU</span><span class="fc-meta">Tracking + tinta</span></div>
+      <h4 class="fc-title">Campanie &quot;FARA PIXEL&quot; + CPA peste tinta</h4>
+      <p class="fc-prob">Exista o campanie numita literal &quot;CAMPANII FARA PIXEL&quot; — adica trackingul e rupt pe ea. In plus, costul mediu pe comanda e ~28 lei, peste tinta de 20.</p><p class="fc-fix"><b>Ce facem:</b> Verifica pixel + CAPI (deduplicare web/server), taie ce nu trackeaza si calibreaza la CPA 20 lei / tROAS 8.</p></div></div><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#47499E;background:#EEF1FF">INFO</span><span class="fc-meta">Adevarul cifrelor</span></div>
+      <h4 class="fc-title">ROAS raportat usor optimist fata de GA4</h4>
+      <p class="fc-prob">Meta raporteaza ROAS ~3,8–4,5. GA4 (last-click) atribuie ceva mai putin reclamelor Meta. Adevarul e intre cele doua — important e sa nu iei deciziile doar pe Ads Manager.</p><p class="fc-fix"><b>Ce facem:</b> Judeca pe profit blended (MER pe tot contul) + comenzile facebook/cpc din GA4, nu pe un singur numar.</p></div></div><div class="fc"><div class="fc-body">
+      <div class="fc-top"><span class="fc-badge" style="color:#1A7A4A;background:#F0FFF4">OK</span><span class="fc-meta">De pastrat</span></div>
+      <h4 class="fc-title">Disciplina buna de obiectiv</h4>
+      <p class="fc-prob">162 din 200 campanii sunt corect pe Vanzari, pixelul e activ si trackeaza zilnic, iar canalul aduce venit real confirmat in GA4. Baza e solida.</p></div></div></section>
+<section class="sec"><h2>Plan de actiune</h2><p class="sub">In ordine — tracking-ul intai, apoi structura.</p><div class="plan"><div class="step"><span class="step-n">1</span><div><b>Curata tracking-ul (ambele canale)</b><span>Google: principala = doar Purchase. Meta: verifica pixel + CAPI dedup, taie campania fara pixel. Referinta pe GA4 + MER.</span></div></div><div class="step"><span class="step-n">2</span><div><b>Meta — consolidare</b><span>200 campanii -&gt; cateva CBO de Vanzari (All-site + RMK dinamic + categorii top); arhiveaza testele.</span></div></div><div class="step"><span class="step-n">3</span><div><b>Meta — opreste scurgerile</b><span>Stop trafic / awareness / engagement; calibreaza la CPA 20 lei / tROAS 8; min 2–4 creative/adset.</span></div></div><div class="step"><span class="step-n">4</span><div><b>Google — bidding corect</b><span>PMax pe Max Conversion Value + tROAS 8.</span></div></div><div class="step"><span class="step-n">5</span><div><b>Google — construieste brandul</b><span>Search [BP] brand always-on.</span></div></div><div class="step"><span class="step-n">6</span><div><b>Google — scaleaza pe categoriile top</b><span>PMax + Shopping pe Sandale / Pantofi / Papuci dama (categoriile care vand in GA4).</span></div></div><div class="step"><span class="step-n">7</span><div><b>Fundatie</b><span>Completeaza fisa client (cos mediu ~165 lei, categorii, tinta) — tinte: CPA max 20 lei, tROAS 8.</span></div></div></div></section>
+</div>
+<footer>Audit intern Devrika · 30 iunie 2026 · date reale din conturi (Google Ads · Meta · GA4)</footer>
+</body></html>
