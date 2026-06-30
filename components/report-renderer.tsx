@@ -216,8 +216,24 @@ export function ReportRenderer({ data }: { data: AuditData }) {
         </div>
       </header>
 
+      {/* ---------- CE TE COSTA ---------- */}
+      <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 0" }}>
+        <div style={{ background: "linear-gradient(135deg, rgba(10,190,207,0.07), rgba(71,73,158,0.07))", border: "1px solid #E6EBF4", borderLeft: `4px solid ${C.cyan}`, borderRadius: 18, padding: "28px 30px" }}>
+          <div style={{ fontFamily: sora, fontSize: 13, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: C.indigo, marginBottom: 8 }}>Ce te costa asta</div>
+          <div style={{ fontFamily: sora, fontSize: 26, fontWeight: 800, color: C.navy, lineHeight: 1.15, marginBottom: 12 }}>
+            {data.scor < 40 ? "Pierzi clienti in fiecare zi" : data.scor < 70 ? "Lasi clienti pe masa" : "Esti aproape — dar concurenta e mai vizibila"}
+          </div>
+          <p style={{ fontSize: 15.5, color: C.gray600, lineHeight: 1.6, margin: 0 }}>
+            {critice > 0
+              ? <><b style={{ color: C.gray800 }}>{critice} probleme critice</b> si inca {Math.max(total - critice, 0)} de reglat inseamna </>
+              : <><b style={{ color: C.gray800 }}>{total} puncte de reglat</b> inseamna </>}
+            ca o parte din oamenii care te cauta pe Google ajung la concurenta in loc sa ajunga la tine. Toate sunt reparabile — iar acelasi trafic iti poate aduce mai multe vanzari, <b style={{ color: C.gray800 }}>fara buget suplimentar de reclama</b>. <span style={{ color: C.gray400, fontStyle: "italic" }}>Estimativ — impactul exact depinde de piata si de executie.</span>
+          </p>
+        </div>
+      </section>
+
       {/* ---------- TOP PROBLEME ---------- */}
-      <section style={{ maxWidth: 920, margin: "0 auto", padding: "56px 24px 12px" }}>
+      <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
         <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Ce te tine pe loc</h2>
         <p style={{ color: C.gray500, margin: "0 0 26px", fontSize: 15.5 }}>Cele mai importante {top.length} probleme, in ordinea impactului asupra clientilor tai.</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -232,16 +248,39 @@ export function ReportRenderer({ data }: { data: AuditData }) {
         {sectiuni.map(s => <SectionBlock key={s} sectiune={s} data={data} />)}
       </section>
 
+      {/* ---------- DE CE DEVRIKA ---------- */}
+      <section style={{ maxWidth: 920, margin: "20px auto 0", padding: "0 24px 0" }}>
+        <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>De ce Devrika</h2>
+        <p style={{ color: C.gray500, margin: "0 0 22px", fontSize: 15.5 }}>Nu primesti doar un raport. Primesti echipa care il pune in practica.</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          {[
+            { t: "Implementam, nu doar raportam", d: "Reparam noi ce ai vazut aici — nu-ti lasam o lista de teme." },
+            { t: "Toate canalele, un singur partener", d: "SEO + Google Ads + Meta, optimizate pe vanzari reale, nu pe vanity metrics." },
+            { t: "Specializati pe ecommerce & WordPress", d: "Zeci de magazine optimizate — stim exact ce misca acul." },
+          ].map((x, i) => (
+            <div key={i} style={{ background: C.white, border: "1px solid #E6EBF4", borderTop: `3px solid ${C.cyan}`, borderRadius: 14, padding: "18px 20px" }}>
+              <div style={{ fontFamily: sora, fontWeight: 700, fontSize: 15, color: C.gray800, marginBottom: 6 }}>{x.t}</div>
+              <div style={{ fontSize: 13.5, color: C.gray600, lineHeight: 1.5 }}>{x.d}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ---------- CTA ---------- */}
-      <section style={{ maxWidth: 920, margin: "20px auto 0", padding: "0 24px 56px" }}>
+      <section style={{ maxWidth: 920, margin: "28px auto 0", padding: "0 24px 56px" }}>
         <div style={{ borderRadius: 24, overflow: "hidden", background: `linear-gradient(135deg, ${C.indigo}, ${C.cyan})`, color: C.white, padding: "52px 32px", textAlign: "center" }}>
-          <h2 style={{ fontFamily: sora, fontSize: 32, fontWeight: 800, margin: "0 0 12px" }}>Vrei sa reparam tot ce ai vazut aici?</h2>
+          <h2 style={{ fontFamily: sora, fontSize: 32, fontWeight: 800, margin: "0 0 12px" }}>Hai sa reparam tot ce ai vazut aici</h2>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.92)", maxWidth: 620, margin: "0 auto 28px", lineHeight: 1.55 }}>
-            Echipa Devrika iti implementeaza recomandarile din raport si iti aduce clientii care acum ajung la concurenta. Prima discutie e gratuita.
+            Prima discutie e gratuita: iti aratam exact ce reparam primul si ce inseamna in clienti. Fara obligatii.
           </p>
           <a href="https://devrika.ro/contact" style={{ display: "inline-block", background: C.white, color: C.indigo, fontFamily: sora, fontWeight: 700, fontSize: 17, padding: "16px 34px", borderRadius: 12, textDecoration: "none", boxShadow: "0 12px 30px rgba(0,0,0,0.18)" }}>
-            Solicita consultanta gratuita
+            Vreau o discutie gratuita
           </a>
+          <div style={{ display: "flex", gap: 20, justifyContent: "center", flexWrap: "wrap", marginTop: 26, fontFamily: sora, fontWeight: 600, fontSize: 15.5 }}>
+            <a href="tel:+40742374325" style={{ color: C.white, textDecoration: "none" }}>Razvan · 0742 374 325</a>
+            <a href="tel:+40756281176" style={{ color: C.white, textDecoration: "none" }}>Vlad · 0756 281 176</a>
+            <a href="mailto:hello@devrika.ro" style={{ color: C.white, textDecoration: "none" }}>hello@devrika.ro</a>
+          </div>
         </div>
         <p style={{ textAlign: "center", fontSize: 13, color: C.gray400, marginTop: 22 }}>Raport generat automat de Devrika · audit.devrika.ro</p>
       </section>
