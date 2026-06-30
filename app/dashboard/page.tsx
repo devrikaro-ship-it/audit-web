@@ -1,6 +1,9 @@
 import { listAudits } from "@/lib/leads-store";
+import { WARM_CLIENTS } from "@/lib/warm-clients";
 
 export const dynamic = "force-dynamic";
+
+const normDomain = (d: string) => (d || "").toLowerCase().replace(/^www\./, "").replace(/\/$/, "");
 
 const C = {
   navy: "#13163A", indigo: "#47499E", cyan: "#0ABECF", slate: "#F4F6FB",
@@ -15,7 +18,10 @@ function fmtDate(t: number) {
 }
 
 export default async function DashboardPage() {
-  const audits = await listAudits();
+  const warmDomains = new Set(WARM_CLIENTS.map(c => normDomain(c.domain)));
+  const all = await listAudits();
+  // clientii calzi (avem acces) nu apar ca lead-uri reci — doar in tab-ul "cald"
+  const audits = all.filter(a => !warmDomains.has(normDomain(a.domain)));
   const cuContact = audits.filter(a => a.email || a.telefon).length;
 
   const th: React.CSSProperties = { fontFamily: sora, fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: C.gray500, textAlign: "left", padding: "12px 16px", borderBottom: `1px solid ${C.border}`, whiteSpace: "nowrap" };

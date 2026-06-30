@@ -12,6 +12,7 @@ export type WarmChannel = {
 export type WarmClient = {
   slug: string;
   client: string;
+  domain: string;
   date: string;
   vertical: string;
   cpa: string;
@@ -26,6 +27,7 @@ export const WARM_CLIENTS: WarmClient[] = [
   {
     slug: "modlet",
     client: "Modlet",
+    domain: "modlet.ro",
     date: "30 iun 2026",
     vertical: "Incaltaminte dama",
     cpa: "20 RON",
@@ -41,6 +43,7 @@ export const WARM_CLIENTS: WarmClient[] = [
   {
     slug: "mansarda-online",
     client: "Mansarda Online",
+    domain: "mansarda-online.ro",
     date: "30 iun 2026",
     vertical: "Materiale mansarda (VELUX/FAKRO)",
     cpa: "400 RON",
