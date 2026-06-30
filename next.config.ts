@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  async redirects() {
-    // In productie, root-ul = landing-ul public. Local pastram Dev Index-ul.
+  async rewrites() {
+    // In productie, root-ul SERVESTE landing-ul (URL ramane curat: audit.devrika.ro,
+    // fara /audit-seo in bara). Local pastram Dev Index-ul la "/".
     if (process.env.NODE_ENV !== "production") return [];
-    return [{ source: "/", destination: "/audit-seo", permanent: false }];
+    return { beforeFiles: [{ source: "/", destination: "/audit-seo" }] };
   },
 };
 
