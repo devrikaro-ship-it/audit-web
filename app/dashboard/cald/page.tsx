@@ -1,4 +1,5 @@
-import { WARM_CLIENTS, type WarmChannel } from "@/lib/warm-clients";
+import { WARM_CLIENTS } from "@/lib/warm-clients";
+import { listWarmReports } from "@/lib/warm-report";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,15 @@ const C = {
 };
 const sora = "var(--font-sora), system-ui, sans-serif";
 const inter = "var(--font-inter), system-ui, sans-serif";
-const stateColor = (s: WarmChannel["state"]) => (s === "bun" ? C.green : s === "mediu" ? C.orange : C.red);
+
+type CardState = "bun" | "mediu" | "slab";
+type CardChannel = { name: string; state: CardState; verdict: string; signal: string };
+type Card = {
+  slug: string; client: string; vertical: string; date: string; verdict: string;
+  cpa: string; troas: string; aov: string; channels: CardChannel[]; report: string;
+};
+const stateColor = (s: CardState) => (s === "bun" ? C.green : s === "mediu" ? C.orange : C.red);
+const stripHtml = (s: string) => s.replace(/<[^>]+>/g, "");
 
 function Tabs({ active }: { active: "rece" | "cald" }) {
   const base: React.CSSProperties = { fontFamily: sora, fontSize: 13.5, fontWeight: 700, padding: "9px 18px", borderRadius: 10, textDecoration: "none" };
@@ -23,8 +32,23 @@ function Tabs({ active }: { active: "rece" | "cald" }) {
   );
 }
 
-export default function WarmDashboardPage() {
-  const clients = WARM_CLIENTS;
+export default async function WarmDashboardPage() {
+  // rapoarte din store (generate de skill via /api/cald) + cele legacy (HTML pre-randat)
+  const stored = await listWarmReports();
+  const fromStore: Card[] = stored.map((r) => ({
+    slug: r.slug, client: r.client, vertical: r.vertical ?? "", date: r.date, verdict: stripHtml(r.verdict),
+    cpa: r.targets?.cpa ?? "—", troas: r.targets?.troas ?? "—", aov: r.targets?.aov ?? "—",
+    channels: r.channels.map((ch) => ({ name: ch.name, state: ch.state, verdict: ch.verdict, signal: ch.note ?? (ch.kpis[0]?.v ?? "") })),
+    report: `/cald/${r.slug}`,
+  }));
+  const legacy: Card[] = WARM_CLIENTS.map((c) => ({
+    slug: c.slug, client: c.client, vertical: c.vertical, date: c.date, verdict: c.verdict,
+    cpa: c.cpa, troas: c.troas, aov: c.aov,
+    channels: c.channels.map((ch) => ({ name: ch.name, state: ch.state, verdict: ch.verdict, signal: ch.signal })),
+    report: c.report,
+  }));
+  const seen = new Set(fromStore.map((c) => c.slug));
+  const clients: Card[] = [...fromStore, ...legacy.filter((c) => !seen.has(c.slug))];
 
   return (
     <div style={{ fontFamily: inter, background: C.slate, minHeight: "100vh" }}>
