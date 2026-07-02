@@ -1,0 +1,76 @@
+{
+  "client": "vegis.ro",
+  "url": "https://vegis.ro",
+  "date": "18 Iunie 2026",
+  "platform": "OpenCart (magazin online)",
+  "business": "Magazin naturist — suplimente, cosmetice, alimente bio",
+  "logo_sm": "vegis.ro · Audit Devrika · Iunie 2026",
+  "scores": { "global": 66, "seo": 68, "ads": 64 },
+  "summary": "Fundatia e serioasa si rulezi deja in Google Shopping pe un CSS. Te tin pe loc cateva lucruri reparabile: prima pagina nu are titlu principal (H1), iar bugetul de Shopping nu e separat pe performanta. Reparate, vizibilitatea poate trece de la 66 la 80+.",
+  "n_probleme": "5",
+  "n_oportunitati": "4",
+
+  "costs": [
+    { "sev": "critical", "title": "Prima pagina fara titlu principal (H1)", "impact": "Cea mai importanta pagina nu are titlul principal, asa ca Google ramane fara cel mai clar semnal despre ce vinzi.", "tag": "SEO" },
+    { "sev": "high", "title": "Produsele apar fara stele in Google", "impact": "Nu trimiti recenziile in date, asa ca produsul apare fara stele langa competitorul care le are — la acelasi pret, clientul alege stelele.", "tag": "Ads" },
+    { "sev": "high", "title": "Buget Shopping fara segmentare pe performanta", "impact": "Bugetul se imparte egal pe tot catalogul, inclusiv pe produsele care nu vand niciodata (Villains / Zombies).", "tag": "Ads" },
+    { "sev": "medium", "title": "Meta Pixel nedetectat pe site", "impact": "Fara pixelul de Facebook/Instagram nu poti masura sau optimiza reclame pe canalul social — des cel mai mare volum la ecom.", "tag": "Ads" },
+    { "sev": "medium", "title": "Sitemap urias intr-un singur fisier", "impact": "Cu zeci de mii de adrese intr-un fisier, Google parcurge greu site-ul, iar produsele noi se indexeaza incet.", "tag": "SEO" }
+  ],
+
+  "tech_signals": [
+    { "label": "HTTPS + redirects", "ok": true },
+    { "label": "Sitemap + robots", "ok": true },
+    { "label": "Schema produs", "ok": true },
+    { "label": "Ruleaza Google Shopping", "ok": true },
+    { "label": "H1 pe homepage", "ok": false },
+    { "label": "Canonical homepage", "ok": false },
+    { "label": "Security headers", "ok": false },
+    { "label": "Imagini WebP", "ok": false },
+    { "label": "llms.txt (AI-ready)", "ok": false },
+    { "label": "Broken links", "ok": true }
+  ],
+
+  "seo_findings": [
+    { "sev": "critical", "title": "Homepage fara H1 si canonical", "impact": "Cea mai importanta pagina porneste cu un handicap in Google.", "tag": "On-Page", "effort": "30 min" },
+    { "sev": "high", "title": "Sitemap intr-un fisier de 28.521 pagini", "impact": "Google parcurge greu; produsele noi se indexeaza incet.", "tag": "Indexare", "effort": "2-3h" },
+    { "sev": "high", "title": "Fara structura H2 pe pagini", "impact": "Google si motoarele AI inteleg mai greu despre ce e fiecare pagina.", "tag": "Structura", "effort": "1h" },
+    { "sev": "medium", "title": "Imagini grele, fara WebP (+6 fara descriere)", "impact": "Imaginile mari incarca pagina greu pe telefon, iar o parte din vizitatori pleaca inainte sa vada produsul. WebP le-ar reduce mult fara pierdere de calitate.", "tag": "Viteza", "effort": "3h" },
+    { "sev": "low", "title": "Security headers lipsa + llms.txt", "impact": "Lipsesc protectiile standard HSTS si CSP (semnal de incredere mai slab) si fisierul care pregateste site-ul pentru raspunsurile Google AI / ChatGPT.", "tag": "Tehnic / AI", "effort": "1h" }
+  ],
+
+  "ads_intro": "Rulezi deja Google Shopping pe un CSS (TRUDA) — bun. Mai jos: ce masori acum si unde se pierde buget.",
+  "track_signals": [
+    { "label": "Ruleaza Shopping (CSS TRUDA)", "ok": true },
+    { "label": "Google Analytics 4", "ok": true },
+    { "label": "Google Tag Manager", "ok": true },
+    { "label": "Google Ads conversion (AW-)", "ok": true },
+    { "label": "Meta Pixel (Facebook/IG)", "ok": false },
+    { "label": "Meta CAPI server-side", "ok": false },
+    { "label": "Consent Mode v2", "ok": false }
+  ],
+
+  "ads_findings": [
+    { "sev": "critical", "title": "Lipsa segmentare produse in Shopping", "impact": "Bugetul se imparte aproape egal pe tot catalogul, inclusiv pe produsele care nu vand niciodata (Villains / Zombies). Un sistem de etichetare muta banii pe ce aduce comenzi, cu aceeasi investitie.", "tag": "Buget irosit", "effort": "Setup" },
+    { "sev": "high", "title": "Shopping nestructurat pe profitabilitate", "impact": "Cu mii de produse, banii trebuie concentrati pe best-sellers cu marja buna, nu raspanditi uniform peste tot catalogul.", "tag": "Profit", "effort": "Analiza" },
+    { "sev": "high", "title": "Meta Pixel nedetectat — canalul social neatins", "impact": "Fara pixelul de Facebook/Instagram nu poti masura ce vand reclamele sociale si nu le poti optimiza — des canalul cu cel mai mare volum la ecom.", "tag": "Tracking", "effort": "1h" },
+    { "sev": "medium", "title": "Merchant Center si titluri de produs de verificat", "impact": "Produsele respinse din feed nu apar deloc in Shopping, iar titlurile slabe primesc mai putine afisari pe cautarile potrivite — expunere pierduta fara buget in plus.", "tag": "Eligibilitate", "effort": "1-2h" },
+    { "sev": "low", "title": "Competitia se structureaza, tu nu", "impact": "Castiga cine isi separa produsele pe performanta si adauga stele, nu doar cine are un CSS. Acolo se face diferenta de cost pe click.", "tag": "Competitie", "effort": "Setup" }
+  ],
+
+  "plan_intro": "<strong>Obiectiv 90 zile:</strong> de la 66 la 80+ pe vizibilitate, plus un Shopping care vinde pe profit, nu pe tot catalogul.",
+  "plan": [
+    { "title": "H1 + canonical pe prima pagina", "sub": "Cel mai puternic semnal on-page, momentan lipsa", "zone": "SEO" },
+    { "title": "Segmentare produse + campanie Shopping pe profit", "sub": "Heroes / Villains / Zombies — bugetul pe ce vinde", "zone": "Ads" },
+    { "title": "Sitemap impartit + imagini WebP", "sub": "Indexare mai buna + pagini mai rapide pe mobil", "zone": "SEO" },
+    { "title": "Verificare Merchant Center", "sub": "Recuperezi produsele respinse din feed", "zone": "Ads" },
+    { "title": "llms.txt + security headers", "sub": "Pregatire AI + protectii standard", "zone": "SEO" }
+  ],
+
+  "cta": {
+    "title": "Vrei sa rezolvam asta pentru tine?",
+    "text": "Echipa Devrika poate implementa tot planul de mai sus — SEO + Google Shopping — ca sa fii gasit si ales de clientii care te cauta deja. Prima discutie e gratuita.",
+    "btn": "Programeaza o discutie gratuita",
+    "contact": "<strong>devrika.ro</strong> · hello@devrika.ro · Razvan 0742 374 325 · Vlad 0756 281 176"
+  }
+}
