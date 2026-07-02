@@ -26,6 +26,7 @@ export const CHECKS: Record<string, CheckDef> = {
   lcp:                { id: "lcp",                 label: "LCP — Continut principal",sectiune: "viteza",   importanta: "critic",    descriereOk: "Sub 2.5s — continutul principal apare rapid" },
   cls:                { id: "cls",                 label: "CLS — Stabilitate",      sectiune: "viteza",    importanta: "major",     descriereOk: "Sub 0.1 — elementele nu sar in timp ce se incarca" },
   inp:                { id: "inp",                 label: "INP — Reactivitate",     sectiune: "viteza",    importanta: "major",     descriereOk: "Sub 200ms — site-ul raspunde instant la click-uri" },
+  ttfb:               { id: "ttfb",                label: "TTFB — Raspuns server",  sectiune: "viteza",    importanta: "major",     descriereOk: "Sub 600ms — serverul livreaza primul byte rapid" },
 
   // 2. SEO Tehnic (5)
   title_tag:          { id: "title_tag",           label: "Title Tag",              sectiune: "seo",       importanta: "critic",    descriereOk: "Titlu unic, 50-60 caractere, cu keyword principal" },
@@ -86,6 +87,7 @@ export const PROBLEMS: Record<string, Problem> = {
   lcp_atentie:              { id: "lcp_atentie",              label: "LCP acceptabil dar imbunatatibil",  sectiune: "viteza",    importanta: "major",     problema: "Continutul principal apare intre 2.5s si 4s.", fix: "Preincarca imaginea principala cu <link rel='preload'>. Verifica ca serverul are CDN activ." },
   cls_critic:               { id: "cls_critic",               label: "Elemente care sar pe pagina",       sectiune: "viteza",    importanta: "major",     problema: "Elementele de pe pagina isi schimba pozitia in timp ce se incarca.", fix: "Adauga dimensiuni fixe (width si height) pe fiecare imagine si video." },
   inp_slab:                 { id: "inp_slab",                 label: "Site-ul raspunde lent la click-uri",sectiune: "viteza",    importanta: "major",     problema: "Cand utilizatorul da click, site-ul raspunde cu intarziere vizibila (peste 200ms).", fix: "Elimina sau incarca asincron scripturile JavaScript de la terti." },
+  ttfb_slab:                { id: "ttfb_slab",                label: "Server lent (TTFB mare)",           sectiune: "viteza",    importanta: "major",     problema: "Serverul livreaza primul byte in peste 600ms. Tot ce urmeaza (imagini, scripturi, randare) se amana cu aceasta intarziere, iar Google penalizeaza direct timpul de raspuns al serverului.", fix: "Activeaza cache la nivel de server, pune un CDN in fata si verifica hostingul. Pe WordPress: plugin de cache + hosting cu LiteSpeed sau disk NVMe." },
 
   // SEO
   title_missing:            { id: "title_missing",            label: "Title tag lipsa",                  sectiune: "seo",       importanta: "critic",    problema: "Pagina nu are un titlu. In Google apare fie URL-ul, fie ceva generat automat.", fix: "Adauga un <title> unic pe fiecare pagina, 50-60 de caractere, cu keyword principal si numele firmei." },
@@ -157,6 +159,7 @@ export const CHECK_TO_PROBLEM: Record<string, Record<StatusCheck, string | null>
   lcp:                { ok: null, atentie: "lcp_atentie",               critic: "lcp_critic" },
   cls:                { ok: null, atentie: "cls_critic",                critic: "cls_critic" },
   inp:                { ok: null, atentie: "inp_slab",                  critic: "inp_slab" },
+  ttfb:               { ok: null, atentie: "ttfb_slab",                 critic: "ttfb_slab" },
   title_tag:          { ok: null, atentie: "title_long",                critic: "title_missing" },
   meta_description:   { ok: null, atentie: "meta_desc_missing",         critic: "meta_desc_missing" },
   h1:                 { ok: null, atentie: "h1_multiple",               critic: "h1_missing" },

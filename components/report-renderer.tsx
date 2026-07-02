@@ -65,17 +65,79 @@ function splitSection(sectiune: Sectiune, data: AuditData): { scor: number; prob
   return { scor, problems, oks };
 }
 
-function topFindings(data: AuditData, n: number): Finding[] {
-  const sectiuni: Sectiune[] = ["viteza", "seo", "continut", "keywords", "structura", "schema", "social", "securitate"];
-  const all = sectiuni.flatMap(s => splitSection(s, data).problems);
-  all.sort((a, b) => (a.status === b.status ? a.rank - b.rank : a.status === "critic" ? -1 : 1));
-  return all.slice(0, n);
-}
-
 function countAllProblems(data: AuditData): { total: number; critice: number } {
-  const sectiuni: Sectiune[] = ["viteza", "seo", "continut", "keywords", "structura", "schema", "social", "securitate"];
+  const sectiuni: Sectiune[] = ["viteza", "seo", "continut", "keywords", "structura", "schema"];
   const all = sectiuni.flatMap(s => splitSection(s, data).problems);
   return { total: all.length, critice: all.filter(f => f.status === "critic").length };
+}
+
+/* ---------- 4 categorii raport: Tracking · SEO · UX/UI · Trust ---------- */
+function catVerdict(s: number) {
+  if (s >= 70) return { w: "Bun",       fg: C.green,  bg: C.greenBg };
+  if (s >= 40) return { w: "De reglat", fg: C.yellow, bg: C.yellowBg };
+  return                { w: "Slab",      fg: C.red,    bg: C.redBg };
+}
+function sectionAvg(data: AuditData, sections: Sectiune[]): number {
+  const s = sections.map(x => splitSection(x, data).scor);
+  return s.reduce((a, b) => a + b, 0) / (s.length || 1);
+}
+// scor pe baza prezentei unor semnale din ConversieAudit (tracking, incredere, ux)
+function leakScore(data: AuditData, ids: string[]): number | null {
+  const rel = (data.conversie?.leaks ?? []).filter(l => ids.includes(l.id) && l.present !== "necunoscut");
+  if (!rel.length) return null;
+  return (rel.filter(l => l.present === "da").length / rel.length) * 100;
+}
+function avgDefined(...vals: (number | null)[]): number {
+  const v = vals.filter((x): x is number => x != null);
+  return Math.round(v.reduce((a, b) => a + b, 0) / (v.length || 1));
+}
+function googleAdsScore(g: NonNullable<AuditData["googleAds"]>): number {
+  if (g.css.status === "third_party_css") return 100;
+  if (g.css.status === "google_css") return 45;
+  if (g.shopping.present) return 60;
+  if (g.css.status === "not_in_shopping") return 25;
+  return 50;
+}
+function googleAdsSub(g: NonNullable<AuditData["googleAds"]>): string {
+  if (g.css.status === "google_css") return "Fara CSS partener — CPC ~20% mai mare";
+  if (g.css.status === "third_party_css") return `CSS partener (${g.css.provider}) — optimizat`;
+  if (g.css.status === "not_in_shopping") return "Nu rulezi Google Shopping";
+  return "CSS · Shopping · concurenta";
+}
+function CategoriiSummary({ data }: { data: AuditData }) {
+  const gAds = data.googleAds
+    ? { label: "Google Ads", sub: googleAdsSub(data.googleAds), scor: googleAdsScore(data.googleAds) }
+    : { label: "Google Ads", sub: "Verificare CSS + Shopping", scor: 50 };
+  const cards = [
+    { label: "Tracking",          sub: "Google, Meta, TikTok + Consent Mode", scor: avgDefined(leakScore(data, ["ga4", "ads_conv", "pixel", "tiktok", "consent"])) },
+    { label: "SEO",               sub: "On-page · Continut · Keywords · Structura · Schema", scor: Math.round(sectionAvg(data, ["seo", "continut", "keywords", "structura", "schema"])) },
+    { label: "UX / UI",           sub: "Viteza + aspectul magazinului",       scor: avgDefined(sectionAvg(data, ["viteza"]), leakScore(data, ["mobile", "filters", "search", "related", "product_info"])) },
+    gAds,
+  ];
+  return (
+    <section style={{ maxWidth: 920, margin: "0 auto", padding: "40px 24px 0" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 14 }}>
+        {cards.map(c => {
+          const v = catVerdict(c.scor);
+          return (
+            <div key={c.label} style={{ background: C.white, border: "1px solid #E6EBF4", borderRadius: 16, padding: "18px 20px", boxShadow: "0 6px 24px rgba(19,22,58,.05)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 14.5, color: C.navy }}>{c.label}</span>
+                <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase", color: v.fg, background: v.bg, padding: "3px 8px", borderRadius: 6 }}>{v.w}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 5 }}>
+                <span style={{ fontSize: 11.5, color: C.gray500 }}>{c.sub}</span>
+                <b style={{ fontFamily: sora, fontSize: 15, color: v.fg }}>{c.scor}<span style={{ fontSize: 11, color: C.gray400 }}>/100</span></b>
+              </div>
+              <div style={{ height: 7, background: C.slate, borderRadius: 99, overflow: "hidden" }}>
+                <div style={{ height: "100%", borderRadius: 99, width: `${c.scor}%`, background: v.fg }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
 }
 
 /* ---------- gauge 270° ---------- */
@@ -201,57 +263,98 @@ function LeakCard({ l }: { l: MoneyLeak }) {
   );
 }
 
-function ConversieSection({ c }: { c: import("@/lib/types").ConversieAudit }) {
-  const zone: import("@/lib/types").ConvZona[] = ["Tracking & PPC", "Incredere", "Functii magazin", "UX & Mobil", "Cos & checkout"];
-  const gaps = c.leaks.filter(l => l.present !== "da");
-  const have = c.leaks.filter(l => l.present === "da");
-  const ppcColor = c.scorPpc >= 70 ? C.green : c.scorPpc >= 40 ? C.orange : C.red;
+/* ---------- chip verde "ai deja" ---------- */
+function GreenChip({ label }: { label: string }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 7, background: C.greenBg, border: "1px solid #D6EFE0", borderRadius: 10, padding: "8px 13px", fontSize: 13.5, color: C.gray800 }}>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg>
+      <span style={{ fontWeight: 600 }}>{label}</span>
+    </span>
+  );
+}
+
+/* ---------- header rubrica: titlu + scor + subtitlu ---------- */
+function RubricHead({ title, sub, scor }: { title: string; sub: string; scor: number }) {
+  const color = scoreColor(scor);
+  return (
+    <>
+      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
+        <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: 0 }}>{title}</h2>
+        <span style={{ fontFamily: sora, fontSize: 26, fontWeight: 800, color }}>{scor}<span style={{ fontSize: 14, color: C.gray400 }}>/100</span></span>
+      </div>
+      <p style={{ color: C.gray500, margin: "6px 0 22px", fontSize: 15.5 }}>{sub}</p>
+    </>
+  );
+}
+
+/* ---------- Rubrica 1: Tracking (strict tracking) ---------- */
+function TrackingSection({ data }: { data: AuditData }) {
+  const trackIds = ["ga4", "ads_conv", "pixel", "tiktok", "consent"];
+  const leaks = (data.conversie?.leaks ?? []).filter(l => trackIds.includes(l.id));
+  const gaps = leaks.filter(l => l.present !== "da");
+  const have = leaks.filter(l => l.present === "da");
   return (
     <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
-      <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Bani pierduti din site si reclame</h2>
-      <p style={{ color: C.gray500, margin: "0 0 22px", fontSize: 15.5 }}>Fiecare vizitator — mai ales cel platit din reclame — care nu cumpara e buget aruncat. Uite unde se scurg banii.</p>
+      <RubricHead title="Tracking" sub="Google (Analytics + Ads), Meta, TikTok si Consent Mode v2 — masurarea pe care se bazeaza orice reclama profitabila." scor={avgDefined(leakScore(data, ["ga4", "ads_conv", "pixel", "tiktok", "consent"]))} />
+      {gaps.length > 0 && <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{gaps.map(l => <LeakCard key={l.id} l={l} />)}</div>}
+      {have.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: gaps.length ? 14 : 0 }}>{have.map(l => <GreenChip key={l.id} label={l.label} />)}</div>}
+    </section>
+  );
+}
 
-      {/* banner pregatire PPC */}
-      <div style={{ background: `radial-gradient(120% 140% at 0% 0%, ${C.navyMid} 0%, ${C.navy} 70%)`, color: C.white, borderRadius: 18, padding: "22px 26px", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", marginBottom: 26 }}>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontFamily: sora, fontSize: 40, fontWeight: 800, color: ppcColor, lineHeight: 1 }}>{c.scorPpc}<span style={{ fontSize: 18, color: C.gray400 }}>/100</span></div>
-          <div style={{ fontSize: 11.5, color: C.gray400, marginTop: 4, letterSpacing: "0.04em" }}>pregatire pentru reclame</div>
+/* ---------- Rubrica 3: UX / UI (viteza + aspectul magazinului) ---------- */
+function UxUiSection({ data }: { data: AuditData }) {
+  const uxIds = ["mobile", "filters", "search", "related", "product_info", "freeship"];
+  const leaks = (data.conversie?.leaks ?? []).filter(l => uxIds.includes(l.id));
+  const gaps = leaks.filter(l => l.present !== "da");
+  const have = leaks.filter(l => l.present === "da");
+  const scor = avgDefined(sectionAvg(data, ["viteza"]), leakScore(data, uxIds));
+  return (
+    <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
+      <RubricHead title="UX / UI" sub="Cum arata si se misca magazinul — viteza pe mobil si functiile care tin clientul pe site." scor={scor} />
+      <SectionBlock sectiune="viteza" data={data} />
+      {gaps.length > 0 && <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{gaps.map(l => <LeakCard key={l.id} l={l} />)}</div>}
+      {have.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: gaps.length ? 14 : 0 }}>{have.map(l => <GreenChip key={l.id} label={l.label} />)}</div>}
+    </section>
+  );
+}
+
+function GoogleAdsSection({ g }: { g: NonNullable<AuditData["googleAds"]> }) {
+  const css = g.css, shop = g.shopping;
+  const v =
+    css.status === "third_party_css" ? { fg: C.green, bg: C.greenBg, lab: "AI CSS PARTENER", title: `Rulezi Google Shopping printr-un CSS partener (${css.provider})` } :
+    css.status === "google_css"      ? { fg: C.red, bg: C.redBg, lab: "PLATESTI IN PLUS", title: "Rulezi prin CSS-ul Google — CPC pana la ~20% mai mare" } :
+    css.status === "not_in_shopping" ? { fg: C.orange, bg: C.yellowBg, lab: "OPORTUNITATE", title: "Nu apari in Google Shopping pe produsele tale" } :
+                                       { fg: C.gray500, bg: C.slate, lab: "NEDETERMINAT", title: "Nu am putut verifica statusul in Google Shopping" };
+  return (
+    <section style={{ maxWidth: 920, margin: "0 auto", padding: "8px 24px 12px" }}>
+      <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Google Ads — Shopping &amp; CSS</h2>
+      <p style={{ color: C.gray500, margin: "0 0 22px", fontSize: 15.5 }}>Am cautat produsele tale pe Google si am citit reclamele Shopping reale — exact ce vede un cumparator.</p>
+
+      <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${v.fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
+          <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: v.fg, background: v.bg }}>{v.lab}</span>
+          <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{v.title}</h4>
         </div>
-        <div style={{ flex: 1, minWidth: 240 }}>
-          <div style={{ fontFamily: sora, fontWeight: 700, fontSize: 17, marginBottom: 4 }}>
-            {c.ruleazaReclame === "da" ? "Rulezi reclame — dar pe o fundatie care pierde bani" : "Inca nu rulezi reclame — iar fundatia nu e pregatita"}
-          </div>
-          <p style={{ fontSize: 14, color: "#C7D2E8", lineHeight: 1.5, margin: 0 }}>
-            {c.ruleazaReclame === "da"
-              ? "Cheltui pe reclame, dar lipsurile de mai jos fac ca o parte din buget sa se duca pe vizitatori care nu cumpara. Reparam fundatia si gestionam campaniile ca fiecare leu sa aduca vanzari."
-              : "Inainte sa pui bani in reclame, site-ul trebuie sa converteasca si sa masoare. Altfel platesti trafic care pleaca. Construim fundatia si pornim campaniile corect."}
-          </p>
-        </div>
+        <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: 0 }}>{css.message}</p>
       </div>
 
-      {zone.map(z => {
-        const items = gaps.filter(l => l.zona === z);
-        if (!items.length) return null;
-        return (
-          <div key={z} style={{ marginBottom: 26 }}>
-            <h3 style={{ fontFamily: sora, fontSize: 18, fontWeight: 800, color: C.navy, margin: "0 0 12px" }}>{z}</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {items.map(l => <LeakCard key={l.id} l={l} />)}
-            </div>
-          </div>
-        );
-      })}
-
-      {have.length > 0 && (
-        <div style={{ marginTop: 4 }}>
-          <h3 style={{ fontFamily: sora, fontSize: 15, fontWeight: 700, color: C.gray600, margin: "0 0 10px" }}>Ai deja, bine ca stam pe asta:</h3>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {have.map(l => (
-              <span key={l.id} style={{ display: "inline-flex", alignItems: "center", gap: 7, background: C.greenBg, border: "1px solid #D6EFE0", borderRadius: 10, padding: "8px 13px", fontSize: 13.5, color: C.gray800 }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg>
-                <span style={{ fontWeight: 600 }}>{l.label}</span>
-              </span>
-            ))}
+      {shop.competitors.length > 0 && (
+        <div style={{ background: C.slate, border: "1px solid #E6EBF4", borderRadius: 16, padding: "20px 24px" }}>
+          <h3 style={{ fontFamily: sora, fontSize: 17, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Cine liciteaza pe produsele tale ({shop.competitors.length})</h3>
+          <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "0 0 14px" }}>{shop.message}</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {shop.competitors.slice(0, 8).map((c, i) => {
+              const gCss = /^google$/i.test(c.css);
+              return (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, background: C.white, border: "1px solid #E6EBF4", borderRadius: 10, padding: "10px 14px" }}>
+                  <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 12, color: C.gray400, minWidth: 18 }}>{i + 1}</span>
+                  <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: C.gray800 }}>{c.seller}</span>
+                  <span style={{ fontSize: 11.5, fontWeight: 700, padding: "3px 8px", borderRadius: 6, color: gCss ? C.gray500 : C.green, background: gCss ? C.slate : C.greenBg }}>{gCss ? "CSS Google" : `CSS ${c.css}`}</span>
+                  {c.price != null && <span style={{ fontFamily: sora, fontSize: 13.5, fontWeight: 700, color: C.navy, minWidth: 72, textAlign: "right" }}>{c.price.toLocaleString("ro-RO")} {shop.currency || "RON"}</span>}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -261,8 +364,7 @@ function ConversieSection({ c }: { c: import("@/lib/types").ConversieAudit }) {
 
 /* ============================ RAPORT ============================ */
 export function ReportRenderer({ data }: { data: AuditData }) {
-  const sectiuni: Sectiune[] = ["viteza", "seo", "continut", "keywords", "structura", "schema", "social", "securitate"];
-  const top = topFindings(data, 5);
+  const seoSub: Sectiune[] = ["seo", "continut", "keywords", "structura", "schema"];
   const { total, critice } = countAllProblems(data);
   const verdict = data.scor >= 70 ? "Stai bine, dar mai sunt puncte de castigat." : data.scor >= 40 ? "Pierzi clienti din cauza unor probleme reparabile." : "Pierzi clienti zilnic — site-ul are probleme grave de vizibilitate.";
 
@@ -293,6 +395,19 @@ export function ReportRenderer({ data }: { data: AuditData }) {
         </div>
       </header>
 
+      {/* ---------- AVERTISMENT crawl partial ---------- */}
+      {data.avertisment && (
+        <section style={{ maxWidth: 920, margin: "0 auto", padding: "24px 24px 0" }}>
+          <div style={{ background: C.yellowBg, border: `1px solid ${C.yellow}33`, borderLeft: `4px solid ${C.yellow}`, borderRadius: 14, padding: "16px 20px", display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <span style={{ fontSize: 18, lineHeight: 1.3 }}>⚠️</span>
+            <p style={{ fontSize: 14.5, color: C.gray800, lineHeight: 1.55, margin: 0 }}>{data.avertisment}</p>
+          </div>
+        </section>
+      )}
+
+      {/* ---------- 4 CATEGORII (grijile din funnel) ---------- */}
+      <CategoriiSummary data={data} />
+
       {/* ---------- CE TE COSTA ---------- */}
       <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 0" }}>
         <div style={{ background: "linear-gradient(135deg, rgba(10,190,207,0.07), rgba(71,73,158,0.07))", border: "1px solid #E6EBF4", borderLeft: `4px solid ${C.cyan}`, borderRadius: 18, padding: "28px 30px" }}>
@@ -309,24 +424,20 @@ export function ReportRenderer({ data }: { data: AuditData }) {
         </div>
       </section>
 
-      {/* ---------- BANI PIERDUTI / PPC ---------- */}
-      {data.conversie && <ConversieSection c={data.conversie} />}
+      {/* ---------- RUBRICA 1: TRACKING ---------- */}
+      {data.conversie && <TrackingSection data={data} />}
 
-      {/* ---------- TOP PROBLEME ---------- */}
+      {/* ---------- RUBRICA 2: SEO ---------- */}
       <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
-        <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Ce te tine pe loc in Google</h2>
-        <p style={{ color: C.gray500, margin: "0 0 26px", fontSize: 15.5 }}>Cele mai importante {top.length} probleme, in ordinea impactului asupra clientilor tai.</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {top.map((f, i) => <FindingCard key={i} f={f} index={i} showArea />)}
-        </div>
+        <RubricHead title="SEO" sub="On-page, continut, cuvinte cheie, structura si date structurate — verificate pe home, categorii si produse." scor={Math.round(sectionAvg(data, seoSub))} />
+        {seoSub.map(s => <SectionBlock key={s} sectiune={s} data={data} />)}
       </section>
 
-      {/* ---------- DETALIU PE SECTIUNI (acelasi format) ---------- */}
-      <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
-        <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Raportul complet</h2>
-        <p style={{ color: C.gray500, margin: "0 0 30px", fontSize: 15.5 }}>Toate verificarile pe cele 8 zone, grupate. Problemele cu detalii, restul marcate ca rezolvate.</p>
-        {sectiuni.map(s => <SectionBlock key={s} sectiune={s} data={data} />)}
-      </section>
+      {/* ---------- RUBRICA 3: UX / UI ---------- */}
+      {data.conversie && <UxUiSection data={data} />}
+
+      {/* ---------- RUBRICA 4: GOOGLE ADS ---------- */}
+      {data.googleAds && <GoogleAdsSection g={data.googleAds} />}
 
       {/* ---------- DE CE DEVRIKA ---------- */}
       <section style={{ maxWidth: 920, margin: "20px auto 0", padding: "0 24px 0" }}>

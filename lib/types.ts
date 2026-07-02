@@ -1,3 +1,5 @@
+import type { GoogleShoppingIntel } from "./css-detect";
+
 export type StatusCheck = "ok" | "atentie" | "critic";
 export type AuditStatus = "pending" | "running" | "done" | "error";
 
@@ -18,12 +20,14 @@ export type AuditData = {
   domain: string;
   pagesAnalyzed: number;
   scor: number;
+  avertisment?: string; // crawl partial blocat (anti-bot / pagina goala) — verificarile pot fi incomplete
   checksRezultate: Record<string, CheckResult>;
   seoChecks: PageCheck[];
   continutChecks: PageCheck[];
   keywordsChecks: PageCheck[];
   structuraChecks: PageCheck[];
   conversie?: ConversieAudit;
+  googleAds?: GoogleShoppingIntel; // CSS + peisaj Shopping (doar ecom, via BrightData)
 };
 
 // ── Conversie / bani pierduti (instrument de vanzare PPC) ──

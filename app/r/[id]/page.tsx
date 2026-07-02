@@ -38,6 +38,11 @@ export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<AuditData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isPrint, setIsPrint] = useState(false);
+
+  useEffect(() => {
+    setIsPrint(new URLSearchParams(window.location.search).get("print") === "1");
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -70,5 +75,26 @@ export default function ReportPage() {
 
   if (error) return <ErrorScreen message={error} />;
   if (!data) return <LoadingScreen />;
-  return <ReportRenderer data={data} />;
+  return (
+    <>
+      <ReportRenderer data={data} />
+      {!isPrint && (
+        <a
+          href={`/r/${id}/pdf`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            position: "fixed", left: "50%", bottom: 24, transform: "translateX(-50%)", zIndex: 50,
+            display: "inline-flex", alignItems: "center", gap: 9,
+            padding: "16px 34px", borderRadius: 999, color: "#fff", fontWeight: 800,
+            fontFamily: "var(--font-sora), system-ui, sans-serif", fontSize: 16.5,
+            textDecoration: "none", boxShadow: "0 12px 34px rgba(10,190,207,0.5)",
+            background: "linear-gradient(135deg,#47499E,#0ABECF)",
+          }}
+        >
+          ⬇ Descarca PDF
+        </a>
+      )}
+    </>
+  );
 }

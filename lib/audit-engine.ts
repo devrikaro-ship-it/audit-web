@@ -1,7 +1,10 @@
 import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona } from "./types";
+import { analyzeProspectLive, deriveProductQueries, type GoogleShoppingIntel, type LiveTracking } from "./css-detect";
 
 const FETCH_TIMEOUT = 12000;
-const MAX_PAGES = 50;
+const MAX_PAGES = 60;        // candidati (buffer peste minimul de 50 pt paginile care pica)
+const MIN_PAGES = 50;        // tinta minima de pagini analizate
+const FETCH_CONCURRENCY = 8;
 const LLM_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "OAI-SearchBot", "CCBot", "Googlebot-Extended"];
 
 // ── HTML parsing utilities ───────────────────────────────────────────────────
@@ -144,6 +147,48 @@ async function fetchPage(url: string): Promise<PageData> {
   }
 }
 
+// Timpul pana cand serverul livreaza headerele raspunsului (~TTFB). fetch() se
+// rezolva la sosirea headerelor, inainte de corpul paginii.
+async function measureTTFB(url: string): Promise<number | null> {
+  try {
+    const t0 = Date.now();
+    const r = await fetchWithTimeout(url, 10000);
+    const ms = Date.now() - t0;
+    void r.body?.cancel();
+    return ms;
+  } catch { return null; }
+}
+
+// Site in spatele unei protectii anti-bot (Cloudflare/challenge) sau pagina goala:
+// crawler-ul nu primeste HTML real, deci auditul ar fi fals. Acelasi gard ca in collect.py.
+function detectBlocker(homepageHtml: string): string | null {
+  const blocked = /Just a moment|cf-mitigated|challenge-platform|Attention Required|_cf_chl|Enable JavaScript and cookies/i.test(homepageHtml);
+  const empty = homepageHtml.replace(/\s+/g, "").length < 2000;
+  if (blocked) return "Site-ul este in spatele unei protectii anti-bot (Cloudflare/challenge). Crawler-ul nu primeste continutul real, asa ca o parte din verificari pot fi incomplete.";
+  if (empty) return "Pagina a raspuns cu foarte putin continut (posibil site JavaScript/SPA sau gol). O parte din verificari pot fi incomplete.";
+  return null;
+}
+
+const PRODUCT_FEED_PATHS = [
+  "/feed", "/product-feed", "/feed.xml", "/wp-content/uploads/woo-feed",
+  "/index.php?route=extension/feed/google_sitemap", "/googlebase.xml", "/feed/google",
+  "/products.json", "/sitemap_products_1.xml", "/collections/all.atom",
+];
+
+// Verifica daca exista un feed de produse public (pentru Google Shopping / catalog Meta).
+async function probeProductFeed(origin: string): Promise<boolean> {
+  const checks = await Promise.allSettled(
+    PRODUCT_FEED_PATHS.map(async (p) => {
+      try {
+        const r = await fetchWithTimeout(origin + p, 6000);
+        void r.body?.cancel();
+        return r.status === 200;
+      } catch { return false; }
+    })
+  );
+  return checks.some((c) => c.status === "fulfilled" && c.value === true);
+}
+
 // ── Sitemap discovery ────────────────────────────────────────────────────────
 
 function extractSitemapFromRobots(robotsTxt: string, origin: string): string {
@@ -190,11 +235,40 @@ const EXCLUDE_PATTERNS = [
   /[?&](utm_|ref=|session|token)/i, /\.(xml|pdf|jpg|png|gif|css|js)$/i,
 ];
 
+// Potrivire pe host ignorand "www." — robots.txt indica des sitemap pe www
+// iar auditul ruleaza pe non-www (sau invers). Fara asta, toate URL-urile pica.
+function sameHost(a: string, b: string): boolean {
+  try {
+    return new URL(a).hostname.replace(/^www\./, "") === new URL(b).hostname.replace(/^www\./, "");
+  } catch { return false; }
+}
+
 function filterUrls(urls: string[], origin: string): string[] {
+  const seen = new Set<string>();
   return urls.filter(u => {
-    if (!u.startsWith(origin)) return false;
-    return !EXCLUDE_PATTERNS.some(re => re.test(u));
+    if (!sameHost(u, origin)) return false;
+    if (EXCLUDE_PATTERNS.some(re => re.test(u))) return false;
+    const key = u.replace(/\/$/, "");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
   });
+}
+
+// Extrage link-uri interne dintr-o pagina (fallback cand sitemap-ul e subtire/absent).
+function extractInternalLinks(html: string, origin: string): string[] {
+  const out: string[] = [];
+  const re = /href=["']([^"'#]+)["']/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(html)) !== null) {
+    let href = m[1].trim();
+    if (!href || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("javascript:")) continue;
+    try {
+      const abs = new URL(href, origin).toString().split("#")[0];
+      if (sameHost(abs, origin)) out.push(abs);
+    } catch { /* skip */ }
+  }
+  return out;
 }
 
 function segmentUrls(urls: string[], origin: string): { homepage: string; categories: string[]; products: string[] } {
@@ -264,6 +338,12 @@ function inpToStatus(tbt: string): StatusCheck {
   if (isNaN(ms)) return "atentie";
   if (ms < 200) return "ok";
   if (ms < 600) return "atentie";
+  return "critic";
+}
+
+function ttfbToStatus(ms: number): StatusCheck {
+  if (ms < 600) return "ok";
+  if (ms < 1200) return "atentie";
   return "critic";
 }
 
@@ -600,7 +680,12 @@ function computeSecurityChecks(homepage: PageData, allPages: PageData[]): Record
   };
 }
 
-function computeVitezaChecks(mobile: PSIResult | null, desktop: PSIResult | null): Record<string, CheckResult> {
+function ttfbCheck(ttfbMs: number | null): CheckResult {
+  if (ttfbMs == null) return { status: "atentie", value: "Nu s-a putut masura" };
+  return { status: ttfbToStatus(ttfbMs), value: `${ttfbMs} ms` };
+}
+
+function computeVitezaChecks(mobile: PSIResult | null, desktop: PSIResult | null, ttfbMs: number | null): Record<string, CheckResult> {
   if (!mobile && !desktop) {
     return {
       pagespeed_mobile:  { status: "atentie", value: "Nu s-a putut contacta PageSpeed API" },
@@ -608,6 +693,7 @@ function computeVitezaChecks(mobile: PSIResult | null, desktop: PSIResult | null
       lcp:  { status: "atentie", value: "Date indisponibile" },
       cls:  { status: "atentie", value: "Date indisponibile" },
       inp:  { status: "atentie", value: "Date indisponibile" },
+      ttfb: ttfbCheck(ttfbMs),
     };
   }
   const m = mobile ?? { score: 0, lcp: "—", cls: "—", tbt: "—" };
@@ -618,6 +704,7 @@ function computeVitezaChecks(mobile: PSIResult | null, desktop: PSIResult | null
     lcp:  { status: lcpToStatus(m.lcp),  value: m.lcp },
     cls:  { status: clsToStatus(m.cls),  value: m.cls },
     inp:  { status: inpToStatus(m.tbt),  value: m.tbt },
+    ttfb: ttfbCheck(ttfbMs),
   };
 }
 
@@ -662,7 +749,7 @@ function computeOverallScore(
 
 // ── Conversie / bani pierduti (PPC) ──────────────────────────────────────────
 
-function computeConversieAudit(pages: PageData[], mobile: PSIResult | null): ConversieAudit {
+function computeConversieAudit(pages: PageData[], mobile: PSIResult | null, hasProductFeed: boolean): ConversieAudit {
   const homepage = pages[0];
   const corpus = pages.map(p => p.html).join("\n").toLowerCase();
   const has = (...n: string[]) => n.some(x => corpus.includes(x));
@@ -676,24 +763,33 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null): Con
     leaks.push({ id, label, zona, present, pierdere, fix });
 
   // ---- TRACKING & PPC (carligul de vanzare) ----
+  // GTM injecteaza tag-urile client-side, deci nu apar in HTML-ul brut. Cand GTM
+  // e prezent dar tag-ul nu se vede static, marcam "necunoscut" (nu "nu"), ca sa
+  // nu raportam fals ca lipseste. Pt. ecom, browserul BrightData verifica la runtime.
+  const hasGTM = /googletagmanager\.com\/gtm\.js/i.test(corpus) || /gtm-[a-z0-9]{5,9}/i.test(corpus) || has("datalayer.push", "window.datalayer");
   const hasGA4 = /gtag\/js\?id=g-/i.test(corpus) || /["']g-[a-z0-9]{6,}["']/i.test(corpus) || has("googletagmanager.com/gtag");
   const hasAds = /aw-\d{6,}/i.test(corpus) || has("google_conversion", "googleads.g.doubleclick", "gtag_report_conversion");
   const hasPixel = has("fbq(", "connect.facebook.net", "facebook.com/tr");
+  const hasTikTok = has("analytics.tiktok.com", "ttq.load", "ttq.page", "ttq.track");
   const hasConsent = has("gtag('consent'", 'gtag("consent"', "'consent', 'default'", "cookiebot", "onetrust", "cookieyes", "complianz", "consentmanager");
+  const veil = (found: boolean): Presence => found ? "da" : (hasGTM ? "necunoscut" : "nu");
 
-  add("ga4", "Google Analytics 4", "Tracking & PPC", hasGA4 ? "da" : "nu",
+  add("ga4", "Google Analytics 4", "Tracking & PPC", veil(hasGA4),
     "Fara analytics nu stii ce pagini si ce reclame aduc vanzari — optimizezi pe ghicit, nu pe date.",
     "Instalam GA4 cu evenimente ecommerce (view_item, add_to_cart, purchase).");
-  add("ads_conv", "Google Ads — urmarire conversii", "Tracking & PPC", hasAds ? "da" : (hasGA4 ? "necunoscut" : "nu"),
+  add("ads_conv", "Google Ads — urmarire conversii", "Tracking & PPC", hasAds ? "da" : ((hasGA4 || hasGTM) ? "necunoscut" : "nu"),
     "Daca dai bani pe Google Ads fara urmarirea conversiilor, Google liciteaza orb — ajungi sa platesti de 2-3x mai mult per vanzare.",
     "Conectam conversiile reale (Purchase) la Google Ads si licitam pe valoare, nu pe clicuri.");
-  add("pixel", "Meta Pixel", "Tracking & PPC", hasPixel ? "da" : "nu",
+  add("pixel", "Meta Pixel", "Tracking & PPC", veil(hasPixel),
     "Fara Pixel, reclamele Meta nu pot gasi cumparatori si nu poti face retargeting — cea mai profitabila audienta a ta.",
     "Instalam Meta Pixel + evenimente standard + audiente de retargeting.");
+  add("tiktok", "TikTok Pixel", "Tracking & PPC", veil(hasTikTok),
+    "Fara TikTok Pixel nu poti masura sau optimiza reclamele TikTok — un canal in crestere rapida pentru ecommerce.",
+    "Instalam TikTok Pixel + evenimente standard pentru campanii TikTok.");
   add("capi", "Meta Conversion API (server-side)", "Tracking & PPC", "necunoscut",
     "Fara CAPI se pierd ~10-30% din conversii (iOS, blocare cookies) → Meta optimizeaza pe date incomplete si arde buget.",
     "Configuram CAPI cu deduplicare web + server pentru date complete.");
-  add("consent", "Consent Mode v2", "Tracking & PPC", hasConsent ? "da" : "nu",
+  add("consent", "Consent Mode v2", "Tracking & PPC", veil(hasConsent),
     "Fara Consent Mode v2 pierzi date de conversie din UE, iar reclamele Google pierd din eficienta (si e obligatoriu legal).",
     "Implementam banner de consimtamant conectat la Consent Mode v2.");
 
@@ -730,6 +826,12 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null): Con
     add("related", "Produse similare / recomandate", "Functii magazin", hasRelated ? "da" : "necunoscut",
       "Recomandarile cresc valoarea cosului cu 10-30%. Fara ele, lasi bani pe masa la fiecare comanda.",
       "Adaugam blocuri de produse similare si 'cumparate impreuna'.");
+    add("feed", "Feed de produse (Shopping / Catalog Meta)", "Functii magazin", hasProductFeed ? "da" : "necunoscut",
+      "Fara un feed de produse nu poti rula Google Shopping sau reclame de catalog Meta — cele mai profitabile formate pentru ecommerce. Concurentii cu feed apar cu poza si pret direct in cautare.",
+      "Generam si conectam un feed de produse la Google Merchant Center si la catalogul Meta.");
+    add("shopping_segmentare", "Segmentare produse in Google Shopping", "Functii magazin", "necunoscut",
+      "Daca rulezi Shopping fara separare pe performanta, bugetul se imparte aproape egal pe tot catalogul — produsele care nu vand mananca bani degeaba. Un sistem de etichetare pe performanta muta banii pe produsele care aduc comenzi, cu aceeasi investitie.",
+      "Implementam segmentare pe performanta a feed-ului (Heroes / Sidekicks / Villains / Zombies) + structura de campanii pe etichete.");
   }
 
   // ---- UX & MOBIL ----
@@ -748,7 +850,13 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null): Con
     "Costurile-surpriza de livrare sunt motivul #1 de abandon al cosului. Un prag de livrare gratuita afisat creste si valoarea comenzii.",
     "Afisam o bara de progres spre livrarea gratuita (ex: 'mai ai 40 lei pana la livrare gratuita').");
 
-  // scor PPC: ponderam tracking-ul (vinde PPC), ignoram necunoscut
+  const scorPpc = computePpcScore(leaks);
+
+  return { isEcom, ruleazaReclame: (hasAds || hasPixel) ? "da" : (hasGTM ? "necunoscut" : "nu"), scorPpc, leaks };
+}
+
+// scor PPC: ponderam tracking-ul (vinde PPC), ignoram necunoscut
+function computePpcScore(leaks: MoneyLeak[]): number {
   const w = (l: MoneyLeak) => (l.zona === "Tracking & PPC" ? 2 : 1);
   let num = 0, den = 0;
   for (const l of leaks) {
@@ -756,9 +864,16 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null): Con
     den += w(l);
     if (l.present === "da") num += w(l);
   }
-  const scorPpc = den ? Math.round((num / den) * 100) : 0;
+  return den ? Math.round((num / den) * 100) : 0;
+}
 
-  return { isEcom, ruleazaReclame: (hasAds || hasPixel) ? "da" : "nu", scorPpc, leaks };
+// Suprascrie detectia statica cu adevarul din browser (runtime). Doar upgrade la
+// "da" — absenta la runtime nu dovedeste lipsa (consent gating, tag pe alte pagini).
+function applyLiveTracking(c: ConversieAudit, t: LiveTracking): ConversieAudit {
+  const seen: Record<string, boolean> = { ga4: t.ga4, ads_conv: t.googleAds, pixel: t.metaPixel, tiktok: t.tiktok, consent: t.consent };
+  const leaks = c.leaks.map((l) => (seen[l.id] && l.present !== "da" ? { ...l, present: "da" as Presence } : l));
+  const ruleazaReclame: Presence = (t.googleAds || t.metaPixel || t.ga4) ? "da" : c.ruleazaReclame;
+  return { ...c, leaks, scorPpc: computePpcScore(leaks), ruleazaReclame };
 }
 
 // ── Main entry point ─────────────────────────────────────────────────────────
@@ -803,19 +918,29 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
 
   const { homepage, categories, products } = segmentUrls(filtered, origin);
 
-  // Select pages to analyze
-  const toAnalyze = [
-    homepage,
-    ...categories.slice(0, 15),
-    ...products.slice(0, 34),
-  ].slice(0, MAX_PAGES);
+  // Select pages to analyze — homepage + mix categorii/produse, umplut pana la MAX_PAGES
+  const uniq = (arr: string[]) => [...new Set(arr.map(u => u.replace(/\/$/, "")))];
+  let toAnalyze = uniq([homepage, ...categories, ...products]).slice(0, MAX_PAGES);
+
+  // Fallback link-crawl: daca sitemap-ul a dat prea putine pagini (ex: sitemap absent/blocat),
+  // extrage link-uri interne din homepage + primele cateva categorii pana atingem tinta.
+  if (toAnalyze.length < MIN_PAGES) {
+    const homeHtml = await fetchText(homepage);
+    let discovered = filterUrls(extractInternalLinks(homeHtml, origin), origin);
+    for (const seed of discovered.slice(0, 5)) {
+      if (uniq([...toAnalyze, ...discovered]).length >= MAX_PAGES) break;
+      const seedHtml = await fetchText(seed);
+      discovered = discovered.concat(filterUrls(extractInternalLinks(seedHtml, origin), origin));
+    }
+    toAnalyze = uniq([homepage, ...categories, ...products, ...discovered]).slice(0, MAX_PAGES);
+  }
 
   if (!toAnalyze.includes(homepage)) toAnalyze.unshift(homepage);
 
-  // Phase 2: Fetch pages (5 concurrent)
+  // Phase 2: Fetch pages (concurenta FETCH_CONCURRENCY)
   const pages: PageData[] = [];
-  for (let i = 0; i < toAnalyze.length; i += 5) {
-    const batch = toAnalyze.slice(i, i + 5);
+  for (let i = 0; i < toAnalyze.length; i += FETCH_CONCURRENCY) {
+    const batch = toAnalyze.slice(i, i + FETCH_CONCURRENCY);
     const results = await Promise.all(batch.map(u => fetchPage(u)));
     pages.push(...results);
   }
@@ -823,16 +948,22 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const analyzedPages = pages.filter(p => p.ok);
   const homepageData = analyzedPages[0] ?? pages[0] ?? { url: homepage, html: "", status: 0, headers: {}, ok: false };
 
-  // Phase 3: PSI (parallel, homepage only)
-  const [mobileResult, desktopResult] = await Promise.allSettled([
+  // Phase 3: PSI + TTFB + feed produse (parallel, homepage/origin only)
+  const [mobileResult, desktopResult, ttfbResult, feedResult] = await Promise.allSettled([
     fetchPSI(origin, "mobile"),
     fetchPSI(origin, "desktop"),
+    measureTTFB(origin),
+    probeProductFeed(origin),
   ]);
   const mobile = mobileResult.status === "fulfilled" ? mobileResult.value : null;
   const desktop = desktopResult.status === "fulfilled" ? desktopResult.value : null;
+  const ttfbMs = ttfbResult.status === "fulfilled" ? ttfbResult.value : null;
+  const hasProductFeed = feedResult.status === "fulfilled" ? feedResult.value : false;
+
+  const avertisment = detectBlocker(homepageData.html) ?? undefined;
 
   // Phase 4: Compute section results
-  const viteza = computeVitezaChecks(mobile, desktop);
+  const viteza = computeVitezaChecks(mobile, desktop, ttfbMs);
   const seoChecks = computeSeoChecks(analyzedPages, domain);
   const continutChecks = computeContinutChecks(analyzedPages);
   const keywordsChecks = computeKeywordsChecks(analyzedPages);
@@ -842,18 +973,47 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const securitate = computeSecurityChecks(homepageData, analyzedPages);
 
   const scor = computeOverallScore(viteza, seoChecks, continutChecks, keywordsChecks, structuraChecks, schema, social, securitate);
-  const conversie = computeConversieAudit(analyzedPages, mobile);
+  let conversie = computeConversieAudit(analyzedPages, mobile, hasProductFeed);
+
+  // Phase 5: browser real (BrightData) — tracking la runtime + CSS + peisaj Shopping.
+  // Doar ecom. Tracking-ul via GTM nu se vede in HTML brut; il citim la runtime.
+  let googleAds: GoogleShoppingIntel | undefined;
+  if (conversie.isEcom && process.env.BRIGHTDATA_CDP) {
+    const productSet = new Set(products.map((u) => u.replace(/\/$/, "")));
+    const productTitles = analyzedPages
+      .filter((p) => productSet.has(p.url.replace(/\/$/, "")))
+      .map((p) => parseTitle(p.html))
+      .filter(Boolean);
+    const fallbackTitles = analyzedPages.slice(1).map((p) => parseTitle(p.html)).filter(Boolean);
+    const brand = domain.replace(/^www\./, "").split(".")[0];
+    const queries = deriveProductQueries(brand, productTitles.length ? productTitles : fallbackTitles);
+    try {
+      // safety cap: navigatia BrightData poate fi lenta; nu blocam auditul peste 65s
+      const live = await Promise.race([
+        analyzeProspectLive(domain, origin, queries, { maxQueries: 3 }),
+        new Promise<undefined>((r) => setTimeout(() => r(undefined), 65000)),
+      ]);
+      if (live) {
+        googleAds = { css: live.css, shopping: live.shopping };
+        if (live.tracking?.ok) conversie = applyLiveTracking(conversie, live.tracking);
+      }
+    } catch {
+      googleAds = undefined;
+    }
+  }
 
   return {
     url: origin,
     domain,
     pagesAnalyzed: analyzedPages.length,
     scor,
+    avertisment,
     checksRezultate: { ...viteza, ...schema, ...social, ...securitate },
     seoChecks,
     continutChecks,
     keywordsChecks,
     structuraChecks,
     conversie,
+    googleAds,
   };
 }
