@@ -1,5 +1,7 @@
 # Framing — cum scrii ca sa agati clientul
 
+> Dictionar de traducere tehnic → client, valabil in **ambele** cai (web + fallback Python). Structura raportului RECE ramane cea din `../AUDIT-SPEC.md` (4 rubrici); aici e doar *cum formulezi* fiecare finding.
+
 Raportul e instrument de **vanzare**, nu document tehnic. Decidentul e netehnic (proprietar de business).
 
 ## Regula de aur

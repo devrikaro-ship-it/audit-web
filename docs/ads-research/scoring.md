@@ -1,5 +1,7 @@
 # Scoring — cum dai scorurile (0-100)
 
+> ⚠️ **Aplica caii fallback Python** (build.py), NU motorului web. Motorul web RECE isi calculeaza scorurile pe cele 4 rubrici (Tracking · SEO · UX/UI · Google Ads) dupa `../AUDIT-SPEC.md` sec. 6 — acela e autoritatea. Categoriile de mai jos sunt pentru raportul generat din collect.py/build.py.
+
 Scop: scoruri **credibile si consistente** intre clienti. Nu sunt exacte stiintific, dar trebuie sa reflecte realitatea din crawl.
 
 ## Categorii + pondere (scor global)
