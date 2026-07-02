@@ -1,4 +1,4 @@
-import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona } from "./types";
+import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona, ProductSignal } from "./types";
 import { analyzeProspectLive, deriveProductQueries, type GoogleShoppingIntel, type LiveTracking } from "./css-detect";
 
 const FETCH_TIMEOUT = 12000;
@@ -747,6 +747,40 @@ function computeOverallScore(
   return Math.round(weights.reduce((acc, w) => acc + w.score * w.weight, 0));
 }
 
+// ── Semnal produse neoptimizate (carlig Catamo) ──────────────────────────────
+// Constatare standard, mereu-prezenta pe ecom. Cand prindem pagini de produs,
+// o ancoram in numere reale (titluri scurte/generice, meta lipsa); altfel generica.
+
+function computeProductSignal(pages: PageData[], productUrls: string[], hasProductFeed: boolean): ProductSignal {
+  const productSet = new Set(productUrls.map(u => u.replace(/\/$/, "")));
+  const prods = pages.filter(p => productSet.has(p.url.replace(/\/$/, "")));
+  let weakTitles = 0, missingMeta = 0;
+  for (const p of prods) {
+    const title = parseTitle(p.html);
+    const words = title.split(/\s+/).filter(Boolean).length;
+    if (title.length < 45 || words < 4) weakTitles++;
+    if (!parseMeta(p.html, "description")) missingMeta++;
+  }
+  const checked = prods.length;
+  const headline = "Produsele tale nu sunt optimizate pentru Google Shopping si cautare";
+
+  const feedFraza = hasProductFeed
+    ? "Ai un feed de produse, dar titlurile si descrieriile din el conteaza la fel de mult ca existenta lui."
+    : "Fara un feed de produse optimizat nici nu poti rula Google Shopping la potential.";
+
+  let message: string;
+  if (checked > 0 && (weakTitles > 0 || missingMeta > 0)) {
+    const parti: string[] = [];
+    if (weakTitles > 0) parti.push(`${weakTitles} au titluri scurte sau generice`);
+    if (missingMeta > 0) parti.push(`${missingMeta} nu au descriere`);
+    message = `Am verificat ${checked} pagini de produs si ${parti.join(" iar ")} — exact textele pe care Google le foloseste ca sa decida pe ce cautari iti arata produsele. Titlurile si descrierile slabe inseamna ca produsele apar mai rar in Shopping si in cautare decat ar putea, chiar cu buget de reclama. ${feedFraza} Cu titluri, descrieri si feed optimizate acelasi catalog aduce mai multe afisari si clicuri, fara buget suplimentar.`;
+  } else {
+    message = `Titlurile, descrierile si feed-ul produselor sunt textele pe care Google le foloseste ca sa decida pe ce cautari apari in Shopping si in cautare. In majoritatea magazinelor acestea raman needitate (numele scurt din platforma), asa ca produsele apar mai rar decat ar putea. ${feedFraza} Optimizate, acelasi catalog aduce mai multe afisari si clicuri, fara buget suplimentar de reclama.`;
+  }
+
+  return { checked, weakTitles, missingMeta, hasFeed: hasProductFeed, headline, message };
+}
+
 // ── Conversie / bani pierduti (PPC) ──────────────────────────────────────────
 
 function computeConversieAudit(pages: PageData[], mobile: PSIResult | null, hasProductFeed: boolean): ConversieAudit {
@@ -974,6 +1008,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
 
   const scor = computeOverallScore(viteza, seoChecks, continutChecks, keywordsChecks, structuraChecks, schema, social, securitate);
   let conversie = computeConversieAudit(analyzedPages, mobile, hasProductFeed);
+  const productSignal = conversie.isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
 
   // Phase 5: browser real (BrightData) — tracking la runtime + CSS + peisaj Shopping.
   // Doar ecom. Tracking-ul via GTM nu se vede in HTML brut; il citim la runtime.
@@ -1015,5 +1050,6 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     structuraChecks,
     conversie,
     googleAds,
+    productSignal,
   };
 }

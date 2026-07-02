@@ -319,18 +319,21 @@ function UxUiSection({ data }: { data: AuditData }) {
   );
 }
 
-function GoogleAdsSection({ g }: { g: NonNullable<AuditData["googleAds"]> }) {
-  const css = g.css, shop = g.shopping;
-  const v =
+function GoogleAdsSection({ data }: { data: AuditData }) {
+  const g = data.googleAds;
+  const ps = data.productSignal;
+  const css = g?.css, shop = g?.shopping;
+  const v = css && (
     css.status === "third_party_css" ? { fg: C.green, bg: C.greenBg, lab: "AI CSS PARTENER", title: `Rulezi Google Shopping printr-un CSS partener (${css.provider})` } :
     css.status === "google_css"      ? { fg: C.red, bg: C.redBg, lab: "PLATESTI IN PLUS", title: "Rulezi prin CSS-ul Google — CPC pana la ~20% mai mare" } :
     css.status === "not_in_shopping" ? { fg: C.orange, bg: C.yellowBg, lab: "OPORTUNITATE", title: "Nu apari in Google Shopping pe produsele tale" } :
-                                       { fg: C.gray500, bg: C.slate, lab: "NEDETERMINAT", title: "Nu am putut verifica statusul in Google Shopping" };
+                                       { fg: C.gray500, bg: C.slate, lab: "NEDETERMINAT", title: "Nu am putut verifica statusul in Google Shopping" });
   return (
     <section style={{ maxWidth: 920, margin: "0 auto", padding: "8px 24px 12px" }}>
       <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Google Ads — Shopping &amp; CSS</h2>
-      <p style={{ color: C.gray500, margin: "0 0 22px", fontSize: 15.5 }}>Am cautat produsele tale pe Google si am citit reclamele Shopping reale — exact ce vede un cumparator.</p>
+      <p style={{ color: C.gray500, margin: "0 0 22px", fontSize: 15.5 }}>{g ? "Am cautat produsele tale pe Google si am citit reclamele Shopping reale — exact ce vede un cumparator." : "Cum stai pe Google Shopping si cat de pregatite sunt produsele tale pentru reclame."}</p>
 
+      {css && v && (
       <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${v.fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
           <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: v.fg, background: v.bg }}>{v.lab}</span>
@@ -338,8 +341,19 @@ function GoogleAdsSection({ g }: { g: NonNullable<AuditData["googleAds"]> }) {
         </div>
         <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: 0 }}>{css.message}</p>
       </div>
+      )}
 
-      {shop.competitors.length > 0 && (
+      {ps && (
+        <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${C.indigo}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
+            <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: C.indigo, background: "rgba(71,73,158,0.10)" }}>OPTIMIZARE PRODUSE</span>
+            <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{ps.headline}</h4>
+          </div>
+          <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: 0 }}>{ps.message}</p>
+        </div>
+      )}
+
+      {shop && shop.competitors.length > 0 && (
         <div style={{ background: C.slate, border: "1px solid #E6EBF4", borderRadius: 16, padding: "20px 24px" }}>
           <h3 style={{ fontFamily: sora, fontSize: 17, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Cine liciteaza pe produsele tale ({shop.competitors.length})</h3>
           <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "0 0 14px" }}>{shop.message}</p>
@@ -437,7 +451,7 @@ export function ReportRenderer({ data }: { data: AuditData }) {
       {data.conversie && <UxUiSection data={data} />}
 
       {/* ---------- RUBRICA 4: GOOGLE ADS ---------- */}
-      {data.googleAds && <GoogleAdsSection g={data.googleAds} />}
+      {(data.googleAds || data.productSignal) && <GoogleAdsSection data={data} />}
 
       {/* ---------- DE CE DEVRIKA ---------- */}
       <section style={{ maxWidth: 920, margin: "20px auto 0", padding: "0 24px 0" }}>

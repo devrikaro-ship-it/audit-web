@@ -28,6 +28,19 @@ export type AuditData = {
   structuraChecks: PageCheck[];
   conversie?: ConversieAudit;
   googleAds?: GoogleShoppingIntel; // CSS + peisaj Shopping (doar ecom, via BrightData)
+  productSignal?: ProductSignal;   // semnal optimizare produse (carlig Catamo, doar ecom)
+};
+
+// ── Semnal produse neoptimizate (instrument de vanzare — carlig Catamo) ──
+// Constatare standard, mereu-prezenta pe ecom (ca segmentarea feed-ului).
+// Cand avem pagini de produs verificate, o ancoram in numere reale; altfel ramane generica.
+export type ProductSignal = {
+  checked: number;      // pagini de produs verificate
+  weakTitles: number;   // titluri scurte / generice
+  missingMeta: number;  // fara meta description
+  hasFeed: boolean;     // feed de produse public gasit
+  headline: string;
+  message: string;
 };
 
 // ── Conversie / bani pierduti (instrument de vanzare PPC) ──
