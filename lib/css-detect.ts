@@ -166,16 +166,32 @@ export function classifyCss(prospectDomain: string, tiles: CssTile[]): CssVerdic
 
 // Build a few Google queries from crawled product data. A merchant running
 // Shopping should appear on at least one of its own product searches.
+// Deriva interogari de produs curate din titluri, pentru cautarea Shopping.
+// Titlurile de produs vin des cu sufix de site/brand ("Produs - Magazin", "Produs | Categorie")
+// si boilerplate ("cumpara online") care strica interogarea si duc la carusel gol -> "nedeterminat".
+// Curatam sufixul + boilerplate + brandul, pastram 2-6 cuvinte de nume-produs.
+const QUERY_STOPWORDS = /\b(cumpara|cumpără|comanda|comandă|online|magazin|pret|preț|oferta|ofertă|promotie|promoție|reducere|reduceri|nou|noua|nouă|shop|store|ieftin|livrare|gratuita|gratuită|set|buc)\b/gi;
+function escapeRegex(s: string): string { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
 export function deriveProductQueries(brand: string | null, productTitles: string[], limit = 4): string[] {
+  const brandLc = (brand || "").toLowerCase().trim();
+  const brandRe = brandLc ? new RegExp(`\\b${escapeRegex(brandLc)}\\b`, "ig") : null;
   const seen = new Set<string>();
   const out: string[] = [];
   for (const raw of productTitles) {
-    const q = (raw || "").replace(/\s+/g, " ").trim().split(" ").slice(0, 7).join(" ");
+    let t = (raw || "").replace(/\s+/g, " ").trim();
+    // taie tot dupa primul separator de tip site/brand
+    t = t.split(/\s[-–—|•·]\s|\s:\s/)[0].trim();
+    t = t.replace(QUERY_STOPWORDS, " ");
+    if (brandRe) t = t.replace(brandRe, " ");
+    const words = t.replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim().split(" ").filter(w => w.length > 1);
+    const q = words.slice(0, 6).join(" ");
     const key = q.toLowerCase();
-    if (q.length >= 6 && !seen.has(key)) { seen.add(key); out.push(q); }
+    if (words.length >= 2 && q.length >= 6 && !seen.has(key)) { seen.add(key); out.push(q); }
     if (out.length >= limit) break;
   }
-  if (brand && out.length < limit) out.unshift(brand);
+  // ultima resursa: daca n-am scos nicio interogare buna, incearca macar brandul
+  if (out.length === 0 && brand) out.push(brand);
   return out.slice(0, limit);
 }
 

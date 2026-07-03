@@ -785,6 +785,12 @@ function contentImageCount(html: string): number {
 function hasStockSignal(html: string): boolean {
   return /in stoc|in stock|schema\.org\/instock|stoc epuizat|out of stock|disponibil|availability/i.test(html);
 }
+// Pagina de produs reala (nu Contact/Blog/Categorie) — pe semnale de continut, nu pe adancimea URL.
+function isProductPage(html: string): boolean {
+  const hasProductSchema = /"@type"\s*:\s*"Product"/i.test(html) || /schema\.org\/Product\b/i.test(html) || /property=["']og:type["'][^>]*content=["']product/i.test(html);
+  const hasPrice = /itemprop=["']price["']|"price"\s*:|\d[\d.\s]*[.,]?\d*\s*(lei|ron|€)/i.test(html);
+  return hasProductSchema || (hasPrice && hasAddToCart(html));
+}
 
 function uxField(id: string, label: string, checks: { ok: boolean; g: string; l: string }[], problema: string, fix: string): UxField {
   const gasit = checks.filter(c => c.ok).map(c => c.g);
@@ -1152,14 +1158,17 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   // Doar ecom. Tracking-ul via GTM nu se vede in HTML brut; il citim la runtime.
   let googleAds: GoogleShoppingIntel | undefined;
   if (conversie.isEcom && process.env.BRIGHTDATA_CDP) {
-    const productSet = new Set(products.map((u) => u.replace(/\/$/, "")));
-    const productTitles = analyzedPages
-      .filter((p) => productSet.has(p.url.replace(/\/$/, "")))
-      .map((p) => parseTitle(p.html))
-      .filter(Boolean);
-    const fallbackTitles = analyzedPages.slice(1).map((p) => parseTitle(p.html)).filter(Boolean);
+    // Selectia titlurilor de produs pt interogarile Shopping, in ordinea increderii:
+    // 1) pagini cu semnale reale de produs (schema/pret+cos), 2) segmentare pe URL, 3) restul.
+    const norm = (u: string) => u.replace(/\/$/, "");
+    const productSet = new Set(products.map(norm));
+    const titlesFrom = (ps: PageData[]) => ps.map((p) => parseTitle(p.html)).filter(Boolean);
+    const contentProducts = titlesFrom(analyzedPages.filter((p) => isProductPage(p.html)));
+    const urlProducts = titlesFrom(analyzedPages.filter((p) => productSet.has(norm(p.url))));
+    const fallbackTitles = titlesFrom(analyzedPages.slice(1));
+    const bestTitles = contentProducts.length >= 2 ? contentProducts : (urlProducts.length ? urlProducts : fallbackTitles);
     const brand = domain.replace(/^www\./, "").split(".")[0];
-    const queries = deriveProductQueries(brand, productTitles.length ? productTitles : fallbackTitles);
+    const queries = deriveProductQueries(brand, bestTitles);
     try {
       // safety cap: navigatia BrightData poate fi lenta; nu blocam auditul peste 65s
       const live = await Promise.race([
