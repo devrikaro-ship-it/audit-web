@@ -4,7 +4,7 @@
 > (sau schimbam fisierul explicit, nu codul pe furis).
 > **Se citeste INAINTE** de a atinge raportul: `components/report-renderer.tsx`,
 > `lib/audit-engine.ts`, `lib/css-detect.ts`.
-> **Ultima actualizare:** 2026-07-03 — backlog 3.3/3.4 implementat (UX/UI, Catamo, landing ecom, fiabilitate CSS).
+> **Ultima actualizare:** 2026-07-03 — tot backlog-ul implementat (UX/UI, Catamo, landing ecom, fiabilitate CSS + FAZA 2: pret/brand/GBP).
 
 ---
 
@@ -77,8 +77,8 @@ Fiecare camp: status bun/partial/slab (necunoscut cand tipul de pagina lipseste 
 **Detectie:** browser real cu IP **EEA** (BrightData) — citeste caruselul "Sponsored products" pe Google. Vezi `reference_css_detection_method` (memorie).
 Cand CSS iese **"nedeterminat"** (carusel dinamic / interogari slabe): arata "de verificat" (invariant), nu un scor fals de rau.
 > **FIABILITATE:** ✅ imbunatatita. Titlurile de produs pt interogari se iau din pagini detectate pe **continut** (`isProductPage`: schema Product / og:type=product / pret+cos), nu pe adancimea URL (nu mai baga Contact/Blog). `deriveProductQueries` taie sufixul de site/brand + boilerplate. Poate cadea inca pe "nedeterminat" cand caruselul e gol/dinamic — atunci "de verificat".
-**FAZA 2** (neconstruite — flaky / munca in plus): comparatie pret pe acelasi produs, aparare brand (concurenti pe brand), recenzii GBP.
-**Cod:** `lib/css-detect.ts` — `analyzeProspectLive` (folosit in `audit-engine.ts`; `analyzeGoogleShopping` e superseded); render `GoogleAdsSection`.
+**FAZA 2** ✅ construita (best-effort, degradare gratioasa): **pozitionare pret** (`analyzePricePosition` din caruselul Shopping, orientativ — nu strict acelasi-produs), **aparare brand** (`collectBrandIntelOn`: concurenti pe SERP-ul de brand -> campanie de brand), **recenzii GBP** (knowledge panel: rating + nr recenzii -> Seller Ratings). O singura navigare extra (brand) acopera brand+GBP.
+**Cod:** `lib/css-detect.ts` — `analyzeProspectLive` (tracking + Shopping + faza brand; folosit in `audit-engine.ts`; `analyzeGoogleShopping` e superseded); render `GoogleAdsSection` (`AdsFindingCard`).
 
 ---
 
@@ -132,6 +132,8 @@ Hero (domeniu + gauge scor global) · "Ce te costa asta" · "De ce Devrika" · C
 3. ✅ **Landing + comunicare ecom** — `app/audit-seo` rescris 100% pe magazine online (hero/features/CTA/meta).
 4. ✅ **Fiabilitate CSS** — `isProductPage` (detectie pe continut) + `deriveProductQueries` curatat. (3.4)
 
-**FAZA 2** (backlog neconstruit): comparatie pret pe acelasi produs, aparare brand, recenzii GBP.
+5. ✅ **FAZA 2** — pozitionare pret + aparare brand + recenzii GBP in rubrica Google Ads (best-effort, `analyzePricePosition` + `collectBrandIntelOn`). (3.4)
+
+**Backlog: gol.** Tot ce era in spec e implementat. Ce ramane e operational: cheie PageSpeed in env Coolify, restrictie zona BrightData la IP Hetzner la deploy.
 
 Cod atins: `components/report-renderer.tsx`, `lib/audit-engine.ts`, `lib/css-detect.ts`, `lib/types.ts`, `app/audit-seo/page.tsx`.
