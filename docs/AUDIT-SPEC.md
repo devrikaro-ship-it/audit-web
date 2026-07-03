@@ -4,7 +4,7 @@
 > (sau schimbam fisierul explicit, nu codul pe furis).
 > **Se citeste INAINTE** de a atinge raportul: `components/report-renderer.tsx`,
 > `lib/audit-engine.ts`, `lib/css-detect.ts`.
-> **Ultima actualizare:** 2026-07-02 — creat dupa restructurarea raportului pe 4 rubrici.
+> **Ultima actualizare:** 2026-07-03 — backlog 3.3/3.4 implementat (UX/UI, Catamo, landing ecom, fiabilitate CSS).
 
 ---
 
@@ -64,19 +64,19 @@ Detaliile de orchestrare: `skill/SKILL.md`. Acest spec descrie **structura rapor
 3. **Analiza pagina categorie** — grila produse (poza+pret), breadcrumbs, paginare, text intro categorie
 4. **Analiza pagina produs** — imagini multiple, pret+stoc, "Adauga in cos", descriere, recenzii, produse similare
 5. **Filtre & sortare** — marime / culoare / pret / brand + optiuni de sortare
-> ⚠️ **IMPLEMENTARE NECONFORMA:** `UxUiSection` actual foloseste semnale plate din leaks (`mobile/filters/search/related/product_info/freeship`) — NU cele 5 de mai sus. DE RESCRIS. **Atentie:** analiza pe home/categorie/produs (2-4) **nu exista in motor** — cere logica NOUA in `lib/audit-engine.ts` (verificari UX per tip de pagina), nu doar schimbare de render.
-**Cod:** `lib/audit-engine.ts` (de adaugat) + render `UxUiSection` (`components/report-renderer.tsx`).
+Fiecare camp: status bun/partial/slab (necunoscut cand tipul de pagina lipseste din crawl, exclus din medie) + semnale gasit/lipsa in limbaj de client. Scor rubrica = media campurilor cu status != necunoscut.
+**Cod:** `lib/audit-engine.ts` (`computeUxAudit` + detectori) -> `UxAudit`/`UxField` in `lib/types.ts`; render `UxCard`/`UxUiSection` (`components/report-renderer.tsx`). ✅ construit.
 
 ### 3.4 Google Ads
 **Scope decis 2026-07-02** — 4 campuri, fiecare cu carligul lui de vanzare:
 1. **CSS** (primar) — Google / partener / custom / nu ruleaza Shopping. Fara CSS partener ("By Google") -> "platesti pana la ~20% mai mult pe click". **Carlig: ProductHero.** ✅ construit
 2. **Concurenti Shopping** — cine liciteaza pe produsele tale + CSS-ul lor + pret. **Carlig: management campanii.** ✅ construit
 3. **Prezenta in Shopping** — apari sau nu pe produsele tale. **Carlig: management.** ✅ construit
-4. **Semnal produse (Catamo)** — constatare standard, mereu-prezenta: produsele nu-s optimizate pentru Shopping/cautare (titluri/descrieri/feed) -> se pot optimiza. **Carlig: Catamo.** NU cere analiza perfecta, e o constatare de vanzare (ca segmentarea). ⚠️ DE CONSTRUIT.
+4. **Semnal produse (Catamo)** — constatare standard, mereu-prezenta pe ecom: produsele nu-s optimizate pentru Shopping/cautare (titluri/descrieri/feed) -> se pot optimiza. Ancorat in numere reale cand prindem pagini de produs (titluri scurte/generice, meta lipsa), altfel generic. **Carlig: Catamo.** ✅ construit (`computeProductSignal` -> `ProductSignal`; bloc OPTIMIZARE PRODUSE in `GoogleAdsSection`; se randeaza pe ecom chiar si fara BrightData).
 
 **Detectie:** browser real cu IP **EEA** (BrightData) — citeste caruselul "Sponsored products" pe Google. Vezi `reference_css_detection_method` (memorie).
 Cand CSS iese **"nedeterminat"** (carusel dinamic / interogari slabe): arata "de verificat" (invariant), nu un scor fals de rau.
-> ⚠️ **FIABILITATE (de reparat):** cade des pe "nedeterminat" pentru ca interogarile de produs se deriva slab (crawl-ul prinde Contact/Articole in loc de pagini produs). De imbunatatit detectia de pagina-produs + derivarea query-urilor.
+> **FIABILITATE:** ✅ imbunatatita. Titlurile de produs pt interogari se iau din pagini detectate pe **continut** (`isProductPage`: schema Product / og:type=product / pret+cos), nu pe adancimea URL (nu mai baga Contact/Blog). `deriveProductQueries` taie sufixul de site/brand + boilerplate. Poate cadea inca pe "nedeterminat" cand caruselul e gol/dinamic — atunci "de verificat".
 **FAZA 2** (neconstruite — flaky / munca in plus): comparatie pret pe acelasi produs, aparare brand (concurenti pe brand), recenzii GBP.
 **Cod:** `lib/css-detect.ts` — `analyzeProspectLive` (folosit in `audit-engine.ts`; `analyzeGoogleShopping` e superseded); render `GoogleAdsSection`.
 
@@ -126,12 +126,12 @@ Hero (domeniu + gauge scor global) · "Ce te costa asta" · "De ce Devrika" · C
 
 **Decizii: toate rezolvate** (A1 UX/UI, A2 Google Ads scope, A3 praguri — 2026-07-02).
 
-**Ramas de IMPLEMENTAT** (codul nu se potriveste inca specului):
-1. **UX/UI** — rescris `UxUiSection` + logica noua in `audit-engine.ts` (analiza home/categorie/produs, vezi 3.3). Acum foloseste semnale plate.
-2. **Semnal Catamo** — finding nou in rubrica Google Ads: "produsele nu-s optimizate pentru Shopping/cautare" (vezi 3.4).
-3. **Landing + comunicare ecom** — `app/audit-seo` + copy + CTA orientate 100% pe magazine online (decis ecom-only).
-4. **Fiabilitate CSS** — imbunatatit derivarea interogarilor de produs (cade des pe "nedeterminat", vezi 3.4).
+**Implementat (2026-07-03) — codul se potriveste cu specul:**
+1. ✅ **UX/UI** — `computeUxAudit` (analiza home/categorie/produs + viteza + filtre) + `UxCard`/`UxUiSection`. (3.3)
+2. ✅ **Semnal Catamo** — `computeProductSignal` + bloc OPTIMIZARE PRODUSE in `GoogleAdsSection`. (3.4)
+3. ✅ **Landing + comunicare ecom** — `app/audit-seo` rescris 100% pe magazine online (hero/features/CTA/meta).
+4. ✅ **Fiabilitate CSS** — `isProductPage` (detectie pe continut) + `deriveProductQueries` curatat. (3.4)
 
-**FAZA 2** (backlog): comparatie pret pe acelasi produs, aparare brand, recenzii GBP.
+**FAZA 2** (backlog neconstruit): comparatie pret pe acelasi produs, aparare brand, recenzii GBP.
 
-Cod atins: `components/report-renderer.tsx`, `lib/audit-engine.ts`, `lib/css-detect.ts`.
+Cod atins: `components/report-renderer.tsx`, `lib/audit-engine.ts`, `lib/css-detect.ts`, `lib/types.ts`, `app/audit-seo/page.tsx`.
