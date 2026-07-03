@@ -1,7 +1,7 @@
 "use client";
 
 import { CHECKS, SECTIUNI_CONFIG, CHECK_TO_PROBLEM, PROBLEMS, type StatusCheck, type Sectiune } from "@/lib/problems-db";
-import type { AuditData, CheckResult, PageCheck, MoneyLeak } from "@/lib/types";
+import type { AuditData, CheckResult, PageCheck, MoneyLeak, UxField } from "@/lib/types";
 
 export type { AuditData };
 
@@ -68,7 +68,19 @@ function splitSection(sectiune: Sectiune, data: AuditData): { scor: number; prob
 function countAllProblems(data: AuditData): { total: number; critice: number } {
   const sectiuni: Sectiune[] = ["viteza", "seo", "continut", "keywords", "structura", "schema"];
   const all = sectiuni.flatMap(s => splitSection(s, data).problems);
-  return { total: all.length, critice: all.filter(f => f.status === "critic").length };
+  let total = all.length;
+  let critice = all.filter(f => f.status === "critic").length;
+  // UX/UI: fiecare camp care nu e "bun"/"necunoscut" = o problema (slab = critica)
+  for (const f of data.ux?.fields ?? []) {
+    if (f.status === "slab") { total++; critice++; }
+    else if (f.status === "partial") { total++; }
+  }
+  // Tracking: campurile confirmate lipsa (nu "de verificat") = critice
+  const trackIds = ["ga4", "ads_conv", "pixel", "tiktok", "consent"];
+  for (const l of data.conversie?.leaks ?? []) {
+    if (trackIds.includes(l.id) && l.present === "nu") { total++; critice++; }
+  }
+  return { total, critice };
 }
 
 /* ---------- 4 categorii raport: Tracking · SEO · UX/UI · Trust ---------- */
@@ -111,7 +123,7 @@ function CategoriiSummary({ data }: { data: AuditData }) {
   const cards = [
     { label: "Tracking",          sub: "Google, Meta, TikTok + Consent Mode", scor: avgDefined(leakScore(data, ["ga4", "ads_conv", "pixel", "tiktok", "consent"])) },
     { label: "SEO",               sub: "On-page · Continut · Keywords · Structura · Schema", scor: Math.round(sectionAvg(data, ["seo", "continut", "keywords", "structura", "schema"])) },
-    { label: "UX / UI",           sub: "Viteza + aspectul magazinului",       scor: avgDefined(sectionAvg(data, ["viteza"]), leakScore(data, ["mobile", "filters", "search", "related", "product_info"])) },
+    { label: "UX / UI",           sub: "Viteza + homepage, categorie, produs, filtre", scor: data.ux ? data.ux.scor : Math.round(sectionAvg(data, ["viteza"])) },
     gAds,
   ];
   return (
@@ -302,19 +314,53 @@ function TrackingSection({ data }: { data: AuditData }) {
   );
 }
 
-/* ---------- Rubrica 3: UX / UI (viteza + aspectul magazinului) ---------- */
+/* ---------- Rubrica 3: UX / UI (analiza pe tipuri de pagina) ---------- */
+function UxCard({ f }: { f: UxField }) {
+  const v =
+    f.status === "bun"        ? { fg: C.green,  bg: C.greenBg,  lab: "BUN" } :
+    f.status === "partial"    ? { fg: C.orange, bg: C.yellowBg, lab: "DE REGLAT" } :
+    f.status === "necunoscut" ? { fg: C.yellow, bg: C.yellowBg, lab: "DE VERIFICAT" } :
+                                { fg: C.red,    bg: C.redBg,    lab: "SLAB" };
+  const showFix = f.status !== "bun";
+  return (
+    <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${v.fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
+        <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: v.fg, background: v.bg }}>{v.lab}</span>
+        <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0, flex: 1 }}>{f.label}</h4>
+        {f.status !== "necunoscut" && <span style={{ fontFamily: sora, fontSize: 15, fontWeight: 800, color: v.fg }}>{f.scor}<span style={{ fontSize: 11, color: C.gray400 }}>/100</span></span>}
+      </div>
+      {showFix && <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "0 0 9px" }}>{f.problema}</p>}
+      {(f.gasit.length > 0 || f.lipsa.length > 0) && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 7, margin: showFix ? "0 0 10px" : 0 }}>
+          {f.gasit.map((g, i) => (
+            <span key={`g${i}`} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: C.greenBg, border: "1px solid #D6EFE0", borderRadius: 8, padding: "4px 9px", fontSize: 12.5, color: C.gray800 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 5 5L20 7" /></svg>{g}
+            </span>
+          ))}
+          {f.lipsa.map((l, i) => (
+            <span key={`l${i}`} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: f.status === "necunoscut" ? C.slate : C.redBg, border: `1px solid ${f.status === "necunoscut" ? "#E6EBF4" : "#F6D9D4"}`, borderRadius: 8, padding: "4px 9px", fontSize: 12.5, color: C.gray600 }}>
+              {f.status !== "necunoscut" && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2.8" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>}{l}
+            </span>
+          ))}
+        </div>
+      )}
+      {showFix && (
+        <p style={{ fontSize: 13, color: C.gray800, lineHeight: 1.5, margin: 0 }}>
+          <span style={{ fontWeight: 700, color: C.indigo }}>Ce facem: </span>{f.fix}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function UxUiSection({ data }: { data: AuditData }) {
-  const uxIds = ["mobile", "filters", "search", "related", "product_info", "freeship"];
-  const leaks = (data.conversie?.leaks ?? []).filter(l => uxIds.includes(l.id));
-  const gaps = leaks.filter(l => l.present !== "da");
-  const have = leaks.filter(l => l.present === "da");
-  const scor = avgDefined(sectionAvg(data, ["viteza"]), leakScore(data, uxIds));
+  if (!data.ux) return null;
   return (
     <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
-      <RubricHead title="UX / UI" sub="Cum arata si se misca magazinul — viteza pe mobil si functiile care tin clientul pe site." scor={scor} />
-      <SectionBlock sectiune="viteza" data={data} />
-      {gaps.length > 0 && <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{gaps.map(l => <LeakCard key={l.id} l={l} />)}</div>}
-      {have.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: gaps.length ? 14 : 0 }}>{have.map(l => <GreenChip key={l.id} label={l.label} />)}</div>}
+      <RubricHead title="UX / UI" sub="Cum arata si se misca magazinul — viteza pe mobil si experienta pe homepage, categorie, produs si la filtrare." scor={data.ux.scor} />
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {data.ux.fields.map(f => <UxCard key={f.id} f={f} />)}
+      </div>
     </section>
   );
 }
@@ -448,7 +494,7 @@ export function ReportRenderer({ data }: { data: AuditData }) {
       </section>
 
       {/* ---------- RUBRICA 3: UX / UI ---------- */}
-      {data.conversie && <UxUiSection data={data} />}
+      {data.ux && <UxUiSection data={data} />}
 
       {/* ---------- RUBRICA 4: GOOGLE ADS ---------- */}
       {(data.googleAds || data.productSignal) && <GoogleAdsSection data={data} />}

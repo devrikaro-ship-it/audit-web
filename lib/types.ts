@@ -29,6 +29,24 @@ export type AuditData = {
   conversie?: ConversieAudit;
   googleAds?: GoogleShoppingIntel; // CSS + peisaj Shopping (doar ecom, via BrightData)
   productSignal?: ProductSignal;   // semnal optimizare produse (carlig Catamo, doar ecom)
+  ux?: UxAudit;                    // UX/UI pe tipuri de pagina (doar ecom)
+};
+
+// ── UX / UI — analiza pe tipuri de pagina (spec 3.3): viteza + home + categorie + produs + filtre ──
+export type UxStatus = "bun" | "partial" | "slab" | "necunoscut";
+export type UxField = {
+  id: string;         // viteza | home | categorie | produs | filtre
+  label: string;
+  status: UxStatus;
+  scor: number;       // 0-100 (irelevant cand status=necunoscut)
+  gasit: string[];    // semnale prezente (limbaj client)
+  lipsa: string[];    // semnale absente
+  problema: string;   // ce inseamna pentru client
+  fix: string;        // ce facem
+};
+export type UxAudit = {
+  scor: number;       // media campurilor cu status != necunoscut
+  fields: UxField[];  // 5, in ordinea din spec
 };
 
 // ── Semnal produse neoptimizate (instrument de vanzare — carlig Catamo) ──

@@ -1,4 +1,4 @@
-import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona, ProductSignal } from "./types";
+import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona, ProductSignal, UxAudit, UxField, UxStatus } from "./types";
 import { analyzeProspectLive, deriveProductQueries, type GoogleShoppingIntel, type LiveTracking } from "./css-detect";
 
 const FETCH_TIMEOUT = 12000;
@@ -747,6 +747,143 @@ function computeOverallScore(
   return Math.round(weights.reduce((acc, w) => acc + w.score * w.weight, 0));
 }
 
+// ── UX / UI — analiza pe tipuri de pagina (spec 3.3) ─────────────────────────
+// Semnale euristice din HTML-ul fiecarui tip de pagina (home / categorie / produs).
+// Cand nu prindem un tip de pagina in crawl -> status "necunoscut" (exclus din medie).
+
+function priceCount(html: string): number {
+  return (html.match(/\d[\d.\s]*[.,]?\d*\s*(lei|ron|€|eur)\b/gi) ?? []).length;
+}
+function hasAddToCart(html: string): boolean {
+  return /add[-_ ]?to[-_ ]?cart|adaug[aă]\s+[iî]n\s+co[sș]|single_add_to_cart|comanda\s+rapida|cumpar[aă]\s+acum|buy\s+now/i.test(html);
+}
+function hasPaginationUi(html: string): boolean {
+  return /page\/\d|[?&]paged?=|rel=["']next["']|page-numbers|pagination|nav-links/i.test(html);
+}
+function hasSortUi(html: string): boolean {
+  return /orderby|sorteaz[aă]|sortare|sort[-_ ]?by|[?&]sort=|["']sort-/i.test(html);
+}
+function hasFiltersUi(html: string): boolean {
+  return /woocommerce-widget-layered-nav|wc-block-attribute-filter|yith-wcan|filtreaz[aă]|facet|filter-options|price_slider|filter-widget|data-filter|["']filters?["']/i.test(html);
+}
+function hasReviewsUi(html: string): boolean {
+  return /aggregaterating|trustpilot|yotpo|judge\.me|stamped|reviews\.io|okendo|recenzii|review-|star-rating|rating-stars|stele/i.test(html);
+}
+function hasRelatedUi(html: string): boolean {
+  return /produse similare|related|s-ar putea sa|recomandate|you may also like|complete the look|cross-sell|upsell/i.test(html);
+}
+function hasNavUi(html: string): boolean {
+  return /<nav[\s>]|role=["']navigation["']|class=["'][^"']*(menu|navbar|main-nav)/i.test(html);
+}
+function hasIntroText(html: string): boolean {
+  const paras = html.match(/<p[^>]*>([\s\S]*?)<\/p>/gi) ?? [];
+  return paras.some(p => countWords(p) >= 30);
+}
+function contentImageCount(html: string): number {
+  return parseImages(html).filter(im => !/logo|icon|sprite|badge|payment|placeholder|avatar/i.test(im.src)).length;
+}
+function hasStockSignal(html: string): boolean {
+  return /in stoc|in stock|schema\.org\/instock|stoc epuizat|out of stock|disponibil|availability/i.test(html);
+}
+
+function uxField(id: string, label: string, checks: { ok: boolean; g: string; l: string }[], problema: string, fix: string): UxField {
+  const gasit = checks.filter(c => c.ok).map(c => c.g);
+  const lipsa = checks.filter(c => !c.ok).map(c => c.l);
+  const scor = Math.round((gasit.length / checks.length) * 100);
+  const status: UxStatus = scor >= 70 ? "bun" : scor >= 40 ? "partial" : "slab";
+  return { id, label, status, scor, gasit, lipsa, problema, fix };
+}
+function uxUnknown(id: string, label: string, problema: string, fix: string, lipsa = "nu am prins acest tip de pagina in crawl"): UxField {
+  return { id, label, status: "necunoscut", scor: 0, gasit: [], lipsa: [lipsa], problema, fix };
+}
+
+function computeUxAudit(
+  pages: PageData[],
+  seg: { homepage: string; categories: string[]; products: string[] },
+  mobile: PSIResult | null,
+  domain: string,
+): UxAudit {
+  const norm = (u: string) => u.replace(/\/$/, "");
+  const home = pages[0]?.html ?? "";
+  const catSet = new Set(seg.categories.map(norm));
+  const prodSet = new Set(seg.products.map(norm));
+  const catPage = pages.find(p => catSet.has(norm(p.url)))?.html ?? "";
+  const prodPage = pages.find(p => prodSet.has(norm(p.url)))?.html ?? "";
+  const hasViewport = /<meta[^>]+name=["']viewport["']/i.test(home);
+
+  const fields: UxField[] = [];
+
+  // 1. Viteza (din PSI mobil)
+  if (mobile == null) {
+    fields.push(uxUnknown("viteza", "Viteza pe mobil",
+      "Fiecare secunda in plus la incarcare inseamna pana la -7% conversii. Pe trafic platit, e buget aruncat direct.",
+      "Optimizam imaginile, scripturile si serverul pentru incarcare sub 2.5s pe mobil.", "viteza de masurat"));
+  } else {
+    const scor = Math.max(0, Math.min(100, Math.round(mobile.score)));
+    const status: UxStatus = scor >= 70 ? "bun" : scor >= 40 ? "partial" : "slab";
+    fields.push({
+      id: "viteza", label: "Viteza pe mobil", status, scor,
+      gasit: scor >= 70 ? [`scor PageSpeed ${scor}/100`] : [],
+      lipsa: scor < 70 ? [`scor PageSpeed ${scor}/100`, mobile.lcp ? `LCP ${mobile.lcp}` : ""].filter(Boolean) : [],
+      problema: "Fiecare secunda in plus la incarcare inseamna pana la -7% conversii. Pe trafic platit, e buget aruncat direct.",
+      fix: "Optimizam imaginile, scripturile si serverul pentru incarcare sub 2.5s pe mobil.",
+    });
+  }
+
+  // 2. Homepage (mereu prezent)
+  fields.push(uxField("home", "Analiza homepage", [
+    { ok: countH1(home) >= 1, g: "mesaj / hero clar (H1)", l: "fara titlu-hero clar (H1)" },
+    { ok: hasNavUi(home), g: "meniu de navigare", l: "meniu greu de gasit" },
+    { ok: countInternalLinks(home, domain) >= 10, g: "categorii si cai spre produse", l: "putine cai spre categorii/produse" },
+    { ok: hasViewport, g: "adaptat pentru mobil", l: "nu e adaptat pentru mobil" },
+  ], "Homepage-ul e prima impresie. Fara un mesaj clar, meniu vizibil si cale rapida spre produse, vizitatorul pleaca in cateva secunde.",
+    "Refacem homepage-ul: hero cu mesaj clar, meniu si categorii vizibile, cale directa spre produse."));
+
+  // 3. Pagina categorie
+  if (catPage) {
+    fields.push(uxField("categorie", "Analiza pagina categorie", [
+      { ok: priceCount(catPage) >= 3 || contentImageCount(catPage) >= 6, g: "grila de produse cu poza si pret", l: "grila de produse neclara (poza/pret)" },
+      { ok: hasBreadcrumbs(catPage), g: "breadcrumbs (stii unde esti)", l: "fara breadcrumbs" },
+      { ok: hasPaginationUi(catPage), g: "paginare", l: "fara paginare vizibila" },
+      { ok: hasIntroText(catPage), g: "text de intro pe categorie", l: "fara text de intro (pierzi si SEO)" },
+    ], "Pagina de categorie e locul unde clientul alege. Fara grila clara, breadcrumbs si text de context, se pierde si pleaca.",
+      "Structuram pagina de categorie: grila poza+pret, breadcrumbs, paginare, text de intro optimizat."));
+  } else {
+    fields.push(uxUnknown("categorie", "Analiza pagina categorie",
+      "Pagina de categorie e locul unde clientul alege produsul. Trebuie sa fie clara si usor de rasfoit.",
+      "Verificam si structuram paginile de categorie: grila poza+pret, breadcrumbs, paginare, text de intro."));
+  }
+
+  // 4. Pagina produs
+  if (prodPage) {
+    fields.push(uxField("produs", "Analiza pagina produs", [
+      { ok: contentImageCount(prodPage) >= 3, g: "imagini multiple", l: "prea putine imagini de produs" },
+      { ok: priceCount(prodPage) >= 1 && hasStockSignal(prodPage), g: "pret + stoc", l: "pret sau stoc neclar" },
+      { ok: hasAddToCart(prodPage), g: "buton 'Adauga in cos' clar", l: "buton de comanda greu de gasit" },
+      { ok: countWords(prodPage) >= 200, g: "descriere de produs", l: "descriere subtire" },
+      { ok: hasReviewsUi(prodPage), g: "recenzii / rating", l: "fara recenzii pe produs" },
+      { ok: hasRelatedUi(prodPage), g: "produse similare", l: "fara produse similare" },
+    ], "Pagina de produs e locul deciziei de cumparare. Imagini, pret, stoc, buton clar, descriere, recenzii si recomandari — fiecare care lipseste scade comenzile.",
+      "Completam pagina de produs: galerie, pret+stoc vizibil, buton clar, descriere, recenzii, produse similare."));
+  } else {
+    fields.push(uxUnknown("produs", "Analiza pagina produs",
+      "Pagina de produs e locul deciziei de cumparare — imagini, pret, stoc, buton clar, descriere, recenzii.",
+      "Verificam si completam paginile de produs: galerie, pret+stoc, buton clar, descriere, recenzii, produse similare."));
+  }
+
+  // 5. Filtre & sortare (din categorie daca exista, altfel din tot corpus-ul)
+  const filterHtml = catPage || pages.map(p => p.html).join("\n");
+  fields.push(uxField("filtre", "Filtre & sortare", [
+    { ok: hasFiltersUi(filterHtml), g: "filtre (marime/culoare/pret/brand)", l: "fara filtre pe categorii" },
+    { ok: hasSortUi(filterHtml), g: "optiuni de sortare", l: "fara sortare (pret, popularitate)" },
+  ], "Catalog fara filtre si sortare = clientul nu-si gaseste rapid produsul si pleaca. Filtrele cresc direct rata de gasire si comenzile.",
+    "Implementam filtre (marime, culoare, pret, brand) + sortare pe categorii."));
+
+  const scored = fields.filter(f => f.status !== "necunoscut");
+  const scor = scored.length ? Math.round(scored.reduce((a, f) => a + f.scor, 0) / scored.length) : 0;
+  return { scor, fields };
+}
+
 // ── Semnal produse neoptimizate (carlig Catamo) ──────────────────────────────
 // Constatare standard, mereu-prezenta pe ecom. Cand prindem pagini de produs,
 // o ancoram in numere reale (titluri scurte/generice, meta lipsa); altfel generica.
@@ -1009,6 +1146,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const scor = computeOverallScore(viteza, seoChecks, continutChecks, keywordsChecks, structuraChecks, schema, social, securitate);
   let conversie = computeConversieAudit(analyzedPages, mobile, hasProductFeed);
   const productSignal = conversie.isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
+  const ux = conversie.isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
 
   // Phase 5: browser real (BrightData) — tracking la runtime + CSS + peisaj Shopping.
   // Doar ecom. Tracking-ul via GTM nu se vede in HTML brut; il citim la runtime.
@@ -1051,5 +1189,6 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     conversie,
     googleAds,
     productSignal,
+    ux,
   };
 }

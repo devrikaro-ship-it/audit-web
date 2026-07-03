@@ -94,6 +94,16 @@ const MOCK_DATA: AuditData = {
       message: "Apari in Google Shopping alaturi de 3 concurenti pe produsele tale. Doi dintre ei ruleaza printr-un CSS partener — deci platesc mai putin pe click decat tine.",
     },
   },
+  ux: {
+    scor: 58,
+    fields: [
+      { id: "viteza", label: "Viteza pe mobil", status: "slab", scor: 34, gasit: [], lipsa: ["scor PageSpeed 34/100", "LCP 4.2s"], problema: "Fiecare secunda in plus la incarcare inseamna pana la -7% conversii. Pe trafic platit, e buget aruncat direct.", fix: "Optimizam imaginile, scripturile si serverul pentru incarcare sub 2.5s pe mobil." },
+      { id: "home", label: "Analiza homepage", status: "bun", scor: 100, gasit: ["mesaj / hero clar (H1)", "meniu de navigare", "categorii si cai spre produse", "adaptat pentru mobil"], lipsa: [], problema: "Homepage-ul e prima impresie.", fix: "Refacem homepage-ul." },
+      { id: "categorie", label: "Analiza pagina categorie", status: "partial", scor: 50, gasit: ["grila de produse cu poza si pret", "breadcrumbs (stii unde esti)"], lipsa: ["fara paginare vizibila", "fara text de intro (pierzi si SEO)"], problema: "Pagina de categorie e locul unde clientul alege. Fara grila clara, breadcrumbs si text de context, se pierde si pleaca.", fix: "Structuram pagina de categorie: grila poza+pret, breadcrumbs, paginare, text de intro optimizat." },
+      { id: "produs", label: "Analiza pagina produs", status: "slab", scor: 33, gasit: ["imagini multiple", "pret + stoc"], lipsa: ["buton de comanda greu de gasit", "descriere subtire", "fara recenzii pe produs", "fara produse similare"], problema: "Pagina de produs e locul deciziei de cumparare. Imagini, pret, stoc, buton clar, descriere, recenzii si recomandari — fiecare care lipseste scade comenzile.", fix: "Completam pagina de produs: galerie, pret+stoc vizibil, buton clar, descriere, recenzii, produse similare." },
+      { id: "filtre", label: "Filtre & sortare", status: "necunoscut", scor: 0, gasit: [], lipsa: ["nu am prins acest tip de pagina in crawl"], problema: "Catalog fara filtre si sortare = clientul nu-si gaseste rapid produsul si pleaca.", fix: "Implementam filtre (marime, culoare, pret, brand) + sortare pe categorii." },
+    ],
+  },
   productSignal: {
     checked: 24,
     weakTitles: 17,
