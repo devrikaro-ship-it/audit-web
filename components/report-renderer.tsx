@@ -546,7 +546,7 @@ export function ReportRenderer({ data }: { data: AuditData }) {
           {[
             { t: "Implementam, nu doar raportam", d: "Reparam noi ce ai vazut aici — nu-ti lasam o lista de teme." },
             { t: "Toate canalele, un singur partener", d: "SEO + Google Ads + Meta, optimizate pe vanzari reale, nu pe vanity metrics." },
-            { t: "Specializati pe ecommerce & WordPress", d: "Zeci de magazine optimizate — stim exact ce misca acul." },
+            { t: "Specializati pe ecommerce", d: "Zeci de magazine optimizate, pe orice platforma — stim exact ce misca acul." },
           ].map((x, i) => (
             <div key={i} style={{ background: C.white, border: "1px solid #E6EBF4", borderTop: `3px solid ${C.cyan}`, borderRadius: 14, padding: "18px 20px" }}>
               <div style={{ fontFamily: sora, fontWeight: 700, fontSize: 15, color: C.gray800, marginBottom: 6 }}>{x.t}</div>

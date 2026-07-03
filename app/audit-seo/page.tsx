@@ -120,27 +120,17 @@ export default function AuditSEO() {
           In 2 minute vezi unde pierzi cumparatori si unde arzi bani pe reclame — masurare, SEO, experienta de cumparare si Google Shopping, cu ce te costa fiecare si cum se repara.
         </p>
 
-        <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link href="/audit"
-            className="inline-flex items-center gap-2.5 rounded-[14px] px-9 py-[18px] text-[17px] font-bold text-white transition-all hover:-translate-y-0.5"
-            style={{
-              background: "linear-gradient(135deg,#47499E,#0ABECF)",
-              boxShadow: "0 8px 32px rgba(71,73,158,0.3)"
-            }}>
-            Analizeaza magazinul meu gratuit
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </Link>
-          <a href="/r/preview" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-[14px] border px-7 py-[18px] text-[17px] font-bold transition-all hover:-translate-y-0.5"
-            style={{ color: "#47499E", background: "#fff", borderColor: "rgba(71,73,158,0.25)" }}>
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" />
-            </svg>
-            Vezi un exemplu de raport
-          </a>
-        </div>
+        <Link href="/audit"
+          className="inline-flex items-center gap-2.5 rounded-[14px] px-9 py-[18px] text-[17px] font-bold text-white transition-all hover:-translate-y-0.5"
+          style={{
+            background: "linear-gradient(135deg,#47499E,#0ABECF)",
+            boxShadow: "0 8px 32px rgba(71,73,158,0.3)"
+          }}>
+          Analizeaza magazinul meu gratuit
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </Link>
 
         <div className="mt-4 flex items-center justify-center gap-1 text-[13px]" style={{ color: "#94a3b8" }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -294,24 +284,14 @@ export default function AuditSEO() {
           <p className="mb-10 text-lg" style={{ color: "rgba(255,255,255,0.8)" }}>
             Audit gratuit pentru magazine online. Fara cont. Rezultate in 2 minute.
           </p>
-          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/audit"
-              className="inline-flex items-center gap-2.5 rounded-[14px] bg-white px-10 py-[18px] text-[17px] font-extrabold transition-all hover:-translate-y-0.5"
-              style={{ color: "#47499E", boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
-              Analizeaza magazinul meu gratuit
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </Link>
-            <a href="/r/preview" target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-[14px] border px-8 py-[18px] text-[17px] font-bold text-white transition-all hover:-translate-y-0.5"
-              style={{ borderColor: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.08)" }}>
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" />
-              </svg>
-              Vezi un exemplu de raport
-            </a>
-          </div>
+          <Link href="/audit"
+            className="inline-flex items-center gap-2.5 rounded-[14px] bg-white px-10 py-[18px] text-[17px] font-extrabold transition-all hover:-translate-y-0.5"
+            style={{ color: "#47499E", boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
+            Analizeaza magazinul meu gratuit
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
       </section>
 
