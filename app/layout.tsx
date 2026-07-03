@@ -25,8 +25,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Audit SEO Gratuit — Devrika",
-  description: "Afla in 2 minute ce probleme SEO are site-ul tau. Gratuit, fara cont.",
+  title: "Audit gratuit pentru magazine online — Devrika",
+  description: "Afla in 2 minute de ce magazinul tau nu vinde cat ar putea: masurare, SEO, experienta si Google Ads/Shopping. Gratuit, fara cont.",
 };
 
 export default function RootLayout({
