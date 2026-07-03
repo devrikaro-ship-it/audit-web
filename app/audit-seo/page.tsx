@@ -4,50 +4,26 @@ const features = [
   {
     bg: "#eef0ff", stroke: "#47499E",
     title: "Tracking & masurare",
-    desc: "GA4, Google Ads, Meta Pixel, TikTok, Consent Mode v2. Daca nu masori corect, reclamele se optimizeaza pe orb si arzi buget.",
+    desc: "GA4, Google Ads, Meta Pixel, TikTok si Consent Mode v2 — masurarea pe care se bazeaza orice reclama profitabila. Daca nu masori corect, arzi buget pe orb.",
     icon: <><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></>,
   },
   {
     bg: "#e0f9fb", stroke: "#0ABECF",
-    title: "Google Shopping & CSS",
-    desc: "Rulezi prin CSS-ul Google (platesti pana la ~20% mai mult pe click) sau printr-un partener? Vezi si cine liciteaza pe produsele tale.",
-    icon: <><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" /></>,
-  },
-  {
-    bg: "#eef0ff", stroke: "#47499E",
-    title: "Optimizare produse",
-    desc: "Titluri, descrieri si feed. Daca produsele nu-s optimizate, apar mai rar in Shopping si in cautare — chiar cu buget de reclama.",
-    icon: <><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></>,
-  },
-  {
-    bg: "#e0f9fb", stroke: "#0ABECF",
     title: "SEO ecommerce",
-    desc: "Title, meta, H1, canonical, schema Product cu pret si stele, structura pe categorii si produse — verificate pe zeci de pagini.",
+    desc: "Title, meta, H1, canonical, schema Product cu pret si stele, cuvinte cheie si structura pe categorii si produse — verificate pe zeci de pagini.",
     icon: <><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></>,
   },
   {
     bg: "#eef0ff", stroke: "#47499E",
-    title: "Pagina produs & categorie",
-    desc: "Galerie, pret+stoc, buton 'Adauga in cos', descriere, recenzii, produse similare, filtre — locul unde clientul decide sa cumpere.",
+    title: "UX / UI magazin",
+    desc: "Viteza pe mobil + pagina de produs si categorie: galerie, pret+stoc, buton clar, recenzii, produse similare, filtre — locul unde clientul decide sa cumpere.",
     icon: <><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></>,
   },
   {
     bg: "#e0f9fb", stroke: "#0ABECF",
-    title: "Viteza pe mobil",
-    desc: "~70% din cumparatori sunt pe telefon. Un magazin lent pe mobil pierde vanzari — si bugetul de reclama pe care il aduce acolo.",
-    icon: <><rect x="5" y="2" width="14" height="20" rx="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></>,
-  },
-  {
-    bg: "#eef0ff", stroke: "#47499E",
-    title: "Concurenti in Shopping",
-    desc: "Cine apare langa tine pe produsele tale, ce CSS folosesc si la ce pret — exact ce vede cumparatorul cand cauta ce vinzi.",
-    icon: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></>,
-  },
-  {
-    bg: "#e0f9fb", stroke: "#0ABECF",
-    title: "Schema & rich results",
-    desc: "Produsele tale apar in Google cu pret si stele langa rezultat? Fara ele, clientul da click la concurentul care le are.",
-    icon: <><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" /><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" /></>,
+    title: "Google Ads & Shopping",
+    desc: "CSS (platesti pana la ~20% mai mult pe click?), cine liciteaza pe produsele tale, pozitionarea de pret si daca produsele-s optimizate pentru Shopping.",
+    icon: <><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></>,
   },
 ];
 
