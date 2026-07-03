@@ -117,7 +117,7 @@ export default function AuditSEO() {
         </h1>
 
         <p className="mx-auto mb-10 max-w-[560px] text-lg leading-relaxed" style={{ color: "#64748b" }}>
-          Audit gratuit pentru magazine online: masurare, SEO, experienta si Google Ads/Shopping. Vezi exact ce te costa clienti — si unde arzi buget pe reclame.
+          In 2 minute vezi unde pierzi cumparatori si unde arzi bani pe reclame — masurare, SEO, experienta de cumparare si Google Shopping, cu ce te costa fiecare si cum se repara.
         </p>
 
         <Link href="/audit"
@@ -200,7 +200,7 @@ export default function AuditSEO() {
           Tot ce tine magazinul tau pe loc
         </h2>
         <p className="mx-auto mb-16 max-w-[520px] text-center text-base leading-relaxed" style={{ color: "#64748b" }}>
-          De la masurare si SEO pana la Google Shopping si experienta de cumparare — o analiza clara a magazinului tau, cu ce te costa fiecare problema si ce reparam.
+          Verificam fiecare loc unde un magazin pierde vanzari — de la masurare si Google Shopping pana la pagina de produs. Primesti ce te costa fiecare problema si exact ce reparam.
         </p>
         <div className="mx-auto grid max-w-[1000px] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f) => (

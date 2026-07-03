@@ -478,7 +478,7 @@ export function ReportRenderer({ data }: { data: AuditData }) {
           </div>
 
           <div style={{ textAlign: "center", marginTop: 40 }}>
-            <span style={{ display: "inline-block", fontFamily: sora, fontWeight: 700, fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: C.cyan, background: "rgba(71,73,158,0.45)", border: "1px solid rgba(10,190,207,0.3)", padding: "6px 14px", borderRadius: 999 }}>Audit gratuit · SEO</span>
+            <span style={{ display: "inline-block", fontFamily: sora, fontWeight: 700, fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: C.cyan, background: "rgba(71,73,158,0.45)", border: "1px solid rgba(10,190,207,0.3)", padding: "6px 14px", borderRadius: 999 }}>Audit gratuit · Magazin online</span>
             <h1 style={{ fontFamily: sora, fontSize: 46, fontWeight: 800, margin: "16px 0 8px", letterSpacing: "-0.01em" }}>{data.domain}</h1>
             <p style={{ fontSize: 18, color: "#C7D2E8", margin: 0 }}>Cat de bine te gasesc clientii online — si cat pierzi</p>
           </div>
