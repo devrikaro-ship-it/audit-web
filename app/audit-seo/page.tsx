@@ -176,10 +176,10 @@ export default function AuditSEO() {
       <section className="bg-white px-8 py-16">
         <div className="mx-auto grid max-w-[900px] grid-cols-2 gap-8 text-center md:grid-cols-4">
           {[
-            { n: "3.200+", l: "Magazine analizate" },
-            { n: "24.000+", l: "Probleme gasite" },
-            { n: "1.9M €", l: "Buget de reclame optimizat" },
-            { n: "4.9/5", l: "Nota medie clienti" },
+            { n: "180+", l: "Magazine analizate" },
+            { n: "3.100+", l: "Probleme gasite" },
+            { n: "40.000 €/luna", l: "Buget de reclame gestionat" },
+            { n: "4.8/5", l: "Nota medie clienti" },
           ].map((s) => (
             <div key={s.l}>
               <div className="text-4xl font-black tracking-[-1px]" style={{
