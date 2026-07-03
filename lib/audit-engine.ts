@@ -1170,13 +1170,14 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     const brand = domain.replace(/^www\./, "").split(".")[0];
     const queries = deriveProductQueries(brand, bestTitles);
     try {
-      // safety cap: navigatia BrightData poate fi lenta; nu blocam auditul peste 65s
+      // safety cap: navigatia BrightData poate fi lenta; nu blocam auditul.
+      // 4 faze secventiale (tracking + Shopping + brand) -> plafon 82s.
       const live = await Promise.race([
-        analyzeProspectLive(domain, origin, queries, { maxQueries: 3 }),
-        new Promise<undefined>((r) => setTimeout(() => r(undefined), 65000)),
+        analyzeProspectLive(domain, origin, queries, { maxQueries: 3, brand }),
+        new Promise<undefined>((r) => setTimeout(() => r(undefined), 82000)),
       ]);
       if (live) {
-        googleAds = { css: live.css, shopping: live.shopping };
+        googleAds = { css: live.css, shopping: live.shopping, pricePosition: live.pricePosition, brandDefense: live.brandDefense, gbpReviews: live.gbpReviews };
         if (live.tracking?.ok) conversie = applyLiveTracking(conversie, live.tracking);
       }
     } catch {

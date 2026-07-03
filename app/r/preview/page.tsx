@@ -93,6 +93,18 @@ const MOCK_DATA: AuditData = {
       ],
       message: "Apari in Google Shopping alaturi de 3 concurenti pe produsele tale. Doi dintre ei ruleaza printr-un CSS partener — deci platesc mai putin pe click decat tine.",
     },
+    pricePosition: {
+      status: "pricier", prospectPrice: 139, competitorAvg: 129, currency: "RON", deltaPct: 8,
+      message: "Pe produsele verificate esti orientativ cu ~8% mai scump decat media concurentei din Shopping (~129 RON). La cautari unde cumparatorul compara pretul, pierzi clicul catre cel mai ieftin.",
+    },
+    brandDefense: {
+      status: "contested", competitors: ["farmacia-x.ro", "dentmarket.ro"],
+      message: "Am gasit 2 concurenti care apar pe cautarea numelui tau de brand (farmacia-x.ro, dentmarket.ro). Iti iau clicuri de la clienti care te cautau pe tine — iti aperi brandul cu o campanie de brand.",
+    },
+    gbpReviews: {
+      status: "found", rating: 4.1, count: 87,
+      message: "Profilul tau Google are 4.1 stele (87 recenzii) — sub pragul care inspira incredere. Recenziile slabe scad rata de click, inclusiv la reclame.",
+    },
   },
   ux: {
     scor: 58,

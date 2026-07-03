@@ -242,7 +242,49 @@ type DetectOpts = {
   hl?: string;
   country?: string; // exit-IP country; the CSS "By X" label is EEA-only, so default RO
   maxQueries?: number;
+  brand?: string; // pentru faza de aparare brand + GBP (cautare pe numele brandului)
 };
+
+// ── FAZA 2 — pozitionare pret + aparare brand + recenzii GBP ──
+// Toate degradeaza gratios: cand nu putem determina -> "unknown"/"de verificat".
+export type PricePosition = {
+  status: "cheaper" | "similar" | "pricier" | "unknown";
+  prospectPrice: number | null;
+  competitorAvg: number | null;
+  currency: string | null;
+  deltaPct: number | null; // + = prospectul e mai scump decat media concurentei
+  message: string;
+};
+export type BrandDefense = {
+  status: "clear" | "contested" | "unknown"; // contested = concurenti apar pe cautarea de brand
+  competitors: string[];
+  message: string;
+};
+export type GbpReviews = {
+  status: "found" | "none" | "unknown";
+  rating: number | null;
+  count: number | null;
+  message: string;
+};
+
+// Pozitionare de pret orientativa, din caruselul Shopping deja citit (fara browser in plus).
+// NB: nu e comparatie strict acelasi-produs (tile-urile pot fi produse diferite) -> framing "orientativ".
+export function analyzePricePosition(shopping: ShoppingIntel): PricePosition {
+  const prices = shopping.competitors.map((c) => c.price).filter((p): p is number => p != null && p > 0);
+  const pp = shopping.prospectPrice;
+  const base: PricePosition = { status: "unknown", prospectPrice: pp, competitorAvg: null, currency: shopping.currency, deltaPct: null,
+    message: "Nu am putut compara preturile (nu apari in Shopping sau nu avem preturi de la concurenti)." };
+  if (pp == null || prices.length < 2) return base;
+  const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+  const deltaPct = Math.round(((pp - avg) / avg) * 100);
+  const cur = shopping.currency || "RON";
+  const status: PricePosition["status"] = deltaPct >= 8 ? "pricier" : deltaPct <= -8 ? "cheaper" : "similar";
+  const message =
+    status === "pricier" ? `Pe produsele verificate esti orientativ cu ~${deltaPct}% mai scump decat media concurentei din Shopping (~${Math.round(avg)} ${cur}). La cautari unde cumparatorul compara pretul, pierzi clicul catre cel mai ieftin.` :
+    status === "cheaper" ? `Pe produsele verificate esti orientativ cu ~${Math.abs(deltaPct)}% mai ieftin decat media concurentei din Shopping (~${Math.round(avg)} ${cur}) — un avantaj pe care il poti scoate in fata in reclame.` :
+                           `Pe produsele verificate esti aproximativ la nivelul pretului mediu din Shopping (~${Math.round(avg)} ${cur}). Diferentiaza-te prin livrare, recenzii sau bundle-uri, nu doar pret.`;
+  return { status, prospectPrice: pp, competitorAvg: Math.round(avg), currency: cur, deltaPct, message };
+}
 
 // The "By X" CSS label only renders for an EEA visitor, so the residential exit
 // IP must be in the EEA. Inject BrightData's -country-<cc> into the zone username.
@@ -278,6 +320,78 @@ async function collectTilesOn(browser: any, prospectDomain: string, queries: str
   }
 }
 
+// Knowledge-panel / business-card scrape from a brand SERP: rating + review count.
+const KNOWLEDGE_PANEL_EXTRACT_JS = `
+(() => {
+  let rating = null, count = null;
+  try {
+    for (const el of document.querySelectorAll('[aria-label]')) {
+      const a = el.getAttribute('aria-label') || '';
+      const m = a.match(/([0-5][.,]\\d)\\s*(out of 5|din 5|stars?|stele)/i);
+      if (m) { rating = parseFloat(m[1].replace(',', '.')); break; }
+    }
+  } catch (e) {}
+  const txt = (document.body ? document.body.innerText : '').replace(/\\s+/g, ' ');
+  try {
+    if (rating == null) { const m = txt.match(/([0-5][.,]\\d)\\s*[\\u2605\\u2b50]?\\s*\\(([\\d.,]{1,9})\\)/); if (m) { rating = parseFloat(m[1].replace(',', '.')); count = parseInt(m[2].replace(/[.,]/g, ''), 10); } }
+    if (count == null) { const m = txt.match(/([\\d.,]{1,9})\\s*(Google reviews|recenzii Google|recenzii|reviews)/i); if (m) count = parseInt(m[1].replace(/[.,]/g, ''), 10); }
+    if (rating == null) { const m = txt.match(/([0-5][.,]\\d)\\s*(\\u2605|\\u2b50|stele|stars?)/i); if (m) rating = parseFloat(m[1].replace(',', '.')); }
+  } catch (e) {}
+  return { rating: (rating != null && rating >= 0 && rating <= 5) ? rating : null, count: (count != null && count > 0 && count < 10000000) ? count : null };
+})()
+`;
+
+// One brand SERP navigation → brand-defense (competitors bidding on the brand) +
+// GBP reviews (knowledge panel). Best-effort; degrades to "unknown".
+async function collectBrandIntelOn(browser: any, prospectDomain: string, brand: string, opts: DetectOpts): Promise<{ brandDefense: BrandDefense; gbp: GbpReviews }> {
+  const gl = opts.gl || "RO", hl = opts.hl || "en";
+  const unknownBrand: BrandDefense = { status: "unknown", competitors: [], message: "Nu am putut verifica daca alti concurenti liciteaza pe numele tau de brand." };
+  const unknownGbp: GbpReviews = { status: "unknown", rating: null, count: null, message: "Nu am gasit un profil Google Business cu recenzii la cautarea brandului — de verificat daca exista si e optimizat." };
+  if (!brand || brand.length < 2) return { brandDefense: unknownBrand, gbp: unknownGbp };
+  const page = await browser.newPage();
+  try {
+    const url = `https://www.google.com/search?q=${encodeURIComponent(brand)}&hl=${hl}&gl=${gl}`;
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45000 });
+    await page.waitForTimeout(1800);
+    await page.mouse.wheel(0, 2200).catch(() => {});
+    await page.waitForTimeout(1200);
+    const tiles = (await page.evaluate(SPONSORED_EXTRACT_JS)) as CssTile[];
+    const kp = (await page.evaluate(KNOWLEDGE_PANEL_EXTRACT_JS)) as { rating: number | null; count: number | null };
+
+    const seen = new Set<string>();
+    const competitors: string[] = [];
+    for (const t of tiles) {
+      if (tileMatchesDomain(prospectDomain, t)) continue;
+      const s = sellerOf(t);
+      if (!s) continue;
+      const key = normalize(s);
+      if (!key || seen.has(key)) continue;
+      seen.add(key); competitors.push(s);
+    }
+    const brandDefense: BrandDefense = competitors.length
+      ? { status: "contested", competitors, message: `Am gasit ${competitors.length} concurenti care apar pe cautarea numelui tau de brand (${competitors.slice(0, 5).join(", ")}). Iti iau clicuri de la clienti care te cautau pe tine — iti aperi brandul cu o campanie de brand.` }
+      : unknownBrand;
+
+    let gbp: GbpReviews;
+    if (kp.rating != null || kp.count != null) {
+      const stars = kp.rating != null ? `${kp.rating} stele` : "recenzii";
+      const cnt = kp.count != null ? ` (${kp.count} recenzii)` : "";
+      const good = kp.rating != null && kp.rating >= 4.3;
+      gbp = { status: "found", rating: kp.rating, count: kp.count,
+        message: good
+          ? `Ai un profil Google cu ${stars}${cnt} — semnal bun de incredere. Activeaza Google Seller Ratings ca stelele sa apara si in reclame.`
+          : `Profilul tau Google are ${stars}${cnt} — sub pragul care inspira incredere. Recenziile slabe scad rata de click, inclusiv la reclame.` };
+    } else {
+      gbp = { status: "unknown", rating: null, count: null, message: "Nu am gasit un profil Google Business cu recenzii la cautarea brandului — de verificat daca exista si e optimizat (conteaza pentru incredere si pentru stele in reclame)." };
+    }
+    return { brandDefense, gbp };
+  } catch {
+    return { brandDefense: unknownBrand, gbp: unknownGbp };
+  } finally {
+    await page.close().catch(() => {});
+  }
+}
+
 // Requires playwright-core; connects over CDP to the scraping browser.
 async function collectTiles(prospectDomain: string, queries: string[], opts: DetectOpts): Promise<CssTile[]> {
   const raw = opts.cdpEndpoint || process.env.BRIGHTDATA_CDP;
@@ -298,7 +412,7 @@ export async function detectCss(prospectDomain: string, queries: string[], opts:
   return classifyCss(prospectDomain, await collectTiles(prospectDomain, queries, opts));
 }
 
-export type GoogleShoppingIntel = { css: CssVerdict; shopping: ShoppingIntel };
+export type GoogleShoppingIntel = { css: CssVerdict; shopping: ShoppingIntel; pricePosition?: PricePosition; brandDefense?: BrandDefense; gbpReviews?: GbpReviews };
 
 // One browser session → both CSS verdict and the Shopping competitive landscape.
 export async function analyzeGoogleShopping(prospectDomain: string, queries: string[], opts: DetectOpts = {}): Promise<GoogleShoppingIntel> {
@@ -385,25 +499,33 @@ function withTimeout<T>(p: Promise<T>, ms: number, fb: T): Promise<T> {
   return Promise.race([p, new Promise<T>((r) => setTimeout(() => r(fb), ms))]);
 }
 
-export type ProspectLiveIntel = { css: CssVerdict; shopping: ShoppingIntel; tracking: LiveTracking | null };
+export type ProspectLiveIntel = { css: CssVerdict; shopping: ShoppingIntel; tracking: LiveTracking | null; pricePosition: PricePosition; brandDefense: BrandDefense; gbpReviews: GbpReviews };
 
 // One browser session → live tracking (homepage) + CSS verdict + Shopping
-// landscape (Google searches). Each phase self-limits so a slow phase never
-// discards the other's result.
+// landscape (product searches) + brand SERP (brand defense + GBP reviews).
+// Each phase self-limits so a slow phase never discards the others' result.
 export async function analyzeProspectLive(prospectDomain: string, prospectUrl: string, queries: string[], opts: DetectOpts = {}): Promise<ProspectLiveIntel> {
   const raw = opts.cdpEndpoint || process.env.BRIGHTDATA_CDP;
   const unknown: CssVerdict = { status: "unknown", provider: null, matchedSeller: null, tilesSeen: 0, message: "BROWSER_NOT_CONFIGURED" };
-  if (!raw) return { css: unknown, shopping: analyzeShopping(prospectDomain, []), tracking: null };
+  const unknownBrand: BrandDefense = { status: "unknown", competitors: [], message: "Nu am putut verifica daca alti concurenti liciteaza pe numele tau de brand." };
+  const unknownGbp: GbpReviews = { status: "unknown", rating: null, count: null, message: "Nu am gasit un profil Google Business cu recenzii la cautarea brandului — de verificat." };
+  if (!raw) {
+    const shopping = analyzeShopping(prospectDomain, []);
+    return { css: unknown, shopping, tracking: null, pricePosition: analyzePricePosition(shopping), brandDefense: unknownBrand, gbpReviews: unknownGbp };
+  }
   const cdp = withCountry(raw, opts.country || "ro");
   const { chromium } = await import("playwright-core");
   const browser = await chromium.connectOverCDP(cdp, { timeout: 60000 });
   let tracking: LiveTracking | null = null;
   let tiles: CssTile[] = [];
+  let brandIntel = { brandDefense: unknownBrand, gbp: unknownGbp };
   try {
-    tracking = await withTimeout(detectTrackingOnPage(browser, prospectUrl).catch(() => null), 22000, null);
-    tiles = await withTimeout(collectTilesOn(browser, prospectDomain, queries, opts).catch(() => []), 38000, []);
+    tracking = await withTimeout(detectTrackingOnPage(browser, prospectUrl).catch(() => null), 20000, null);
+    tiles = await withTimeout(collectTilesOn(browser, prospectDomain, queries, opts).catch(() => []), 32000, []);
+    if (opts.brand) brandIntel = await withTimeout(collectBrandIntelOn(browser, prospectDomain, opts.brand, opts).catch(() => brandIntel), 16000, brandIntel);
   } finally {
     await browser.close().catch(() => {});
   }
-  return { css: classifyCss(prospectDomain, tiles), shopping: analyzeShopping(prospectDomain, tiles), tracking };
+  const shopping = analyzeShopping(prospectDomain, tiles);
+  return { css: classifyCss(prospectDomain, tiles), shopping, tracking, pricePosition: analyzePricePosition(shopping), brandDefense: brandIntel.brandDefense, gbpReviews: brandIntel.gbp };
 }

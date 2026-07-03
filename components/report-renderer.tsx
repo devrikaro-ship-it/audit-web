@@ -365,9 +365,30 @@ function UxUiSection({ data }: { data: AuditData }) {
   );
 }
 
+function AdsFindingCard({ fg, bg, lab, title, message }: { fg: string; bg: string; lab: string; title: string; message: string }) {
+  return (
+    <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
+        <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: fg, background: bg }}>{lab}</span>
+        <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{title}</h4>
+      </div>
+      <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: 0 }}>{message}</p>
+    </div>
+  );
+}
+
 function GoogleAdsSection({ data }: { data: AuditData }) {
   const g = data.googleAds;
   const ps = data.productSignal;
+  const price = g?.pricePosition, brand = g?.brandDefense, gbp = g?.gbpReviews;
+  const priceV = price && price.status !== "unknown" && (
+    price.status === "pricier" ? { fg: C.orange, bg: C.yellowBg, lab: "PRET PESTE PIATA", title: "Esti mai scump decat media concurentei pe produsele verificate" } :
+    price.status === "cheaper" ? { fg: C.green, bg: C.greenBg, lab: "AVANTAJ DE PRET", title: "Esti mai ieftin decat media concurentei — foloseste-l in reclame" } :
+                                 { fg: C.gray500, bg: C.slate, lab: "PRET LA NIVELUL PIETEI", title: "Esti aproximativ la nivelul pretului mediu din Shopping" });
+  const gbpV = gbp && (
+    gbp.status === "found"
+      ? (gbp.rating != null && gbp.rating >= 4.3 ? { fg: C.green, bg: C.greenBg, lab: "RECENZII GOOGLE" } : { fg: C.orange, bg: C.yellowBg, lab: "RECENZII GOOGLE" })
+      : { fg: C.yellow, bg: C.yellowBg, lab: "DE VERIFICAT" });
   const css = g?.css, shop = g?.shopping;
   const v = css && (
     css.status === "third_party_css" ? { fg: C.green, bg: C.greenBg, lab: "AI CSS PARTENER", title: `Rulezi Google Shopping printr-un CSS partener (${css.provider})` } :
@@ -388,6 +409,8 @@ function GoogleAdsSection({ data }: { data: AuditData }) {
         <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: 0 }}>{css.message}</p>
       </div>
       )}
+
+      {price && priceV && <AdsFindingCard fg={priceV.fg} bg={priceV.bg} lab={priceV.lab} title={priceV.title} message={price.message} />}
 
       {ps && (
         <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${C.indigo}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
@@ -416,6 +439,22 @@ function GoogleAdsSection({ data }: { data: AuditData }) {
               );
             })}
           </div>
+        </div>
+      )}
+
+      {brand && brand.status === "contested" && (
+        <div style={{ marginTop: 22 }}>
+          <AdsFindingCard fg={C.red} bg={C.redBg} lab="APARARE BRAND" title="Concurentii apar pe cautarea numelui tau de brand" message={brand.message} />
+        </div>
+      )}
+
+      {gbp && gbpV && (gbp.status === "found" || gbp.status === "unknown") && (
+        <div style={{ marginTop: brand && brand.status === "contested" ? 0 : 22 }}>
+          <AdsFindingCard fg={gbpV.fg} bg={gbpV.bg} lab={gbpV.lab}
+            title={gbp.status === "found"
+              ? (gbp.rating != null ? `Profil Google: ${gbp.rating} stele${gbp.count != null ? ` (${gbp.count} recenzii)` : ""}` : "Ai recenzii pe profilul Google")
+              : "Profil Google Business cu recenzii — de verificat"}
+            message={gbp.message} />
         </div>
       )}
     </section>
