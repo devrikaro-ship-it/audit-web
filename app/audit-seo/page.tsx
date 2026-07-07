@@ -175,7 +175,7 @@ export default function AuditSEO() {
           ].map((s) => (
             <div key={s.l}>
               <div className="whitespace-nowrap font-black tracking-[-1px]" style={{
-                fontFamily: sora, fontSize: "clamp(22px,3.4vw,32px)",
+                fontFamily: sora, fontSize: "clamp(20px,3vw,28px)",
                 background: "linear-gradient(135deg,#47499E,#0ABECF)",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
               }}>{s.n}</div>

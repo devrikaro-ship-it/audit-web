@@ -596,7 +596,7 @@ export function ReportRenderer({ data }: { data: AuditData }) {
       <section style={{ maxWidth: 920, margin: "20px auto 0", padding: "0 24px 0" }}>
         <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>De ce Devrika</h2>
         <p style={{ color: C.gray500, margin: "0 0 22px", fontSize: 15.5 }}>Nu primesti doar un raport. Primesti echipa care il pune in practica.</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
           {[
             { t: "Implementam, nu doar raportam", d: "Reparam noi ce ai vazut aici — nu-ti lasam o lista de teme." },
             { t: "Toate canalele, un singur partener", d: "SEO + Google Ads + Meta, optimizate pe vanzari reale, nu pe vanity metrics." },

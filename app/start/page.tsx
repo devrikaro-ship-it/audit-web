@@ -334,7 +334,7 @@ export default function StartPage() {
                 <span className="text-xs text-gray-400">Moneda:</span>
                 {CURRENCIES.map((c) => (
                   <button key={c.code} type="button" onClick={() => setCurrency(c.code)}
-                    className="rounded-lg border px-2.5 py-1 text-xs font-semibold transition-all"
+                    className="min-h-[40px] rounded-lg border px-3.5 py-2 text-sm font-semibold transition-all"
                     style={{ background: currency === c.code ? "#f0f4ff" : "white", borderColor: currency === c.code ? "#47499E" : "#e2e8f0", color: currency === c.code ? "#47499E" : "#64748b" }}>
                     {c.code}
                   </button>
