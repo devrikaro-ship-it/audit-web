@@ -87,7 +87,10 @@ export type PSIResult = {
 
 export async function fetchPSI(url: string, strategy: "mobile" | "desktop"): Promise<PSIResult | null> {
   try {
-    const endpoint = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=${strategy}&fields=lighthouseResult.categories.performance.score,lighthouseResult.audits`;
+    // Fara cheie, endpointul public da 429 pe volum (limita anonima). Cu cheia din
+    // env, quota e per-proiect Google. PAGESPEED_API_KEY se seteaza in .env.local + Coolify.
+    const key = process.env.PAGESPEED_API_KEY ? `&key=${process.env.PAGESPEED_API_KEY}` : "";
+    const endpoint = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=${strategy}${key}&fields=lighthouseResult.categories.performance.score,lighthouseResult.audits`;
     const r = await fetchWithTimeout(endpoint, 25000);
     if (!r.ok) return null;
     const json = await r.json();
