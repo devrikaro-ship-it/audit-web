@@ -195,6 +195,19 @@ function FindingCard({ f, index, showArea }: { f: Finding; index?: number; showA
   );
 }
 
+/* ---------- card "ai deja asta" (acelasi format ca FindingCard, dar verde) ---------- */
+function OkCard({ o }: { o: OkItem }) {
+  return (
+    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: "18px 26px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: C.green, background: C.greenBg }}>OK</span>
+        <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0, flex: 1 }}>{o.label}</h4>
+        {o.value && o.value !== "—" && <span style={{ fontSize: 13, color: C.gray500 }}>{o.value}</span>}
+      </div>
+    </div>
+  );
+}
+
 function SectionIconBox({ icon, size = 22 }: { icon: string; size?: number }) {
   const p = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "white", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   const paths: Record<string, React.ReactNode> = {
@@ -231,19 +244,8 @@ function SectionBlock({ sectiune, data }: { sectiune: Sectiune; data: AuditData 
 
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         {problems.map((f, i) => <FindingCard key={i} f={f} />)}
+        {oks.map((o, i) => <OkCard key={`ok${i}`} o={o} />)}
       </div>
-
-      {oks.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: problems.length ? 14 : 0 }}>
-          {oks.map((o, i) => (
-            <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 7, background: C.greenBg, border: "1px solid #D6EFE0", borderRadius: 10, padding: "8px 13px", fontSize: 13.5, color: C.gray800 }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg>
-              <span style={{ fontWeight: 600 }}>{o.label}</span>
-              <span style={{ color: C.gray500 }}>· {o.value}</span>
-            </span>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
