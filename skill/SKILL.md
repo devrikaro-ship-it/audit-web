@@ -29,7 +29,9 @@ Un singur skill de audit client, cu **doua functii** clar separate. Alegi modul 
 Skill-ul e un **wrapper** peste app-ul web `audit-web` (repo `devrikaro-ship-it/audit-web`, local `~/seo-audit`; acest skill = folderul `skill/` din el, symlink in `~/.claude/skills/`). Motorul, catalogul, scoringul, raportul si PDF-ul sunt **acolo**, intr-un singur loc — nu dublam logica in Python.
 
 - **RECE**: calea principala = app-ul web (detaliu la *MOD RECE* mai jos). Structura raportului = `docs/AUDIT-SPEC.md`.
-- **CALD**: ruleaza pull-urile reale (`meta_pull.py --json`, `ga4_pull.py`, gads), **asambleaza** un raport (judecata ta) ca JSON in forma `WarmReport` (`~/seo-audit/lib/warm-report.ts`), apoi trimite-l cu `python scripts/post_cald.py raport.json --base <url-web>` → apare la `/cald/<slug>` (+ PDF `/cald/<slug>/pdf`) si in dashboard-ul CALD.
+- **CALD**: ruleaza pull-urile reale (`scripts/meta_pull.py --json` local in skill; `clients/ga4_pull.py` si `clients/gads_*` din directorul de lucru Devrika `~/clients`), **asambleaza** un raport (judecata ta) ca JSON in forma `WarmReport` (schema in `~/seo-audit/lib/warm-report.ts`: obligatoriu `slug`, `client`, `verdict`, `channels[]`). Publicare, doua cai:
+  - **Web (implicit):** `python scripts/post_cald.py raport.json --base <url-web>` → apare la `/cald/<slug>` (+ PDF `/cald/<slug>/pdf`) si in dashboard-ul CALD.
+  - **PDF local (offline):** `python scripts/warm_report.py raport.json iesire.html` apoi `python scripts/html_to_pdf.py iesire.html Audit-{client}.pdf` — cand nu vrei sa treci prin web.
 - **Fallback Python** (`collect.py`/`build.py`/`html_to_pdf.py`): doar cand web-ul nu poate crawla (ex: Cloudflare). NU e calea implicita.
 - Knowledge de framing Ads (Ad Library, CSS Shopping, segmentare) in `~/seo-audit/docs/ads-research/` (= `references/`).
 
@@ -69,7 +71,7 @@ Motorul, catalogul, scoringul, raportul si PDF-ul sunt in app-ul web `~/seo-audi
 Structura si scoringul de mai jos (`references/scoring.md`, `references/framing.md`) descriu **acest fallback**, nu motorul web (care e autoritativ pe spec).
 1. `python scripts/collect.py https://domeniul.ro` — semnale SEO + Ads. Daca apare `!!! BLOCKER`, ia paginile prin Playwright; daca nici asa, spune userului ca site-ul blocheaza crawl.
 2. Research Shopping/Meta best-effort: `references/google-ads-research.md`, `references/meta-ads-research.md`.
-3. `python scripts/build.py date.json raport.html` (framing: `references/framing.md`) -> `python scripts/html_to_pdf.py raport.html "Audit-Devrika-{client}.pdf"`.
+3. `python scripts/build.py date.json raport.html` (forma lui `date.json` = `assets/example.json`; framing: `references/framing.md`) -> `python scripts/html_to_pdf.py raport.html "Audit-Devrika-{client}.pdf"`.
 4. Salveaza in `seo-audits/{client}/` (pastreaza si JSON-ul).
 
 ---
@@ -88,7 +90,7 @@ Structura si scoringul de mai jos (`references/scoring.md`, `references/framing.
 4. **GA4 cross-check** (`clients/ga4_pull.py` / `ga4_ecom.py`): adevarul pe canale. **Confrunta ROAS-ul Meta raportat cu `facebook/cpc` purchase din GA4** — diferenta mare = atribuire view-through umflata. La fel `google/cpc` vs ROAS Google.
 5. **SEO/site** (optional, daca e in scop): `/seo` engine sau `collect.py` pe site + GSC (indexare/queries) + GMC (feed/misrepresentation).
 6. **Sinteza**: o concluzie care leaga tot (de obicei: tracking poluat -> ROAS fictiv -> bidding pe gunoi), apoi per canal numerotat problema -> impact -> fix, + plan ordonat (tracking intai). Ce NU s-a putut verifica = listat explicit.
-7. **Salveaza** in `clients/{client}/AUDIT-{data}.md`. Daca clientul cere si varianta de prezentat -> ruleaza pasul build.py/PDF pe findings (ton ajustat).
+7. **Salveaza** in `clients/{client}/AUDIT-{data}.md`. Daca clientul cere si varianta de prezentat -> asambleaza `WarmReport` JSON (`slug`/`client`/`verdict`/`channels[]`) si publica via `post_cald.py` (web) sau `warm_report.py` + `html_to_pdf.py` (PDF local).
 
 ## Reguli mod cald (din doctrina Devrika)
 - **Nu te incred in ROAS-ul raportat de platforme** pana nu validezi conversiile. Google: primary = doar Purchase real (+ call value = AOV din GA4). Meta: judeca pe `facebook/cpc` GA4 (canal slab, CR real ~0.4-0.5%), nu pe Ads Manager.
@@ -104,4 +106,4 @@ Structura si scoringul de mai jos (`references/scoring.md`, `references/framing.
 - `meta_pull.py` foloseste tokenul System User din `~/.config/meta-ads/token` (Graph API; merge si cand MCP e dezactivat pe cont).
 - Scripturile `gads_*` ruleaza cu venv `~/.claude/skills/seo/.venv/bin/python` + config `~/.config/claude-seo/google-ads.yaml`.
 - Daca PSI/CrUX e rate-limited fara cheie, scrie "viteza de masurat" — nu inventa cifre.
-- Model template fallback Python (rece): `seo-audits/sndeco/`. Model audit cald: `clients/mansarda-online/AUDIT-2026-06-30.md`.
+- Model template fallback Python (rece): `seo-audits/sndeco/`. Model audit cald: ultimul `clients/*/AUDIT-*.md`.
