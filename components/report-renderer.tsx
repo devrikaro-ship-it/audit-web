@@ -2,23 +2,14 @@
 
 import { CHECKS, SECTIUNI_CONFIG, CHECK_TO_PROBLEM, PROBLEMS, type StatusCheck, type Sectiune } from "@/lib/problems-db";
 import type { AuditData, CheckResult, PageCheck, MoneyLeak, UxField } from "@/lib/types";
+import { statusScore, scoreToStatus, VERDICT_GOOD, VERDICT_MID } from "@/lib/scoring";
+import { C, sora, inter } from "@/lib/theme";
 
 export type { AuditData };
 
-/* ---------- paleta (identica cu PDF-ul Devrika) ---------- */
-const C = {
-  navy: "#13163A", navyMid: "#23265F", indigo: "#47499E", cyan: "#0ABECF",
-  white: "#FFFFFF",
-  red: "#C0392B", redBg: "#FEF2F2", orange: "#D45B00", orangeBg: "#FFF4E6",
-  yellow: "#B45309", yellowBg: "#FFFBEB", green: "#1A7A4A", greenBg: "#F0FFF4",
-  gray400: "#8FA3C0", gray500: "#64748b", gray600: "#4A5E7A", gray800: "#1E2D42",
-  slate: "#F4F6FB",
-};
-const sora = "var(--font-sora), system-ui, sans-serif";
-const inter = "var(--font-inter), system-ui, sans-serif";
+/* ---------- design tokens: paleta + fonturi in lib/theme (sursa unica) ---------- */
 
-function scoreColor(s: number) { return s >= 70 ? C.green : s >= 40 ? C.orange : C.red; }
-function statusScore(s: StatusCheck) { return s === "ok" ? 100 : s === "atentie" ? 55 : 10; }
+function scoreColor(s: number) { return s >= VERDICT_GOOD ? C.green : s >= VERDICT_MID ? C.orange : C.red; }
 function sevMeta(s: StatusCheck) {
   if (s === "ok")      return { label: "OK",     fg: C.green,  bg: C.greenBg };
   if (s === "atentie") return { label: "MEDIU",  fg: C.yellow, bg: C.yellowBg };
@@ -44,7 +35,7 @@ function splitSection(sectiune: Sectiune, data: AuditData): { scor: number; prob
     for (const c of map[sectiune] ?? []) {
       const sc = Math.round((c.correctCount / Math.max(c.total, 1)) * 100);
       scores.push(sc);
-      const status: StatusCheck = sc >= 70 ? "ok" : sc >= 40 ? "atentie" : "critic";
+      const status: StatusCheck = scoreToStatus(sc);
       const value = `${c.correctCount} din ${c.total} ${c.unit ?? "pagini"} OK`;
       if (status === "ok") oks.push({ label: c.label, value });
       else problems.push({ area, label: c.label, status, problema: c.problema, fix: c.fix, value, rank: sc });
@@ -85,9 +76,9 @@ function countAllProblems(data: AuditData): { total: number; critice: number } {
 
 /* ---------- 4 categorii raport: Tracking · SEO · UX/UI · Trust ---------- */
 function catVerdict(s: number) {
-  if (s >= 70) return { w: "Bun",       fg: C.green,  bg: C.greenBg };
-  if (s >= 40) return { w: "De reglat", fg: C.yellow, bg: C.yellowBg };
-  return                { w: "Slab",      fg: C.red,    bg: C.redBg };
+  if (s >= VERDICT_GOOD) return { w: "Bun",       fg: C.green,  bg: C.greenBg };
+  if (s >= VERDICT_MID)  return { w: "De reglat", fg: C.yellow, bg: C.yellowBg };
+  return                        { w: "Slab",      fg: C.red,    bg: C.redBg };
 }
 function sectionAvg(data: AuditData, sections: Sectiune[]): number {
   const s = sections.map(x => splitSection(x, data).scor);
@@ -462,10 +453,65 @@ function GoogleAdsSection({ data }: { data: AuditData }) {
 }
 
 /* ============================ RAPORT ============================ */
+function RoiSimSection({ data }: { data: AuditData }) {
+  const r = data.roiSim;
+  if (!r) return null;
+  const eur = (n: number) => n.toLocaleString("ro-RO") + " €";
+  const rows = [
+    { k: "Rata de conversie", now: r.convNowPct + "%", goal: r.convGoalPct + "%" },
+    { k: "Cost pe achizitie", now: eur(r.cpaNowEur), goal: eur(r.cpaGoalEur) },
+    { k: "ROAS (venit / buget)", now: r.roasNow + "×", goal: r.roasGoal + "×" },
+    { k: "Venit din reclame / luna", now: eur(r.revenueNowEur), goal: eur(r.revenueGoalEur) },
+  ];
+  return (
+    <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
+      <div style={{ background: C.white, border: "1px solid #E6EBF4", borderRadius: 18, overflow: "hidden" }}>
+        <div style={{ background: "linear-gradient(135deg, rgba(71,73,158,0.06), rgba(10,190,207,0.06))", padding: "26px 30px", borderBottom: "1px solid #E6EBF4" }}>
+          <div style={{ fontFamily: sora, fontSize: 13, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: C.indigo, marginBottom: 8 }}>Ce castigi daca repari · estimare</div>
+          <div style={{ fontFamily: sora, fontSize: 26, fontWeight: 800, color: C.navy, lineHeight: 1.15 }}>
+            La acelasi buget, ai putea aduce in plus{" "}
+            <span style={{ color: C.indigo }}>~{eur(r.extraRevenueMonthEur)}</span> pe luna
+          </div>
+          <p style={{ fontSize: 14.5, color: C.gray600, lineHeight: 1.55, margin: "10px 0 0" }}>
+            Adica ~<b style={{ color: C.gray800 }}>{eur(r.extraRevenueYearEur)}</b> pe an — daca duci rata de conversie de la {r.convNowPct}% la {r.convGoalPct}%{r.cpcReductionPct > 0 ? ` si scazi costul pe click cu ~${r.cpcReductionPct}%` : ""}.
+          </p>
+        </div>
+
+        <div style={{ padding: "8px 30px 4px", overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14.5, fontVariantNumeric: "tabular-nums" }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: "left", padding: "12px 8px", fontFamily: sora, fontSize: 12, letterSpacing: "0.04em", textTransform: "uppercase", color: C.gray400, fontWeight: 700 }}>Indicator</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontFamily: sora, fontSize: 12, letterSpacing: "0.04em", textTransform: "uppercase", color: C.gray400, fontWeight: 700 }}>Acum</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontFamily: sora, fontSize: 12, letterSpacing: "0.04em", textTransform: "uppercase", color: C.indigo, fontWeight: 700 }}>Posibil</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={row.k} style={{ borderTop: i === 0 ? "none" : "1px solid #EEF1F7" }}>
+                  <td style={{ textAlign: "left", padding: "12px 8px", color: C.gray600 }}>{row.k}</td>
+                  <td style={{ textAlign: "right", padding: "12px 8px", color: C.gray400 }}>{row.now}</td>
+                  <td style={{ textAlign: "right", padding: "12px 8px", color: C.indigo, fontWeight: 700 }}>{row.goal}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div style={{ padding: "14px 30px 24px", borderTop: "1px solid #EEF1F7", marginTop: 6 }}>
+          <p style={{ fontSize: 12.5, color: C.gray400, lineHeight: 1.6, margin: 0 }}>
+            {r.assumptions.join(" ")}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ReportRenderer({ data }: { data: AuditData }) {
   const seoSub: Sectiune[] = ["seo", "continut", "keywords", "structura", "schema"];
   const { total, critice } = countAllProblems(data);
-  const verdict = data.scor >= 70 ? "Stai bine, dar mai sunt puncte de castigat." : data.scor >= 40 ? "Pierzi clienti din cauza unor probleme reparabile." : "Pierzi clienti zilnic — site-ul are probleme grave de vizibilitate.";
+  const verdict = data.scor >= VERDICT_GOOD ? "Stai bine, dar mai sunt puncte de castigat." : data.scor >= VERDICT_MID ? "Pierzi clienti din cauza unor probleme reparabile." : "Pierzi clienti zilnic — site-ul are probleme grave de vizibilitate.";
 
   return (
     <div style={{ fontFamily: inter, background: C.slate, minHeight: "100vh" }}>
@@ -537,6 +583,9 @@ export function ReportRenderer({ data }: { data: AuditData }) {
 
       {/* ---------- RUBRICA 4: GOOGLE ADS ---------- */}
       {(data.googleAds || data.productSignal) && <GoogleAdsSection data={data} />}
+
+      {/* ---------- SIMULARE DE VENIT (din inputurile funnel-ului) ---------- */}
+      {data.roiSim && <RoiSimSection data={data} />}
 
       {/* ---------- DE CE DEVRIKA ---------- */}
       <section style={{ maxWidth: 920, margin: "20px auto 0", padding: "0 24px 0" }}>

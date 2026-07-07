@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import type { AuditRequestBody } from "@/lib/audit-request";
 
 const TARI = [
   { code: "+40", flag: "🇷🇴", name: "Romania" },
@@ -29,65 +30,22 @@ function isValidPhone(v: string) {
 
 const TOTAL_STEPS = 5;
 
-const PLATFORME_PREZENTARE = [
-  "WordPress", "Wix", "Squarespace", "Webflow", "Joomla", "Custom", "Altul",
+// Rata de conversie pe intervale usoare (owner netehnic). value = mijloc reprezentativ; null = "nu stiu".
+const CONV_BUCKETS: { label: string; sub: string; value: number | null }[] = [
+  { label: "Sub 1%", sub: "din 100 de vizitatori, sub 1 cumpara", value: 0.7 },
+  { label: "1 - 2%", sub: "cam 1-2 din 100", value: 1.5 },
+  { label: "2 - 3%", sub: "cam 2-3 din 100", value: 2.5 },
+  { label: "Peste 3%", sub: "3 sau mai multi din 100", value: 3.5 },
+  { label: "Nu stiu", sub: "folosim media pietei in simulare", value: null },
 ];
-const PLATFORME_MAGAZINE = [
-  "WooCommerce", "Shopify", "GoMag", "MerchantPro", "OpenCart",
-  "PrestaShop", "Magento", "Wix eCommerce", "Custom", "Altul",
-];
+
 const PROBLEME = [
-  {
-    label: "Site-ul meu se incarca greu",
-    sub: "Vizitatorii pleaca inainte sa vada continutul",
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="10" stroke="#47499E" strokeWidth="1.5"/>
-        <path d="M12 6v6l4 2" stroke="#0ABECF" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Nu apar in Google",
-    sub: "Site-ul nu e indexat sau nu apare deloc",
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="7" stroke="#47499E" strokeWidth="1.5"/>
-        <path d="M16.5 16.5L21 21" stroke="#0ABECF" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M8 11h6M11 8v6" stroke="#47499E" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Apar dar nimeni nu da click",
-    sub: "Am impresii dar CTR-ul e scazut",
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-        <path d="M15 15l-5-5m0 0l-3 8L3 3l18 4-8 3z" stroke="#47499E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M15 15l4 4" stroke="#0ABECF" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Am trafic dar nu convertesc",
-    sub: "Multi vizitatori, putini clienti",
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-        <path d="M3 17l4-4 4 4 4-6 4 2" stroke="#47499E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M3 21h18" stroke="#0ABECF" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Nu stiu care e problema",
-    sub: "Vreau sa vad imaginea completa",
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="10" stroke="#47499E" strokeWidth="1.5"/>
-        <path d="M12 8v4M12 16h.01" stroke="#0ABECF" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
+  { label: "Site-ul meu se incarca greu", sub: "Vizitatorii pleaca inainte sa vada continutul" },
+  { label: "Nu apar in Google", sub: "Site-ul nu e indexat sau nu apare deloc" },
+  { label: "Apar dar nimeni nu da click", sub: "Am impresii dar CTR-ul e scazut" },
+  { label: "Am trafic dar nu convertesc", sub: "Multi vizitatori, putini clienti" },
+  { label: "Platesc mult pe reclame", sub: "Costul pe vanzare e prea mare" },
+  { label: "Nu stiu care e problema", sub: "Vreau sa vad imaginea completa" },
 ];
 
 function DevrikaLogo() {
@@ -115,16 +73,8 @@ function ProgressDots({ current }: { current: number }) {
     <div className="flex flex-col items-center gap-2 mb-8">
       <div className="flex gap-2">
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-          <div
-            key={i}
-            className="h-2 rounded-full transition-all duration-300"
-            style={{
-              width: i === current - 1 ? 28 : 8,
-              background: i < current
-                ? "linear-gradient(135deg,#47499E,#0ABECF)"
-                : "#e2e8f0",
-            }}
-          />
+          <div key={i} className="h-2 rounded-full transition-all duration-300"
+            style={{ width: i === current - 1 ? 28 : 8, background: i < current ? "linear-gradient(135deg,#47499E,#0ABECF)" : "#e2e8f0" }} />
         ))}
       </div>
       <span className="text-xs text-gray-400">Pasul {current} din {TOTAL_STEPS}</span>
@@ -134,10 +84,7 @@ function ProgressDots({ current }: { current: number }) {
 
 function BackButton({ onClick }: { onClick: () => void }) {
   return (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-6"
-    >
+    <button onClick={onClick} className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-6">
       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
       </svg>
@@ -146,33 +93,80 @@ function BackButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function PrimaryButton({
-  children,
-  onClick,
-  disabled = false,
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
-}) {
+function PrimaryButton({ children, onClick, disabled = false }: { children: React.ReactNode; onClick?: () => void; disabled?: boolean }) {
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
+    <button onClick={onClick} disabled={disabled}
       className="w-full py-4 rounded-xl text-white font-bold text-base transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 active:scale-[0.98]"
-      style={{ background: "linear-gradient(135deg,#47499E,#0ABECF)" }}
-    >
+      style={{ background: "linear-gradient(135deg,#47499E,#0ABECF)" }}>
       {children}
     </button>
   );
 }
 
+function EuroInput({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
+  return (
+    <div className="relative mb-2">
+      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">€</span>
+      <input
+        type="text" inputMode="decimal" placeholder={placeholder} value={value}
+        onChange={(e) => onChange(e.target.value.replace(/[^0-9.,]/g, ""))}
+        className="w-full pl-9 pr-4 py-3.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#47499E] transition-colors"
+      />
+    </div>
+  );
+}
+
+type ScanResult = { origin: string; reachable: boolean; platform: string | null; isEcom: boolean | null; tracking: { gtm?: boolean; ga4?: boolean; metaPixel?: boolean; tiktok?: boolean } };
+
+function ScanCard({ scan }: { scan: ScanResult }) {
+  const trackers = [
+    { k: "ga4", label: "Google Analytics 4", on: scan.tracking.ga4 },
+    { k: "metaPixel", label: "Meta Pixel", on: scan.tracking.metaPixel },
+    { k: "tiktok", label: "TikTok Pixel", on: scan.tracking.tiktok },
+    { k: "gtm", label: "Google Tag Manager", on: scan.tracking.gtm },
+  ];
+  const row = (label: string, val: React.ReactNode) => (
+    <div className="flex items-center justify-between py-2.5 border-b" style={{ borderColor: "#f1f5f9" }}>
+      <span className="text-sm text-gray-500">{label}</span>
+      <span className="text-sm font-semibold text-gray-800">{val}</span>
+    </div>
+  );
+  return (
+    <div className="rounded-xl border p-5 mb-6" style={{ borderColor: "#e2e8f0", background: "#fafbff" }}>
+      {row("Platforma", scan.platform ?? "o detectam in analiza")}
+      {row("Tip site", scan.isEcom ? "Magazin online" : "Site")}
+      <div className="pt-3">
+        <span className="text-sm text-gray-500">Masuratori gasite in cod</span>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {trackers.map((t) => (
+            <span key={t.k} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium"
+              style={{ background: t.on ? "#ecfdf5" : "#f8fafc", color: t.on ? "#047857" : "#94a3b8", border: `1px solid ${t.on ? "#a7f3d0" : "#e2e8f0"}` }}>
+              <span>{t.on ? "✓" : "–"}</span>{t.label}
+            </span>
+          ))}
+        </div>
+      </div>
+      <p className="text-xs text-gray-400 mt-4 leading-relaxed">
+        E doar o privire rapida. In raport verificam totul in detaliu — inclusiv masuratorile care se incarca dupa (nu apar aici) si prezenta ta in Google Shopping.
+      </p>
+    </div>
+  );
+}
+
 export default function StartPage() {
-  const [step, setStep] = useState(1);
+  type Screen = "url" | "scan" | "found" | "q";
+  const [screen, setScreen] = useState<Screen>("url");
+  const [qstep, setQstep] = useState(1);
+
   const [url, setUrl] = useState("");
-  const [tipBusiness, setTipBusiness] = useState<"magazin" | "prezentare" | "">("");
-  const [platforma, setPlatforma] = useState("");
+  const [scan, setScan] = useState<ScanResult | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
+
+  const [convValue, setConvValue] = useState<number | null | undefined>(undefined); // undefined = neatins
+  const [aov, setAov] = useState("");
+  const [adBudget, setAdBudget] = useState("");
   const [probleme, setProbleme] = useState<string[]>([]);
+
   const [nume, setNume] = useState("");
   const [email, setEmail] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
@@ -183,24 +177,53 @@ export default function StartPage() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const platforme = tipBusiness === "magazin" ? PLATFORME_MAGAZINE : PLATFORME_PREZENTARE;
-
-  function next() {
-    setStep((s) => Math.min(s + 1, TOTAL_STEPS));
+  // URL -> porneste scanul rapid SI auditul complet in fundal (spec §11.2)
+  async function startScan() {
+    if (!url.trim()) return;
+    setScreen("scan");
+    // auditul complet ruleaza cat timp userul raspunde la intrebari
+    fetch("/api/audit", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phase: "start", url, tipBusiness: "magazin" } satisfies AuditRequestBody),
+    }).then((r) => r.json()).then((d) => { if (d?.id) setJobId(d.id); }).catch(() => {});
+    // scanul rapid -> cardul "uite ce am gasit"
+    try {
+      const res = await fetch("/api/scan", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      const data = await res.json();
+      setScan(data as ScanResult);
+    } catch {
+      setScan({ origin: url, reachable: false, platform: null, isEcom: null, tracking: {} });
+    }
+    setScreen("found");
   }
-  function back() {
-    setStep((s) => Math.max(s - 1, 1));
+
+  function qNext() { setQstep((s) => Math.min(s + 1, TOTAL_STEPS)); }
+  function qBack() {
+    if (qstep === 1) { setScreen("found"); return; }
+    setQstep((s) => Math.max(s - 1, 1));
   }
 
   async function handleSubmit() {
     setSubmitting(true);
+    const convRate = convValue === undefined ? null : convValue;
     try {
-      const res = await fetch("/api/audit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, tipBusiness, platforma, probleme, nume, email, telefon }),
-      });
-      const { id } = await res.json();
+      let id = jobId;
+      if (id) {
+        await fetch("/api/audit", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phase: "finalize", id, nume, email, telefon, probleme, convRate, aov, adBudget } satisfies AuditRequestBody),
+        });
+      } else {
+        // fallback: auditul nu s-a pornit la scan -> submit intr-un pas
+        const res = await fetch("/api/audit", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url, tipBusiness: "magazin", platforma: scan?.platform ?? undefined, nume, email, telefon, probleme, convRate, aov, adBudget } satisfies AuditRequestBody),
+        });
+        id = (await res.json())?.id;
+      }
       window.location.href = `/processing/${id}`;
     } catch {
       setSubmitting(false);
@@ -209,30 +232,24 @@ export default function StartPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{
-        background: "linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 30%,#f0fafa 70%,#e8fffe 100%)",
-      }}
-    >
-      {/* Header */}
+    <div className="min-h-screen flex flex-col"
+      style={{ background: "linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 30%,#f0fafa 70%,#e8fffe 100%)" }}>
       <header className="fixed top-0 left-0 right-0 px-8 py-4 flex items-center gap-2.5 z-10"
         style={{ background: "rgba(255,255,255,0.8)", backdropFilter: "blur(8px)" }}>
         <DevrikaLogo />
         <span className="text-base font-extrabold" style={{ color: "#1e1b4b" }}>Devrika</span>
       </header>
 
-      {/* Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-12">
-        <ProgressDots current={step} />
+        {screen === "q" && <ProgressDots current={qstep} />}
 
         <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
 
-          {/* Step 1 — URL */}
-          {step === 1 && (
+          {/* URL */}
+          {screen === "url" && (
             <div>
-              <h1 className="text-2xl font-black text-gray-900 mb-1">URL-ul site-ului tau</h1>
-              <p className="text-sm text-gray-400 mb-6">Introducem adresa exacta pentru a putea scana site-ul</p>
+              <h1 className="text-2xl font-black text-gray-900 mb-1">Adresa magazinului tau</h1>
+              <p className="text-sm text-gray-400 mb-6">O scanam pe loc si iti aratam ce gasim. Fara cont, fara card.</p>
               <div className="relative mb-6">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
                   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -240,131 +257,117 @@ export default function StartPage() {
                   </svg>
                 </span>
                 <input
-                  type="url"
-                  placeholder="ex: site-ul-tau.ro"
-                  value={url}
+                  type="url" placeholder="ex: magazinul-tau.ro" value={url}
                   onChange={(e) => setUrl(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") startScan(); }}
                   className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#47499E] transition-colors"
                 />
               </div>
-              <PrimaryButton onClick={next} disabled={!url.trim()}>
-                Continua →
-              </PrimaryButton>
+              <PrimaryButton onClick={startScan} disabled={!url.trim()}>Scaneaza magazinul →</PrimaryButton>
             </div>
           )}
 
-          {/* Step 2 — Tip business */}
-          {step === 2 && (
+          {/* SCANNING */}
+          {screen === "scan" && (
+            <div className="text-center py-6">
+              <div className="mx-auto mb-6 h-14 w-14 rounded-full border-4 animate-spin"
+                style={{ borderColor: "#e2e8f0", borderTopColor: "#47499E" }} />
+              <h1 className="text-xl font-black text-gray-900 mb-1">Scanam magazinul tau...</h1>
+              <p className="text-sm text-gray-400">Ne uitam la platforma, masuratori si structura. Dureaza cateva secunde.</p>
+            </div>
+          )}
+
+          {/* FOUND */}
+          {screen === "found" && scan && (
             <div>
-              <BackButton onClick={back} />
-              <h1 className="text-2xl font-black text-gray-900 mb-1">Ce tip de site ai?</h1>
-              <p className="text-sm text-gray-400 mb-6">Adaptam analiza in functie de tipul afacerii tale</p>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  {
-                    value: "magazin",
-                    label: "Magazine online",
-                    icon: (
-                      <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
-                        <rect x="2" y="7" width="20" height="14" rx="2" fill="#f0f4ff" stroke="#47499E" strokeWidth="1.5"/>
-                        <path d="M16 7V5a4 4 0 00-8 0v2" stroke="#47499E" strokeWidth="1.5" strokeLinecap="round"/>
-                        <path d="M9 12h6M12 9v6" stroke="#0ABECF" strokeWidth="1.5" strokeLinecap="round"/>
-                      </svg>
-                    ),
-                  },
-                  {
-                    value: "prezentare",
-                    label: "Site prezentare & servicii",
-                    icon: (
-                      <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
-                        <rect x="2" y="3" width="20" height="15" rx="2" fill="#f0f4ff" stroke="#47499E" strokeWidth="1.5"/>
-                        <path d="M8 21h8M12 18v3" stroke="#47499E" strokeWidth="1.5" strokeLinecap="round"/>
-                        <path d="M6 8h12M6 12h8" stroke="#0ABECF" strokeWidth="1.5" strokeLinecap="round"/>
-                      </svg>
-                    ),
-                  },
-                ].map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => { setTipBusiness(opt.value as "magazin" | "prezentare"); setPlatforma(""); next(); }}
-                    className="flex flex-col items-center gap-3 p-5 rounded-xl border-2 transition-all hover:border-[#47499E]"
-                    style={{
-                      borderColor: tipBusiness === opt.value ? "#47499E" : "#e2e8f0",
-                      background: tipBusiness === opt.value ? "#f0f4ff" : "white",
-                    }}
-                  >
-                    {opt.icon}
-                    <span className="text-sm font-semibold text-gray-800 text-center">{opt.label}</span>
-                  </button>
-                ))}
+              <div className="inline-flex items-center gap-1.5 mb-3 px-2.5 py-1 rounded-full text-xs font-semibold"
+                style={{ background: "#ecfdf5", color: "#047857" }}>
+                <span>✓</span> Analiza a pornit
+              </div>
+              <h1 className="text-2xl font-black text-gray-900 mb-1">Uite ce am gasit</h1>
+              <p className="text-sm text-gray-400 mb-5">Analizam magazinul in fundal chiar acum. Pana e gata, raspunde la cateva intrebari ca sa-ti facem si o estimare de venit.</p>
+              <ScanCard scan={scan} />
+              <PrimaryButton onClick={() => { setScreen("q"); setQstep(1); }}>Continua →</PrimaryButton>
+              <button onClick={() => setScreen("url")} className="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-3">
+                Alta adresa
+              </button>
+            </div>
+          )}
+
+          {/* Q1 — conversie */}
+          {screen === "q" && qstep === 1 && (
+            <div>
+              <BackButton onClick={qBack} />
+              <h1 className="text-2xl font-black text-gray-900 mb-1">Ce rata de conversie ai?</h1>
+              <p className="text-sm text-gray-400 mb-6">Din vizitatori, cati cumpara. Daca nu stii, alege ultima varianta — folosim media pietei.</p>
+              <div className="flex flex-col gap-2 mb-6">
+                {CONV_BUCKETS.map((b) => {
+                  const selected = convValue === b.value && !(b.value === null && convValue === undefined);
+                  return (
+                    <button key={b.label}
+                      onClick={() => { setConvValue(b.value); qNext(); }}
+                      className="flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all hover:border-[#47499E]"
+                      style={{ borderColor: selected ? "#47499E" : "#e2e8f0", background: selected ? "#f0f4ff" : "white" }}>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">{b.label}</p>
+                        <p className="text-xs text-gray-400">{b.sub}</p>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {/* Step 3 — Platforma */}
-          {step === 3 && (
+          {/* Q2 — AOV */}
+          {screen === "q" && qstep === 2 && (
             <div>
-              <BackButton onClick={back} />
-              <h1 className="text-2xl font-black text-gray-900 mb-1">Ce platforma folosesti?</h1>
-              <p className="text-sm text-gray-400 mb-6">Ne ajuta sa detectam probleme specifice platformei tale</p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {platforme.map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setPlatforma(p)}
-                    className="px-4 py-2 rounded-full text-sm font-medium border-2 transition-all"
-                    style={{
-                      borderColor: platforma === p ? "#47499E" : "#e2e8f0",
-                      background: platforma === p ? "#f0f4ff" : "white",
-                      color: platforma === p ? "#47499E" : "#64748b",
-                    }}
-                  >
-                    {p}
-                  </button>
-                ))}
-              </div>
-              <PrimaryButton onClick={next} disabled={!platforma}>
-                Continua →
-              </PrimaryButton>
+              <BackButton onClick={qBack} />
+              <h1 className="text-2xl font-black text-gray-900 mb-1">Cat e comanda medie?</h1>
+              <p className="text-sm text-gray-400 mb-6">Valoarea medie a unei comenzi (AOV), aproximativ, in euro.</p>
+              <EuroInput value={aov} onChange={setAov} placeholder="ex: 45" />
+              <p className="text-xs text-gray-400 mb-6">Cat cheltuie in medie un client cand comanda.</p>
+              <PrimaryButton onClick={qNext}>Continua →</PrimaryButton>
+              <button onClick={qNext} className="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-3">Nu stiu / sari peste</button>
             </div>
           )}
 
-          {/* Step 4 — Probleme (selectie multipla) */}
-          {step === 4 && (
+          {/* Q3 — buget ads */}
+          {screen === "q" && qstep === 3 && (
             <div>
-              <BackButton onClick={back} />
-              <h1 className="text-2xl font-black text-gray-900 mb-1">Care sunt problemele tale?</h1>
-              <p className="text-sm text-gray-400 mb-6">Poti selecta mai multe. Prioritizam recomandarile in functie de obiectivele tale.</p>
+              <BackButton onClick={qBack} />
+              <h1 className="text-2xl font-black text-gray-900 mb-1">Buget lunar de reclame?</h1>
+              <p className="text-sm text-gray-400 mb-6">Aproximativ, cat investesti pe luna in Google / Meta. Doar pentru simulare.</p>
+              <EuroInput value={adBudget} onChange={setAdBudget} placeholder="ex: 1000" />
+              <p className="text-xs text-gray-400 mb-6">Daca nu faci reclame acum, lasa gol.</p>
+              <PrimaryButton onClick={qNext}>Continua →</PrimaryButton>
+              <button onClick={qNext} className="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-3">Nu fac reclame / sari peste</button>
+            </div>
+          )}
+
+          {/* Q4 — preocupare */}
+          {screen === "q" && qstep === 4 && (
+            <div>
+              <BackButton onClick={qBack} />
+              <h1 className="text-2xl font-black text-gray-900 mb-1">Ce te preocupa cel mai mult?</h1>
+              <p className="text-sm text-gray-400 mb-6">Poti alege mai multe. Ne ajuta sa punem accentul unde conteaza pentru tine.</p>
               <div className="flex flex-col gap-2 mb-6">
                 {PROBLEME.map((p) => {
                   const selected = probleme.includes(p.label);
                   return (
-                    <button
-                      key={p.label}
-                      onClick={() => setProbleme((prev) =>
-                        selected ? prev.filter((x) => x !== p.label) : [...prev, p.label]
-                      )}
+                    <button key={p.label}
+                      onClick={() => setProbleme((prev) => selected ? prev.filter((x) => x !== p.label) : [...prev, p.label])}
                       className="flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all"
-                      style={{
-                        borderColor: selected ? "#47499E" : "#e2e8f0",
-                        background: selected ? "#f0f4ff" : "white",
-                      }}
-                    >
-                      <span className="shrink-0">{p.icon}</span>
-                      <div>
+                      style={{ borderColor: selected ? "#47499E" : "#e2e8f0", background: selected ? "#f0f4ff" : "white" }}>
+                      <div className="flex-1">
                         <p className="text-sm font-semibold text-gray-800">{p.label}</p>
                         <p className="text-xs text-gray-400">{p.sub}</p>
                       </div>
-                      <div
-                        className="ml-auto shrink-0 h-5 w-5 rounded flex items-center justify-center border-2 transition-all"
-                        style={{
-                          borderColor: selected ? "#47499E" : "#cbd5e1",
-                          background: selected ? "#47499E" : "white",
-                        }}
-                      >
+                      <div className="ml-auto shrink-0 h-5 w-5 rounded flex items-center justify-center border-2 transition-all"
+                        style={{ borderColor: selected ? "#47499E" : "#cbd5e1", background: selected ? "#47499E" : "white" }}>
                         {selected && (
                           <svg width="12" height="12" fill="none" viewBox="0 0 12 12">
-                            <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         )}
                       </div>
@@ -372,14 +375,12 @@ export default function StartPage() {
                   );
                 })}
               </div>
-              <PrimaryButton onClick={next} disabled={probleme.length === 0}>
-                Continua →
-              </PrimaryButton>
+              <PrimaryButton onClick={qNext}>Continua →</PrimaryButton>
             </div>
           )}
 
-          {/* Step 5 — Date contact */}
-          {step === 5 && (() => {
+          {/* Q5 — contact */}
+          {screen === "q" && qstep === 5 && (() => {
             const isOther = prefix === "other";
             const emailErr = emailTouched && !isValidEmail(email);
             const telErr = telefonTouched && !isValidPhone(telefon);
@@ -388,56 +389,32 @@ export default function StartPage() {
             const selectedTara = TARI.find((t) => t.code === prefix) ?? TARI[0];
             return (
               <div>
-                <BackButton onClick={back} />
-                <h1 className="text-2xl font-black text-gray-900 mb-1">Ultimul pas!</h1>
-                <p className="text-sm text-gray-400 mb-6">Iti trimitem raportul gratuit pe email in cateva minute</p>
+                <BackButton onClick={qBack} />
+                <h1 className="text-2xl font-black text-gray-900 mb-1">Unde trimitem raportul?</h1>
+                <p className="text-sm text-gray-400 mb-6">Iti trimitem raportul complet + simularea pe email in cateva minute.</p>
                 <div className="flex flex-col gap-4 mb-6">
-
-                  {/* Nume */}
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 mb-1.5">Numele tau</label>
-                    <input
-                      type="text"
-                      placeholder="ex: Ion Popescu"
-                      value={nume}
-                      onChange={(e) => setNume(e.target.value)}
-                      className="w-full px-4 py-3.5 rounded-xl border text-sm outline-none transition-colors"
-                      style={{ borderColor: "#e2e8f0" }}
-                      onFocus={(e) => e.target.style.borderColor = "#47499E"}
-                      onBlur={(e) => e.target.style.borderColor = "#e2e8f0"}
-                    />
+                    <input type="text" placeholder="ex: Ion Popescu" value={nume} onChange={(e) => setNume(e.target.value)}
+                      className="w-full px-4 py-3.5 rounded-xl border text-sm outline-none transition-colors" style={{ borderColor: "#e2e8f0" }}
+                      onFocus={(e) => e.target.style.borderColor = "#47499E"} onBlur={(e) => e.target.style.borderColor = "#e2e8f0"} />
                   </div>
-
-                  {/* Email */}
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 mb-1.5">Email</label>
-                    <input
-                      type="email"
-                      placeholder="ex: ion@firma.ro"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                    <input type="email" placeholder="ex: ion@firma.ro" value={email} onChange={(e) => setEmail(e.target.value)}
                       onBlur={() => setEmailTouched(true)}
                       className="w-full px-4 py-3.5 rounded-xl border text-sm outline-none transition-colors"
                       style={{ borderColor: emailErr ? "#ef4444" : "#e2e8f0" }}
-                      onFocus={(e) => e.target.style.borderColor = emailErr ? "#ef4444" : "#47499E"}
-                    />
-                    {emailErr && (
-                      <p className="text-xs text-red-500 mt-1">Introdu o adresa de email valida (ex: ion@firma.ro)</p>
-                    )}
+                      onFocus={(e) => e.target.style.borderColor = emailErr ? "#ef4444" : "#47499E"} />
+                    {emailErr && <p className="text-xs text-red-500 mt-1">Introdu o adresa de email valida (ex: ion@firma.ro)</p>}
                   </div>
-
-                  {/* Telefon cu prefix tara */}
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 mb-1.5">Telefon</label>
                     <div className="flex gap-2">
-                      {/* Dropdown prefix */}
                       <div className="relative">
-                        <button
-                          type="button"
-                          onClick={() => setDropdownOpen((o) => !o)}
+                        <button type="button" onClick={() => setDropdownOpen((o) => !o)}
                           className="flex items-center gap-1.5 px-3 py-3.5 rounded-xl border text-sm font-medium whitespace-nowrap transition-colors"
-                          style={{ borderColor: dropdownOpen ? "#47499E" : "#e2e8f0", minWidth: 90 }}
-                        >
+                          style={{ borderColor: dropdownOpen ? "#47499E" : "#e2e8f0", minWidth: 90 }}>
                           <span>{selectedTara.flag}</span>
                           <span className="text-gray-700">{selectedTara.code}</span>
                           <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-400">
@@ -447,13 +424,10 @@ export default function StartPage() {
                         {dropdownOpen && (
                           <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-20 max-h-52 overflow-y-auto w-52">
                             {TARI.map((t) => (
-                              <button
-                                key={t.code}
-                                type="button"
+                              <button key={t.code} type="button"
                                 onClick={() => { setPrefix(t.code); setDropdownOpen(false); if (t.code !== "other") setPrefixCustom(""); }}
                                 className="flex items-center gap-2.5 w-full px-3 py-2.5 text-sm text-left hover:bg-gray-50 transition-colors"
-                                style={{ background: prefix === t.code ? "#f0f4ff" : undefined }}
-                              >
+                                style={{ background: prefix === t.code ? "#f0f4ff" : undefined }}>
                                 <span>{t.flag}</span>
                                 <span className="text-gray-500 text-xs w-10 shrink-0">{t.code !== "other" ? t.code : ""}</span>
                                 <span className="text-gray-700 truncate">{t.name}</span>
@@ -462,40 +436,24 @@ export default function StartPage() {
                           </div>
                         )}
                       </div>
-                      {/* Input prefix manual pentru Alta tara */}
                       {isOther && (
-                        <input
-                          type="text"
-                          placeholder="+52"
-                          value={prefixCustom}
+                        <input type="text" placeholder="+52" value={prefixCustom}
                           onChange={(e) => setPrefixCustom(e.target.value.replace(/[^+0-9]/g, ""))}
                           className="w-20 px-3 py-3.5 rounded-xl border text-sm outline-none transition-colors text-center"
                           style={{ borderColor: prefixCustom && !prefixValid ? "#ef4444" : "#e2e8f0" }}
-                          onFocus={(e) => e.target.style.borderColor = "#47499E"}
-                          onBlur={(e) => e.target.style.borderColor = "#e2e8f0"}
-                          maxLength={5}
-                        />
+                          onFocus={(e) => e.target.style.borderColor = "#47499E"} onBlur={(e) => e.target.style.borderColor = "#e2e8f0"} maxLength={5} />
                       )}
-                      {/* Numar */}
-                      <input
-                        type="tel"
-                        placeholder="740 000 000"
-                        value={telefon}
-                        onChange={(e) => setTelefon(e.target.value.replace(/[^0-9\s\-]/g, ""))}
-                        onBlur={() => setTelefonTouched(true)}
+                      <input type="tel" placeholder="740 000 000" value={telefon}
+                        onChange={(e) => setTelefon(e.target.value.replace(/[^0-9\s\-]/g, ""))} onBlur={() => setTelefonTouched(true)}
                         className="flex-1 px-4 py-3.5 rounded-xl border text-sm outline-none transition-colors"
                         style={{ borderColor: telErr ? "#ef4444" : "#e2e8f0" }}
-                        onFocus={(e) => e.target.style.borderColor = telErr ? "#ef4444" : "#47499E"}
-                      />
+                        onFocus={(e) => e.target.style.borderColor = telErr ? "#ef4444" : "#47499E"} />
                     </div>
-                    {telErr && (
-                      <p className="text-xs text-red-500 mt-1">Introdu un numar de telefon valid (min 6 cifre)</p>
-                    )}
+                    {telErr && <p className="text-xs text-red-500 mt-1">Introdu un numar de telefon valid (min 6 cifre)</p>}
                   </div>
                 </div>
-
                 <PrimaryButton onClick={handleSubmit} disabled={!canSubmit || submitting}>
-                  {submitting ? "Se porneste auditul..." : "Trimite-mi raportul gratuit →"}
+                  {submitting ? "Se pregateste raportul..." : "Vezi raportul magazinului →"}
                 </PrimaryButton>
                 <p className="flex items-center justify-center gap-1.5 text-xs text-gray-400 mt-3">
                   <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -506,6 +464,7 @@ export default function StartPage() {
               </div>
             );
           })()}
+
         </div>
       </div>
     </div>

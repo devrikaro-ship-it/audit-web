@@ -124,6 +124,27 @@ const MOCK_DATA: AuditData = {
     headline: "Produsele tale nu sunt optimizate pentru Google Shopping si cautare",
     message: "Am verificat 24 pagini de produs si 17 au titluri scurte sau generice iar 20 nu au descriere — exact textele pe care Google le foloseste ca sa decida pe ce cautari iti arata produsele. Titlurile si descrierile slabe inseamna ca produsele apar mai rar in Shopping si in cautare decat ar putea, chiar cu buget de reclama. Ai un feed de produse, dar titlurile si descrieriile din el conteaza la fel de mult ca existenta lui. Cu titluri, descrieri si feed optimizate acelasi catalog aduce mai multe afisari si clicuri, fara buget suplimentar.",
   },
+  roiSim: {
+    input: { adBudgetEur: 1500, aovEur: 55, convRatePct: 1.5 },
+    usedMarketAverage: false,
+    convNowPct: 1.5,
+    convGoalPct: 2.2,
+    cpcReductionPct: 12,
+    roasNow: 1.8,
+    roasGoal: 3,
+    cpaNowEur: 30,
+    cpaGoalEur: 18,
+    revenueNowEur: 2750,
+    revenueGoalEur: 4580,
+    extraRevenueMonthEur: 1830,
+    extraRevenueYearEur: 21950,
+    assumptions: [
+      "Cost pe click de referinta ~0.45 EUR (medie ecom).",
+      "Conversie de pornire = ce ai raspuns (1.5%).",
+      "Reducere de cost pe click ~12% presupusa dintr-un CSS partener.",
+      "Estimare orientativa. Cifra exacta doar cu acces la cont (GA4 / Google Ads).",
+    ],
+  },
 };
 
 export default function ReportPreview() {

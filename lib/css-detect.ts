@@ -5,6 +5,8 @@
 // IP (Google suppresses Shopping ads for datacenter / plain fetch), so the browser
 // transport connects over CDP to a residential scraping browser (BrightData).
 
+import type { Browser } from "playwright-core";
+
 export type CssTile = {
   css: string; // raw label, e.g. "By Google", "By smec"
   cssProvider: string; // "Google", "smec", ...
@@ -296,7 +298,7 @@ function withCountry(cdp: string, country: string): string {
 // Loads each query on an already-open browser and returns the sponsored tiles
 // from the query where the prospect appears (richest signal), else the last
 // non-empty set.
-async function collectTilesOn(browser: any, prospectDomain: string, queries: string[], opts: DetectOpts): Promise<CssTile[]> {
+async function collectTilesOn(browser: Browser, prospectDomain: string, queries: string[], opts: DetectOpts): Promise<CssTile[]> {
   const gl = opts.gl || "RO";
   const hl = opts.hl || "en";
   const page = await browser.newPage();
@@ -343,7 +345,7 @@ const KNOWLEDGE_PANEL_EXTRACT_JS = `
 
 // One brand SERP navigation → brand-defense (competitors bidding on the brand) +
 // GBP reviews (knowledge panel). Best-effort; degrades to "unknown".
-async function collectBrandIntelOn(browser: any, prospectDomain: string, brand: string, opts: DetectOpts): Promise<{ brandDefense: BrandDefense; gbp: GbpReviews }> {
+async function collectBrandIntelOn(browser: Browser, prospectDomain: string, brand: string, opts: DetectOpts): Promise<{ brandDefense: BrandDefense; gbp: GbpReviews }> {
   const gl = opts.gl || "RO", hl = opts.hl || "en";
   const unknownBrand: BrandDefense = { status: "unknown", competitors: [], message: "Nu am putut verifica daca alti concurenti liciteaza pe numele tau de brand." };
   const unknownGbp: GbpReviews = { status: "unknown", rating: null, count: null, message: "Nu am gasit un profil Google Business cu recenzii la cautarea brandului — de verificat daca exista si e optimizat." };
@@ -455,7 +457,9 @@ const TRACKING_GLOBALS_JS = `
 })()
 `;
 
-function parseTracking(hits: string[], globals: any): LiveTracking {
+type RuntimeGlobals = { gtmKeys?: string[]; gtag?: boolean; fbq?: boolean; ttq?: boolean; cmp?: string | null };
+
+function parseTracking(hits: string[], globals: RuntimeGlobals | null): LiveTracking {
   const H = hits.join("\n");
   const keys: string[] = (globals?.gtmKeys || []) as string[];
   const gtmFromNet = (H.match(/gtm\.js\?id=(GTM-[A-Z0-9]+)/gi) || []).map((s) => s.replace(/.*id=/i, ""));
@@ -474,13 +478,13 @@ function parseTracking(hits: string[], globals: any): LiveTracking {
   return { ok: true, gtm, ga4, googleAds, metaPixel, tiktok, consent, cmp: cmp || null };
 }
 
-async function detectTrackingOnPage(browser: any, url: string): Promise<LiveTracking> {
+async function detectTrackingOnPage(browser: Browser, url: string): Promise<LiveTracking> {
   const page = await browser.newPage();
   const hits: string[] = [];
-  page.on("request", (req: any) => { try { const u = req.url(); if (u) hits.push(u); } catch {} });
+  page.on("request", (req) => { try { const u = req.url(); if (u) hits.push(u); } catch {} });
   // block heavy resources — tags fire from JS, so this is safe and cuts bandwidth
   try {
-    await page.route("**/*", (route: any) => {
+    await page.route("**/*", (route) => {
       const t = route.request().resourceType();
       if (t === "image" || t === "media" || t === "font") return route.abort().catch(() => {});
       return route.continue().catch(() => {});
@@ -490,7 +494,7 @@ async function detectTrackingOnPage(browser: any, url: string): Promise<LiveTrac
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
   } catch {}
   await page.waitForTimeout(4500).catch(() => {});
-  const globals = await page.evaluate(TRACKING_GLOBALS_JS).catch(() => null);
+  const globals = (await page.evaluate(TRACKING_GLOBALS_JS).catch(() => null)) as RuntimeGlobals | null;
   await page.close().catch(() => {});
   return parseTracking(hits, globals);
 }

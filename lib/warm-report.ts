@@ -62,9 +62,9 @@ export type WarmReport = {
 const FILE = process.env.WARM_FILE || path.join(process.cwd(), "data", "warm-reports.json");
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __warmCache: WarmReport[] | undefined;
-  // eslint-disable-next-line no-var
+   
   var __warmWrite: Promise<void> | undefined;
 }
 

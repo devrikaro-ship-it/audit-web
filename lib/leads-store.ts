@@ -23,9 +23,9 @@ export type StoredAudit = {
 const FILE = process.env.LEADS_FILE || path.join(process.cwd(), "data", "audits.json");
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __leadsCache: StoredAudit[] | undefined;
-  // eslint-disable-next-line no-var
+   
   var __leadsWrite: Promise<void> | undefined;
 }
 

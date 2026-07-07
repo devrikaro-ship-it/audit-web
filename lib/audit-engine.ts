@@ -1,95 +1,16 @@
-import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona, ProductSignal, UxAudit, UxField, UxStatus } from "./types";
+import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona, ProductSignal, UxAudit, UxField } from "./types";
 import { analyzeProspectLive, deriveProductQueries, type GoogleShoppingIntel, type LiveTracking } from "./css-detect";
+import { detectEcom, detectHtmlTracking } from "./site-signals";
+import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
+import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
+import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
 
-const FETCH_TIMEOUT = 12000;
 const MAX_PAGES = 60;        // candidati (buffer peste minimul de 50 pt paginile care pica)
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
 const FETCH_CONCURRENCY = 8;
 const LLM_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "OAI-SearchBot", "CCBot", "Googlebot-Extended"];
 
-// ── HTML parsing utilities ───────────────────────────────────────────────────
-
-function parseTitle(html: string): string {
-  const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-  return m ? m[1].replace(/<[^>]+>/g, "").trim() : "";
-}
-
-function parseMeta(html: string, name: string): string {
-  const re1 = new RegExp(`<meta[^>]+name=["']${name}["'][^>]+content=["']([^"']*?)["']`, "i");
-  const re2 = new RegExp(`<meta[^>]+content=["']([^"']*?)["'][^>]+name=["']${name}["']`, "i");
-  return (html.match(re1) ?? html.match(re2))?.[1]?.trim() ?? "";
-}
-
-function parseMetaOG(html: string, prop: string): string {
-  const re1 = new RegExp(`<meta[^>]+property=["']${prop}["'][^>]+content=["']([^"']*?)["']`, "i");
-  const re2 = new RegExp(`<meta[^>]+content=["']([^"']*?)["'][^>]+property=["']${prop}["']`, "i");
-  return (html.match(re1) ?? html.match(re2))?.[1]?.trim() ?? "";
-}
-
-function parseCanonical(html: string): string {
-  const m = html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']*?)["']/i)
-    ?? html.match(/<link[^>]+href=["']([^"']*?)["'][^>]+rel=["']canonical["']/i);
-  return m?.[1]?.trim() ?? "";
-}
-
-function countH1(html: string): number {
-  return (html.match(/<h1[\s>]/gi) ?? []).length;
-}
-
-function hasH2(html: string): boolean {
-  return /<h2[\s>]/i.test(html);
-}
-
-function parseJsonLD(html: string): object[] {
-  const results: object[] = [];
-  const re = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(html)) !== null) {
-    try { results.push(JSON.parse(m[1])); } catch { /* skip invalid */ }
-  }
-  return results;
-}
-
-function parseImages(html: string): { src: string; alt: string }[] {
-  const results: { src: string; alt: string }[] = [];
-  const re = /<img([^>]*?)>/gi;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(html)) !== null) {
-    const attrs = m[1];
-    const src = (attrs.match(/src=["']([^"']+)["']/) ?? [])[1] ?? "";
-    const alt = (attrs.match(/alt=["']([^"']*?)["']/) ?? [])[1] ?? "__MISSING__";
-    if (src && !src.startsWith("data:")) results.push({ src, alt });
-  }
-  return results;
-}
-
-function countInternalLinks(html: string, domain: string): number {
-  const re = /href=["']([^"']+)["']/gi;
-  let count = 0, m: RegExpExecArray | null;
-  while ((m = re.exec(html)) !== null) {
-    const href = m[1];
-    if (href.includes(domain) || href.startsWith("/")) count++;
-  }
-  return count;
-}
-
-function countWords(html: string): number {
-  const text = html
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  return text ? text.split(" ").filter(w => w.length > 2).length : 0;
-}
-
-function hasBreadcrumbs(html: string): boolean {
-  return /breadcrumb/i.test(html) || /BreadcrumbList/i.test(html);
-}
-
-function hasFAQ(html: string): boolean {
-  return /faq|intrebari\s+frecvente|frequently\s+asked/i.test(html) || /FAQPage/i.test(html);
-}
+// ── HTML parsing utilities: in lib/parse-page (pur + testat) ──────────────────
 
 function isCleanUrl(url: string): boolean {
   try {
@@ -100,64 +21,12 @@ function isCleanUrl(url: string): boolean {
   } catch { return false; }
 }
 
-function extractKeyword(title: string, metaDesc: string): string {
+function extractKeyword(title: string): string {
   const clean = title.split(/[|\-–—,:]/)[0].trim().toLowerCase();
   return clean.split(" ").slice(0, 3).join(" ");
 }
 
-// ── Fetch utilities ──────────────────────────────────────────────────────────
-
-async function fetchWithTimeout(url: string, timeout = FETCH_TIMEOUT): Promise<Response> {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeout);
-  try {
-    return await fetch(url, {
-      signal: ctrl.signal,
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; AuditBot/1.0)" },
-    });
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-async function fetchText(url: string): Promise<string> {
-  try {
-    const r = await fetchWithTimeout(url);
-    return r.ok ? r.text() : "";
-  } catch { return ""; }
-}
-
-type PageData = {
-  url: string;
-  html: string;
-  status: number;
-  headers: Record<string, string>;
-  ok: boolean;
-};
-
-async function fetchPage(url: string): Promise<PageData> {
-  try {
-    const r = await fetchWithTimeout(url, 10000);
-    const html = r.ok ? await r.text() : "";
-    const headers: Record<string, string> = {};
-    r.headers.forEach((v, k) => { headers[k.toLowerCase()] = v; });
-    return { url, html, status: r.status, headers, ok: r.ok };
-  } catch {
-    return { url, html: "", status: 0, headers: {}, ok: false };
-  }
-}
-
-// Timpul pana cand serverul livreaza headerele raspunsului (~TTFB). fetch() se
-// rezolva la sosirea headerelor, inainte de corpul paginii.
-async function measureTTFB(url: string): Promise<number | null> {
-  try {
-    const t0 = Date.now();
-    const r = await fetchWithTimeout(url, 10000);
-    const ms = Date.now() - t0;
-    void r.body?.cancel();
-    return ms;
-  } catch { return null; }
-}
+// ── Fetch utilities: in lib/net (seam de retea, singurul loc cu fetch) ─────────
 
 // Site in spatele unei protectii anti-bot (Cloudflare/challenge) sau pagina goala:
 // crawler-ul nu primeste HTML real, deci auditul ar fi fals. Acelasi gard ca in collect.py.
@@ -167,26 +36,6 @@ function detectBlocker(homepageHtml: string): string | null {
   if (blocked) return "Site-ul este in spatele unei protectii anti-bot (Cloudflare/challenge). Crawler-ul nu primeste continutul real, asa ca o parte din verificari pot fi incomplete.";
   if (empty) return "Pagina a raspuns cu foarte putin continut (posibil site JavaScript/SPA sau gol). O parte din verificari pot fi incomplete.";
   return null;
-}
-
-const PRODUCT_FEED_PATHS = [
-  "/feed", "/product-feed", "/feed.xml", "/wp-content/uploads/woo-feed",
-  "/index.php?route=extension/feed/google_sitemap", "/googlebase.xml", "/feed/google",
-  "/products.json", "/sitemap_products_1.xml", "/collections/all.atom",
-];
-
-// Verifica daca exista un feed de produse public (pentru Google Shopping / catalog Meta).
-async function probeProductFeed(origin: string): Promise<boolean> {
-  const checks = await Promise.allSettled(
-    PRODUCT_FEED_PATHS.map(async (p) => {
-      try {
-        const r = await fetchWithTimeout(origin + p, 6000);
-        void r.body?.cancel();
-        return r.status === 200;
-      } catch { return false; }
-    })
-  );
-  return checks.some((c) => c.status === "fulfilled" && c.value === true);
 }
 
 // ── Sitemap discovery ────────────────────────────────────────────────────────
@@ -261,7 +110,7 @@ function extractInternalLinks(html: string, origin: string): string[] {
   const re = /href=["']([^"'#]+)["']/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(html)) !== null) {
-    let href = m[1].trim();
+    const href = m[1].trim();
     if (!href || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("javascript:")) continue;
     try {
       const abs = new URL(href, origin).toString().split("#")[0];
@@ -285,37 +134,9 @@ function segmentUrls(urls: string[], origin: string): { homepage: string; catego
   return { homepage, categories, products };
 }
 
-// ── PageSpeed API ────────────────────────────────────────────────────────────
+// ── PageSpeed scoring: fetchPSI in lib/net; aici doar maparea la status ────────
 
-type PSIResult = {
-  score: number;
-  lcp: string;
-  cls: string;
-  tbt: string;
-};
-
-async function fetchPSI(url: string, strategy: "mobile" | "desktop"): Promise<PSIResult | null> {
-  try {
-    const endpoint = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=${strategy}&fields=lighthouseResult.categories.performance.score,lighthouseResult.audits`;
-    const r = await fetchWithTimeout(endpoint, 25000);
-    if (!r.ok) return null;
-    const json = await r.json();
-    const audits = json?.lighthouseResult?.audits ?? {};
-    const score = Math.round((json?.lighthouseResult?.categories?.performance?.score ?? 0) * 100);
-    return {
-      score,
-      lcp: audits["largest-contentful-paint"]?.displayValue ?? "—",
-      cls: audits["cumulative-layout-shift"]?.displayValue ?? "—",
-      tbt: audits["total-blocking-time"]?.displayValue ?? "—",
-    };
-  } catch { return null; }
-}
-
-function psiToStatus(score: number): StatusCheck {
-  if (score >= 70) return "ok";
-  if (score >= 40) return "atentie";
-  return "critic";
-}
+const psiToStatus = scoreToStatus;
 
 function lcpToStatus(lcp: string): StatusCheck {
   const secs = parseFloat(lcp.replace(",", ".").replace(/[^0-9.]/g, ""));
@@ -380,7 +201,7 @@ type SeoPageResult = {
   urlClean: boolean;
 };
 
-function computeSeoChecks(pages: PageData[], domain: string): PageCheck[] {
+function computeSeoChecks(pages: PageData[]): PageCheck[] {
   const results: SeoPageResult[] = pages.map(p => ({
     hasTitle: !!parseTitle(p.html),
     titleLen: parseTitle(p.html).length,
@@ -482,7 +303,7 @@ function computeKeywordsChecks(pages: PageData[]): PageCheck[] {
   const total = pages.length || 1;
   const kwResults = pages.map(p => {
     const title = parseTitle(p.html).toLowerCase();
-    const kw = extractKeyword(title, parseMeta(p.html, "description"));
+    const kw = extractKeyword(title);
     if (!kw) return { inTitle: false, inH1: false, inUrl: false, inCategory: false, canibalizare: false };
     const h1 = (p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").toLowerCase();
     const urlPath = new URL(p.url).pathname.toLowerCase();
@@ -646,7 +467,7 @@ function computeSocialChecks(homepage: PageData): Record<string, CheckResult> {
   };
 }
 
-function computeSecurityChecks(homepage: PageData, allPages: PageData[]): Record<string, CheckResult> {
+function computeSecurityChecks(homepage: PageData): Record<string, CheckResult> {
   const isHttps = homepage.url.startsWith("https://");
   const hsts = homepage.headers["strict-transport-security"];
   const xframe = homepage.headers["x-frame-options"];
@@ -796,8 +617,7 @@ function uxField(id: string, label: string, checks: { ok: boolean; g: string; l:
   const gasit = checks.filter(c => c.ok).map(c => c.g);
   const lipsa = checks.filter(c => !c.ok).map(c => c.l);
   const scor = Math.round((gasit.length / checks.length) * 100);
-  const status: UxStatus = scor >= 70 ? "bun" : scor >= 40 ? "partial" : "slab";
-  return { id, label, status, scor, gasit, lipsa, problema, fix };
+  return { id, label, status: scoreToUxStatus(scor), scor, gasit, lipsa, problema, fix };
 }
 function uxUnknown(id: string, label: string, problema: string, fix: string, lipsa = "nu am prins acest tip de pagina in crawl"): UxField {
   return { id, label, status: "necunoscut", scor: 0, gasit: [], lipsa: [lipsa], problema, fix };
@@ -826,11 +646,10 @@ function computeUxAudit(
       "Optimizam imaginile, scripturile si serverul pentru incarcare sub 2.5s pe mobil.", "viteza de masurat"));
   } else {
     const scor = Math.max(0, Math.min(100, Math.round(mobile.score)));
-    const status: UxStatus = scor >= 70 ? "bun" : scor >= 40 ? "partial" : "slab";
     fields.push({
-      id: "viteza", label: "Viteza pe mobil", status, scor,
-      gasit: scor >= 70 ? [`scor PageSpeed ${scor}/100`] : [],
-      lipsa: scor < 70 ? [`scor PageSpeed ${scor}/100`, mobile.lcp ? `LCP ${mobile.lcp}` : ""].filter(Boolean) : [],
+      id: "viteza", label: "Viteza pe mobil", status: scoreToUxStatus(scor), scor,
+      gasit: scor >= VERDICT_GOOD ? [`scor PageSpeed ${scor}/100`] : [],
+      lipsa: scor < VERDICT_GOOD ? [`scor PageSpeed ${scor}/100`, mobile.lcp ? `LCP ${mobile.lcp}` : ""].filter(Boolean) : [],
       problema: "Fiecare secunda in plus la incarcare inseamna pana la -7% conversii. Pe trafic platit, e buget aruncat direct.",
       fix: "Optimizam imaginile, scripturile si serverul pentru incarcare sub 2.5s pe mobil.",
     });
@@ -931,9 +750,8 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null, hasP
   const corpus = pages.map(p => p.html).join("\n").toLowerCase();
   const has = (...n: string[]) => n.some(x => corpus.includes(x));
 
-  const isWoo = has("woocommerce", "wp-content/plugins/woocommerce", "add_to_cart", "add-to-cart");
-  const isShopify = has("cdn.shopify.com", "myshopify", "/cart.js", "shopify.theme");
-  const isEcom = isWoo || isShopify || has("adauga in cos", "adaugă în coș", "add to cart", "/cart", "/cos", "/checkout", "/comanda");
+  // amprenta platforma/ecom din modulul partajat (aceeasi ca in scanul din funnel)
+  const isEcom = detectEcom(corpus);
 
   const leaks: MoneyLeak[] = [];
   const add = (id: string, label: string, zona: ConvZona, present: Presence, pierdere: string, fix: string) =>
@@ -943,11 +761,12 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null, hasP
   // GTM injecteaza tag-urile client-side, deci nu apar in HTML-ul brut. Cand GTM
   // e prezent dar tag-ul nu se vede static, marcam "necunoscut" (nu "nu"), ca sa
   // nu raportam fals ca lipseste. Pt. ecom, browserul BrightData verifica la runtime.
-  const hasGTM = /googletagmanager\.com\/gtm\.js/i.test(corpus) || /gtm-[a-z0-9]{5,9}/i.test(corpus) || has("datalayer.push", "window.datalayer");
-  const hasGA4 = /gtag\/js\?id=g-/i.test(corpus) || /["']g-[a-z0-9]{6,}["']/i.test(corpus) || has("googletagmanager.com/gtag");
+  const track = detectHtmlTracking(corpus);
+  const hasGTM = track.gtm;
+  const hasGA4 = track.ga4;
   const hasAds = /aw-\d{6,}/i.test(corpus) || has("google_conversion", "googleads.g.doubleclick", "gtag_report_conversion");
-  const hasPixel = has("fbq(", "connect.facebook.net", "facebook.com/tr");
-  const hasTikTok = has("analytics.tiktok.com", "ttq.load", "ttq.page", "ttq.track");
+  const hasPixel = track.metaPixel;
+  const hasTikTok = track.tiktok;
   const hasConsent = has("gtag('consent'", 'gtag("consent"', "'consent', 'default'", "cookiebot", "onetrust", "cookieyes", "complianz", "consentmanager");
   const veil = (found: boolean): Presence => found ? "da" : (hasGTM ? "necunoscut" : "nu");
 
@@ -1141,13 +960,13 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
 
   // Phase 4: Compute section results
   const viteza = computeVitezaChecks(mobile, desktop, ttfbMs);
-  const seoChecks = computeSeoChecks(analyzedPages, domain);
+  const seoChecks = computeSeoChecks(analyzedPages);
   const continutChecks = computeContinutChecks(analyzedPages);
   const keywordsChecks = computeKeywordsChecks(analyzedPages);
   const structuraChecks = computeStructuraChecks(analyzedPages, robotsTxt, sitemapXml, sitemapUrl);
   const schema = computeSchemaChecks(analyzedPages);
   const social = computeSocialChecks(homepageData);
-  const securitate = computeSecurityChecks(homepageData, analyzedPages);
+  const securitate = computeSecurityChecks(homepageData);
 
   const scor = computeOverallScore(viteza, seoChecks, continutChecks, keywordsChecks, structuraChecks, schema, social, securitate);
   let conversie = computeConversieAudit(analyzedPages, mobile, hasProductFeed);
@@ -1184,6 +1003,9 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
       googleAds = undefined;
     }
   }
+
+  // Nota: simularea de venit (roiSim) se calculeaza in lib/audit-store (tryFinalize),
+  // cand sosesc inputurile din funnel — nu aici. runAudit produce doar semnalele.
 
   return {
     url: origin,

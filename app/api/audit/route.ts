@@ -1,51 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createJob, getJob, setJobResult, setJobError } from "@/lib/audit-store";
-import { runAudit } from "@/lib/audit-engine";
-import { saveAudit, getAudit } from "@/lib/leads-store";
-import { randomUUID } from "crypto";
+import { startJob, finalizeJob, getJobView } from "@/lib/audit-store";
+import { parseAuditRequest } from "@/lib/audit-request";
 
+// Ruta e subtire: parseaza cererea (contract in lib/audit-request) -> operatii pe modulul
+// de audit-job (lib/audit-store). Nicio logica de forma / coercitie / ciclu de viata aici.
 export async function POST(req: NextRequest) {
-  const body = await req.json().catch(() => ({}));
-  const { url, tipBusiness, platforma, nume, email, telefon, probleme } = body;
+  const cmd = parseAuditRequest(await req.json().catch(() => null));
 
-  if (!url || typeof url !== "string") {
-    return NextResponse.json({ error: "URL invalid" }, { status: 400 });
+  if (cmd.kind === "error") return NextResponse.json({ error: cmd.error }, { status: cmd.status });
+
+  if (cmd.kind === "finalize") {
+    const ok = await finalizeJob(cmd.id, cmd.input);
+    return ok ? NextResponse.json({ id: cmd.id }) : NextResponse.json({ error: "Job negasit" }, { status: 404 });
   }
 
-  const id = randomUUID();
-  createJob(id, url, { tipBusiness, platforma, nume, email, telefon, probleme });
-
-  // Run audit asynchronously (fire-and-forget)
-  (async () => {
-    try {
-      const data = await runAudit(url);
-      setJobResult(id, data);
-      // persista auditul finalizat + contactul (durabil, pt dashboard + link permanent)
-      const job = getJob(id);
-      await saveAudit({
-        id, url, domain: data.domain, scor: data.scor, createdAt: job?.createdAt ?? Date.now(),
-        nume, email, telefon, tipBusiness, platforma, probleme, data,
-      });
-    } catch (err) {
-      setJobError(id, err instanceof Error ? err.message : "Eroare necunoscuta");
-    }
-  })();
-
+  const id = startJob(cmd.url, cmd.meta);
   return NextResponse.json({ id });
 }
 
 export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id");
   if (!id) return NextResponse.json({ error: "ID lipsa" }, { status: 400 });
-
-  // intai job-ul viu (in memorie), apoi store-ul durabil (dupa redeploy)
-  const job = getJob(id);
-  if (job) {
-    return NextResponse.json({ id: job.id, url: job.url, status: job.status, data: job.data ?? null, error: job.error ?? null });
-  }
-  const stored = await getAudit(id);
-  if (stored) {
-    return NextResponse.json({ id: stored.id, url: stored.url, status: "done", data: stored.data, error: null });
-  }
-  return NextResponse.json({ error: "Audit negasit" }, { status: 404 });
+  const view = await getJobView(id);
+  return view ? NextResponse.json(view) : NextResponse.json({ error: "Audit negasit" }, { status: 404 });
 }

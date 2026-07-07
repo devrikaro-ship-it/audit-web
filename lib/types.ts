@@ -1,4 +1,5 @@
 import type { GoogleShoppingIntel } from "./css-detect";
+import type { RoiSim } from "./roi-sim";
 
 export type StatusCheck = "ok" | "atentie" | "critic";
 export type AuditStatus = "pending" | "running" | "done" | "error";
@@ -30,6 +31,7 @@ export type AuditData = {
   googleAds?: GoogleShoppingIntel; // CSS + peisaj Shopping (doar ecom, via BrightData)
   productSignal?: ProductSignal;   // semnal optimizare produse (carlig Catamo, doar ecom)
   ux?: UxAudit;                    // UX/UI pe tipuri de pagina (doar ecom)
+  roiSim?: RoiSim;                 // simulare venit (ROAS acum vs posibil) — din inputurile funnel-ului
 };
 
 // ── UX / UI — analiza pe tipuri de pagina (spec 3.3): viteza + home + categorie + produs + filtre ──
@@ -88,6 +90,11 @@ export type AuditJob = {
   email?: string;
   telefon?: string;
   probleme?: string[];
+  convRate?: number | null; // rata de conversie declarata (%), null = "nu stiu"
+  aov?: number;             // comanda medie (EUR)
+  adBudget?: number;        // buget lunar de reclame (EUR)
+  finalizeRequested?: boolean; // funnel a trimis contactul + inputurile (finalize)
+  saved?: boolean;             // persistat durabil (evita salvare dubla la race)
   status: AuditStatus;
   createdAt: number;
   data?: AuditData;

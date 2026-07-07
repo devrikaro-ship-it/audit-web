@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { ReportRenderer } from "@/components/report-renderer";
 import type { AuditData } from "@/lib/types";
 import Link from "next/link";
@@ -38,11 +38,7 @@ export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<AuditData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isPrint, setIsPrint] = useState(false);
-
-  useEffect(() => {
-    setIsPrint(new URLSearchParams(window.location.search).get("print") === "1");
-  }, []);
+  const isPrint = useSearchParams().get("print") === "1";
 
   useEffect(() => {
     if (!id) return;
