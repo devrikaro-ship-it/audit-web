@@ -123,7 +123,7 @@ function CategoriiSummary({ data }: { data: AuditData }) {
         {cards.map(c => {
           const v = catVerdict(c.scor);
           return (
-            <div key={c.label} style={{ background: C.white, border: "1px solid #E6EBF4", borderRadius: 16, padding: "18px 20px", boxShadow: "0 6px 24px rgba(19,22,58,.05)" }}>
+            <div key={c.label} style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: "18px 20px", boxShadow: "0 6px 24px rgba(19,22,58,.05)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 14.5, color: C.navy }}>{c.label}</span>
                 <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase", color: v.fg, background: v.bg, padding: "3px 8px", borderRadius: 6 }}>{v.w}</span>
@@ -176,7 +176,7 @@ function StatPill({ n, label, color }: { n: number | string; label: string; colo
 function FindingCard({ f, index, showArea }: { f: Finding; index?: number; showArea?: boolean }) {
   const m = sevMeta(f.status);
   return (
-    <div style={{ background: C.white, border: "1px solid #E6EBF4", borderRadius: 16, padding: "22px 26px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", display: "flex", gap: 18 }}>
+    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: "22px 26px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", display: "flex", gap: 18 }}>
       {index != null && <div style={{ fontFamily: sora, fontSize: 22, fontWeight: 800, color: "#C9D2E3", width: 30, flexShrink: 0 }}>{String(index + 1).padStart(2, "0")}</div>}
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 8 }}>
@@ -253,7 +253,7 @@ function LeakCard({ l }: { l: MoneyLeak }) {
   const fg = unknown ? C.yellow : C.red, bg = unknown ? C.yellowBg : C.redBg;
   const lab = unknown ? "DE VERIFICAT" : "LIPSESTE";
   return (
-    <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)" }}>
+    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
         <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: fg, background: bg }}>{lab}</span>
         <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{l.label}</h4>
@@ -314,7 +314,7 @@ function UxCard({ f }: { f: UxField }) {
                                 { fg: C.red,    bg: C.redBg,    lab: "SLAB" };
   const showFix = f.status !== "bun";
   return (
-    <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${v.fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)" }}>
+    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${v.fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
         <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: v.fg, background: v.bg }}>{v.lab}</span>
         <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0, flex: 1 }}>{f.label}</h4>
@@ -329,7 +329,7 @@ function UxCard({ f }: { f: UxField }) {
             </span>
           ))}
           {f.lipsa.map((l, i) => (
-            <span key={`l${i}`} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: f.status === "necunoscut" ? C.slate : C.redBg, border: `1px solid ${f.status === "necunoscut" ? "#E6EBF4" : "#F6D9D4"}`, borderRadius: 8, padding: "4px 9px", fontSize: 12.5, color: C.gray600 }}>
+            <span key={`l${i}`} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: f.status === "necunoscut" ? C.slate : C.redBg, border: `1px solid ${f.status === "necunoscut" ? C.border : "#F6D9D4"}`, borderRadius: 8, padding: "4px 9px", fontSize: 12.5, color: C.gray600 }}>
               {f.status !== "necunoscut" && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2.8" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>}{l}
             </span>
           ))}
@@ -358,7 +358,7 @@ function UxUiSection({ data }: { data: AuditData }) {
 
 function AdsFindingCard({ fg, bg, lab, title, message }: { fg: string; bg: string; lab: string; title: string; message: string }) {
   return (
-    <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
+    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
         <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: fg, background: bg }}>{lab}</span>
         <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{title}</h4>
@@ -392,7 +392,7 @@ function GoogleAdsSection({ data }: { data: AuditData }) {
       <p style={{ color: C.gray500, margin: "0 0 22px", fontSize: 15.5 }}>{g ? "Am cautat produsele tale pe Google si am citit reclamele Shopping reale — exact ce vede un cumparator." : "Cum stai pe Google Shopping si cat de pregatite sunt produsele tale pentru reclame."}</p>
 
       {css && v && (
-      <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${v.fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
+      <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${v.fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
           <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: v.fg, background: v.bg }}>{v.lab}</span>
           <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{v.title}</h4>
@@ -404,7 +404,7 @@ function GoogleAdsSection({ data }: { data: AuditData }) {
       {price && priceV && <AdsFindingCard fg={priceV.fg} bg={priceV.bg} lab={priceV.lab} title={priceV.title} message={price.message} />}
 
       {ps && (
-        <div style={{ background: C.white, border: "1px solid #E6EBF4", borderLeft: `4px solid ${C.indigo}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
+        <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.indigo}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
             <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: C.indigo, background: "rgba(71,73,158,0.10)" }}>OPTIMIZARE PRODUSE</span>
             <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{ps.headline}</h4>
@@ -414,14 +414,14 @@ function GoogleAdsSection({ data }: { data: AuditData }) {
       )}
 
       {shop && shop.competitors.length > 0 && (
-        <div style={{ background: C.slate, border: "1px solid #E6EBF4", borderRadius: 16, padding: "20px 24px" }}>
+        <div style={{ background: C.slate, border: `1px solid ${C.border}`, borderRadius: 16, padding: "20px 24px" }}>
           <h3 style={{ fontFamily: sora, fontSize: 17, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Cine liciteaza pe produsele tale ({shop.competitors.length})</h3>
           <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "0 0 14px" }}>{shop.message}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {shop.competitors.slice(0, 8).map((c, i) => {
               const gCss = /^google$/i.test(c.css);
               return (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, background: C.white, border: "1px solid #E6EBF4", borderRadius: 10, padding: "10px 14px" }}>
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, background: C.white, border: `1px solid ${C.border}`, borderRadius: 10, padding: "10px 14px" }}>
                   <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 12, color: C.gray400, minWidth: 18 }}>{i + 1}</span>
                   <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: C.gray800 }}>{c.seller}</span>
                   <span style={{ fontSize: 11.5, fontWeight: 700, padding: "3px 8px", borderRadius: 6, color: gCss ? C.gray500 : C.green, background: gCss ? C.slate : C.greenBg }}>{gCss ? "CSS Google" : `CSS ${c.css}`}</span>
@@ -465,8 +465,8 @@ function RoiSimSection({ data }: { data: AuditData }) {
   ];
   return (
     <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
-      <div style={{ background: C.white, border: "1px solid #E6EBF4", borderRadius: 18, overflow: "hidden" }}>
-        <div style={{ background: "linear-gradient(135deg, rgba(71,73,158,0.06), rgba(10,190,207,0.06))", padding: "26px 30px", borderBottom: "1px solid #E6EBF4" }}>
+      <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 18, overflow: "hidden" }}>
+        <div style={{ background: "linear-gradient(135deg, rgba(71,73,158,0.06), rgba(10,190,207,0.06))", padding: "26px 30px", borderBottom: `1px solid ${C.border}` }}>
           <div style={{ fontFamily: sora, fontSize: 13, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: C.indigo, marginBottom: 8 }}>Ce castigi daca repari · estimare</div>
           <div style={{ fontFamily: sora, fontSize: 26, fontWeight: 800, color: C.navy, lineHeight: 1.15 }}>
             La acelasi buget, ai putea aduce in plus{" "}
@@ -555,10 +555,10 @@ export function ReportRenderer({ data }: { data: AuditData }) {
 
       {/* ---------- CE TE COSTA ---------- */}
       <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 0" }}>
-        <div style={{ background: "linear-gradient(135deg, rgba(10,190,207,0.07), rgba(71,73,158,0.07))", border: "1px solid #E6EBF4", borderLeft: `4px solid ${C.cyan}`, borderRadius: 18, padding: "28px 30px" }}>
+        <div style={{ background: "linear-gradient(135deg, rgba(10,190,207,0.07), rgba(71,73,158,0.07))", border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.cyan}`, borderRadius: 18, padding: "28px 30px" }}>
           <div style={{ fontFamily: sora, fontSize: 13, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: C.indigo, marginBottom: 8 }}>Ce te costa asta</div>
           <div style={{ fontFamily: sora, fontSize: 26, fontWeight: 800, color: C.navy, lineHeight: 1.15, marginBottom: 12 }}>
-            {data.scor < 40 ? "Pierzi clienti in fiecare zi" : data.scor < 70 ? "Lasi clienti pe masa" : "Esti aproape — dar concurenta e mai vizibila"}
+            {data.scor < VERDICT_MID ? "Pierzi clienti in fiecare zi" : data.scor < VERDICT_GOOD ? "Lasi clienti pe masa" : "Esti aproape — dar concurenta e mai vizibila"}
           </div>
           <p style={{ fontSize: 15.5, color: C.gray600, lineHeight: 1.6, margin: 0 }}>
             {critice > 0
@@ -597,7 +597,7 @@ export function ReportRenderer({ data }: { data: AuditData }) {
             { t: "Toate canalele, un singur partener", d: "SEO + Google Ads + Meta, optimizate pe vanzari reale, nu pe vanity metrics." },
             { t: "Specializati pe ecommerce", d: "Zeci de magazine optimizate, pe orice platforma — stim exact ce misca acul." },
           ].map((x, i) => (
-            <div key={i} style={{ background: C.white, border: "1px solid #E6EBF4", borderTop: `3px solid ${C.cyan}`, borderRadius: 14, padding: "18px 20px" }}>
+            <div key={i} style={{ background: C.white, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.cyan}`, borderRadius: 14, padding: "18px 20px" }}>
               <div style={{ fontFamily: sora, fontWeight: 700, fontSize: 15, color: C.gray800, marginBottom: 6 }}>{x.t}</div>
               <div style={{ fontSize: 13.5, color: C.gray600, lineHeight: 1.5 }}>{x.d}</div>
             </div>

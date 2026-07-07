@@ -21,7 +21,6 @@ const update = (id: string, u: Partial<AuditJob>) => {
   if (job) store.set(id, { ...job, ...u });
 };
 
-export type { StartMeta, FinalizeInput };
 export type JobView = { id: string; url: string; status: AuditJob["status"]; data: AuditJob["data"] | null; error: string | null };
 
 // Porneste auditul de la URL si il ruleaza in fundal. Returneaza id-ul imediat.

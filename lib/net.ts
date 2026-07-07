@@ -6,7 +6,7 @@
 
 export const FETCH_TIMEOUT = 12000;
 
-export async function fetchWithTimeout(url: string, timeout = FETCH_TIMEOUT): Promise<Response> {
+async function fetchWithTimeout(url: string, timeout = FETCH_TIMEOUT): Promise<Response> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeout);
   try {

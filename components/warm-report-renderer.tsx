@@ -2,14 +2,15 @@
 
 import type { WarmReport, WarmChannel, WarmFinding, WarmStep } from "@/lib/warm-report";
 import { C, sora, inter } from "@/lib/theme";
+import { VERDICT_GOOD, VERDICT_MID } from "@/lib/scoring";
 
 /* Render raport CALD (audit intern pe date reale). Port al scripts/warm_report.py.
    Paleta + fonturi din lib/theme (sursa unica, aceleasi tokenuri ca raportul RECE). */
 
 const SEV: Record<string, { fg: string; bg: string; lab: string }> = {
-  critic: { fg: C.red, bg: "#FEF2F2", lab: "CRITIC" },
-  major: { fg: C.orange, bg: "#FFF4E6", lab: "MAJOR" },
-  minor: { fg: "#B45309", bg: "#FFFBEB", lab: "MINOR" },
+  critic: { fg: C.red, bg: C.redBg, lab: "CRITIC" },
+  major: { fg: C.orange, bg: C.orangeBg, lab: "MAJOR" },
+  minor: { fg: C.yellow, bg: C.yellowBg, lab: "MINOR" },
 };
 const stateColor = (s: string) => (s === "bun" ? C.green : s === "slab" ? C.red : C.orange);
 const Html = ({ html, ...rest }: { html: string } & React.HTMLAttributes<HTMLSpanElement>) =>
@@ -17,7 +18,7 @@ const Html = ({ html, ...rest }: { html: string } & React.HTMLAttributes<HTMLSpa
 
 function ChannelCard({ c }: { c: WarmChannel }) {
   const s = typeof c.score === "number" ? Math.round(c.score) : null;
-  const sc = s == null ? C.cyan : s >= 67 ? C.green : s >= 40 ? C.orange : C.red;
+  const sc = s == null ? C.cyan : s >= VERDICT_GOOD ? C.green : s >= VERDICT_MID ? C.orange : C.red;
   return (
     <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 18, padding: 22, boxShadow: "0 8px 30px rgba(19,22,58,.08)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
