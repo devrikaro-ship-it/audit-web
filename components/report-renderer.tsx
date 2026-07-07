@@ -248,32 +248,30 @@ function SectionBlock({ sectiune, data }: { sectiune: Sectiune; data: AuditData 
   );
 }
 
-/* ---------- Conversie / bani pierduti (PPC) ---------- */
+/* ---------- Conversie / bani pierduti (PPC) — acelasi card pt prezent / de verificat / lipsa ---------- */
 function LeakCard({ l }: { l: MoneyLeak }) {
+  const present = l.present === "da";
   const unknown = l.present === "necunoscut";
-  const fg = unknown ? C.yellow : C.red, bg = unknown ? C.yellowBg : C.redBg;
-  const lab = unknown ? "DE VERIFICAT" : "LIPSESTE";
+  const fg = present ? C.green : unknown ? C.yellow : C.red;
+  const bg = present ? C.greenBg : unknown ? C.yellowBg : C.redBg;
+  const lab = present ? "PREZENT" : unknown ? "DE VERIFICAT" : "LIPSESTE";
   return (
     <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: present ? 0 : 7 }}>
         <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: fg, background: bg }}>{lab}</span>
         <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{l.label}</h4>
       </div>
-      <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "0 0 9px" }}>{l.pierdere}</p>
-      <p style={{ fontSize: 13, color: C.gray800, lineHeight: 1.5, margin: 0 }}>
-        <span style={{ fontWeight: 700, color: C.indigo }}>Ce facem: </span>{l.fix}
-      </p>
+      {present ? (
+        <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "7px 0 0" }}>{l.positiv ?? "Detectat activ pe site."}</p>
+      ) : (
+        <>
+          <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "0 0 9px" }}>{l.pierdere}</p>
+          <p style={{ fontSize: 13, color: C.gray800, lineHeight: 1.5, margin: 0 }}>
+            <span style={{ fontWeight: 700, color: C.indigo }}>Ce facem: </span>{l.fix}
+          </p>
+        </>
+      )}
     </div>
-  );
-}
-
-/* ---------- chip verde "ai deja" ---------- */
-function GreenChip({ label }: { label: string }) {
-  return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 7, background: C.greenBg, border: "1px solid #D6EFE0", borderRadius: 10, padding: "8px 13px", fontSize: 13.5, color: C.gray800 }}>
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg>
-      <span style={{ fontWeight: 600 }}>{label}</span>
-    </span>
   );
 }
 
@@ -297,11 +295,12 @@ function TrackingSection({ data }: { data: AuditData }) {
   const leaks = (data.conversie?.leaks ?? []).filter(l => trackIds.includes(l.id));
   const gaps = leaks.filter(l => l.present !== "da");
   const have = leaks.filter(l => l.present === "da");
+  // Toate itemii in acelasi format de card: intai ce lipseste/de verificat, apoi ce e prezent.
+  const ordered = [...gaps, ...have];
   return (
     <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
       <RubricHead title="Tracking" sub="Google (Analytics + Ads), Meta, TikTok si Consent Mode v2 — masurarea pe care se bazeaza orice reclama profitabila." scor={avgDefined(leakScore(data, ["ga4", "ads_conv", "pixel", "tiktok", "consent"]))} />
-      {gaps.length > 0 && <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{gaps.map(l => <LeakCard key={l.id} l={l} />)}</div>}
-      {have.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: gaps.length ? 14 : 0 }}>{have.map(l => <GreenChip key={l.id} label={l.label} />)}</div>}
+      {ordered.length > 0 && <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{ordered.map(l => <LeakCard key={l.id} l={l} />)}</div>}
     </section>
   );
 }

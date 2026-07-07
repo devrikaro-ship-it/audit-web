@@ -73,6 +73,7 @@ export type MoneyLeak = {
   present: Presence;
   pierdere: string; // ce te costa (benchmark de industrie)
   fix: string;
+  positiv?: string; // ce iti aduce cand E prezent (afisat pe cardul verde)
 };
 export type ConversieAudit = {
   isEcom: boolean;

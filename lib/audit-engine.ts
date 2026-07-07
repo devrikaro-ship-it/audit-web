@@ -753,8 +753,8 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null, hasP
   const isEcom = detectEcom(corpus);
 
   const leaks: MoneyLeak[] = [];
-  const add = (id: string, label: string, zona: ConvZona, present: Presence, pierdere: string, fix: string) =>
-    leaks.push({ id, label, zona, present, pierdere, fix });
+  const add = (id: string, label: string, zona: ConvZona, present: Presence, pierdere: string, fix: string, positiv?: string) =>
+    leaks.push({ id, label, zona, present, pierdere, fix, positiv });
 
   // ---- TRACKING & PPC (carligul de vanzare) ----
   // Din HTML brut NU putem dovedi absenta unui tag (poate fi injectat prin GTM sau
@@ -772,22 +772,27 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null, hasP
 
   add("ga4", "Google Analytics 4", "Tracking & PPC", veil(hasGA4),
     "Fara analytics nu stii ce pagini si ce reclame aduc vanzari — optimizezi pe ghicit, nu pe date.",
-    "Instalam GA4 cu evenimente ecommerce (view_item, add_to_cart, purchase).");
+    "Instalam GA4 cu evenimente ecommerce (view_item, add_to_cart, purchase).",
+    "Detectat activ — masori traficul si comportamentul pe site.");
   add("ads_conv", "Google Ads — urmarire conversii", "Tracking & PPC", veil(hasAds),
     "Daca dai bani pe Google Ads fara urmarirea conversiilor, Google liciteaza orb — ajungi sa platesti de 2-3x mai mult per vanzare.",
-    "Conectam conversiile reale (Purchase) la Google Ads si licitam pe valoare, nu pe clicuri.");
+    "Conectam conversiile reale (Purchase) la Google Ads si licitam pe valoare, nu pe clicuri.",
+    "Detectat activ — Google Ads liciteaza pe vanzari reale, nu pe clicuri.");
   add("pixel", "Meta Pixel", "Tracking & PPC", veil(hasPixel),
     "Fara Pixel, reclamele Meta nu pot gasi cumparatori si nu poti face retargeting — cea mai profitabila audienta a ta.",
-    "Instalam Meta Pixel + evenimente standard + audiente de retargeting.");
+    "Instalam Meta Pixel + evenimente standard + audiente de retargeting.",
+    "Detectat activ — poti masura si face retargeting pe Meta.");
   add("tiktok", "TikTok Pixel", "Tracking & PPC", veil(hasTikTok),
     "Fara TikTok Pixel nu poti masura sau optimiza reclamele TikTok — un canal in crestere rapida pentru ecommerce.",
-    "Instalam TikTok Pixel + evenimente standard pentru campanii TikTok.");
+    "Instalam TikTok Pixel + evenimente standard pentru campanii TikTok.",
+    "Detectat activ — poti masura si optimiza reclamele TikTok.");
   add("capi", "Meta Conversion API (server-side)", "Tracking & PPC", "necunoscut",
     "Fara CAPI se pierd ~10-30% din conversii (iOS, blocare cookies) → Meta optimizeaza pe date incomplete si arde buget.",
     "Configuram CAPI cu deduplicare web + server pentru date complete.");
   add("consent", "Consent Mode v2", "Tracking & PPC", veil(hasConsent),
     "Fara Consent Mode v2 pierzi date de conversie din UE, iar reclamele Google pierd din eficienta (si e obligatoriu legal).",
-    "Implementam banner de consimtamant conectat la Consent Mode v2.");
+    "Implementam banner de consimtamant conectat la Consent Mode v2.",
+    "Detectat activ — pastrezi datele de conversie conform GDPR.");
 
   // ---- INCREDERE ----
   const hasReviews = has("aggregaterating", "trustpilot", "yotpo", "judge.me", "stamped.io", "reviews.io", "okendo", '"reviewcount"', "stele verificate");

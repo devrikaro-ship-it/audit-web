@@ -67,9 +67,9 @@ const MOCK_DATA: AuditData = {
     ruleazaReclame: "da",
     scorPpc: 60,
     leaks: [
-      { id: "ga4",      label: "Google Analytics 4",   zona: "Tracking & PPC", present: "da",  pierdere: "Fara GA4 nu stii ce pagini aduc vanzari.", fix: "Instalam GA4 cu evenimente de ecommerce." },
+      { id: "ga4",      label: "Google Analytics 4",   zona: "Tracking & PPC", present: "da",  pierdere: "Fara GA4 nu stii ce pagini aduc vanzari.", fix: "Instalam GA4 cu evenimente de ecommerce.", positiv: "Detectat activ — masori traficul si comportamentul pe site." },
       { id: "ads_conv", label: "Google Ads conversii",  zona: "Tracking & PPC", present: "nu",  pierdere: "Fara conversii, Google liciteaza orbeste — irosesti buget.", fix: "Conectam conversia de achizitie in Google Ads." },
-      { id: "pixel",    label: "Meta Pixel",            zona: "Tracking & PPC", present: "da",  pierdere: "Fara Pixel nu poti face remarketing pe Facebook/Instagram.", fix: "Instalam Meta Pixel + Conversions API." },
+      { id: "pixel",    label: "Meta Pixel",            zona: "Tracking & PPC", present: "da",  pierdere: "Fara Pixel nu poti face remarketing pe Facebook/Instagram.", fix: "Instalam Meta Pixel + Conversions API.", positiv: "Detectat activ — poti masura si face retargeting pe Meta." },
       { id: "tiktok",   label: "TikTok Pixel",          zona: "Tracking & PPC", present: "necunoscut", pierdere: "Nu am putut confirma TikTok Pixel.", fix: "Verificam si instalam TikTok Pixel daca lipseste." },
       { id: "consent",  label: "Consent Mode v2",       zona: "Tracking & PPC", present: "nu",  pierdere: "Fara Consent Mode pierzi date de conversie in UE.", fix: "Configuram Consent Mode v2 cu bannerul de cookies." },
       { id: "mobile",   label: "Experienta pe mobil",   zona: "UX & Mobil",     present: "nu",  pierdere: "70% din trafic e pe mobil — un mobil greoi pierde vanzari.", fix: "Optimizam viteza si layout-ul pe mobil." },
