@@ -210,3 +210,25 @@ Audit de calitate (skill `improve-codebase-architecture` + ESLint). Aplicate TOA
 **Neatacat (constient):** garda SSRF (scan/audit fac fetch pe URL-uri arbitrare server-side — chokepoint pregatit in `lib/net.ts`, dar validarea de IP nu e pusa); componenta comuna `FindingCard` intre RECE↔CALD (design tokens impartasite, dar structura cardului inca dublata).
 
 **Deploy productie (2026-07-07):** cele 3 commituri (refactor + landing/funnel/simulare + fix PSI) pushate pe `main` -> redeploy Coolify. Env-uri productie complete: `PAGESPEED_API_KEY` + `BRIGHTDATA_CDP`. Ramas doar `CALD_TOKEN` (amanat — CALD merge deschis fara el). Gotcha env Coolify (POST valoare prin argv node = gol) in [[infra_hetzner_coolify]].
+
+---
+
+## 13. DE CONSTRUIT (urmatoarea sesiune) — Sanatate tracking + indicator consent
+
+> Status: DISCUTAT + APROBAT 2026-07-07, NEIMPLEMENTAT. Motorul deja capteaza TOATE
+> request-urile de retea in browserul real BrightData (`lib/css-detect.ts`,
+> `detectTrackingOnPage` -> `hits.push(u)`). Acum le folosim doar ca boolean da/nu.
+> Fiecare request de tracking cara in URL evenimentul + semnalul de consent — le parsam.
+
+**Ce se poate detecta din afara (RECE, fara acces la cont):**
+- **Evenimente pe pagina:** Pixel `ev=PageView/ViewContent/AddToCart/Purchase`, GA4 `en=page_view/view_item/add_to_cart`, TikTok event params. Vedem exact ce trage pe fiecare pagina crawlata.
+- **Retargeting pregatit:** Pixel + `PageView` pe toate paginile = audiente de baza; `ViewContent`+`AddToCart` cu `content_ids`/`content_type` pe pagina de produs = retargeting dinamic (DPA) posibil. Semafor verde/galben.
+- **Indicator consent (⭐ prioritar):** marcam momentul cand apasam Accept (in `acceptCookies`), bucketam `hits` in **pre-accept** vs **post-accept**, citim `gcs=` (Google Consent Signal: G100=refuzat, G111=acordat) + prezenta CMP. Semafor:
+  - 🟢 **Corect** — CMP prezent, tag-urile NU trag pre-accept (sau trag cu `gcs=denied`), trag cu `gcs=G111` post-accept -> Consent Mode v2 chiar e cablat.
+  - 🟡 **De reglat** — tag-urile trag complet INAINTE de accept (fara `gcs`) -> risc GDPR + pierdere date UE.
+  - 🔴 **Lipsa** — niciun banner / niciun semnal.
+  - Eficient: UN singur page-load (bucketare pe timestamp fata de click-ul de accept), NU al doilea load.
+
+**BOUNDARY onestitate — NU se poate din afara (doar CALD, acces la cont):** daca ID-ul Pixel/GA4 e AL LOR (nu rest de la alta agentie); CAPI / deduplicare / EMQ; daca conversiile se inregistreaza efectiv in cont; daca audientele se populeaza. In RECE => "setat / de reglat / de verificat cu acces", NICIODATA "gresit" categoric.
+
+**Plan implementare (pe rand, cu confirmare):** (1) indicator consent (parse `gcs` + bucket pre/post accept in `detectTrackingOnPage`, camp nou pe `LiveTracking`); (2) panou "Sanatate tracking" in raport (evenimente detectate + retargeting-ready) — rubrica Tracking din §3.1. Modificare motor (`css-detect.ts` + `audit-engine.ts`) + renderer + acest spec.
