@@ -170,15 +170,16 @@ La click pe CTA (adresa data in hero):
 2. **Detectia grea ruleaza in FUNDAL** (CSS / Shopping / tracking runtime prin BrightData, ~40-80s) cat timp userul raspunde la intrebari -> se termina taman la raport. (Umple timpul de asteptare cu intrebarile.)
 3. **5 pasi cu intrebari** (ce scanul nu poate sti):
    1. **Rata de conversie medie** — cu optiunea "nu stiu" (fallback pe media pietei ~1.3%)
-   2. **Comanda medie (AOV)** — in EUR ("cat cheltuie in medie un client pe o comanda")
-   3. **Buget lunar de reclame** — in EUR (aproximativ, "doar pentru simulare")
+   2. **Comanda medie (AOV)** — in moneda magazinului + **selector de moneda** (RON/EUR/USD/GBP). Moneda e auto-detectata din site la scan (`detectCurrency`: cod ISO din schema/config -> simbol/text -> TLD; `lei` WooCommerce RO normalizat la RON) si pre-selectata; userul poate corecta.
+   3. **Buget lunar de reclame** — in aceeasi moneda ca AOV (aproximativ, "doar pentru simulare")
    4. **Ce te preocupa cel mai mult** — viteza / Google / conversii...
    5. **Contact** — nume, email, telefon (ULTIMUL pas, dupa ce e implicat)
 4. **Raport + simulare** — combina scanul cu raspunsurile.
 
 ### 11.3 Simulare de venit (RECE)
 **Scop:** in loc de "de ce noi", arata in bani ce inseamna reparatul.
-**Inputuri:** buget lunar ads (EUR) + AOV (EUR) + rata de conversie (pasul 1; "nu stiu" -> media pietei).
+**Inputuri:** buget lunar ads + AOV (in moneda magazinului) + moneda + rata de conversie (pasul 1; "nu stiu" -> media pietei).
+**Moneda:** toate sumele (buget/AOV/venit) sunt in moneda userului (`lib/currency.ts` = sursa unica cod+simbol), INCLUSIV CPC-ul de referinta — valoare NATIVA pe moneda (`CPC_BENCH` in `roi-sim.ts`, RON ~2.2 lei/click ca moneda primara), nu convertita din EUR. Simbolul se afiseaza in raport din `roiSim.currency`.
 **Formula:** `ROAS = AOV / CPA`. La acelasi buget:
 - `ROAS_posibil = ROAS_acum × (conv_nou / conv_acum) × 1/(1 − reducere_CPC)`
 - `Venit_extra_luna = (ROAS_posibil − ROAS_acum) × buget`
@@ -189,7 +190,7 @@ La click pe CTA (adresa data in hero):
 - **conv_acum:** raspunsul userului; doar "nu stiu" cade pe media pietei.
 
 **Onestitate (invariant):** afiseaza clar **"estimare orientativa"**; cifra exacta doar cu acces la cont (GA4/Ads) = CALD. Nu prezenta estimarea drept cifra reala.
-**Cod (de construit):** input in funnel `app/start`, calcul in `lib/roi-sim.ts` (nou), afisare in raport (`report-renderer.tsx`) + teaser pe landing.
+**Cod:** input in funnel `app/start`, moneda in `lib/currency.ts`, calcul in `lib/roi-sim.ts`, afisare in raport (`report-renderer.tsx`) + teaser pe landing.
 
 ---
 

@@ -77,15 +77,8 @@ export default function AuditSEO() {
         style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(12px)", borderColor: "rgba(71,73,158,0.08)" }}>
         <div className="mx-auto flex h-16 max-w-[1100px] items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 no-underline">
-            <svg width="28" height="28" viewBox="0 0 93 88" fill="none">
-              <defs>
-                <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#0ABECF" /><stop offset="100%" stopColor="#47499E" /></linearGradient>
-                <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#47499E" /><stop offset="100%" stopColor="#0ABECF" /></linearGradient>
-              </defs>
-              <ellipse cx="35" cy="44" rx="35" ry="35" fill="url(#lg1)" opacity="0.9" />
-              <ellipse cx="58" cy="44" rx="35" ry="35" fill="url(#lg2)" opacity="0.7" />
-              <circle cx="46.5" cy="44" r="5" fill="#fff" opacity="0.9" />
-            </svg>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-devrika.png" alt="Devrika" width={36} height={36} className="h-9 w-9" />
             <span className="text-base font-extrabold tracking-[-0.3px]" style={{ color: "#1e1b4b" }}>Devrika</span>
           </Link>
           <Link href="/audit"
@@ -173,16 +166,16 @@ export default function AuditSEO() {
 
       {/* 2 · TRUST */}
       <section className="bg-white px-8 py-16">
-        <div className="mx-auto grid max-w-[900px] grid-cols-2 gap-8 text-center md:grid-cols-4">
+        <div className="mx-auto grid max-w-[960px] grid-cols-2 items-start gap-8 text-center md:grid-cols-4">
           {[
             { n: "180+", l: "Magazine analizate" },
             { n: "3.100+", l: "Probleme gasite" },
-            { n: "40.000 €/luna", l: "Buget de reclame gestionat" },
+            { n: "40.000€/luna", l: "Buget de reclame gestionat" },
             { n: "4.8/5", l: "Nota medie clienti" },
           ].map((s) => (
             <div key={s.l}>
-              <div className="text-4xl font-black tracking-[-1px]" style={{
-                fontFamily: sora,
+              <div className="whitespace-nowrap font-black tracking-[-1px]" style={{
+                fontFamily: sora, fontSize: "clamp(22px,3.4vw,32px)",
                 background: "linear-gradient(135deg,#47499E,#0ABECF)",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
               }}>{s.n}</div>
@@ -199,8 +192,28 @@ export default function AuditSEO() {
             style={{ fontFamily: sora, fontSize: "clamp(26px,4vw,38px)", color: "#0f172a" }}>
             Primesti vizite, dar putine devin comenzi
           </h2>
-          <p className="mx-auto max-w-[600px] text-lg leading-relaxed" style={{ color: "#64748b" }}>
-            De cele mai multe ori nu traficul e problema. Sunt lucruri mici, ascunse — masurarea care nu prinde vanzarile, produsele care nu apar in cautari, pasi greoi pana la cumparare, clicuri platite mai scump decat trebuie. Auditul le arata pe toate, dintr-o privire.
+          <p className="mx-auto mb-8 max-w-[560px] text-lg leading-relaxed" style={{ color: "#64748b" }}>
+            De cele mai multe ori nu traficul e problema, ci lucruri mici si ascunse:
+          </p>
+          <ul className="mx-auto flex max-w-[520px] flex-col gap-3.5 text-left">
+            {[
+              "Masurare care nu prinde toate vanzarile",
+              "Produse care nu apar in cautari",
+              "Pasi greoi pana la cumparare",
+              "Clicuri platite mai scump decat trebuie",
+            ].map((t) => (
+              <li key={t} className="flex items-center gap-3 rounded-xl border bg-white px-4 py-3 text-[15px]"
+                style={{ borderColor: "#e8eaf5", color: "#334155" }}>
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white"
+                  style={{ background: "linear-gradient(135deg,#47499E,#0ABECF)" }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                </span>
+                {t}
+              </li>
+            ))}
+          </ul>
+          <p className="mx-auto mt-8 max-w-[520px] text-lg leading-relaxed" style={{ color: "#64748b" }}>
+            Auditul le arata pe toate, <b style={{ color: "#0f172a" }}>dintr-o privire</b>.
           </p>
         </div>
       </section>
@@ -215,7 +228,7 @@ export default function AuditSEO() {
         <p className="mx-auto mb-14 max-w-[520px] text-center text-base leading-relaxed" style={{ color: "#64748b" }}>
           Apasa pe fiecare zona ca sa vezi exact ce verificam acolo — in limbaj clar, nu tehnic.
         </p>
-        <div className="mx-auto grid max-w-[880px] grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="mx-auto grid max-w-[880px] grid-cols-1 items-start gap-4 md:grid-cols-2">
           {zones.map((z) => (
             <details key={z.title} className="group rounded-2xl border transition-all"
               style={{ background: "#fff", borderColor: "#e2e8f0" }}>
@@ -287,24 +300,11 @@ export default function AuditSEO() {
           style={{ fontFamily: sora, fontSize: "clamp(28px,4vw,42px)", color: "#0f172a" }}>
           Vezi cat ai putea castiga daca repari
         </h2>
-        <p className="mx-auto mb-12 max-w-[540px] text-center text-base leading-relaxed" style={{ color: "#64748b" }}>
-          Ne spui bugetul lunar de reclame si comanda medie, iar raportul estimeaza cat ai putea aduce in plus la acelasi buget, daca creste rata de conversie si scade costul pe click.
+        <p className="mx-auto mb-12 max-w-[560px] text-center text-base leading-relaxed" style={{ color: "#64748b" }}>
+          In timpul analizei iti punem cateva intrebari (buget de reclame, comanda medie), iar raportul estimeaza cat ai putea aduce in plus la acelasi buget — daca creste rata de conversie si scade costul pe click. Asa arata rezultatul:
         </p>
         <div className="mx-auto max-w-[640px] rounded-2xl border p-6 md:p-8" style={{ background: "#fafbff", borderColor: "#e2e8f0" }}>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {[
-              { lab: "Buget lunar reclame", hint: "aproximativ, doar pentru simulare" },
-              { lab: "Comanda medie (AOV)", hint: "cat cheltuie in medie un client" },
-            ].map((f) => (
-              <div key={f.lab} className="rounded-xl border bg-white p-4" style={{ borderColor: "#e2e8f0" }}>
-                <div className="text-[11px] font-bold uppercase tracking-wide" style={{ color: "#94a3b8" }}>{f.lab}</div>
-                <div className="mt-1 text-lg font-black" style={{ color: "#1e293b" }}>€ ____</div>
-                <div className="mt-1 text-[11px]" style={{ color: "#64748b" }}>{f.hint}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4 overflow-x-auto rounded-xl border" style={{ borderColor: "#e2e8f0" }}>
+          <div className="overflow-x-auto rounded-xl border" style={{ borderColor: "#e2e8f0" }}>
             <table className="w-full text-sm" style={{ borderCollapse: "collapse", fontVariantNumeric: "tabular-nums" }}>
               <thead>
                 <tr style={{ background: "#fff" }}>
@@ -357,15 +357,8 @@ export default function AuditSEO() {
       {/* FOOTER */}
       <footer className="px-8 py-10 text-center" style={{ background: "#0f172a" }}>
         <div className="mb-4 flex items-center justify-center gap-2.5">
-          <svg width="24" height="24" viewBox="0 0 93 88" fill="none">
-            <defs>
-              <linearGradient id="flg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#0ABECF" /><stop offset="100%" stopColor="#47499E" /></linearGradient>
-              <linearGradient id="flg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#47499E" /><stop offset="100%" stopColor="#0ABECF" /></linearGradient>
-            </defs>
-            <ellipse cx="35" cy="44" rx="35" ry="35" fill="url(#flg1)" opacity="0.9" />
-            <ellipse cx="58" cy="44" rx="35" ry="35" fill="url(#flg2)" opacity="0.7" />
-            <circle cx="46.5" cy="44" r="5" fill="#fff" opacity="0.9" />
-          </svg>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-devrika.png" alt="Devrika" width={30} height={30} className="h-[30px] w-[30px]" />
           <span className="text-base font-extrabold text-white">Devrika</span>
         </div>
         <p className="text-[13px]" style={{ color: "#475569" }}>

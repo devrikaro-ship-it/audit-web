@@ -7,20 +7,20 @@
 export type StartMeta = {
   tipBusiness?: string; platforma?: string;
   nume?: string; email?: string; telefon?: string; probleme?: string[];
-  convRate?: number | null; aov?: number; adBudget?: number;
+  convRate?: number | null; aov?: number; adBudget?: number; currency?: string;
   finalizeRequested?: boolean;
 };
 export type FinalizeInput = {
   nume?: string; email?: string; telefon?: string; probleme?: string[];
-  convRate?: number | null; aov?: number; adBudget?: number;
+  convRate?: number | null; aov?: number; adBudget?: number; currency?: string;
 };
 
 // ── Forma pe fir (ce trimite clientul). Numerele pot veni ca string din formular. ──
 type Num = string | number | null | undefined;
 export type AuditRequestBody =
   | { phase: "start"; url: string; tipBusiness?: string; platforma?: string }
-  | { phase: "finalize"; id: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num }
-  | { phase?: undefined; url: string; tipBusiness?: string; platforma?: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num };
+  | { phase: "finalize"; id: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num; currency?: string }
+  | { phase?: undefined; url: string; tipBusiness?: string; platforma?: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num; currency?: string };
 
 // ── Comanda parsata (ce executa ruta) ──
 export type ParsedRequest =
@@ -33,6 +33,7 @@ const num = (v: Num): number | undefined => {
   return Number.isFinite(n) ? n : undefined;
 };
 const convRateOf = (v: Num): number | null => (v == null || v === "" ? null : (num(v) ?? null));
+const curOf = (v: unknown): string | undefined => (typeof v === "string" && /^[A-Za-z]{3}$/.test(v) ? v.toUpperCase() : undefined);
 
 export function parseAuditRequest(body: unknown): ParsedRequest {
   if (!body || typeof body !== "object") return { kind: "error", status: 400, error: "Body invalid" };
@@ -44,7 +45,7 @@ export function parseAuditRequest(body: unknown): ParsedRequest {
       kind: "finalize", id: b.id,
       input: {
         nume: b.nume as string, email: b.email as string, telefon: b.telefon as string, probleme: b.probleme as string[],
-        aov: num(b.aov as Num), adBudget: num(b.adBudget as Num), convRate: convRateOf(b.convRate as Num),
+        aov: num(b.aov as Num), adBudget: num(b.adBudget as Num), convRate: convRateOf(b.convRate as Num), currency: curOf(b.currency),
       },
     };
   }
@@ -57,7 +58,7 @@ export function parseAuditRequest(body: unknown): ParsedRequest {
     meta: {
       tipBusiness: b.tipBusiness as string, platforma: b.platforma as string,
       nume: b.nume as string, email: b.email as string, telefon: b.telefon as string, probleme: b.probleme as string[],
-      aov: num(b.aov as Num), adBudget: num(b.adBudget as Num), convRate: convRateOf(b.convRate as Num),
+      aov: num(b.aov as Num), adBudget: num(b.adBudget as Num), convRate: convRateOf(b.convRate as Num), currency: curOf(b.currency),
       finalizeRequested: hasContact, // legacy = contactul vine odata cu URL-ul
     },
   };

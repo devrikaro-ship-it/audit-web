@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { detectPlatform, detectEcom, detectHtmlTracking } from "@/lib/site-signals";
+import { detectPlatform, detectEcom, detectHtmlTracking, detectCurrency } from "@/lib/site-signals";
 
 // Scan rapid (~2-5s) din HTML brut — pentru cardul "Uite ce am gasit" din funnel (spec §11.2).
 // NU e detectia completa: tracking-ul aici e din cod, nu runtime; detectia grea (BrightData)
@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
   const platform = detectPlatform(head);
   const isEcom = detectEcom(head, platform);
   const tracking = detectHtmlTracking(head);
+  const currency = detectCurrency(head, origin);
 
-  return NextResponse.json({ origin, reachable: true, platform, isEcom, tracking });
+  return NextResponse.json({ origin, reachable: true, platform, isEcom, tracking, currency });
 }

@@ -4,6 +4,7 @@ import { CHECKS, SECTIUNI_CONFIG, CHECK_TO_PROBLEM, PROBLEMS, type StatusCheck, 
 import type { AuditData, CheckResult, PageCheck, MoneyLeak, UxField } from "@/lib/types";
 import { statusScore, scoreToStatus, VERDICT_GOOD, VERDICT_MID } from "@/lib/scoring";
 import { C, sora, inter } from "@/lib/theme";
+import { symOf } from "@/lib/currency";
 
 export type { AuditData };
 
@@ -456,12 +457,13 @@ function GoogleAdsSection({ data }: { data: AuditData }) {
 function RoiSimSection({ data }: { data: AuditData }) {
   const r = data.roiSim;
   if (!r) return null;
-  const eur = (n: number) => n.toLocaleString("ro-RO") + " €";
+  const sym = symOf(r.currency);
+  const money = (n: number) => n.toLocaleString("ro-RO") + " " + sym;
   const rows = [
     { k: "Rata de conversie", now: r.convNowPct + "%", goal: r.convGoalPct + "%" },
-    { k: "Cost pe achizitie", now: eur(r.cpaNowEur), goal: eur(r.cpaGoalEur) },
+    { k: "Cost pe achizitie", now: money(r.cpaNow), goal: money(r.cpaGoal) },
     { k: "ROAS (venit / buget)", now: r.roasNow + "×", goal: r.roasGoal + "×" },
-    { k: "Venit din reclame / luna", now: eur(r.revenueNowEur), goal: eur(r.revenueGoalEur) },
+    { k: "Venit din reclame / luna", now: money(r.revenueNow), goal: money(r.revenueGoal) },
   ];
   return (
     <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
@@ -470,10 +472,10 @@ function RoiSimSection({ data }: { data: AuditData }) {
           <div style={{ fontFamily: sora, fontSize: 13, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: C.indigo, marginBottom: 8 }}>Ce castigi daca repari · estimare</div>
           <div style={{ fontFamily: sora, fontSize: 26, fontWeight: 800, color: C.navy, lineHeight: 1.15 }}>
             La acelasi buget, ai putea aduce in plus{" "}
-            <span style={{ color: C.indigo }}>~{eur(r.extraRevenueMonthEur)}</span> pe luna
+            <span style={{ color: C.indigo }}>~{money(r.extraRevenueMonth)}</span> pe luna
           </div>
           <p style={{ fontSize: 14.5, color: C.gray600, lineHeight: 1.55, margin: "10px 0 0" }}>
-            Adica ~<b style={{ color: C.gray800 }}>{eur(r.extraRevenueYearEur)}</b> pe an — daca duci rata de conversie de la {r.convNowPct}% la {r.convGoalPct}%{r.cpcReductionPct > 0 ? ` si scazi costul pe click cu ~${r.cpcReductionPct}%` : ""}.
+            Adica ~<b style={{ color: C.gray800 }}>{money(r.extraRevenueYear)}</b> pe an — daca duci rata de conversie de la {r.convNowPct}% la {r.convGoalPct}%{r.cpcReductionPct > 0 ? ` si scazi costul pe click cu ~${r.cpcReductionPct}%` : ""}.
           </p>
         </div>
 

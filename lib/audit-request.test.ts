@@ -25,6 +25,15 @@ describe("parseAuditRequest", () => {
     }
   });
 
+  it("finalize: currency valid -> uppercase; invalid -> undefined", () => {
+    const ok = parseAuditRequest({ phase: "finalize", id: "x", currency: "ron" });
+    const bad = parseAuditRequest({ phase: "finalize", id: "x", currency: "euro" });
+    const none = parseAuditRequest({ phase: "finalize", id: "x" });
+    if (ok.kind === "finalize") expect(ok.input.currency).toBe("RON");
+    if (bad.kind === "finalize") expect(bad.input.currency).toBeUndefined();
+    if (none.kind === "finalize") expect(none.input.currency).toBeUndefined();
+  });
+
   it("finalize: convRate gol / lipsa -> null (nu stiu)", () => {
     const a = parseAuditRequest({ phase: "finalize", id: "x", convRate: "" });
     const b = parseAuditRequest({ phase: "finalize", id: "x" });

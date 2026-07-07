@@ -91,8 +91,9 @@ export type AuditJob = {
   telefon?: string;
   probleme?: string[];
   convRate?: number | null; // rata de conversie declarata (%), null = "nu stiu"
-  aov?: number;             // comanda medie (EUR)
-  adBudget?: number;        // buget lunar de reclame (EUR)
+  aov?: number;             // comanda medie (in moneda magazinului)
+  adBudget?: number;        // buget lunar de reclame (in moneda magazinului)
+  currency?: string;        // cod ISO moneda (RON/EUR/...) detectat/ales in funnel
   finalizeRequested?: boolean; // funnel a trimis contactul + inputurile (finalize)
   saved?: boolean;             // persistat durabil (evita salvare dubla la race)
   status: AuditStatus;

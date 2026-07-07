@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import type { AuditRequestBody } from "@/lib/audit-request";
+import { CURRENCIES, symOf } from "@/lib/currency";
 
 const TARI = [
   { code: "+40", flag: "🇷🇴", name: "Romania" },
@@ -40,13 +41,14 @@ const CONV_BUCKETS: { label: string; sub: string; value: number | null }[] = [
 ];
 
 const PROBLEME = [
-  { label: "Site-ul meu se incarca greu", sub: "Vizitatorii pleaca inainte sa vada continutul" },
-  { label: "Nu apar in Google", sub: "Site-ul nu e indexat sau nu apare deloc" },
-  { label: "Apar dar nimeni nu da click", sub: "Am impresii dar CTR-ul e scazut" },
-  { label: "Am trafic dar nu convertesc", sub: "Multi vizitatori, putini clienti" },
-  { label: "Platesc mult pe reclame", sub: "Costul pe vanzare e prea mare" },
-  { label: "Nu stiu care e problema", sub: "Vreau sa vad imaginea completa" },
+  { label: "Am trafic, dar putine vanzari", sub: "Multi vizitatori, rata mica de conversie" },
+  { label: "Platesc prea mult pe o vanzare", sub: "Costul pe achizitie (CPA) e prea mare" },
+  { label: "Reclamele nu ating ROAS-ul dorit", sub: "Bani investiti in Google / Meta, randament sub tinta" },
+  { label: "Nu apar organic in Google", sub: "Vizibilitate SEO slaba pe cautarile tale" },
+  { label: "Nu apar in cautarile AI", sub: "Lipsesti din ChatGPT / AI Overviews (LLM / GEO)" },
+  { label: "Nu stiu care e problema", sub: "Vreau imaginea completa a magazinului" },
 ];
+
 
 function DevrikaLogo() {
   return (
@@ -103,20 +105,20 @@ function PrimaryButton({ children, onClick, disabled = false }: { children: Reac
   );
 }
 
-function EuroInput({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
+function CurrencyInput({ value, onChange, placeholder, sym }: { value: string; onChange: (v: string) => void; placeholder: string; sym: string }) {
   return (
-    <div className="relative mb-2">
-      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">€</span>
+    <div className="mb-2 flex items-center rounded-xl border border-gray-200 transition-colors focus-within:border-[#47499E]">
+      <span className="shrink-0 pl-4 pr-1.5 text-sm font-semibold text-gray-400">{sym}</span>
       <input
         type="text" inputMode="decimal" placeholder={placeholder} value={value}
         onChange={(e) => onChange(e.target.value.replace(/[^0-9.,]/g, ""))}
-        className="w-full pl-9 pr-4 py-3.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#47499E] transition-colors"
+        className="w-full bg-transparent py-3.5 pr-4 text-sm outline-none"
       />
     </div>
   );
 }
 
-type ScanResult = { origin: string; reachable: boolean; platform: string | null; isEcom: boolean | null; tracking: { gtm?: boolean; ga4?: boolean; metaPixel?: boolean; tiktok?: boolean } };
+type ScanResult = { origin: string; reachable: boolean; platform: string | null; isEcom: boolean | null; tracking: { gtm?: boolean; ga4?: boolean; metaPixel?: boolean; tiktok?: boolean }; currency?: string | null };
 
 function ScanCard({ scan }: { scan: ScanResult }) {
   const trackers = [
@@ -136,18 +138,18 @@ function ScanCard({ scan }: { scan: ScanResult }) {
       {row("Platforma", scan.platform ?? "o detectam in analiza")}
       {row("Tip site", scan.isEcom ? "Magazin online" : "Site")}
       <div className="pt-3">
-        <span className="text-sm text-gray-500">Masuratori gasite in cod</span>
+        <span className="text-sm text-gray-500">Masuratori vazute deja in cod</span>
         <div className="flex flex-wrap gap-2 mt-2">
           {trackers.map((t) => (
             <span key={t.k} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium"
-              style={{ background: t.on ? "#ecfdf5" : "#f8fafc", color: t.on ? "#047857" : "#94a3b8", border: `1px solid ${t.on ? "#a7f3d0" : "#e2e8f0"}` }}>
-              <span>{t.on ? "✓" : "–"}</span>{t.label}
+              style={{ background: t.on ? "#ecfdf5" : "#f8fafc", color: t.on ? "#047857" : "#64748b", border: `1px solid ${t.on ? "#a7f3d0" : "#e2e8f0"}` }}>
+              {t.on ? <span>✓</span> : null}{t.label}{!t.on ? <span className="opacity-70">· in analiza</span> : null}
             </span>
           ))}
         </div>
       </div>
       <p className="text-xs text-gray-400 mt-4 leading-relaxed">
-        E doar o privire rapida. In raport verificam totul in detaliu — inclusiv masuratorile care se incarca dupa (nu apar aici) si prezenta ta in Google Shopping.
+        E doar o privire rapida in cod. Multe masuratori (GA4, Pixel) se incarca prin Google Tag Manager sau abia dupa ce accepti cookies — nu apar aici, dar nu inseamna ca lipsesc. In analiza completa deschidem magazinul intr-un browser real, dam accept si verificam ce se declanseaza cu adevarat, plus prezenta ta in Google Shopping.
       </p>
     </div>
   );
@@ -165,6 +167,7 @@ export default function StartPage() {
   const [convValue, setConvValue] = useState<number | null | undefined>(undefined); // undefined = neatins
   const [aov, setAov] = useState("");
   const [adBudget, setAdBudget] = useState("");
+  const [currency, setCurrency] = useState("RON"); // detectata din scan; userul poate schimba
   const [probleme, setProbleme] = useState<string[]>([]);
 
   const [nume, setNume] = useState("");
@@ -194,6 +197,8 @@ export default function StartPage() {
       });
       const data = await res.json();
       setScan(data as ScanResult);
+      // doar coduri din picker, ca un chip sa fie mereu activ; altfel ramane default RON
+      if (data?.currency && CURRENCIES.some((c) => c.code === data.currency)) setCurrency(data.currency);
     } catch {
       setScan({ origin: url, reachable: false, platform: null, isEcom: null, tracking: {} });
     }
@@ -214,13 +219,13 @@ export default function StartPage() {
       if (id) {
         await fetch("/api/audit", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phase: "finalize", id, nume, email, telefon, probleme, convRate, aov, adBudget } satisfies AuditRequestBody),
+          body: JSON.stringify({ phase: "finalize", id, nume, email, telefon, probleme, convRate, aov, adBudget, currency } satisfies AuditRequestBody),
         });
       } else {
         // fallback: auditul nu s-a pornit la scan -> submit intr-un pas
         const res = await fetch("/api/audit", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url, tipBusiness: "magazin", platforma: scan?.platform ?? undefined, nume, email, telefon, probleme, convRate, aov, adBudget } satisfies AuditRequestBody),
+          body: JSON.stringify({ url, tipBusiness: "magazin", platforma: scan?.platform ?? undefined, nume, email, telefon, probleme, convRate, aov, adBudget, currency } satisfies AuditRequestBody),
         });
         id = (await res.json())?.id;
       }
@@ -324,8 +329,18 @@ export default function StartPage() {
             <div>
               <BackButton onClick={qBack} />
               <h1 className="text-2xl font-black text-gray-900 mb-1">Cat e comanda medie?</h1>
-              <p className="text-sm text-gray-400 mb-6">Valoarea medie a unei comenzi (AOV), aproximativ, in euro.</p>
-              <EuroInput value={aov} onChange={setAov} placeholder="ex: 45" />
+              <p className="text-sm text-gray-400 mb-4">Valoarea medie a unei comenzi (AOV), aproximativ.</p>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="text-xs text-gray-400">Moneda:</span>
+                {CURRENCIES.map((c) => (
+                  <button key={c.code} type="button" onClick={() => setCurrency(c.code)}
+                    className="rounded-lg border px-2.5 py-1 text-xs font-semibold transition-all"
+                    style={{ background: currency === c.code ? "#f0f4ff" : "white", borderColor: currency === c.code ? "#47499E" : "#e2e8f0", color: currency === c.code ? "#47499E" : "#64748b" }}>
+                    {c.code}
+                  </button>
+                ))}
+              </div>
+              <CurrencyInput value={aov} onChange={setAov} placeholder="ex: 200" sym={symOf(currency)} />
               <p className="text-xs text-gray-400 mb-6">Cat cheltuie in medie un client cand comanda.</p>
               <PrimaryButton onClick={qNext}>Continua →</PrimaryButton>
               <button onClick={qNext} className="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-3">Nu stiu / sari peste</button>
@@ -338,7 +353,7 @@ export default function StartPage() {
               <BackButton onClick={qBack} />
               <h1 className="text-2xl font-black text-gray-900 mb-1">Buget lunar de reclame?</h1>
               <p className="text-sm text-gray-400 mb-6">Aproximativ, cat investesti pe luna in Google / Meta. Doar pentru simulare.</p>
-              <EuroInput value={adBudget} onChange={setAdBudget} placeholder="ex: 1000" />
+              <CurrencyInput value={adBudget} onChange={setAdBudget} placeholder="ex: 5000" sym={symOf(currency)} />
               <p className="text-xs text-gray-400 mb-6">Daca nu faci reclame acum, lasa gol.</p>
               <PrimaryButton onClick={qNext}>Continua →</PrimaryButton>
               <button onClick={qNext} className="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-3">Nu fac reclame / sari peste</button>

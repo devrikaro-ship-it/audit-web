@@ -63,7 +63,7 @@ async function tryFinalize(id: string): Promise<void> {
 
   if (!job.data.roiSim && job.aov && job.adBudget && job.data.conversie?.isEcom) {
     const roiSim = computeRoiSim(
-      { adBudgetEur: job.adBudget, aovEur: job.aov, convRatePct: job.convRate ?? null },
+      { adBudget: job.adBudget, aov: job.aov, convRatePct: job.convRate ?? null, currency: job.currency ?? "RON" },
       {
         uxWeak: job.data.ux ? job.data.ux.scor < 55 : true,
         trackingWeak: (job.data.conversie?.scorPpc ?? 0) < 60,

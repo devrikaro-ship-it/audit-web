@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { detectPlatform, detectEcom, detectHtmlTracking } from "./site-signals";
+import { detectPlatform, detectEcom, detectHtmlTracking, detectCurrency } from "./site-signals";
 
 describe("detectPlatform", () => {
   it("recunoaste Shopify inaintea WordPress", () => {
@@ -48,5 +48,24 @@ describe("detectHtmlTracking", () => {
   });
   it("totul false pe HTML gol", () => {
     expect(detectHtmlTracking("<html></html>")).toEqual({ gtm: false, ga4: false, metaPixel: false, tiktok: false });
+  });
+});
+
+describe("detectCurrency", () => {
+  it("cod ISO explicit din schema/config", () => {
+    expect(detectCurrency('"priceCurrency":"EUR"')).toBe("EUR");
+    expect(detectCurrency('"currency_code":"gbp"')).toBe("GBP");
+  });
+  it("normalizeaza LEI (simbol WooCommerce RO) la RON", () => {
+    expect(detectCurrency('data-currency="lei"')).toBe("RON");
+    expect(detectCurrency('"currency":"LEI"')).toBe("RON");
+  });
+  it("fallback pe text si TLD", () => {
+    expect(detectCurrency("Pret: 199 lei")).toBe("RON");
+    expect(detectCurrency("<html></html>", "shop.de")).toBe("EUR");
+    expect(detectCurrency("<html></html>", "magazin.ro")).toBe("RON");
+  });
+  it("null cand nu se poate deduce", () => {
+    expect(detectCurrency("<html></html>", "shop.com")).toBeNull();
   });
 });

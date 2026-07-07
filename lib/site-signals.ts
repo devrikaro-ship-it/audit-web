@@ -44,6 +44,32 @@ export function detectEcom(html: string, platform?: Platform | null): boolean {
   return CART_SIGNALS.test(html);
 }
 
+// Moneda magazinului, best-effort din HTML brut. Prioritate: cod ISO explicit din
+// schema/config (cel mai fiabil) -> simbol/cod in text -> TLD-ul domeniului. Intoarce
+// codul ISO (RON/EUR/USD/GBP...) sau null daca nu se poate deduce (atunci funnel-ul
+// pune userul sa aleaga). NU folosim "$" ca simbol — apare des in cod JS (fals USD).
+// Simboluri/coduri neconforme intalnite in cod (mai ales WooCommerce RO care pune
+// "lei" drept "currency") -> cod ISO real. Fara asta, un magazin RON e citit ca "LEI".
+const CURRENCY_ALIAS: Record<string, string> = { LEI: "RON" };
+
+export function detectCurrency(html: string, url?: string): string | null {
+  const iso = html.match(/["']?(?:priceCurrency|currency|currency_code|active_currency|shop_currency)["']?\s*[:=]\s*["']([A-Za-z]{3})["']/);
+  if (iso) { const c = iso[1].toUpperCase(); return CURRENCY_ALIAS[c] ?? c; }
+  if (/(^|[\s>(])lei([\s<).,]|$)|\bRON\b/i.test(html)) return "RON";
+  if (/€|\bEUR\b/.test(html)) return "EUR";
+  if (/£|\bGBP\b/.test(html)) return "GBP";
+  if (/\bUSD\b/.test(html)) return "USD";
+  if (url) {
+    try {
+      const host = new URL(url.startsWith("http") ? url : "https://" + url).hostname;
+      if (/\.ro$/i.test(host)) return "RON";
+      if (/\.(de|fr|it|es|nl|at|be|fi|ie|pt|gr|sk|lv|lt|ee|si)$/i.test(host)) return "EUR";
+      if (/\.uk$|\.co\.uk$/i.test(host)) return "GBP";
+    } catch { /* url invalid */ }
+  }
+  return null;
+}
+
 // Tracking din HTML brut (fallback / scan rapid). NU e detectia runtime — tag-urile
 // injectate prin GTM nu apar in sursa, deci un "false" aici inseamna "de verificat",
 // nu "lipsa". Superset al vechilor regexuri din scan + audit-engine.
