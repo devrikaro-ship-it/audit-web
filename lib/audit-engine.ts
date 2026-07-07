@@ -758,9 +758,10 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null, hasP
     leaks.push({ id, label, zona, present, pierdere, fix });
 
   // ---- TRACKING & PPC (carligul de vanzare) ----
-  // GTM injecteaza tag-urile client-side, deci nu apar in HTML-ul brut. Cand GTM
-  // e prezent dar tag-ul nu se vede static, marcam "necunoscut" (nu "nu"), ca sa
-  // nu raportam fals ca lipseste. Pt. ecom, browserul BrightData verifica la runtime.
+  // Din HTML brut NU putem dovedi absenta unui tag (poate fi injectat prin GTM sau
+  // alt loader, sau gated pe consent). Pe raport public (invariant spec §5.1):
+  // neconfirmat -> "necunoscut" (= de verificat), NICIODATA "nu"/lipsa. Pe ecom,
+  // browserul BrightData confirma la runtime ce e prezent (applyLiveTracking -> "da").
   const track = detectHtmlTracking(corpus);
   const hasGTM = track.gtm;
   const hasGA4 = track.ga4;
@@ -768,12 +769,12 @@ function computeConversieAudit(pages: PageData[], mobile: PSIResult | null, hasP
   const hasPixel = track.metaPixel;
   const hasTikTok = track.tiktok;
   const hasConsent = has("gtag('consent'", 'gtag("consent"', "'consent', 'default'", "cookiebot", "onetrust", "cookieyes", "complianz", "consentmanager");
-  const veil = (found: boolean): Presence => found ? "da" : (hasGTM ? "necunoscut" : "nu");
+  const veil = (found: boolean): Presence => found ? "da" : "necunoscut";
 
   add("ga4", "Google Analytics 4", "Tracking & PPC", veil(hasGA4),
     "Fara analytics nu stii ce pagini si ce reclame aduc vanzari — optimizezi pe ghicit, nu pe date.",
     "Instalam GA4 cu evenimente ecommerce (view_item, add_to_cart, purchase).");
-  add("ads_conv", "Google Ads — urmarire conversii", "Tracking & PPC", hasAds ? "da" : ((hasGA4 || hasGTM) ? "necunoscut" : "nu"),
+  add("ads_conv", "Google Ads — urmarire conversii", "Tracking & PPC", veil(hasAds),
     "Daca dai bani pe Google Ads fara urmarirea conversiilor, Google liciteaza orb — ajungi sa platesti de 2-3x mai mult per vanzare.",
     "Conectam conversiile reale (Purchase) la Google Ads si licitam pe valoare, nu pe clicuri.");
   add("pixel", "Meta Pixel", "Tracking & PPC", veil(hasPixel),

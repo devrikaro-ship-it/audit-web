@@ -46,8 +46,9 @@ Detaliile de orchestrare: `skill/SKILL.md`. Acest spec descrie **structura rapor
 **Campuri (fix acestea, nimic in plus):** GA4 · Google Ads conversii · Meta Pixel · TikTok Pixel · Consent Mode v2
 **Detectie:** runtime in **browser real** (BrightData) — `window.google_tag_manager` (expune GTM/GA4/AW) + `fbq`/`ttq` + host CMP. **NU** din HTML brut (tag-urile prin GTM nu apar in sursa).
 > Nota: **Consent Mode v2** = detectam *prezenta unui CMP* + semnal `gcs=` (proxy), nu ca e corect legat la gtag. Cand incert -> "de verificat".
-**Fallback** cand browserul nu ruleaza: daca GTM e in HTML dar tag-ul nu se confirma -> "de verificat", **NICIODATA "lipsa"**.
-**Cod:** `lib/css-detect.ts` (`analyzeProspectLive`, `detectTrackingOnPage`) + `lib/audit-engine.ts` (`computeConversieAudit`, `applyLiveTracking`); render `TrackingSection`.
+**Auto-accept cookies (2026-07-07):** browserul real apasa singur "Accept" pe bannerul de consent INAINTE sa citeasca tag-urile (`acceptCookies` in `css-detect.ts`: selectoare CMP cunoscute — OneTrust/Cookiebot/CookieYes/Complianz/etc. — + fallback pe text, in pagina si iframe-uri). Multe tag-uri (GA4/Pixel) sunt gated pe consent si nu se declanseaza pana la accept; fara pas, ar iesi fals neconfirmate. Best-effort: fara banner, merge mai departe.
+**Fallback / invariant (intarit 2026-07-07):** din HTML brut NU se poate dovedi absenta unui tag → `veil` in `computeConversieAudit` returneaza **"da" (confirmat) sau "necunoscut" (de verificat), NICIODATA "nu"/lipsa** (§5.1 universal, raport public). Pe ecom, `applyLiveTracking` face upgrade la "da" ce vede runtime-ul.
+**Cod:** `lib/css-detect.ts` (`analyzeProspectLive`, `detectTrackingOnPage`, `acceptCookies`) + `lib/audit-engine.ts` (`computeConversieAudit`, `applyLiveTracking`); render `TrackingSection`.
 
 ### 3.2 SEO
 **5 sub-sectiuni** (definite de Vlad):

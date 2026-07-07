@@ -5,7 +5,7 @@
 // IP (Google suppresses Shopping ads for datacenter / plain fetch), so the browser
 // transport connects over CDP to a residential scraping browser (BrightData).
 
-import type { Browser } from "playwright-core";
+import type { Browser, Page } from "playwright-core";
 
 export type CssTile = {
   css: string; // raw label, e.g. "By Google", "By smec"
@@ -478,6 +478,54 @@ function parseTracking(hits: string[], globals: RuntimeGlobals | null): LiveTrac
   return { ok: true, gtm, ga4, googleAds, metaPixel, tiktok, consent, cmp: cmp || null };
 }
 
+// Multe tag-uri (GA4/Pixel) sunt gated pe consent si nu se declanseaza pana la
+// "Accept". Browserul real apasa singur acceptul (best-effort) ca sa vedem
+// tracking-ul REAL, nu doar ce se incarca inainte de consimtamant. Fara asta,
+// tag-uri prezente ar iesi neconfirmate. Daca nu e banner, merge mai departe.
+const COOKIE_ACCEPT_SELECTORS = [
+  "#onetrust-accept-btn-handler",
+  "#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll",
+  "#CybotCookiebotDialogBodyButtonAccept",
+  ".cky-btn-accept", '[data-cky-tag="accept-button"]',
+  ".cmplz-accept", ".cc-allow", ".cc-dismiss",
+  '[data-testid="uc-accept-all-button"]', "#uc-btn-accept-banner",
+  "#didomi-notice-agree-button",
+  '[data-tid="banner-accept"]',
+  ".osano-cm-accept-all",
+  ".cli-accept-all-btn", "#cookie_action_close_header",
+  "#cookiescript_accept", "#cookiescript_accept_all",
+];
+
+// Cauta un buton de accept dupa text, in pagina principala + toate iframe-urile
+// (unele CMP-uri pun bannerul intr-un iframe). Ruleaza in browser.
+const CLICK_ACCEPT_BY_TEXT = `(() => {
+  const re = /^(accept all|accept|allow all|allow|agree|i agree|got it|ok|accept[\\u0103a]( tot(ul)?)?|sunt de acord|de acord|permite tot(ul)?|inteleg)$/i;
+  const nodes = Array.from(document.querySelectorAll('button, a, [role="button"], input[type="button"], input[type="submit"]'));
+  for (const n of nodes) {
+    const t = (n.innerText || n.textContent || n.value || '').trim();
+    if (t && re.test(t)) { try { n.click(); return true; } catch (e) {} }
+  }
+  return false;
+})()`;
+
+async function acceptCookies(page: Page): Promise<void> {
+  // selectoare cunoscute combinate intr-un singur query (un singur wait, nu 16)
+  try {
+    const el = page.locator(COOKIE_ACCEPT_SELECTORS.join(", ")).first();
+    if (await el.isVisible({ timeout: 800 }).catch(() => false)) {
+      await el.click({ timeout: 1500 }).catch(() => {});
+      return;
+    }
+  } catch {}
+  // fallback pe text (pagina + iframe-uri) pentru CMP-uri necunoscute
+  try {
+    if (await page.evaluate(CLICK_ACCEPT_BY_TEXT).catch(() => false)) return;
+    for (const f of page.frames()) {
+      if (await f.evaluate(CLICK_ACCEPT_BY_TEXT).catch(() => false)) return;
+    }
+  } catch {}
+}
+
 async function detectTrackingOnPage(browser: Browser, url: string): Promise<LiveTracking> {
   const page = await browser.newPage();
   const hits: string[] = [];
@@ -493,7 +541,9 @@ async function detectTrackingOnPage(browser: Browser, url: string): Promise<Live
   try {
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
   } catch {}
-  await page.waitForTimeout(4500).catch(() => {});
+  await page.waitForTimeout(1200).catch(() => {}); // lasa bannerul de cookies sa apara
+  await acceptCookies(page).catch(() => {});       // apasa "Accept" ca sa deblocam tag-urile
+  await page.waitForTimeout(4500).catch(() => {}); // tag-uri post-consent se declanseaza
   const globals = (await page.evaluate(TRACKING_GLOBALS_JS).catch(() => null)) as RuntimeGlobals | null;
   await page.close().catch(() => {});
   return parseTracking(hits, globals);
