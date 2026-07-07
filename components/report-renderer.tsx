@@ -458,7 +458,9 @@ function GoogleAdsSection({ data }: { data: AuditData }) {
 function RoiSimSection({ data }: { data: AuditData }) {
   const r = data.roiSim;
   if (!r) return null;
-  const sym = symOf(r.currency);
+  // Auditurile persistate inainte de feature-ul de moneda nu au r.currency si erau calculate
+  // in EUR (CPC 0.45 EUR) -> pastreaza "€" pt ele; cele noi au mereu currency setat (default RON).
+  const sym = symOf(r.currency ?? "EUR");
   const money = (n: number) => n.toLocaleString("ro-RO") + " " + sym;
   const rows = [
     { k: "Rata de conversie", now: r.convNowPct + "%", goal: r.convGoalPct + "%" },

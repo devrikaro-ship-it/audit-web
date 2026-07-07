@@ -65,6 +65,10 @@ describe("detectCurrency", () => {
     expect(detectCurrency("<html></html>", "shop.de")).toBe("EUR");
     expect(detectCurrency("<html></html>", "magazin.ro")).toBe("RON");
   });
+  it("nu prinde 'currency' din interiorul altui cuvant (concurrency)", () => {
+    expect(detectCurrency('{"concurrency":"low"}')).toBeNull();
+    expect(detectCurrency('maxConcurrency="off"')).toBeNull();
+  });
   it("null cand nu se poate deduce", () => {
     expect(detectCurrency("<html></html>", "shop.com")).toBeNull();
   });

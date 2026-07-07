@@ -95,7 +95,7 @@ export function computeRoiSim(input: RoiSimInput, levers: RoiSimLevers): RoiSim 
 
   const sym = symOf(input.currency);
   const assumptions = [
-    `Cost pe click de referinta ~${round1(cpcBench)} ${sym} (medie ecom).`,
+    `Cost pe click de referinta ~${cpcBench} ${sym} (medie ecom).`,
     usedMarketAverage
       ? `Conversie de pornire = media pietei (~${MARKET_CONV_PCT}%), pentru ca nu ai stiut-o.`
       : `Conversie de pornire = ce ai raspuns (${round1(convNow)}%).`,

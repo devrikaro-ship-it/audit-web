@@ -53,7 +53,8 @@ export function detectEcom(html: string, platform?: Platform | null): boolean {
 const CURRENCY_ALIAS: Record<string, string> = { LEI: "RON" };
 
 export function detectCurrency(html: string, url?: string): string | null {
-  const iso = html.match(/["']?(?:priceCurrency|currency|currency_code|active_currency|shop_currency)["']?\s*[:=]\s*["']([A-Za-z]{3})["']/);
+  // (?<![A-Za-z]) impiedica potrivirea "currency" in interiorul altui cuvant (ex "concurrency":"low" -> fals "LOW").
+  const iso = html.match(/["']?(?<![A-Za-z])(?:priceCurrency|currency|currency_code|active_currency|shop_currency)["']?\s*[:=]\s*["']([A-Za-z]{3})["']/);
   if (iso) { const c = iso[1].toUpperCase(); return CURRENCY_ALIAS[c] ?? c; }
   if (/(^|[\s>(])lei([\s<).,]|$)|\bRON\b/i.test(html)) return "RON";
   if (/€|\bEUR\b/.test(html)) return "EUR";

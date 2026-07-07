@@ -32,6 +32,9 @@ describe("computeRoiSim", () => {
     expect(ron.roasNow).toBeLessThan(eur.roasNow / 3);
     expect(ron.currency).toBe("RON");
     expect(ron.assumptions[0]).toMatch(/lei/);
+    // CPC afisat = valoarea exacta folosita in calcul (0.45), nu rotunjit la 0.5
+    expect(eur.assumptions[0]).toContain("0.45");
+    expect(eur.assumptions[0]).not.toContain("0.5 ");
   });
 
   it("CSS partener => fara reducere CPC (cpcReductionPct = 0)", () => {

@@ -63,6 +63,7 @@ Motorul, catalogul, scoringul, raportul si PDF-ul sunt in app-ul web `~/seo-audi
 1. Porneste un audit din UI (`/start`) sau `POST /api/audit` cu `{ url, tipBusiness, platforma, nume, email, telefon }`.
 2. Raportul iese la `/r/<id>`, PDF la `/r/<id>/pdf`. Dashboard lead-uri: `/dashboard`.
 3. Motorul acopera deja: crawl (~50 pagini) + PageSpeed, cele 4 rubrici, **tracking la runtime** (browser real BrightData — GA4/Ads/Pixel/TikTok/Consent, nu din HTML brut), CSS + peisaj Shopping EEA, semnal produse (Catamo). Detaliu de detectie: `docs/AUDIT-SPEC.md` sec. 8 + memorie `reference_css_detection_method`.
+4. Funnel-ul (`/start`) pune 5 intrebari si genereaza o **simulare de venit multi-moneda** (RON/EUR/USD/GBP; moneda auto-detectata din site, userul poate alege) — ROAS acum vs posibil, ca "estimare orientativa". Detaliu: `docs/AUDIT-SPEC.md` §11.
 
 ## Fallback Python (DOAR cand web-ul nu poate crawla — ex: Cloudflare/anti-bot)
 Structura si scoringul de mai jos (`references/scoring.md`, `references/framing.md`) descriu **acest fallback**, nu motorul web (care e autoritativ pe spec).

@@ -3,6 +3,9 @@
 // ruta (detectie din prezenta campurilor). Aici traieste o data: tipul wire + parserul.
 // Pur (fara retea, fara audit-store runtime) -> testabil si sigur de importat din client.
 
+import { CURRENCIES } from "./currency";
+const CUR_CODES = new Set<string>(CURRENCIES.map((c) => c.code));
+
 // ── Inputurile pe care le consuma modulul de job (audit-store) ──
 export type StartMeta = {
   tipBusiness?: string; platforma?: string;
@@ -33,7 +36,13 @@ const num = (v: Num): number | undefined => {
   return Number.isFinite(n) ? n : undefined;
 };
 const convRateOf = (v: Num): number | null => (v == null || v === "" ? null : (num(v) ?? null));
-const curOf = (v: unknown): string | undefined => (typeof v === "string" && /^[A-Za-z]{3}$/.test(v) ? v.toUpperCase() : undefined);
+// Acceptam DOAR codurile suportate (nu orice 3 litere): altfel o moneda din afara
+// picker-ului (ex "PLN" pe apel API direct) ar cadea pe CPC-ul RON dar afisat cu simbol PLN.
+const curOf = (v: unknown): string | undefined => {
+  if (typeof v !== "string") return undefined;
+  const c = v.toUpperCase();
+  return CUR_CODES.has(c) ? c : undefined;
+};
 
 export function parseAuditRequest(body: unknown): ParsedRequest {
   if (!body || typeof body !== "object") return { kind: "error", status: 400, error: "Body invalid" };

@@ -28,9 +28,12 @@ describe("parseAuditRequest", () => {
   it("finalize: currency valid -> uppercase; invalid -> undefined", () => {
     const ok = parseAuditRequest({ phase: "finalize", id: "x", currency: "ron" });
     const bad = parseAuditRequest({ phase: "finalize", id: "x", currency: "euro" });
+    const unsupported = parseAuditRequest({ phase: "finalize", id: "x", currency: "PLN" });
     const none = parseAuditRequest({ phase: "finalize", id: "x" });
     if (ok.kind === "finalize") expect(ok.input.currency).toBe("RON");
     if (bad.kind === "finalize") expect(bad.input.currency).toBeUndefined();
+    // cod ISO valid dar din afara celor 4 suportate -> respins (nu doar validare de format)
+    if (unsupported.kind === "finalize") expect(unsupported.input.currency).toBeUndefined();
     if (none.kind === "finalize") expect(none.input.currency).toBeUndefined();
   });
 
