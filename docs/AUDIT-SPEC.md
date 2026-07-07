@@ -108,6 +108,8 @@ Scor per rubrica 0-100. Verdict: **>=70 Bun** (verde) · **>=40 De reglat** (gal
 
 Scor per rubrica: Tracking = % campuri prezente (necunoscut exclus); SEO = media celor 5 sub-sectiuni; UX/UI = media celor 5 campuri (viteza + 3 tipuri de pagini + filtre); Google Ads = mapare pe status CSS.
 
+**Scor global (gauge hero) — 2026-07-07:** doar componentele VIZIBILE in raport (`computeOverallScore`: viteza 0.17 + seo 0.24 + continut 0.20 + keywords 0.16 + structura 0.13 + schema 0.10 = 1.00). Social + securitate **NU** intra in nota (nu-s rubrici, §4) — inainte ponderau 10% ascuns; scoase ca nota sa reflecte exact ce se afiseaza. (`social`/`securitate` raman calculate in `checksRezultate` dar neafisate — cod mort inofensiv.)
+
 ## 7. Wrapper de persuasiune (fix, in afara celor 4 rubrici)
 
 Hero (domeniu + gauge scor global) · "Ce te costa asta" · **simulare de venit** (ROAS acum vs posibil — vezi 11.3) · "De ce Devrika" · CTA + contact. Raportul e locul unde se face vanzarea (dupa ce vede scorul slab), deci CTA + maparea pe servicii raman aici; simularea se adauga.

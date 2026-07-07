@@ -552,18 +552,17 @@ function computeOverallScore(
   keywords: PageCheck[],
   structura: PageCheck[],
   schema: Record<string, CheckResult>,
-  social: Record<string, CheckResult>,
-  securitate: Record<string, CheckResult>,
 ): number {
+  // Doar componentele VIZIBILE in raport (spec §4: social/securitate nu-s rubrici,
+  // deci nu intra in nota globala). Ponderi renormalizate la 1.00 dupa scoaterea
+  // celor 10% (social+securitate) — proportiile relative pastrate.
   const weights = [
-    { score: sectionScore(viteza),     weight: 0.15 },
-    { score: pageCheckScore(seo),      weight: 0.22 },
-    { score: pageCheckScore(continut), weight: 0.18 },
-    { score: pageCheckScore(keywords), weight: 0.15 },
-    { score: pageCheckScore(structura),weight: 0.12 },
-    { score: sectionScore(schema),     weight: 0.08 },
-    { score: sectionScore(social),     weight: 0.05 },
-    { score: sectionScore(securitate), weight: 0.05 },
+    { score: sectionScore(viteza),     weight: 0.17 },
+    { score: pageCheckScore(seo),      weight: 0.24 },
+    { score: pageCheckScore(continut), weight: 0.20 },
+    { score: pageCheckScore(keywords), weight: 0.16 },
+    { score: pageCheckScore(structura),weight: 0.13 },
+    { score: sectionScore(schema),     weight: 0.10 },
   ];
   return Math.round(weights.reduce((acc, w) => acc + w.score * w.weight, 0));
 }
@@ -969,7 +968,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const social = computeSocialChecks(homepageData);
   const securitate = computeSecurityChecks(homepageData);
 
-  const scor = computeOverallScore(viteza, seoChecks, continutChecks, keywordsChecks, structuraChecks, schema, social, securitate);
+  const scor = computeOverallScore(viteza, seoChecks, continutChecks, keywordsChecks, structuraChecks, schema);
   let conversie = computeConversieAudit(analyzedPages, mobile, hasProductFeed);
   const productSignal = conversie.isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
   const ux = conversie.isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
