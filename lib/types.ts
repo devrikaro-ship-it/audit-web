@@ -1,5 +1,7 @@
 import type { GoogleShoppingIntel } from "./css-detect";
 import type { RoiSim } from "./roi-sim";
+import type { PlatformEvidence } from "./platform-audit";
+import type { ShopifyCase } from "./shopify-case";
 
 export type StatusCheck = "ok" | "atentie" | "critic";
 export type AuditStatus = "pending" | "running" | "done" | "error";
@@ -32,6 +34,10 @@ export type AuditData = {
   productSignal?: ProductSignal;   // semnal optimizare produse (carlig Catamo, doar ecom)
   ux?: UxAudit;                    // UX/UI pe tipuri de pagina (doar ecom)
   roiSim?: RoiSim;                 // simulare venit (ROAS acum vs posibil) — din inputurile funnel-ului
+  // ── Stratul de migrare (docs/MIGRARE-SPEC.md), doar pe platforme self-hosted ──
+  // Colectat DUPA ce auditul e gata, ca sa nu intarzie raportul rece (PSI ia pana la 40 s).
+  platformEvidence?: PlatformEvidence; // dovezi de platforma (retea)
+  shopifyCase?: ShopifyCase;           // cazul de migrare (pur, recalculat cand vin cifrele)
 };
 
 // ── UX / UI — analiza pe tipuri de pagina (spec 3.3): viteza + home + categorie + produs + filtre ──
@@ -94,6 +100,7 @@ export type AuditJob = {
   convRate?: number | null; // rata de conversie declarata (%), null = "nu stiu"
   aov?: number;             // comanda medie (in moneda magazinului)
   adBudget?: number;        // buget lunar de reclame (in moneda magazinului)
+  monthlyVisits?: number;   // vizite lunare declarate — fara ele, migrarea da doar procente
   currency?: string;        // cod ISO moneda (RON/EUR/...) detectat/ales in funnel
   finalizeRequested?: boolean; // funnel a trimis contactul + inputurile (finalize)
   saved?: boolean;             // persistat durabil (evita salvare dubla la race)

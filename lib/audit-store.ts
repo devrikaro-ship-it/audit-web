@@ -3,6 +3,8 @@ import type { AuditJob } from "./types";
 import type { StartMeta, FinalizeInput } from "./audit-request";
 import { runAudit } from "./audit-engine";
 import { computeRoiSim } from "./roi-sim";
+import { collectPlatformEvidence } from "./platform-audit";
+import { buildShopifyCase } from "./shopify-case";
 import { saveAudit, getAudit } from "./leads-store";
 
 // Modul care detine CICLUL DE VIATA al unui audit-job, in spatele a 3 operatii:
@@ -32,6 +34,10 @@ export function startJob(url: string, meta: StartMeta = {}): string {
       const data = await runAudit(url);
       update(id, { status: "done", data });
       await tryFinalize(id);
+      // Stratul de migrare, DUPA ce raportul rece e livrabil: colectarea cere PageSpeed,
+      // care ia pana la 40 s pe magazinele grele. Rulat inainte, ar tine clientul in
+      // ecranul de asteptare pentru o rubrica de care poate nici nu are nevoie.
+      await collectMigration(id);
     } catch (err) {
       update(id, { status: "error", error: err instanceof Error ? err.message : "Eroare necunoscuta" });
     }
@@ -55,6 +61,21 @@ export async function getJobView(id: string): Promise<JobView | null> {
   return null;
 }
 
+// Colecteaza dovezile de platforma si construieste cazul de migrare. Ruleaza o singura
+// data, doar pe platforme self-hosted (`migrationCandidate`) — pe un magazin deja pe
+// Shopify nu are ce cauta. Esecul aici NU strica auditul: raportul rece e deja livrat.
+async function collectMigration(id: string): Promise<void> {
+  const job = store.get(id);
+  if (!job?.data || job.data.platformEvidence) return;
+  try {
+    const evidence = await collectPlatformEvidence(job.url);
+    if (!evidence.migrationCandidate) return;
+    job.data.platformEvidence = evidence;
+    update(id, { data: job.data });
+    await tryFinalize(id);
+  } catch { /* raportul rece ramane valid si fara stratul de migrare */ }
+}
+
 // Calculeaza roiSim (cand avem inputuri + date) si persista durabil o singura data,
 // cand auditul e gata SI funnel-ul a trimis finalize. Ruleaza dupa ambele evenimente.
 async function tryFinalize(id: string): Promise<void> {
@@ -71,6 +92,18 @@ async function tryFinalize(id: string): Promise<void> {
       },
     ) ?? undefined;
     if (roiSim) { job.data.roiSim = roiSim; update(id, { data: job.data }); }
+  }
+
+  // Cazul de migrare e PUR: se recalculeaza ori de cate ori se schimba cifrele
+  // declarate (conversie / AOV / vizite), fara sa reatinga reteaua.
+  if (job.data.platformEvidence && job.aov) {
+    job.data.shopifyCase = buildShopifyCase(job.data, job.data.platformEvidence, {
+      convRatePct: job.convRate ?? null,
+      aov: job.aov,
+      monthlyVisits: job.monthlyVisits ?? null,
+      currency: job.currency ?? "RON",
+    });
+    update(id, { data: job.data });
   }
 
   if (job.finalizeRequested && !job.saved) {

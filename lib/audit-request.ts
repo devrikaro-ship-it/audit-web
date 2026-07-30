@@ -11,19 +11,21 @@ export type StartMeta = {
   tipBusiness?: string; platforma?: string;
   nume?: string; email?: string; telefon?: string; probleme?: string[];
   convRate?: number | null; aov?: number; adBudget?: number; currency?: string;
+  monthlyVisits?: number;
   finalizeRequested?: boolean;
 };
 export type FinalizeInput = {
   nume?: string; email?: string; telefon?: string; probleme?: string[];
   convRate?: number | null; aov?: number; adBudget?: number; currency?: string;
+  monthlyVisits?: number;
 };
 
 // ── Forma pe fir (ce trimite clientul). Numerele pot veni ca string din formular. ──
 type Num = string | number | null | undefined;
 export type AuditRequestBody =
   | { phase: "start"; url: string; tipBusiness?: string; platforma?: string }
-  | { phase: "finalize"; id: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num; currency?: string }
-  | { phase?: undefined; url: string; tipBusiness?: string; platforma?: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num; currency?: string };
+  | { phase: "finalize"; id: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num; currency?: string; monthlyVisits?: Num }
+  | { phase?: undefined; url: string; tipBusiness?: string; platforma?: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num; currency?: string; monthlyVisits?: Num };
 
 // ── Comanda parsata (ce executa ruta) ──
 export type ParsedRequest =
@@ -55,6 +57,7 @@ export function parseAuditRequest(body: unknown): ParsedRequest {
       input: {
         nume: b.nume as string, email: b.email as string, telefon: b.telefon as string, probleme: b.probleme as string[],
         aov: num(b.aov as Num), adBudget: num(b.adBudget as Num), convRate: convRateOf(b.convRate as Num), currency: curOf(b.currency),
+        monthlyVisits: num(b.monthlyVisits as Num),
       },
     };
   }
@@ -68,6 +71,7 @@ export function parseAuditRequest(body: unknown): ParsedRequest {
       tipBusiness: b.tipBusiness as string, platforma: b.platforma as string,
       nume: b.nume as string, email: b.email as string, telefon: b.telefon as string, probleme: b.probleme as string[],
       aov: num(b.aov as Num), adBudget: num(b.adBudget as Num), convRate: convRateOf(b.convRate as Num), currency: curOf(b.currency),
+        monthlyVisits: num(b.monthlyVisits as Num),
       finalizeRequested: hasContact, // legacy = contactul vine odata cu URL-ul
     },
   };
