@@ -19,7 +19,7 @@ netehnic, fara diacritice), livrarea si sinteza multi-canal.
 
 | Canal | Skill specific | Ce ii dai |
 |---|---|---|
-| **Google Ads** | [`audit-google-ads`](../audit-google-ads/SKILL.md) | contul + tipul + targetul din fisa |
+| **Google Ads** | `audit-google-ads` | contul + tipul + targetul din fisa |
 | Meta | `meta-ads-optimize` (pana are skill de audit propriu) | act_id + token |
 | SEO / site | `devrika-seo` | domeniul |
 
@@ -28,7 +28,9 @@ daca scrii un prag de Google Ads in acest fisier, ai bifurcat doctrina.
 
 ---
 
-Cele **doua moduri** de mai jos raman valabile; alegi modul DUPA cat acces ai:
+Cele **doua moduri** de mai jos raman valabile; alegi modul DUPA cat acces ai.
+(Un skill de canal poate avea moduri in plus — ex `audit-google-ads` are **CONNECTED**, prospectul
+isi conecteaza singur contul: nici RECE, nici CALD.)
 
 | | **RECE (lead-magnet)** | **CALD (intern)** |
 |---|---|---|
@@ -89,7 +91,7 @@ Pasii + limitele: **[references/note-tehnice.md](references/note-tehnice.md)**.
 
 ## Pasi (rezumat — detaliu in warm-audit.md)
 1. **Identifica conturile** clientului: `clients/{client}/profile/accounts.json` (Google customer id, Meta act_, GA4 property, GSC, GMC). Daca lipseste fisa -> ruleaza intai `client-intake`.
-2. **Google Ads** (acces MCC) → **deleaga la [`audit-google-ads`](../audit-google-ads/SKILL.md)**
+2. **Google Ads** (acces MCC) → **deleaga la `audit-google-ads`**
    (SOP + agenti `audit-gads-collect` / `audit-gads-report`). Comenzile si pragurile stau acolo.
 3. **Meta** (token System User): `python scripts/meta_pull.py <act_id>` — cont, campanii (obiective gresite: LINK_CLICKS/ENGAGEMENT/AWARENESS), pixeli (straini?), insights cu purchase/ROAS (atributie umflata?), structura (boosted posts vs CBO).
 4. **GA4 cross-check** (`clients/ga4_pull.py` / `ga4_ecom.py`): adevarul pe canale. **Confrunta ROAS-ul Meta raportat cu `facebook/cpc` purchase din GA4** — diferenta mare = atribuire view-through umflata. La fel `google/cpc` vs ROAS Google.
@@ -98,7 +100,10 @@ Pasii + limitele: **[references/note-tehnice.md](references/note-tehnice.md)**.
 7. **Salveaza** in `clients/{client}/AUDIT-{data}.md`. Daca clientul cere si varianta de prezentat -> asambleaza `WarmReport` JSON (`slug`/`client`/`verdict`/`channels[]`) si publica via `post_cald.py` (web) sau `warm_report.py` + `html_to_pdf.py` (PDF local).
 
 ## Reguli mod cald (din doctrina Devrika)
-- **Nu te incred in ROAS-ul raportat de platforme** pana nu validezi conversiile. Google: primary = doar Purchase real (+ call value = AOV din GA4). Meta: judeca pe `facebook/cpc` GA4 (canal slab, CR real ~0.4-0.5%), nu pe Ads Manager.
+- **Nu te incred in ROAS-ul raportat de platforme** pana nu validezi conversiile — regula generala,
+  valabila pe orice canal. Ce inseamna "conversie valida" e specific canalului si sta in skill-ul
+  lui: Google → `audit-google-ads` (SOP etapa 2). Meta: judeca pe `facebook/cpc` GA4 (canal slab,
+  CR real ~0.4-0.5%), nu pe Ads Manager — pana cand Meta isi capata skill-ul de audit.
 - **ECOM vs LEADS se trateaza separat** (alt obiectiv, alta metrica) — vezi playbook-uri.
 - Date reale, zero inventat. Ce n-ai putut trage (EMQ/dedup CAPI, feed catalog) = "de verificat", nu afirmat.
 - Detaliu complet, reguli per canal si cross-check-uri: **`references/warm-audit.md`**.
