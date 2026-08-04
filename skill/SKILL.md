@@ -42,23 +42,18 @@ Cele **doua moduri** de mai jos raman valabile; alegi modul DUPA cat acces ai:
 
 ## ⚠️ Arhitectura — motorul traieste in app-ul web (`~/seo-audit`)
 
-Skill-ul e un **wrapper** peste app-ul web `audit-web` (repo `devrikaro-ship-it/audit-web`, local `~/seo-audit`; acest skill = folderul `skill/` din el, symlink in `~/.claude/skills/`). Motorul, catalogul, scoringul, raportul si PDF-ul sunt **acolo**, intr-un singur loc — nu dublam logica in Python.
-
-- **RECE**: calea principala = app-ul web (detaliu la *MOD RECE* mai jos). Structura raportului = `docs/AUDIT-SPEC.md`.
-- **CALD**: ruleaza pull-urile reale (`scripts/meta_pull.py --json` local in skill; `clients/ga4_pull.py` si `clients/gads_*` din directorul de lucru Devrika `~/clients`), **asambleaza** un raport (judecata ta) ca JSON in forma `WarmReport` (schema in `~/seo-audit/lib/warm-report.ts`: obligatoriu `slug`, `client`, `verdict`, `channels[]`). Publicare, doua cai:
-  - **Web (implicit):** `python scripts/post_cald.py raport.json --base <url-web>` → apare la `/cald/<slug>` (+ PDF `/cald/<slug>/pdf`) si in dashboard-ul CALD.
-  - **PDF local (offline):** `python scripts/warm_report.py raport.json iesire.html` apoi `python scripts/html_to_pdf.py iesire.html Audit-{client}.pdf` — cand nu vrei sa treci prin web.
-- **Fallback Python** (`collect.py`/`build.py`/`html_to_pdf.py`): doar cand web-ul nu poate crawla (ex: Cloudflare). NU e calea implicita.
-- Knowledge de framing Ads (Ad Library, CSS Shopping, segmentare) in `~/seo-audit/docs/ads-research/` (= `references/`).
+Skill-ul e un **wrapper** peste app-ul `audit-web` (repo `devrikaro-ship-it/audit-web`; acest skill
+= folderul `skill/` din el, symlink in `~/.claude/skills/`). Motorul, catalogul, scoringul, raportul
+si PDF-ul sunt **acolo**, intr-un singur loc — nu dublam logica in Python.
+Cai de rulare si publicare (WarmReport, post_cald, PDF local):
+**[references/note-tehnice.md](references/note-tehnice.md)**.
 
 ## Cum aleg modul (auto-detect)
 
-1. **`--intern` in argumente** SAU userul zice "audit intern / avem acces / audit cont" -> **CALD**.
-2. Exista deja `clients/{client}/profile/accounts.json` sau ID-uri de cont (Google customer / Meta act_) -> **CALD**.
-3. Avem token Meta (`~/.config/meta-ads/token`) si/sau MCC Google care contine clientul -> **CALD** posibil; confirma scurt cu userul ce conturi atingem.
-4. Altfel (doar un URL de prospect, fara acces) -> **RECE**.
-
-Daca e ambiguu, intreaba o singura data: *"Avem acces la conturile lor sau e audit la rece de prospect?"*
+**CALD** daca: `--intern` in argumente · userul zice "audit intern / avem acces / audit cont" ·
+exista `clients/{client}/profile/accounts.json` sau ID-uri de cont · avem token Meta / MCC-ul
+contine clientul (aici confirma scurt ce conturi atingem). **Altfel RECE** (doar URL, fara acces).
+Ambiguu → intreaba o singura data: *"Avem acces la conturile lor sau e audit la rece?"*
 
 ---
 
@@ -76,19 +71,15 @@ Daca e ambiguu, intreaba o singura data: *"Avem acces la conturile lor sau e aud
 6. **Fara diacritice** in textul raportului (regula clienti Devrika).
 7. **Findings mapeaza pe 3 servicii:** CSS -> ProductHero, produse neoptimizate -> Catamo, restul (concurenti/tracking/Shopping) -> management campanii. (vezi spec sec. 1)
 
-## Calea principala = app-ul web (motorul)
-Motorul, catalogul, scoringul, raportul si PDF-ul sunt in app-ul web `~/seo-audit`. NU rula Python ca prima optiune.
-1. Porneste un audit din UI (`/start`) sau `POST /api/audit` cu `{ url, tipBusiness, platforma, nume, email, telefon }`.
-2. Raportul iese la `/r/<id>`, PDF la `/r/<id>/pdf`. Dashboard lead-uri: `/dashboard`.
-3. Motorul acopera deja: crawl (~50 pagini) + PageSpeed, cele 4 rubrici, **tracking la runtime** (browser real BrightData — GA4/Ads/Pixel/TikTok/Consent, nu din HTML brut), CSS + peisaj Shopping EEA, semnal produse (Catamo). Detaliu de detectie: `docs/AUDIT-SPEC.md` sec. 8 + memorie `reference_css_detection_method`.
-4. Funnel-ul (`/start`) pune 5 intrebari si genereaza o **simulare de venit multi-moneda** (RON/EUR/USD/GBP; moneda auto-detectata din site, userul poate alege) — ROAS acum vs posibil, ca "estimare orientativa". Detaliu: `docs/AUDIT-SPEC.md` §11.
+## Calea principala = app-ul web (motorul). NU rula Python ca prima optiune.
+1. Porneste din UI (`/start`) sau `POST /api/audit` `{url, tipBusiness, platforma, nume, email, telefon}`.
+2. Raport la `/r/<id>`, PDF la `/r/<id>/pdf`, lead-uri in `/dashboard`.
+3. Motorul acopera deja crawl (~50 pagini) + PageSpeed, cele 4 rubrici, tracking **la runtime**
+   (browser real BrightData, nu HTML brut), CSS + peisaj Shopping EEA, semnal produse (Catamo),
+   si simularea de venit multi-moneda din funnel. Detalii: `docs/AUDIT-SPEC.md` §8 si §11.
 
 ## Fallback Python (DOAR cand web-ul nu poate crawla — ex: Cloudflare/anti-bot)
-Structura si scoringul de mai jos (`references/scoring.md`, `references/framing.md`) descriu **acest fallback**, nu motorul web (care e autoritativ pe spec).
-1. `python scripts/collect.py https://domeniul.ro` — semnale SEO + Ads. Daca apare `!!! BLOCKER`, ia paginile prin Playwright; daca nici asa, spune userului ca site-ul blocheaza crawl.
-2. Research Shopping/Meta best-effort: `references/google-ads-research.md`, `references/meta-ads-research.md`.
-3. `python scripts/build.py date.json raport.html` (forma lui `date.json` = `assets/example.json`; framing: `references/framing.md`) -> `python scripts/html_to_pdf.py raport.html "Audit-Devrika-{client}.pdf"`.
-4. Salveaza in `seo-audits/{client}/` (pastreaza si JSON-ul).
+Pasii + limitele: **[references/note-tehnice.md](references/note-tehnice.md)**.
 
 ---
 
@@ -99,11 +90,7 @@ Structura si scoringul de mai jos (`references/scoring.md`, `references/framing.
 ## Pasi (rezumat — detaliu in warm-audit.md)
 1. **Identifica conturile** clientului: `clients/{client}/profile/accounts.json` (Google customer id, Meta act_, GA4 property, GSC, GMC). Daca lipseste fisa -> ruleaza intai `client-intake`.
 2. **Google Ads** (acces MCC) → **deleaga la [`audit-google-ads`](../audit-google-ads/SKILL.md)**
-   (SOP + agenti `audit-gads-collect` / `audit-gads-report`). Scripturile de mai jos raman
-   documentate aici doar ca referinta rapida — sursa unica a procedurii e skill-ul de canal:
-   - `gads_account_check.py` — conversii (cauta primary poluat: PAGE_VIEW/ADD_TO_CART/ENGAGEMENT ca primary), auto-tag, liste negative, audiente, brand [BP].
-   - `gads_winners.py` — campanii toate statusurile, bidding, ROAS, structura (MC plain vs Value+tROAS, Demand Gen/Display, cimitir de teste).
-   - `gads_kw_audit.py` / `gads_keywords.py` — waste pe search terms + negative.
+   (SOP + agenti `audit-gads-collect` / `audit-gads-report`). Comenzile si pragurile stau acolo.
 3. **Meta** (token System User): `python scripts/meta_pull.py <act_id>` — cont, campanii (obiective gresite: LINK_CLICKS/ENGAGEMENT/AWARENESS), pixeli (straini?), insights cu purchase/ROAS (atributie umflata?), structura (boosted posts vs CBO).
 4. **GA4 cross-check** (`clients/ga4_pull.py` / `ga4_ecom.py`): adevarul pe canale. **Confrunta ROAS-ul Meta raportat cu `facebook/cpc` purchase din GA4** — diferenta mare = atribuire view-through umflata. La fel `google/cpc` vs ROAS Google.
 5. **SEO/site** (optional, daca e in scop): `/seo` engine sau `collect.py` pe site + GSC (indexare/queries) + GMC (feed/misrepresentation).
@@ -118,10 +105,7 @@ Structura si scoringul de mai jos (`references/scoring.md`, `references/framing.
 
 ---
 
-## Note tehnice (ambele moduri)
-- Chart.js se randeaza headless prin `--virtual-time-budget` (deja in `html_to_pdf.py`). Nu schimba.
-- Scripturile Python sunt cross-platform, fara dependinte. Ruleaza cu `python`/`python3`.
-- `meta_pull.py` foloseste tokenul System User din `~/.config/meta-ads/token` (Graph API; merge si cand MCP e dezactivat pe cont).
-- Scripturile `gads_*` ruleaza cu venv `~/.claude/skills/seo/.venv/bin/python` + config `~/.config/claude-seo/google-ads.yaml`.
-- Daca PSI/CrUX e rate-limited fara cheie, scrie "viteza de masurat" — nu inventa cifre.
-- Model template fallback Python (rece): `seo-audits/sndeco/`. Model audit cald: ultimul `clients/*/AUDIT-*.md`.
+## Referinte
+- **[references/note-tehnice.md](references/note-tehnice.md)** — runtime, fallback Python, modele
+- **[references/warm-audit.md](references/warm-audit.md)** — playbook mod CALD (reguli per canal)
+- `docs/AUDIT-SPEC.md` — structura raportului RECE (sursa unica)
