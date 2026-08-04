@@ -10,9 +10,25 @@ metadata:
   category: audit
 ---
 
-# Audit Devrika — skill unic, 2 moduri
+# Audit Devrika — skill general de audit
 
-Un singur skill de audit client, cu **doua functii** clar separate. Alegi modul DUPA cat acces ai:
+Skill-ul **general** de audit client: alege modul dupa acces, tine framing-ul comun (durere + bani,
+netehnic, fara diacritice), livrarea si sinteza multi-canal.
+
+## Skill-uri specifice pe canal (auditul profund se DELEAGA)
+
+| Canal | Skill specific | Ce ii dai |
+|---|---|---|
+| **Google Ads** | [`audit-google-ads`](../audit-google-ads/SKILL.md) | contul + tipul + targetul din fisa |
+| Meta | `meta-ads-optimize` (pana are skill de audit propriu) | act_id + token |
+| SEO / site | `devrika-seo` | domeniul |
+
+**Regula:** doctrina unui canal traieste in skill-ul lui. Aici NU se copiaza praguri de canal —
+daca scrii un prag de Google Ads in acest fisier, ai bifurcat doctrina.
+
+---
+
+Cele **doua moduri** de mai jos raman valabile; alegi modul DUPA cat acces ai:
 
 | | **RECE (lead-magnet)** | **CALD (intern)** |
 |---|---|---|
@@ -82,7 +98,9 @@ Structura si scoringul de mai jos (`references/scoring.md`, `references/framing.
 
 ## Pasi (rezumat — detaliu in warm-audit.md)
 1. **Identifica conturile** clientului: `clients/{client}/profile/accounts.json` (Google customer id, Meta act_, GA4 property, GSC, GMC). Daca lipseste fisa -> ruleaza intai `client-intake`.
-2. **Google Ads** (acces MCC): trage cu scripturile din `clients/`:
+2. **Google Ads** (acces MCC) → **deleaga la [`audit-google-ads`](../audit-google-ads/SKILL.md)**
+   (SOP + agenti `audit-gads-collect` / `audit-gads-report`). Scripturile de mai jos raman
+   documentate aici doar ca referinta rapida — sursa unica a procedurii e skill-ul de canal:
    - `gads_account_check.py` — conversii (cauta primary poluat: PAGE_VIEW/ADD_TO_CART/ENGAGEMENT ca primary), auto-tag, liste negative, audiente, brand [BP].
    - `gads_winners.py` — campanii toate statusurile, bidding, ROAS, structura (MC plain vs Value+tROAS, Demand Gen/Display, cimitir de teste).
    - `gads_kw_audit.py` / `gads_keywords.py` — waste pe search terms + negative.
