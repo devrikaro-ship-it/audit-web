@@ -125,8 +125,8 @@ export default function GoogleAdsLanding() {
         <div className="mx-auto flex h-16 max-w-[1100px] items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 no-underline">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-devrika.png" alt="Devrika" width={36} height={36} className="h-9 w-9" />
-            <span className="text-base font-extrabold tracking-[-0.3px]" style={{ color: "#1e1b4b" }}>Devrika</span>
+            <img src="/logo-devrika.png" alt="Audit Devrika" width={36} height={36} className="h-9 w-9" />
+            <span className="text-base font-extrabold tracking-[-0.3px]" style={{ color: "#1e1b4b" }}>Audit Devrika</span>
           </Link>
           <Link href={CONNECT_HREF}
             className="flex min-h-11 items-center rounded-lg px-5 text-sm font-bold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -163,8 +163,10 @@ export default function GoogleAdsLanding() {
             "your home page does not explain the purpose of your app" daca nu gaseste
             numele aplicatiei alaturi de ce face ea. */}
         <p className="mx-auto mb-4 max-w-[640px] text-lg leading-relaxed" style={{ color: C.gray500 }}>
-          <b style={{ color: "#0f172a" }}>Audit Devrika</b> este o aplicatie web care analizeaza contul
-          tau de Google Ads si iti arata pe ce produse pierzi bani in campaniile de Shopping.
+          Acesta e unul dintre auditurile din <Link href="/" style={{ color: C.indigo, fontWeight: 700 }}>Audit Devrika</Link>,
+          aplicatia web care analizeaza magazinul si conturile tale de publicitate. Auditul de fata
+          se conecteaza la contul tau de Google Ads si iti arata pe ce produse pierzi bani in
+          campaniile de Shopping.
         </p>
         <p className="mx-auto mb-10 max-w-[640px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
           Iti conectezi contul de Google Ads, aplicatia citeste datele campaniilor de Shopping din
