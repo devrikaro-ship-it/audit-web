@@ -6,6 +6,62 @@
 
 export const FETCH_TIMEOUT = 12000;
 
+export type GoogleAdsAuth = {
+  accessToken: string;
+  developerToken: string;
+  /** MCC-ul din care se face cererea, cand contul e sub un manager. Fara cratime. */
+  loginCustomerId?: string;
+};
+
+/**
+ * Un search GAQL pe Google Ads API (REST, v21), cu paginare.
+ * NB: endpointul `search` nu accepta `pageSize` (PAGE_SIZE_NOT_SUPPORTED) — doar pageToken.
+ * Aici, nu in intake, pentru ca acesta e singurul fisier care are voie sa atinga fetch().
+ * READ-ONLY prin natura endpoint-ului: `search` doar citeste.
+ */
+export async function googleAdsSearch(
+  customerId: string,
+  query: string,
+  auth: GoogleAdsAuth
+): Promise<Record<string, unknown>[]> {
+  const cid = customerId.replace(/-/g, "");
+  const url = `https://googleads.googleapis.com/v21/customers/${cid}/googleAds:search`;
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${auth.accessToken}`,
+    "developer-token": auth.developerToken,
+    "Content-Type": "application/json",
+  };
+  if (auth.loginCustomerId) headers["login-customer-id"] = auth.loginCustomerId.replace(/-/g, "");
+
+  const rows: Record<string, unknown>[] = [];
+  let pageToken: string | undefined;
+  do {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 60000); // cataloagele mari sunt lente
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        method: "POST",
+        headers,
+        signal: ctrl.signal,
+        body: JSON.stringify({ query, pageToken }),
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      // Mesajul Google e mult mai util decat statusul — il pastram, taiat.
+      throw new Error(`Google Ads API ${res.status}: ${body.slice(0, 400)}`);
+    }
+    const json = (await res.json()) as { results?: Record<string, unknown>[]; nextPageToken?: string };
+    if (json.results) rows.push(...json.results);
+    pageToken = json.nextPageToken;
+  } while (pageToken);
+
+  return rows;
+}
+
 async function fetchWithTimeout(url: string, timeout = FETCH_TIMEOUT): Promise<Response> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeout);

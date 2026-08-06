@@ -58,56 +58,74 @@ export function breakEvenRoas(marginPct: number): number {
 }
 
 /**
- * Marje brute tipice pe industrie — folosite DOAR ca valoare sugerata in formular,
- * niciodata ca fapt despre magazinul lui. Omul le poate schimba.
- * Cheia = prefix de categorie Google Shopping (google_product_category), lowercase.
+ * Marje brute tipice pe industrie — valoare SUGERATA in formular, niciodata afirmata ca fapt
+ * despre magazinul lui. Omul o poate schimba.
+ *
+ * Cheia = id-ul de categorie Google de nivel 1 (`shopping_product.category_level1`). Am ales
+ * id-ul, nu textul, dintr-un motiv verificat pe cont real (06-08-2026): `product_type_level1`
+ * e text liber scris de comerciant in limba lui ("hrana uscata", "recompense si snackuri"),
+ * deci nu se poate potrivi de o regula generala. Taxonomia Google are in schimb 21 de id-uri
+ * stabile, independente de limba.
  */
-export const INDUSTRY_MARGIN: ReadonlyArray<{ match: RegExp; label: string; marginPct: number }> = [
-  { match: /animal|pet|hrana pentru/i, label: "hrana si accesorii animale", marginPct: 28 },
-  { match: /apparel|clothing|imbracaminte|fashion/i, label: "imbracaminte si moda", marginPct: 55 },
-  { match: /health|beauty|cosmetic|frumusete/i, label: "cosmetice si ingrijire", marginPct: 60 },
-  { match: /electronic|computer|telefon/i, label: "electronice", marginPct: 15 },
-  { match: /furniture|home|mobil|casa/i, label: "mobila si decoratiuni", marginPct: 45 },
-  { match: /food|beverage|aliment|bacan/i, label: "alimente si bauturi", marginPct: 25 },
-  { match: /sport|fitness/i, label: "sport si fitness", marginPct: 40 },
-  { match: /toy|jucari|game/i, label: "jucarii", marginPct: 40 },
-  { match: /auto|vehicle|piese/i, label: "auto si piese", marginPct: 30 },
-  { match: /jewel|watch|bijuterii/i, label: "bijuterii si ceasuri", marginPct: 55 },
-];
+export const INDUSTRY_MARGIN: ReadonlyMap<number, { label: string; marginPct: number }> = new Map([
+  [1, { label: "hrana si accesorii animale", marginPct: 28 }],
+  [8, { label: "arta si divertisment", marginPct: 45 }],
+  [111, { label: "business si industrial", marginPct: 30 }],
+  [141, { label: "foto si optica", marginPct: 20 }],
+  [166, { label: "imbracaminte si accesorii", marginPct: 55 }],
+  [222, { label: "electronice", marginPct: 15 }],
+  [412, { label: "alimente si bauturi", marginPct: 25 }],
+  [436, { label: "mobila", marginPct: 45 }],
+  [469, { label: "sanatate si frumusete", marginPct: 60 }],
+  [536, { label: "casa si gradina", marginPct: 42 }],
+  [537, { label: "bebelusi si copii mici", marginPct: 40 }],
+  [632, { label: "bricolaj si scule", marginPct: 30 }],
+  [783, { label: "carti si media", marginPct: 30 }],
+  [888, { label: "auto si piese", marginPct: 30 }],
+  [922, { label: "birotica si papetarie", marginPct: 35 }],
+  [988, { label: "sport si fitness", marginPct: 40 }],
+  [1239, { label: "jucarii si jocuri", marginPct: 40 }],
+  [2092, { label: "software", marginPct: 70 }],
+  [5181, { label: "bagaje si genti", marginPct: 50 }],
+]);
 
-/** Marja implicita cand nu recunoastem industria — mediana ecom RO, deliberat conservatoare. */
+/** Marja implicita cand nu recunoastem industria — mediana ecom, deliberat conservatoare. */
 export const DEFAULT_MARGIN_PCT = 35;
 
 /**
- * Ghiceste industria din categoriile produselor lui si intoarce marja de SUGERAT.
- * Se completeaza in formular ca punct de plecare, ca omul sa nu porneasca de la zero.
+ * Extrage id-ul numeric din resource name-ul intors de API
+ * (`productCategoryConstants/LEVEL1~1` -> 1). Accepta si un id dat direct.
+ */
+export function categoryId(raw?: string): number | null {
+  if (!raw) return null;
+  const m = /(\d+)\s*$/.exec(raw.trim());
+  return m ? Number(m[1]) : null;
+}
+
+/**
+ * Ghiceste industria din categoriile produselor lui si intoarce marja de SUGERAT — pe categoria
+ * DOMINANTA din catalog, ca un magazin mixt sa nu fie etichetat dupa un colt de raft.
  */
 export function suggestMargin(products: Product[]): {
   label: string;
   marginPct: number;
   detected: boolean;
 } {
-  const counts = new Map<string, number>();
+  const counts = new Map<number, number>();
   for (const p of products) {
-    if (!p.category) continue;
-    for (const ind of INDUSTRY_MARGIN) {
-      if (ind.match.test(p.category)) {
-        counts.set(ind.label, (counts.get(ind.label) ?? 0) + 1);
-      }
-    }
+    const id = categoryId(p.category);
+    if (id === null || !INDUSTRY_MARGIN.has(id)) continue;
+    counts.set(id, (counts.get(id) ?? 0) + 1);
   }
-  let best: string | null = null;
+  let bestId: number | null = null;
   let bestN = 0;
-  for (const [label, n] of counts) {
+  for (const [id, n] of counts) {
     if (n > bestN) {
-      best = label;
+      bestId = id;
       bestN = n;
     }
   }
-  if (best) {
-    const ind = INDUSTRY_MARGIN.find((i) => i.label === best)!;
-    return { label: ind.label, marginPct: ind.marginPct, detected: true };
-  }
+  if (bestId !== null) return { ...INDUSTRY_MARGIN.get(bestId)!, detected: true };
   return { label: "magazin online", marginPct: DEFAULT_MARGIN_PCT, detected: false };
 }
 

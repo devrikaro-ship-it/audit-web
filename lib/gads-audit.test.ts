@@ -118,7 +118,7 @@ describe("pragul derivat din marja (nu-l mai intrebam pe om)", () => {
 
 describe("marja sugerata din industria lui", () => {
   it("o deduce din categoriile produselor din contul lui", () => {
-    const s = suggestMargin([P("A", 10, 10, 5, "Animals & Pet Supplies > Pet Food")]);
+    const s = suggestMargin([P("A", 10, 10, 5, "productCategoryConstants/LEVEL1~1")]);
     expect(s.detected).toBe(true);
     expect(s.label).toBe("hrana si accesorii animale");
     expect(s.marginPct).toBe(28);
@@ -132,10 +132,10 @@ describe("marja sugerata din industria lui", () => {
 
   it("alege industria dominanta cand catalogul e mixt", () => {
     const s = suggestMargin([
-      P("A", 1, 1, 1, "Apparel & Accessories > Clothing"),
-      P("B", 1, 1, 1, "Apparel & Accessories > Shoes"),
-      P("C", 1, 1, 1, "Electronics > Computers"),
+      P("A", 1, 1, 1, "productCategoryConstants/LEVEL1~166"),
+      P("B", 1, 1, 1, "productCategoryConstants/LEVEL1~166"),
+      P("C", 1, 1, 1, "productCategoryConstants/LEVEL1~222"),
     ]);
-    expect(s.label).toBe("imbracaminte si moda");
+    expect(s.label).toBe("imbracaminte si accesorii");
   });
 });
