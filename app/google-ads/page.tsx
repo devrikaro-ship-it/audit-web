@@ -412,8 +412,20 @@ export default function GoogleAdsLanding() {
           <img src="/logo-devrika.png" alt="Devrika" width={30} height={30} className="h-[30px] w-[30px]" />
           <span className="text-base font-extrabold text-white">Devrika</span>
         </div>
+        {/* Linkurile legale stau AICI, pe pagina declarata ca home page al aplicatiei, si
+            trimit catre pagini de pe ACELASI host. Google respinge brandingul cand politica
+            de confidentialitate lipseste de pe home page sau sta pe alt domeniu. */}
+        <p className="mb-2 text-[13px]" style={{ color: "#475569" }}>
+          <Link href="/confidentialitate" className="transition-colors hover:text-[#0ABECF]" style={{ color: C.cyan }}>
+            Politica de confidentialitate
+          </Link>
+          {" · "}
+          <Link href="/termeni" className="transition-colors hover:text-[#0ABECF]" style={{ color: C.cyan }}>
+            Termeni si conditii
+          </Link>
+        </p>
         <p className="text-[13px]" style={{ color: "#475569" }}>
-          © {new Date().getFullYear()} Devrika Agency ·{" "}
+          © {new Date().getFullYear()} Devrika ·{" "}
           <Link href="/audit-seo" className="transition-colors hover:text-[#0ABECF]" style={{ color: C.cyan }}>Audit magazine online</Link>
           {" · "}
           <a href="https://devrika.ro" className="transition-colors hover:text-[#0ABECF]" style={{ color: C.cyan }}>devrika.ro</a>
