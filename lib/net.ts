@@ -19,7 +19,47 @@ export type GoogleAdsAuth = {
  * Aici, nu in intake, pentru ca acesta e singurul fisier care are voie sa atinga fetch().
  * READ-ONLY prin natura endpoint-ului: `search` doar citeste.
  */
+/**
+ * Cate interogari Google Ads lasam sa mearga deodata.
+ *
+ * Auditul completat trimite ~11 interogari in paralel. Masurat pe DeHome: fiecare interogare
+ * dureaza sub o secunda luata separat (4s toate, una dupa alta), dar trimise toate odata
+ * raportul ajungea la 20 de secunde — Google le temporizeaza, iar reincercarile noastre pun
+ * peste inca 1,5 si 3 secunde de asteptare. Cu o coada scurta, paralelismul ramane util fara
+ * sa se transforme in asteptare.
+ */
+const MAX_PARALEL = 4;
+let inZbor = 0;
+const coada: (() => void)[] = [];
+
+async function ocupaLoc(): Promise<void> {
+  if (inZbor < MAX_PARALEL) {
+    inZbor++;
+    return;
+  }
+  await new Promise<void>((elibereaza) => coada.push(elibereaza));
+  inZbor++;
+}
+
+function elibereazaLoc(): void {
+  inZbor--;
+  coada.shift()?.();
+}
+
 export async function googleAdsSearch(
+  customerId: string,
+  query: string,
+  auth: GoogleAdsAuth
+): Promise<Record<string, unknown>[]> {
+  await ocupaLoc();
+  try {
+    return await interogheaza(customerId, query, auth);
+  } finally {
+    elibereazaLoc();
+  }
+}
+
+async function interogheaza(
   customerId: string,
   query: string,
   auth: GoogleAdsAuth

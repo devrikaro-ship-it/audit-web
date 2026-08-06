@@ -53,3 +53,54 @@ describe("net", () => {
     expect(await fetchPSI("https://x.ro", "desktop")).toBeNull();
   });
 });
+
+describe("coada de interogari Google Ads", () => {
+  it("nu lasa mai mult de 4 cereri deodata", async () => {
+    const { googleAdsSearch } = await import("./net");
+    let simultan = 0;
+    let varf = 0;
+    const original = globalThis.fetch;
+    globalThis.fetch = (async () => {
+      simultan++;
+      varf = Math.max(varf, simultan);
+      await new Promise((r) => setTimeout(r, 15));
+      simultan--;
+      return new Response(JSON.stringify({ results: [] }), { status: 200 });
+    }) as typeof fetch;
+    try {
+      await Promise.all(
+        Array.from({ length: 12 }, () =>
+          googleAdsSearch("123", "SELECT campaign.id FROM campaign", {
+            accessToken: "t", developerToken: "d",
+          })
+        )
+      );
+    } finally {
+      globalThis.fetch = original;
+    }
+    expect(varf).toBeLessThanOrEqual(4);
+  });
+
+  it("elibereaza locul si cand cererea esueaza — altfel coada se blocheaza definitiv", async () => {
+    const { googleAdsSearch } = await import("./net");
+    const original = globalThis.fetch;
+    globalThis.fetch = (async () =>
+      new Response("nope", { status: 400 })) as typeof fetch;
+    try {
+      for (let i = 0; i < 6; i++) {
+        await googleAdsSearch("123", "SELECT campaign.id FROM campaign", {
+          accessToken: "t", developerToken: "d",
+        }).catch(() => []);
+      }
+      // Daca locurile nu s-ar elibera, apelul de mai jos ar astepta la nesfarsit.
+      globalThis.fetch = (async () =>
+        new Response(JSON.stringify({ results: [] }), { status: 200 })) as typeof fetch;
+      const r = await googleAdsSearch("123", "SELECT campaign.id FROM campaign", {
+        accessToken: "t", developerToken: "d",
+      });
+      expect(r).toEqual([]);
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+});

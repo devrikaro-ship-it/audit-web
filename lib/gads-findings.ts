@@ -14,6 +14,7 @@ import type { StructuraAudit } from "./gads-structure";
 import type { KeywordAudit } from "./gads-keywords";
 import type { PmaxAudit } from "./gads-pmax";
 import type { ShoppingAudit } from "./gads-shopping";
+import type { SearchAudit } from "./gads-search";
 
 /** Cele trei niveluri de onestitate. Nu se amesteca niciodata. */
 export type Tier = "MASURAT" | "ESTIMARE" | "SIMULARE";
@@ -91,6 +92,7 @@ export type ExtraAudit = {
   cuvinte?: KeywordAudit;
   pmax?: PmaxAudit;
   shopping?: ShoppingAudit;
+  cautari?: SearchAudit;
 };
 
 const ron = (n: number) => `${Math.round(n).toLocaleString("ro-RO")} RON`;
@@ -291,6 +293,7 @@ export function buildReport(
     ...(extra.structura?.probleme ?? []),
     ...(extra.shopping?.probleme ?? []),
     ...(extra.pmax?.probleme ?? []),
+    ...(extra.cautari?.probleme ?? []),
   ].map((p) => ({
     cod: p.cod,
     titlu: p.titlu,
