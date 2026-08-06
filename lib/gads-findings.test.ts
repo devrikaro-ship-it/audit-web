@@ -182,3 +182,98 @@ describe("plafonul simularii", () => {
     expect(sim.body).toMatch(/volum limitat de cautari/i);
   });
 });
+
+// ─── Ce a fost adaugat dupa ce raportul a devenit prea sarac: produsele concrete,
+//     risipa pe termeni si punctele de atac din structura contului.
+
+describe("produsele din spatele cifrei", () => {
+  const products: Product[] = [
+    { productId: "a", title: "Canapea Luna gri", cost: 900, conversionValue: 100, impressions: 500 },
+    { productId: "b", title: "Masa cafea sticla", cost: 300, conversionValue: 0, impressions: 200 },
+    { productId: "c", title: "Leagan Joy 500", cost: 0, conversionValue: 0, impressions: 0 },
+    { productId: "d", title: "Fotoliu Nord", cost: 50, conversionValue: 900, impressions: 300 },
+  ];
+
+  it("numeste produsele care ard bani, cele mai scumpe primele", () => {
+    const rep = buildReport(audit(products, 4), OK_TRACKING, 25, 4);
+    const f = rep.findings.find((x) => x.key === "villains")!;
+    expect(f.produse?.[0].titlu).toBe("Canapea Luna gri");
+    expect(f.produse?.[0].cost).toBe(900);
+    expect(f.produse?.[0].roas).toBeCloseTo(0.11, 2);
+  });
+
+  it("NU pune ROAS pe produse cand masurarea e stricata — ar fi o acuzatie fara acoperire", () => {
+    const rep = buildReport(audit(products, 4), BROKEN_TRACKING, 25, 4);
+    const f = rep.findings.find((x) => x.key === "villains-quarantined")!;
+    expect(f.produse?.length).toBeGreaterThan(0);
+    expect(f.produse?.every((p) => p.roas === undefined)).toBe(true);
+  });
+
+  it("numeste si produsele care n-au fost vazute niciodata", () => {
+    const rep = buildReport(audit(products, 4), OK_TRACKING, 25, 4);
+    const f = rep.findings.find((x) => x.key === "zombies")!;
+    expect(f.produse?.map((p) => p.titlu)).toContain("Leagan Joy 500");
+  });
+});
+
+describe("risipa pe cautari", () => {
+  const cuvinte = {
+    negativeTotal: 0,
+    toxice: [],
+    risipa: [{ termen: "canapea ieftina", cost: 120, clicuri: 40 }],
+    risipaTotal: 120,
+    areVizibilitateTermeni: true,
+  };
+
+  it("apare ca finding cu banii ei", () => {
+    const rep = buildReport(audit([], 4), OK_TRACKING, 25, 4, true, { cuvinte });
+    const f = rep.findings.find((x) => x.key === "termeni-risipa")!;
+    expect(f.ron).toBe(120);
+    expect(f.termeni?.[0].termen).toBe("canapea ieftina");
+  });
+
+  it("NU intra in cifra mare — e pe 30 de zile, restul raportului pe 12 luni", () => {
+    const rep = buildReport(audit([], 4), OK_TRACKING, 25, 4, true, { cuvinte });
+    expect(rep.headline.ron).toBe(0);
+    expect(rep.findings.find((x) => x.key === "termeni-risipa")!.body).toMatch(/30 de zile/);
+  });
+
+  it("spune pe fata cand nu are vizibilitate pe termeni", () => {
+    const orb = { ...cuvinte, areVizibilitateTermeni: false };
+    const rep = buildReport(audit([], 4), OK_TRACKING, 25, 4, true, { cuvinte: orb });
+    expect(rep.caveats.some((c) => /Performance Max/.test(c))).toBe(true);
+  });
+});
+
+describe("puncte de atac", () => {
+  it("auto-blocarea brandului sta prima si e critica", () => {
+    const cuvinte = {
+      negativeTotal: 2,
+      toxice: [
+        { cuvant: "masa", produseBlocate: 1, exemple: ["Masa cafea"], eBrand: false },
+        { cuvant: "dehome", produseBlocate: 30, exemple: ["Canapea DeHome"], eBrand: true },
+      ],
+      risipa: [],
+      risipaTotal: 0,
+      areVizibilitateTermeni: true,
+    };
+    const rep = buildReport(audit([], 4), OK_TRACKING, 25, 4, true, { cuvinte });
+    expect(rep.puncte[0].cod).toBe("negativ-brand");
+    expect(rep.puncte[0].grad).toBe("critic");
+    expect(rep.puncte[0].exemple).toContain("Canapea DeHome");
+  });
+
+  it("banii din structura NU se aduna in cifra mare a raportului", () => {
+    const structura = {
+      campanii: [],
+      cheltuialaTotala: 3000,
+      roasCont: 4,
+      probleme: [
+        { cod: "bidding-fara-tinta", titlu: "Fara tinta", ron: 2977, detaliu: "…", grad: "costa" as const },
+      ],
+    };
+    const rep = buildReport(audit([], 4), OK_TRACKING, 25, 4, true, { structura });
+    expect(rep.puncte[0].ron).toBe(2977);
+    expect(rep.headline.ron).toBe(0);
+  });
+});

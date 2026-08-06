@@ -21,7 +21,8 @@ export type Villain = Product & { productRoas: number };
 export type AuditResult = {
   villains: Villain[];
   villainsTotalCost: number;
-  zombies: { count: number; pctOfCatalog: number };
+  /** `list` = produsele concrete, ca raportul sa poata numi cateva, nu doar sa le numere. */
+  zombies: { count: number; pctOfCatalog: number; list: Product[] };
   /** ESTIMARE: coeficient de piata pe cheltuiala reala. null daca magazinul are deja CSS. */
   cssOverpaid: number | null;
   /** SIMULARE: plafon optimist, VENIT nu profit. null cand nu raman castigatori cu spend. */
@@ -180,6 +181,7 @@ export function audit(
     zombies: {
       count: zombiesList.length,
       pctOfCatalog: totalProducts > 0 ? zombiesList.length / totalProducts : 0,
+      list: zombiesList,
     },
     cssOverpaid: isByGoogle ? CSS_DELTA * totalCost : null,
     zone2Simulation:
