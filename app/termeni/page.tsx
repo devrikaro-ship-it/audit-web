@@ -5,7 +5,7 @@ import { C, sora, inter } from "@/lib/theme";
 // Vezi nota din app/confidentialitate/page.tsx pentru motivul tehnic.
 
 export const metadata = {
-  title: "Termeni si conditii — Devrika",
+  title: "Termeni si conditii — Audit Devrika",
   description: "Conditiile in care poti folosi aplicatia Devrika de audit Google Ads.",
 };
 
@@ -31,12 +31,12 @@ export default function Termeni() {
           Termeni si conditii
         </h1>
         <p className="mb-8 text-[14px]" style={{ color: C.gray400 }}>
-          Aplicatia <b>Devrika</b> — audit de Google Ads. Ultima actualizare: august 2026.
+          Aplicatia <b>Audit Devrika</b> — analiza contului de Google Ads. Ultima actualizare: august 2026.
         </p>
 
         <H2>Ce este acest serviciu</H2>
         <P>
-          Devrika este o aplicatie care analizeaza contul tau de Google Ads si iti arata unde se
+          Audit Devrika este o aplicatie care analizeaza contul tau de Google Ads si iti arata unde se
           duc banii din campaniile de Shopping: ce produse consuma buget fara sa vanda, ce produse
           nu au fost afisate niciodata si daca masurarea conversiilor e configurata corect.
           Serviciul e oferit gratuit, fara obligatia de a cumpara ceva.

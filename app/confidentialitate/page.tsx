@@ -10,7 +10,7 @@ import { C, sora, inter } from "@/lib/theme";
 // generala de agentie nu acopera asta si pica verificarea.
 
 export const metadata = {
-  title: "Politica de confidentialitate — Devrika",
+  title: "Politica de confidentialitate — Audit Devrika",
   description:
     "Cum trateaza aplicatia Devrika datele contului tau Google Ads: ce citim, cat pastram, "
     + "cu cine NU impartim si cum retragi accesul.",
@@ -38,18 +38,18 @@ export default function Confidentialitate() {
           Politica de confidentialitate
         </h1>
         <p className="mb-8 text-[14px]" style={{ color: C.gray400 }}>
-          Aplicatia <b>Devrika</b> — audit de Google Ads. Ultima actualizare: august 2026.
+          Aplicatia <b>Audit Devrika</b> — analiza contului de Google Ads. Ultima actualizare: august 2026.
         </p>
 
         <P>
-          Aceasta politica descrie cum aplicatia Devrika trateaza datele la care ii dai acces
+          Aceasta politica descrie cum aplicatia Audit Devrika trateaza datele la care ii dai acces
           atunci cand iti conectezi contul de Google Ads. E scrisa in limbaj obisnuit, pentru ca
           ai dreptul sa intelegi ce se intampla cu datele afacerii tale.
         </P>
 
         <H2>Cine suntem</H2>
         <P>
-          Devrika este o agentie de marketing online din Romania. Aplicatia descrisa aici ruleaza pe{" "}
+          Devrika este o agentie de marketing online din Romania. Aplicatia <b>Audit Devrika</b> descrisa aici ruleaza pe{" "}
           <b>audit.devrika.ro</b> si apartine aceleiasi firme. Ne poti scrie oricand la{" "}
           <a href="mailto:hello@devrika.ro" style={{ color: C.indigo }}>hello@devrika.ro</a>.
         </P>
@@ -114,7 +114,7 @@ export default function Confidentialitate() {
           <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" style={{ color: C.indigo }}>
             myaccount.google.com/permissions
           </a>
-          , gaseste <b>Devrika</b> in lista si apasa &laquo;Remove access&raquo;. Din acel moment
+          , gaseste <b>Audit Devrika</b> in lista si apasa &laquo;Remove access&raquo;. Din acel moment
           aplicatia nu mai poate citi nimic din contul tau.
         </P>
 

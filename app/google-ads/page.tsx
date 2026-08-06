@@ -15,9 +15,9 @@ const CONNECT_HREF = "/google-ads/connect";
 // ("Devrika") sa se regaseasca pe pagina declarata ca home page a aplicatiei — altfel
 // verificarea pica pe "app name does not match the app name on your home page".
 export const metadata = {
-  title: "Devrika — Audit Google Ads pentru magazine online",
+  title: "Audit Devrika — analiza contului tau de Google Ads",
   description:
-    "Devrika analizeaza contul tau de Google Ads si iti arata ce produse consuma buget fara sa "
+    "Audit Devrika analizeaza contul tau de Google Ads si iti arata ce produse consuma buget fara sa "
     + "vanda. Citim doar datele de Shopping din ultimele 12 luni, nu modificam nimic in cont.",
 };
 
@@ -145,7 +145,7 @@ export default function GoogleAdsLanding() {
         <div className="mb-6 inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold"
           style={{ background: "#f0f4ff", borderColor: "rgba(71,73,158,0.15)", color: C.indigo }}>
           <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: C.cyan }} />
-          Devrika · Aplicatie de audit Google Ads · Gratuit
+          Audit Devrika · Aplicatie web · Gratuit
         </div>
 
         <h1 className="mx-auto mb-6 max-w-[860px] font-black leading-[1.05] tracking-[-2px]"
@@ -163,7 +163,7 @@ export default function GoogleAdsLanding() {
             "your home page does not explain the purpose of your app" daca nu gaseste
             numele aplicatiei alaturi de ce face ea. */}
         <p className="mx-auto mb-4 max-w-[640px] text-lg leading-relaxed" style={{ color: C.gray500 }}>
-          <b style={{ color: "#0f172a" }}>Devrika</b> este o aplicatie web care analizeaza contul
+          <b style={{ color: "#0f172a" }}>Audit Devrika</b> este o aplicatie web care analizeaza contul
           tau de Google Ads si iti arata pe ce produse pierzi bani in campaniile de Shopping.
         </p>
         <p className="mx-auto mb-10 max-w-[640px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
@@ -241,7 +241,7 @@ export default function GoogleAdsLanding() {
         {/* Paragraful asta are si un rol tehnic: reviewerul Google verifica daca pagina
             declarata ca home page explica ce face aplicatia si cu ce date lucreaza. */}
         <p className="mx-auto mb-10 max-w-[760px] text-center text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
-          <b style={{ color: "#0f172a" }}>Devrika</b> este aplicatia care face aceasta analiza. Cu
+          <b style={{ color: "#0f172a" }}>Audit Devrika</b> este aplicatia care face aceasta analiza. Cu
           acordul tau, se conecteaza la contul tau de Google Ads si citeste <b>doar</b> datele
           campaniilor de Shopping din ultimele 12 luni — cheltuiala, afisarile si vanzarile pe
           fiecare produs. Pe baza lor iti arata unde se duc banii. Nu stocam datele contului tau si
