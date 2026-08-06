@@ -50,6 +50,7 @@ export default async function DashboardPage() {
           <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
             <a href="/dashboard" style={{ fontFamily: sora, fontSize: 13.5, fontWeight: 700, padding: "9px 18px", borderRadius: 10, textDecoration: "none", background: "#fff", color: C.navy }}>Audituri site (rece)</a>
             <a href="/dashboard/cald" style={{ fontFamily: sora, fontSize: 13.5, fontWeight: 700, padding: "9px 18px", borderRadius: 10, textDecoration: "none", background: "rgba(255,255,255,0.08)", color: "#C7D2E8", border: "1px solid rgba(255,255,255,0.14)" }}>Clienti cu acces (cald)</a>
+            <a href="/dashboard/google-ads" style={{ fontFamily: sora, fontSize: 13.5, fontWeight: 700, padding: "9px 18px", borderRadius: 10, textDecoration: "none", background: "rgba(255,255,255,0.08)", color: "#C7D2E8", border: "1px solid rgba(255,255,255,0.14)" }}>Google Ads (cont conectat)</a>
           </div>
         </div>
       </header>

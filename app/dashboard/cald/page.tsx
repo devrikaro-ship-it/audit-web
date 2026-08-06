@@ -28,6 +28,7 @@ function Tabs({ active }: { active: "rece" | "cald" }) {
     <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
       <a href="/dashboard" style={active === "rece" ? on : off}>Audituri site (rece)</a>
       <a href="/dashboard/cald" style={active === "cald" ? on : off}>Clienti cu acces (cald)</a>
+            <a href="/dashboard/google-ads" style={{ fontFamily: sora, fontSize: 13.5, fontWeight: 700, padding: "9px 18px", borderRadius: 10, textDecoration: "none", background: "rgba(255,255,255,0.08)", color: "#C7D2E8", border: "1px solid rgba(255,255,255,0.14)" }}>Google Ads (cont conectat)</a>
     </div>
   );
 }
