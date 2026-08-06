@@ -129,9 +129,18 @@ describe("simularea (ce castigi daca repari)", () => {
     expect(sim!.tier).toBe("SIMULARE");
   });
 
-  it("arata CASTIGUL fata de acum, nu totalul", () => {
-    // current = 1200, x2 = 6.0*2*200 = 2400 -> castig 1200
-    expect(sim!.ron).toBe(1200);
+  it("arata castigul din MUTAREA banilor, nu din marirea bugetului", () => {
+    // castigatori: cost 200, roas 6 -> aduc 1200. Villains: 100 lei.
+    // buget mutat = 300 -> 300*6 = 1800. Castig fata de 1200 = 600.
+    // NU 1200 (care ar fi din dublarea bugetului, alt scenariu).
+    expect(sim!.ron).toBe(600);
+  });
+
+  it("spune clar ca e mutare de buget, nu bani in plus", () => {
+    expect(sim!.body).toMatch(/fara sa adaugi niciun leu in plus/i);
+    // scenariul "mareste bugetul de 2x/5x" a fost scos: cu plafonul de mai jos devenea
+    // redundant si amesteca doua discutii diferite in acelasi paragraf.
+    expect(sim!.body).not.toMatch(/de cinci ori/i);
   });
 
   it("spune ca e plafon optimist si ca sunt incasari, nu profit", () => {
@@ -155,5 +164,21 @@ describe("simularea (ce castigi daca repari)", () => {
   it("lipseste cand masurarea e stricta — nu are pe ce se sprijini", () => {
     const r2 = buildReport(audit(products, 4), BROKEN_TRACKING, 25, 4);
     expect(r2.findings.some((f) => f.key === "simulare")).toBe(false);
+  });
+});
+
+describe("plafonul simularii", () => {
+  // castigatori foarte eficienti: cost 10, roas 100 -> aduc 1000. Villains 500.
+  // inmultirea seaca: (10+500)*100 = 51.000 -> absurd fata de 1000 actual.
+  const products = [P("A", 500, 100, 5000), P("B", 10, 1000, 4000)];
+  const rep = buildReport(audit(products, 4), OK_TRACKING, 25, 4);
+  const sim = rep.findings.find((f) => f.key === "simulare")!;
+
+  it("nu scoate cifre absurde — plafoneaza la dublarea incasarilor", () => {
+    expect(sim.ron).toBe(1000); // 2x current (1000) minus current = 1000
+  });
+
+  it("spune pe fata ca a plafonat, si de ce", () => {
+    expect(sim.body).toMatch(/volum limitat de cautari/i);
   });
 });

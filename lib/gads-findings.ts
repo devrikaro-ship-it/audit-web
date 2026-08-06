@@ -142,18 +142,39 @@ export function buildReport(
   // Depinde de valoarea conversiilor, deci pe cont cu masurare stricta nu are ce arata.
   const sim = result.zone2Simulation;
   if (sim && tracking.ok && t.survivorsRoas) {
+    // ATENTIE la ce se compara. Doua scenarii DIFERITE, care nu se amesteca:
+    //   (a) MUTAREA banilor de la produsele slabe catre cele bune — acelasi buget total,
+    //       fara niciun leu in plus. Asta e "curatarea" propriu-zisa.
+    //   (b) MARIREA bugetului castigatorilor de 2x / 5x — bani noi, alta discutie.
+    // Formula din spec (x2 = roas * 2 * cost_castigatori) e scenariul (b). Daca prezinti (b)
+    // ca si cum ar rezulta din (a), promiti o dublare din simpla mutare a unei sume mai mici.
+    const bugetMutat = t.survivorsCost + result.villainsTotalCost;
+    // Plafon de bun-simt: produsele bune NU absorb oricat buget la acelasi randament — au un
+    // volum limitat de cautari. Fara plafon, un cont cu castigatori foarte eficienti scotea
+    // +395.000 lei dintr-o cheltuiala anuala de 22.000 (caz real, granox): corect ca inmultire,
+    // dar o cifra pe care orice om cu experienta o citeste ca exagerare si inchide raportul.
+    // Limitam castigul la dublarea incasarilor actuale ale castigatorilor.
+    const PLAFON = 2;
+    const dupaMutare = Math.min(t.survivorsRoas * bugetMutat, sim.current * PLAFON);
+    const plafonat = t.survivorsRoas * bugetMutat > sim.current * PLAFON;
+    const castigDinMutare = Math.max(0, dupaMutare - sim.current);
+
     findings.push({
       key: "simulare",
-      title: "Cat ar aduce acelasi buget, curatat",
-      // Castigul fata de situatia actuala, nu totalul — altfel pare ca apar bani din neant.
-      ron: Math.max(0, sim.x2 - sim.current),
+      title: "Cat ar aduce acelasi buget, mutat pe produsele care vand",
+      ron: castigDinMutare,
       tier: "SIMULARE",
       body:
-        `Produsele care chiar vand la tine aduc acum ${ron(sim.current)} si se intorc de ` +
-        `${t.survivorsRoas.toFixed(2)} ori. Daca banii opriti de la produsele slabe merg catre ele ` +
-        `si tin acelasi randament, dublarea bugetului lor ar insemna ${ron(sim.x2)}, iar de cinci ` +
-        `ori ${ron(sim.x5)}. E un plafon optimist, nu o promisiune: la buget mai mare randamentul ` +
-        `scade de obicei. Sunt incasari, nu profit — profitul depinde de marja ta.`,
+        `Produsele care chiar vand la tine se intorc de ${t.survivorsRoas.toFixed(2)} ori si aduc ` +
+        `acum ${ron(sim.current)}. Daca opresti produsele slabe si muti acei ${ron(result.villainsTotalCost)} ` +
+        `catre ele — fara sa adaugi niciun leu in plus — ar putea ajunge la ${ron(dupaMutare)}. ` +
+        (plafonat
+          ? `Am oprit calculul la dublarea incasarilor actuale, desi inmultirea seaca ar da mai ` +
+            `mult: produsele bune au un volum limitat de cautari si nu absorb oricat buget la ` +
+            `acelasi randament. `
+          : "") +
+        `E un plafon optimist, nu o promisiune: la buget mai mare randamentul scade de obicei. ` +
+        `Si sunt incasari, nu profit — profitul depinde de marja ta.`,
     });
   }
 
