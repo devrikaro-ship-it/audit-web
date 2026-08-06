@@ -287,23 +287,38 @@ export function buildReport(
 
   // Un magazin care isi negativeaza propriul nume isi opreste singur cel mai ieftin trafic pe
   // care il are (CHECKLIST 3.3). Gasit real pe DeHome: "dehome" negativ, 30 din 40 de produse.
-  for (const tox of cuv?.toxice ?? []) {
+  for (const tox of (cuv?.toxice ?? []).filter((t2) => t2.eBrand)) {
     puncte.push({
-      cod: tox.eBrand ? "negativ-brand" : "negativ-toxic",
-      titlu: tox.eBrand
-        ? `Iti blochezi singur numele: "${tox.cuvant}"`
-        : `Cuvantul blocat "${tox.cuvant}" opreste produse pe care le vinzi`,
+      cod: "negativ-brand",
+      titlu: `Iti blochezi singur numele: "${tox.cuvant}"`,
       ron: 0,
-      grad: tox.eBrand ? "critic" : "costa",
+      grad: "critic",
       detaliu:
-        (tox.eBrand
-          ? `Ai pus "${tox.cuvant}" pe lista de cuvinte blocate. Cand cineva cauta exact numele ` +
-            `magazinului tau — cel mai ieftin si cel mai sigur client pe care il poti avea — ` +
-            `reclama ta nu apare. `
-          : `"${tox.cuvant}" e pe lista de cuvinte blocate, dar apare in titlul unor produse pe ` +
-            `care chiar le vinzi. Reclamele pentru ele nu au voie sa se afiseze. `) +
-        `Sunt ${tox.produseBlocate} produse afectate.`,
+        `Ai pus "${tox.cuvant}" pe lista de cuvinte blocate. Cand cineva cauta exact numele ` +
+        `magazinului tau — cel mai ieftin si cel mai sigur client pe care il poti avea — ` +
+        `reclama ta nu apare. Sunt ${tox.produseBlocate} produse afectate.`,
       exemple: tox.exemple,
+    });
+  }
+
+  // Restul se aduna intr-un singur punct. Pe Granox erau 12 cuvinte toxice: 12 carduri
+  // identice se citesc ca zgomot si ingroapa constatarile mari de deasupra lor.
+  const altele = (cuv?.toxice ?? []).filter((t2) => !t2.eBrand);
+  if (altele.length) {
+    const produseBlocate = altele.reduce((s, t2) => s + t2.produseBlocate, 0);
+    puncte.push({
+      cod: "negative-toxice",
+      titlu:
+        altele.length === 1
+          ? `Un cuvant blocat opreste produse pe care le vinzi`
+          : `${altele.length} cuvinte blocate opresc produse pe care le vinzi`,
+      ron: 0,
+      grad: "costa",
+      detaliu:
+        `Lista ta de cuvinte blocate contine termeni care apar in titlurile unor produse aflate ` +
+        `la vanzare. Reclamele pentru ele nu au voie sa se afiseze — ${produseBlocate} produse ` +
+        `sunt oprite asa, fara sa se vada nicaieri in rapoarte.`,
+      exemple: altele.map((t2) => `${t2.cuvant} — ${t2.produseBlocate} produse`),
     });
   }
 

@@ -26,6 +26,9 @@ export type NegativToxic = {
 
 export type TermenRisipa = { termen: string; cost: number; clicuri: number };
 
+/** Un termen asa cum vine din API, inainte sa decidem daca e risipa. */
+export type TermenBrut = { termen: string; cost: number; conversii: number; clicuri: number };
+
 export type KeywordAudit = {
   negativeTotal: number;
   toxice: NegativToxic[];
@@ -58,14 +61,24 @@ export function normalizeaza(s: string): string {
  * dreptul de a fi crezut.
  */
 export function contineCuvant(text: string, cuvant: string): boolean {
+  const m = potrivitor(cuvant);
+  return m ? m.test(normalizeaza(text)) : false;
+}
+
+/**
+ * Expresia pentru un cuvant, construita O SINGURA DATA. Pe Granox (104 negative x 11.824
+ * produse) varianta care compila regexul la fiecare pereche tinea pagina 25 de secunde —
+ * din care 3 erau apelurile la Google si 22 asteptare degeaba.
+ */
+function potrivitor(cuvant: string): RegExp | null {
   const c = normalizeaza(cuvant);
-  if (c.length < 3) return false;
+  if (c.length < 3) return null;
   const esc = c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`(?<![a-z0-9])${esc}(?![a-z0-9])`).test(normalizeaza(text));
+  return new RegExp(`(?<![a-z0-9])${esc}(?![a-z0-9])`);
 }
 
 /** Cuvintele care compun numele magazinului, ca sa recunoastem auto-blocarea brandului. */
-function termeniDeBrand(numeCont: string | undefined, produse: Product[]): string[] {
+function termeniDeBrand(numeCont: string | undefined, titluri: string[]): string[] {
   const din = new Set<string>();
   for (const bucata of (numeCont || "").split(/[\s\-_.]+/)) {
     const n = normalizeaza(bucata);
@@ -73,12 +86,12 @@ function termeniDeBrand(numeCont: string | undefined, produse: Product[]): strin
   }
   // Un cuvant care apare in majoritatea titlurilor e, practic sigur, brandul.
   const frecventa = new Map<string, number>();
-  for (const p of produse) {
-    for (const w of new Set(normalizeaza(p.title).split(" "))) {
+  for (const t of titluri) {
+    for (const w of new Set(t.split(" "))) {
       if (w.length >= 4) frecventa.set(w, (frecventa.get(w) ?? 0) + 1);
     }
   }
-  const prag = produse.length * 0.5;
+  const prag = titluri.length * 0.5;
   for (const [w, n] of frecventa) if (n >= prag && prag > 2) din.add(w);
   return [...din];
 }
@@ -89,11 +102,18 @@ export function analizeazaCuvinte(
   termeni: { termen: string; cost: number; conversii: number; clicuri: number }[],
   numeCont?: string
 ): KeywordAudit {
-  const brand = termeniDeBrand(numeCont, produse);
+  // Titlurile se normalizeaza o singura data, nu o data per negativ.
+  const titluri = produse.map((p) => normalizeaza(p.title));
+  const brand = termeniDeBrand(numeCont, titluri);
 
   const toxice: NegativToxic[] = [];
   for (const n of new Set(negative)) {
-    const lovite = produse.filter((p) => contineCuvant(p.title, n));
+    const re = potrivitor(n);
+    if (!re) continue;
+    const lovite: Product[] = [];
+    for (let i = 0; i < titluri.length; i++) {
+      if (re.test(titluri[i])) lovite.push(produse[i]);
+    }
     if (!lovite.length) continue;
     toxice.push({
       cuvant: n,
@@ -121,12 +141,15 @@ export function analizeazaCuvinte(
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function fetchKeywords(
+/**
+ * Doar reteaua. E separata de analiza ca sa poata pleca in acelasi timp cu restul apelurilor:
+ * altfel pagina asteapta intai catalogul, apoi cuvintele, desi cele doua nu depind una de alta
+ * la nivel de retea (doar la analiza).
+ */
+export async function fetchKeywordData(
   customerId: string,
-  auth: GoogleAdsAuth,
-  produse: Product[],
-  numeCont?: string
-): Promise<KeywordAudit> {
+  auth: GoogleAdsAuth
+): Promise<{ negative: string[]; termeni: TermenBrut[] }> {
   const negative: string[] = [];
   type NegRow = {
     sharedCriterion?: { keyword?: { text?: string } };
@@ -150,7 +173,7 @@ export async function fetchKeywords(
     searchTermView?: { searchTerm?: string };
     metrics?: { costMicros?: string | number; conversions?: string | number; clicks?: string | number };
   };
-  let termeni: { termen: string; cost: number; conversii: number; clicuri: number }[] = [];
+  let termeni: TermenBrut[] = [];
   try {
     const rows = (await googleAdsSearch(
       customerId,
@@ -168,5 +191,15 @@ export async function fetchKeywords(
     termeni = [];
   }
 
+  return { negative, termeni };
+}
+
+export async function fetchKeywords(
+  customerId: string,
+  auth: GoogleAdsAuth,
+  produse: Product[],
+  numeCont?: string
+): Promise<KeywordAudit> {
+  const { negative, termeni } = await fetchKeywordData(customerId, auth);
   return analizeazaCuvinte(negative, produse, termeni, numeCont);
 }

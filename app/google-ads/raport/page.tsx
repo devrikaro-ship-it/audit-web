@@ -9,7 +9,7 @@ import { fetchTracking } from "@/lib/gads-tracking";
 import { audit, breakEvenRoas } from "@/lib/gads-audit";
 import { buildReport, type Tier } from "@/lib/gads-findings";
 import { fetchStructura } from "@/lib/gads-structure";
-import { fetchKeywords } from "@/lib/gads-keywords";
+import { fetchKeywordData, analizeazaCuvinte } from "@/lib/gads-keywords";
 import ContactForm from "./ContactForm";
 import { salveazaContact } from "./actions";
 
@@ -48,19 +48,18 @@ export default async function Raport() {
     loginCustomerId: session.loginCustomerId,
   };
 
-  const [{ products, catalogComplete }, tracking, structura] = await Promise.all([
+  // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
+  // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
+  const [{ products, catalogComplete }, tracking, structura, brutCuvinte] = await Promise.all([
     fetchShoppingProducts(session.customerId, auth),
     fetchTracking(session.customerId, auth),
-    // O analiza de structura cazuta nu are voie sa doboare raportul de produse.
     fetchStructura(session.customerId, auth).catch(() => undefined),
+    fetchKeywordData(session.customerId, auth).catch(() => undefined),
   ]);
-  // Cuvintele au nevoie de catalog ca sa stie ce blocheaza, deci vin dupa produse.
-  const cuvinte = await fetchKeywords(
-    session.customerId,
-    auth,
-    products,
-    session.customerName
-  ).catch(() => undefined);
+  // Doar potrivirea cuvintelor cu catalogul asteapta produsele.
+  const cuvinte = brutCuvinte
+    ? analizeazaCuvinte(brutCuvinte.negative, products, brutCuvinte.termeni, session.customerName)
+    : undefined;
 
   const minRoas = breakEvenRoas(session.marginPct);
   const rep = buildReport(
