@@ -11,6 +11,16 @@ import { C, sora, inter, brandGradient } from "@/lib/theme";
 
 const CONNECT_HREF = "/google-ads/connect";
 
+// Titlu propriu, nu cel global. Google cere ca numele aplicatiei din ecranul de consimtamant
+// ("Devrika") sa se regaseasca pe pagina declarata ca home page a aplicatiei — altfel
+// verificarea pica pe "app name does not match the app name on your home page".
+export const metadata = {
+  title: "Devrika — Audit Google Ads pentru magazine online",
+  description:
+    "Devrika analizeaza contul tau de Google Ads si iti arata ce produse consuma buget fara sa "
+    + "vanda. Citim doar datele de Shopping din ultimele 12 luni, nu modificam nimic in cont.",
+};
+
 // Randurile din mockup-ul de raport. Cifre exemplu, marcate ca atare sub tabel.
 const mockVillains = [
   { p: "Rochie office bleumarin", cost: "4.820 lei", roas: "0,8×" },
@@ -218,6 +228,15 @@ export default function GoogleAdsLanding() {
 
       {/* 2 · SIGURANTA — sus, pentru ca aici e bariera reala */}
       <section className="bg-white px-8 py-16">
+        {/* Paragraful asta are si un rol tehnic: reviewerul Google verifica daca pagina
+            declarata ca home page explica ce face aplicatia si cu ce date lucreaza. */}
+        <p className="mx-auto mb-10 max-w-[760px] text-center text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
+          <b style={{ color: "#0f172a" }}>Devrika</b> este aplicatia care face aceasta analiza. Cu
+          acordul tau, se conecteaza la contul tau de Google Ads si citeste <b>doar</b> datele
+          campaniilor de Shopping din ultimele 12 luni — cheltuiala, afisarile si vanzarile pe
+          fiecare produs. Pe baza lor iti arata unde se duc banii. Nu stocam datele contului tau si
+          nu facem nicio modificare in el.
+        </p>
         <div className="mx-auto grid max-w-[960px] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {safety.map((s) => (
             <div key={s.t} className="flex flex-col gap-2">
