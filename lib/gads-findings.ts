@@ -13,6 +13,7 @@ import type { TrackingState } from "./gads-tracking";
 import type { StructuraAudit } from "./gads-structure";
 import type { KeywordAudit } from "./gads-keywords";
 import type { PmaxAudit } from "./gads-pmax";
+import type { ShoppingAudit } from "./gads-shopping";
 
 /** Cele trei niveluri de onestitate. Nu se amesteca niciodata. */
 export type Tier = "MASURAT" | "ESTIMARE" | "SIMULARE";
@@ -85,7 +86,12 @@ export type ReportModel = {
 };
 
 /** Analizele optionale. Lipsa lor nu opreste raportul — doar il face mai sarac. */
-export type ExtraAudit = { structura?: StructuraAudit; cuvinte?: KeywordAudit; pmax?: PmaxAudit };
+export type ExtraAudit = {
+  structura?: StructuraAudit;
+  cuvinte?: KeywordAudit;
+  pmax?: PmaxAudit;
+  shopping?: ShoppingAudit;
+};
 
 const ron = (n: number) => `${Math.round(n).toLocaleString("ro-RO")} RON`;
 const pct = (n: number) => `${Math.round(n * 100)}%`;
@@ -230,7 +236,10 @@ export function buildReport(
       termeniRestanti: Math.max(0, cuv.risipa.length - MAX_PRODUSE),
     });
   }
-  if (cuv && !cuv.areVizibilitateTermeni) {
+  // Cand modulul de Shopping a stabilit deja ca lipseste Shopping standard, cauza e spusa acolo
+  // ca punct de atac, cu ce se face. Repetata aici, ar suna a doua constatare diferita.
+  const shoppingLipsa = (extra.shopping?.probleme ?? []).some((p) => p.cod === "shopping-lipsa");
+  if (cuv && !cuv.areVizibilitateTermeni && !shoppingLipsa) {
     caveats.push(
       "Pe ce cuvinte se duc banii — contul nu ruleaza Shopping standard, iar Performance Max " +
         "nu raporteaza costul pe termen de cautare."
@@ -280,6 +289,7 @@ export function buildReport(
   // ── Puncte de atac: setari gresite, tinute separat de banii pierduti ───────
   const puncte: PunctDeAtac[] = [
     ...(extra.structura?.probleme ?? []),
+    ...(extra.shopping?.probleme ?? []),
     ...(extra.pmax?.probleme ?? []),
   ].map((p) => ({
     cod: p.cod,

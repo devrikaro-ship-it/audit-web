@@ -10,6 +10,7 @@ import { audit, breakEvenRoas } from "@/lib/gads-audit";
 import { buildReport, type Tier } from "@/lib/gads-findings";
 import { fetchStructura } from "@/lib/gads-structure";
 import { fetchPmaxData, analizeazaPmax } from "@/lib/gads-pmax";
+import { fetchShoppingData, analizeazaShopping } from "@/lib/gads-shopping";
 import { fetchKeywordData, analizeazaCuvinte } from "@/lib/gads-keywords";
 import ContactForm from "./ContactForm";
 import { salveazaContact } from "./actions";
@@ -51,12 +52,14 @@ export default async function Raport() {
 
   // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
   // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
-  const [{ products, catalogComplete }, tracking, structura, brutCuvinte, brutPmax] = await Promise.all([
+  const [{ products, catalogComplete }, tracking, structura, brutCuvinte, brutPmax, brutShop] =
+    await Promise.all([
     fetchShoppingProducts(session.customerId, auth),
     fetchTracking(session.customerId, auth),
     fetchStructura(session.customerId, auth).catch(() => undefined),
     fetchKeywordData(session.customerId, auth).catch(() => undefined),
     fetchPmaxData(session.customerId, auth).catch(() => undefined),
+    fetchShoppingData(session.customerId, auth).catch(() => undefined),
   ]);
   // Doar potrivirile care au nevoie de alt rezultat se fac dupa: cuvintele au nevoie de
   // catalog, PMax de cheltuiala pe campanie.
@@ -64,6 +67,7 @@ export default async function Raport() {
     ? analizeazaCuvinte(brutCuvinte.negative, products, brutCuvinte.termeni, session.customerName)
     : undefined;
   const pmax = brutPmax && structura ? analizeazaPmax(brutPmax, structura.campanii) : undefined;
+  const shopping = brutShop ? analizeazaShopping(brutShop, tracking.ok) : undefined;
 
   const minRoas = breakEvenRoas(session.marginPct);
   const rep = buildReport(
@@ -72,7 +76,7 @@ export default async function Raport() {
     session.marginPct,
     minRoas,
     catalogComplete,
-    { structura, cuvinte, pmax }
+    { structura, cuvinte, pmax, shopping }
   );
 
   // Doua sectiuni, nu o lista plata: banii pierduti si setarile de reparat sunt lucruri
