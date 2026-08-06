@@ -38,6 +38,8 @@ export type ProblemaStructura = {
   detaliu: string;
   /** Cat de grav: blocheaza restul / costa bani / de reglat. */
   grad: "critic" | "costa" | "reglaj";
+  /** Numele concrete din spatele afirmatiei, cand exista. */
+  exemple?: string[];
 };
 
 export type StructuraAudit = {

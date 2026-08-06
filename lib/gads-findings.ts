@@ -12,6 +12,7 @@ import type { AuditResult } from "./gads-audit";
 import type { TrackingState } from "./gads-tracking";
 import type { StructuraAudit } from "./gads-structure";
 import type { KeywordAudit } from "./gads-keywords";
+import type { PmaxAudit } from "./gads-pmax";
 
 /** Cele trei niveluri de onestitate. Nu se amesteca niciodata. */
 export type Tier = "MASURAT" | "ESTIMARE" | "SIMULARE";
@@ -84,7 +85,7 @@ export type ReportModel = {
 };
 
 /** Analizele optionale. Lipsa lor nu opreste raportul — doar il face mai sarac. */
-export type ExtraAudit = { structura?: StructuraAudit; cuvinte?: KeywordAudit };
+export type ExtraAudit = { structura?: StructuraAudit; cuvinte?: KeywordAudit; pmax?: PmaxAudit };
 
 const ron = (n: number) => `${Math.round(n).toLocaleString("ro-RO")} RON`;
 const pct = (n: number) => `${Math.round(n * 100)}%`;
@@ -277,12 +278,16 @@ export function buildReport(
   }
 
   // ── Puncte de atac: setari gresite, tinute separat de banii pierduti ───────
-  const puncte: PunctDeAtac[] = (extra.structura?.probleme ?? []).map((p) => ({
+  const puncte: PunctDeAtac[] = [
+    ...(extra.structura?.probleme ?? []),
+    ...(extra.pmax?.probleme ?? []),
+  ].map((p) => ({
     cod: p.cod,
     titlu: p.titlu,
     ron: Math.round(p.ron),
     detaliu: p.detaliu,
     grad: p.grad,
+    exemple: p.exemple,
   }));
 
   // Un magazin care isi negativeaza propriul nume isi opreste singur cel mai ieftin trafic pe
