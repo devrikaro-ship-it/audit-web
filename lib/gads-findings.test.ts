@@ -117,3 +117,43 @@ describe("niveluri de onestitate si ordonare", () => {
     expect(r2.caveats.some((c) => c.includes("catalogul complet"))).toBe(true);
   });
 });
+
+describe("simularea (ce castigi daca repari)", () => {
+  // A arde bani, B vinde de 6x -> raman 200 lei buget castigator la roas 6
+  const products = [P("A", 100, 100, 5000), P("B", 200, 1200, 4000)];
+  const rep = buildReport(audit(products, 4), OK_TRACKING, 25, 4);
+  const sim = rep.findings.find((f) => f.key === "simulare");
+
+  it("apare, si e etichetata SIMULARE", () => {
+    expect(sim).toBeDefined();
+    expect(sim!.tier).toBe("SIMULARE");
+  });
+
+  it("arata CASTIGUL fata de acum, nu totalul", () => {
+    // current = 1200, x2 = 6.0*2*200 = 2400 -> castig 1200
+    expect(sim!.ron).toBe(1200);
+  });
+
+  it("spune ca e plafon optimist si ca sunt incasari, nu profit", () => {
+    expect(sim!.body).toMatch(/plafon optimist/i);
+    expect(sim!.body).toMatch(/incasari, nu profit/i);
+  });
+
+  it("NU sta prima — o proiectie nu conduce raportul", () => {
+    expect(rep.findings[0].key).not.toBe("simulare");
+    const idx = rep.findings.findIndex((f) => f.key === "simulare");
+    const masurate = rep.findings.filter((f) => f.tier !== "SIMULARE" && !f.quarantined).length;
+    expect(idx).toBeGreaterThanOrEqual(masurate);
+  });
+
+  it("NU intra in cifra de pe prima pagina", () => {
+    const masurat = rep.findings.filter((f) => f.tier === "MASURAT" && !f.quarantined)
+      .reduce((s, f) => s + f.ron, 0);
+    expect(rep.headline.ron).toBe(masurat);
+  });
+
+  it("lipseste cand masurarea e stricta — nu are pe ce se sprijini", () => {
+    const r2 = buildReport(audit(products, 4), BROKEN_TRACKING, 25, 4);
+    expect(r2.findings.some((f) => f.key === "simulare")).toBe(false);
+  });
+});

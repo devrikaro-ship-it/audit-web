@@ -138,13 +138,33 @@ export function buildReport(
     });
   }
 
+  // ── 5. Ce ar aduce bugetul curatat — SIMULARE, ultimul, ca sa nu fie confundat cu masuratul
+  // Depinde de valoarea conversiilor, deci pe cont cu masurare stricta nu are ce arata.
+  const sim = result.zone2Simulation;
+  if (sim && tracking.ok && t.survivorsRoas) {
+    findings.push({
+      key: "simulare",
+      title: "Cat ar aduce acelasi buget, curatat",
+      // Castigul fata de situatia actuala, nu totalul — altfel pare ca apar bani din neant.
+      ron: Math.max(0, sim.x2 - sim.current),
+      tier: "SIMULARE",
+      body:
+        `Produsele care chiar vand la tine aduc acum ${ron(sim.current)} si se intorc de ` +
+        `${t.survivorsRoas.toFixed(2)} ori. Daca banii opriti de la produsele slabe merg catre ele ` +
+        `si tin acelasi randament, dublarea bugetului lor ar insemna ${ron(sim.x2)}, iar de cinci ` +
+        `ori ${ron(sim.x5)}. E un plafon optimist, nu o promisiune: la buget mai mare randamentul ` +
+        `scade de obicei. Sunt incasari, nu profit — profitul depinde de marja ta.`,
+    });
+  }
+
   // Ordonare pe bani in joc; carantinatele coboara la final, nu au suma.
   for (const f of findings) f.ron = Math.round(f.ron);
 
-  findings.sort((a, b) => {
-    if (!!a.quarantined !== !!b.quarantined) return a.quarantined ? 1 : -1;
-    return b.ron - a.ron;
-  });
+  // Ordinea nu e doar pe bani: intai ce e real (MASURAT/ESTIMARE), apoi proiectia, apoi ce nu
+  // se poate judeca. Altfel castigul simulat — de regula cel mai mare numar din raport — ar
+  // sta primul si ar face proiectia sa arate ca principala concluzie.
+  const rang = (f: Finding) => (f.quarantined ? 2 : f.tier === "SIMULARE" ? 1 : 0);
+  findings.sort((a, b) => rang(a) - rang(b) || b.ron - a.ron);
 
   caveats.push(
     "Marja pe produs — folosim valoarea data de tine, deci vorbim despre incasari, nu despre profit."

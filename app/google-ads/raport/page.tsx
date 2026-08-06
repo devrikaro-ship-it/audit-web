@@ -98,8 +98,10 @@ export default async function Raport() {
                   {f.title}
                 </h2>
                 {f.ron > 0 && (
-                  <p className="mb-2 text-[22px] font-black tabular-nums" style={{ fontFamily: sora, color: f.tier === "ESTIMARE" ? C.yellow : C.red }}>
-                    {lei(f.ron)}
+                  // Simularea e castig, nu pierdere — verde cu "+", ca sa nu fie citita ca inca o gaura.
+                  <p className="mb-2 text-[22px] font-black tabular-nums"
+                    style={{ fontFamily: sora, color: f.tier === "SIMULARE" ? C.green : f.tier === "ESTIMARE" ? C.yellow : C.red }}>
+                    {f.tier === "SIMULARE" ? `+${lei(f.ron)}` : lei(f.ron)}
                   </p>
                 )}
                 <p className="text-[14.5px] leading-relaxed" style={{ color: C.gray600 }}>{f.body}</p>
