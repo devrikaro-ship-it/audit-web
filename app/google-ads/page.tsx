@@ -145,7 +145,7 @@ export default function GoogleAdsLanding() {
         <div className="mb-6 inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold"
           style={{ background: "#f0f4ff", borderColor: "rgba(71,73,158,0.15)", color: C.indigo }}>
           <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: C.cyan }} />
-          Gratuit · Pe cifrele tale reale · Ultimele 12 luni
+          Devrika · Aplicatie de audit Google Ads · Gratuit
         </div>
 
         <h1 className="mx-auto mb-6 max-w-[860px] font-black leading-[1.05] tracking-[-2px]"
@@ -158,8 +158,18 @@ export default function GoogleAdsLanding() {
           in Google Shopping
         </h1>
 
-        <p className="mx-auto mb-10 max-w-[600px] text-lg leading-relaxed" style={{ color: C.gray500 }}>
-          Iti conectezi contul de Google Ads, spui ce ROAS minim vrei, si vezi imediat care produse consuma buget fara sa vanda — produs cu produs, cu suma exacta.
+        {/* Prima explicatie a aplicatiei sta AICI, sub titlu, nu la mijlocul paginii:
+            verificarea de branding Google se uita la ce e vizibil sus si respinge cu
+            "your home page does not explain the purpose of your app" daca nu gaseste
+            numele aplicatiei alaturi de ce face ea. */}
+        <p className="mx-auto mb-4 max-w-[640px] text-lg leading-relaxed" style={{ color: C.gray500 }}>
+          <b style={{ color: "#0f172a" }}>Devrika</b> este o aplicatie web care analizeaza contul
+          tau de Google Ads si iti arata pe ce produse pierzi bani in campaniile de Shopping.
+        </p>
+        <p className="mx-auto mb-10 max-w-[640px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
+          Iti conectezi contul de Google Ads, aplicatia citeste datele campaniilor de Shopping din
+          ultimele 12 luni si iti spune care produse consuma buget fara sa vanda — produs cu produs,
+          cu suma exacta. Nu modifica nimic in contul tau.
         </p>
 
         <Link href={CONNECT_HREF}
