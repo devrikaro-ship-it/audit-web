@@ -1,3 +1,28 @@
+# Audit Devrika
+
+## Variabile de mediu
+
+Auditul pe cont Google Ads conectat (`/google-ads`):
+
+| Variabila | Rol |
+|---|---|
+| `GADS_OAUTH_CLIENT_ID` / `GADS_OAUTH_CLIENT_SECRET` | clientul OAuth prin care prospectul da acces de citire |
+| `GADS_DEVELOPER_TOKEN` | dreptul de a citi conturi reale prin Google Ads API |
+| `GADS_REDIRECT_URI` | implicit `http://localhost:3000/api/google-ads/callback` |
+| `GADS_SESSION_SECRET` | semnatura cookie-ului de sesiune (**obligatoriu in productie**) |
+| `GADS_DEMO=1` | mod demo: tot fluxul merge pe cifre simulate, fara Google si fara chei |
+| `DASH_USER` / `DASH_PASS` | parola dashboard-ului intern `/dashboard` (**obligatorii in productie** — fara ele raspunde 503) |
+
+Mod demo, pentru demonstratii si testare fara cont real:
+
+```bash
+GADS_DEMO=1 npm run dev
+```
+
+Raportul generat asa poarta vizibil banda "MOD DEMO — cifre simulate".
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

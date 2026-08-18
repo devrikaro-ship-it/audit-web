@@ -35,11 +35,16 @@ const P = (id: string, cost: number, val: number, imp: number): Product =>
 
 const stareTracking = { ok: true, reasons: [] as string[], junkPrimary: [] as string[] };
 
+const stareCatalog = { cade: false };
+
 vi.mock("@/lib/gads-intake", () => ({
-  fetchShoppingProducts: async () => ({
-    products: [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0), P("D", 50, 900, 300)],
-    catalogComplete: true,
-  }),
+  fetchShoppingProducts: async () => {
+    if (stareCatalog.cade) throw new Error("Google Ads API 401");
+    return {
+      products: [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0), P("D", 50, 900, 300)],
+      catalogComplete: true,
+    };
+  },
 }));
 vi.mock("@/lib/gads-tracking", () => ({ fetchTracking: async () => stareTracking }));
 vi.mock("@/lib/gads-structure", async (orig) => ({
@@ -75,7 +80,7 @@ async function html(): Promise<string> {
 }
 
 describe("pagina de raport, randata", () => {
-  beforeEach(() => { stareTracking.ok = true; });
+  beforeEach(() => { stareTracking.ok = true; stareCatalog.cade = false; });
 
   it("arata produsele pe nume, nu doar numarul lor", async () => {
     const h = await html();
@@ -103,6 +108,13 @@ describe("pagina de raport, randata", () => {
   it("formularul de contact vine dupa constatari, nu inaintea lor", async () => {
     const h = await html();
     expect(h.indexOf("Unde pierzi bani")).toBeLessThan(h.indexOf('data-test="contact"'));
+  });
+
+  it("cand catalogul nu se poate citi, spune asta cinstit in loc sa cada cu 500", async () => {
+    stareCatalog.cade = true;
+    const h = await html();
+    expect(h).toContain("Nu am putut citi catalogul de Shopping");
+    expect(h).toContain("Incearca din nou");
   });
 
   it("pe masurare stricata nu afiseaza ROAS pe produse", async () => {

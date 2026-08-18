@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, listAccounts, type AccessibleAccount } from "@/lib/gads-oauth";
+import { demoOn, demoAccounts } from "@/lib/gads-demo";
 import { alegeCont } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -16,10 +17,14 @@ export default async function Conturi() {
 
   let accounts: AccessibleAccount[] = [];
   let error: string | null = null;
-  try {
-    accounts = await listAccounts(await accessTokenFrom(session.refreshToken));
-  } catch (e) {
-    error = e instanceof Error ? e.message : "necunoscuta";
+  if (demoOn()) {
+    accounts = demoAccounts();
+  } else {
+    try {
+      accounts = await listAccounts(await accessTokenFrom(session.refreshToken));
+    } catch (e) {
+      error = e instanceof Error ? e.message : "necunoscuta";
+    }
   }
 
   const usable = accounts.filter((a) => !a.manager);

@@ -6,6 +6,7 @@ import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import { fetchShoppingProducts } from "@/lib/gads-intake";
 import { suggestMargin } from "@/lib/gads-audit";
+import { demoOn, demoData } from "@/lib/gads-demo";
 import { salveazaMarja } from "./actions";
 import MarginForm from "./MarginForm";
 
@@ -25,7 +26,11 @@ export default async function Marja() {
   const cfg = oauthConfig();
   let sugestie = { label: "magazin online", marginPct: 35, detected: false };
   let nrProduse = 0;
-  try {
+  if (demoOn()) {
+    const { products } = demoData();
+    nrProduse = products.length;
+    sugestie = suggestMargin(products);
+  } else try {
     const token = await accessTokenFrom(session.refreshToken);
     const { products } = await fetchShoppingProducts(session.customerId, {
       accessToken: token,

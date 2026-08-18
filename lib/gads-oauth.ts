@@ -8,6 +8,7 @@
 // care revine a doua oara ar ramane fara — bug clasic, greu de reprodus la testare.
 
 import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { demoOn } from "./gads-demo";
 
 export const SCOPE = "https://www.googleapis.com/auth/adwords";
 const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -24,6 +25,8 @@ export function oauthConfig() {
 
 /** Ce lipseste ca fluxul sa poata rula — pentru o pagina de eroare cinstita, nu un 500 sec. */
 export function missingConfig(): string[] {
+  // In demo nu vorbim cu Google deloc, deci nu lipseste nimic.
+  if (demoOn()) return [];
   const c = oauthConfig();
   const out: string[] = [];
   if (!c.clientId) out.push("GADS_OAUTH_CLIENT_ID");

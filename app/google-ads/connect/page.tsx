@@ -12,6 +12,7 @@ const ERORI: Record<string, string> = {
   anulat: "Ai oprit conectarea la Google. Nu s-a intamplat nimic — poti relua oricand.",
   state: "Conectarea a expirat inainte sa fie finalizata. Mai incearca o data.",
   sesiune: "Sesiunea a expirat. Reconecteaza contul ca sa continuam.",
+  expirat: "Accesul la contul tau de Google a expirat sau a fost retras intre timp. Reconecteaza-te si reluam auditul — dureaza zece secunde.",
   schimb: "Google nu a putut confirma conectarea. Mai incearca o data.",
   fara_cod: "Raspunsul de la Google a venit incomplet. Mai incearca o data.",
   google: "Google a refuzat conectarea. Mai incearca o data.",

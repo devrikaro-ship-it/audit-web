@@ -1,13 +1,23 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { randomBytes } from "node:crypto";
 import { authUrl, missingConfig } from "@/lib/gads-oauth";
+import { demoOn, DEMO_REFRESH_TOKEN } from "@/lib/gads-demo";
+import { seal, SESSION_COOKIE, cookieOptions } from "@/lib/gads-session";
 
 // Porneste consimtamantul Google. `state` = nonce pus si in cookie, verificat la intoarcere:
 // fara el, oricine poate trimite victima pe un callback fabricat (CSRF pe login).
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (demoOn()) {
+    // Demo: nu atingem Google deloc. Sesiunea primeste un token care nu exista nicaieri,
+    // iar paginile de mai departe stiu sa citeasca date simulate in locul contului real.
+    const res = NextResponse.redirect(new URL("/google-ads/conturi", req.url));
+    res.cookies.set(SESSION_COOKIE, seal({ refreshToken: DEMO_REFRESH_TOKEN }), cookieOptions());
+    return res;
+  }
+
   const missing = missingConfig();
   if (missing.length) {
     // Mai bine o pagina care spune ce lipseste decat un 500 pe care nu-l intelege nimeni.

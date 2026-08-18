@@ -15,6 +15,15 @@ import { fetchSearchData, analizeazaSearch } from "@/lib/gads-search";
 import { fetchKeywordData, analizeazaCuvinte } from "@/lib/gads-keywords";
 import ContactForm from "./ContactForm";
 import { salveazaContact } from "./actions";
+import { demoOn, demoData } from "@/lib/gads-demo";
+import type { GadsSession } from "@/lib/gads-session";
+import type { Product } from "@/lib/gads-audit";
+import type { StructuraAudit } from "@/lib/gads-structure";
+import type { TrackingState } from "@/lib/gads-tracking";
+import type { PmaxData } from "@/lib/gads-pmax";
+import type { ShoppingData } from "@/lib/gads-shopping";
+import type { SearchData } from "@/lib/gads-search";
+import type { TermenBrut } from "@/lib/gads-keywords";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Raportul tau · Audit Google Ads Devrika" };
@@ -35,6 +44,66 @@ const GRAD_STYLE = {
 
 const lei = (n: number) => `${n.toLocaleString("ro-RO")} RON`;
 
+type SurseAudit = {
+  products: Product[];
+  catalogComplete: boolean;
+  tracking: TrackingState;
+  structura?: StructuraAudit;
+  brutCuvinte?: { negative: string[]; termeni: TermenBrut[] };
+  brutPmax?: PmaxData;
+  brutShop?: ShoppingData;
+  brutCautari?: SearchData;
+};
+
+/** Cand nu putem citi masurarea, raportul spune "nu stiu" — nu presupune ca e in regula. */
+const TRACKING_NECUNOSCUT: TrackingState = {
+  ok: false,
+  conversions: [],
+  junkPrimary: [],
+  hasSalePrimary: false,
+  reasons: ["nu am putut citi setarile de masurare din cont"],
+};
+
+/**
+ * Aducerea datelor — singurul loc care atinge contul. In demo intoarce cifre simulate, fara
+ * niciun apel catre Google. Pe cont real: token cazut -> reconectare (nu 500), catalog cazut
+ * -> null, adica pagina de indisponibilitate. Restul analizelor sunt optionale prin natura lor.
+ */
+async function surse(session: GadsSession): Promise<SurseAudit | null> {
+  if (demoOn()) return demoData();
+
+  const cfg = oauthConfig();
+  // Un refresh token revocat sau expirat nu e o eroare de server, ci o sesiune care trebuie
+  // reluata. Fara plasa asta, omul care se intoarce peste doua ore primea 500.
+  const token = await accessTokenFrom(session.refreshToken).catch(() => null);
+  if (!token) redirect("/google-ads/connect?eroare=expirat");
+
+  const auth = {
+    accessToken: token,
+    developerToken: cfg.developerToken,
+    // Fara managerul prin care e accesibil contul, Google raspunde USER_PERMISSION_DENIED.
+    loginCustomerId: session.loginCustomerId,
+  };
+  const customerId = session.customerId as string;
+
+  // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
+  // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
+  const [catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari] = await Promise.all([
+    fetchShoppingProducts(customerId, auth).catch(() => null),
+    fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT),
+    fetchStructura(customerId, auth).catch(() => undefined),
+    fetchKeywordData(customerId, auth).catch(() => undefined),
+    fetchPmaxData(customerId, auth).catch(() => undefined),
+    fetchShoppingData(customerId, auth).catch(() => undefined),
+    fetchSearchData(customerId, auth).catch(() => undefined),
+  ]);
+
+  // Catalogul e singurul de care depinde tot restul: fara el nu exista nici produse, nici cifra
+  // de impact. Atunci spunem cinstit ca nu am putut citi, in loc sa aruncam o pagina de eroare.
+  if (!catalog) return null;
+  return { ...catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari };
+}
+
 export default async function Raport() {
   const jar = await cookies();
   const session = unseal(jar.get(SESSION_COOKIE)?.value);
@@ -42,35 +111,19 @@ export default async function Raport() {
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.marginPct) redirect("/google-ads/marja");
 
-  const cfg = oauthConfig();
-  const token = await accessTokenFrom(session.refreshToken);
-  const auth = {
-    accessToken: token,
-    developerToken: cfg.developerToken,
-    // Fara managerul prin care e accesibil contul, Google raspunde USER_PERMISSION_DENIED.
-    loginCustomerId: session.loginCustomerId,
-  };
+  const demo = demoOn();
+  const s = await surse(session);
+  if (!s) return <Indisponibil />;
+  const { products, catalogComplete, tracking, structura } = s;
 
-  // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
-  // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
-  const [{ products, catalogComplete }, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari] =
-    await Promise.all([
-    fetchShoppingProducts(session.customerId, auth),
-    fetchTracking(session.customerId, auth),
-    fetchStructura(session.customerId, auth).catch(() => undefined),
-    fetchKeywordData(session.customerId, auth).catch(() => undefined),
-    fetchPmaxData(session.customerId, auth).catch(() => undefined),
-    fetchShoppingData(session.customerId, auth).catch(() => undefined),
-    fetchSearchData(session.customerId, auth).catch(() => undefined),
-  ]);
   // Doar potrivirile care au nevoie de alt rezultat se fac dupa: cuvintele au nevoie de
   // catalog, PMax de cheltuiala pe campanie.
-  const cuvinte = brutCuvinte
-    ? analizeazaCuvinte(brutCuvinte.negative, products, brutCuvinte.termeni, session.customerName)
+  const cuvinte = s.brutCuvinte
+    ? analizeazaCuvinte(s.brutCuvinte.negative, products, s.brutCuvinte.termeni, session.customerName)
     : undefined;
-  const pmax = brutPmax && structura ? analizeazaPmax(brutPmax, structura.campanii) : undefined;
-  const shopping = brutShop ? analizeazaShopping(brutShop, tracking.ok) : undefined;
-  const cautari = brutCautari ? analizeazaSearch(brutCautari) : undefined;
+  const pmax = s.brutPmax && structura ? analizeazaPmax(s.brutPmax, structura.campanii) : undefined;
+  const shopping = s.brutShop ? analizeazaShopping(s.brutShop, tracking.ok) : undefined;
+  const cautari = s.brutCautari ? analizeazaSearch(s.brutCautari) : undefined;
 
   const minRoas = breakEvenRoas(session.marginPct);
   const rep = buildReport(
@@ -95,6 +148,15 @@ export default async function Raport() {
           <img src="/logo-devrika.png" alt="Devrika" width={34} height={34} className="h-[34px] w-[34px]" />
           <span className="text-base font-extrabold tracking-[-0.3px]" style={{ color: "#1e1b4b" }}>Devrika</span>
         </Link>
+
+        {demo && (
+          // Un raport demo care se da drept cifrele lui e o minciuna care ajunge la un client.
+          // Banda sta sus, inaintea cifrei de impact, si nu se poate rata.
+          <div className="mb-4 rounded-xl px-5 py-3.5 text-center text-[13.5px] font-bold"
+            style={{ background: C.yellowBg, color: C.yellow }}>
+            MOD DEMO — cifrele de mai jos sunt simulate, nu vin din niciun cont real
+          </div>
+        )}
 
         {/* Cifra de impact */}
         <div className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
@@ -273,6 +335,40 @@ export default async function Raport() {
             <b>MASURAT</b> = citit direct din contul tau. <b>ESTIMARE</b> = cifra reala inmultita
             cu un reper de piata, marcata ca atare. Nu prezentam niciodata o estimare drept fapt.
           </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Ce vede omul cand catalogul de Shopping nu se poate citi. Nu e un 500: e o pagina care spune
+ * ce s-a intamplat, ce poate face acum si cum ne scrie daca tot nu merge.
+ */
+function Indisponibil() {
+  return (
+    <div className="flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center"
+      style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
+      <div className="w-full max-w-[520px] rounded-2xl border bg-white p-8 md:p-10"
+        style={{ borderColor: "#e6ebf4", boxShadow: "0 8px 32px rgba(11,31,58,0.06)" }}>
+        <h1 className="mb-4 font-extrabold leading-[1.2] tracking-[-0.5px]"
+          style={{ fontFamily: sora, fontSize: "clamp(20px,3.2vw,26px)", color: "#0f172a" }}>
+          Nu am putut citi catalogul de Shopping
+        </h1>
+        <p className="mb-7 text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
+          Se intampla cand contul nu are inca produse in Shopping, cand accesul prin API tocmai
+          a fost retras sau cand Google raspunde greu. Nu s-a modificat nimic in contul tau.
+        </p>
+        <div className="flex flex-col items-center gap-3">
+          <Link href="/google-ads/raport"
+            className="inline-flex min-h-11 items-center rounded-[14px] px-7 text-[15.5px] font-bold text-white"
+            style={{ background: brandGradient, fontFamily: sora }}>
+            Incearca din nou
+          </Link>
+          <a href="mailto:hello@devrika.ro?subject=Audit%20Google%20Ads%20-%20raportul%20nu%20s-a%20generat"
+            className="text-[13.5px] font-semibold hover:underline" style={{ color: C.indigo }}>
+            Scrie-ne si il facem noi manual
+          </a>
         </div>
       </div>
     </div>
