@@ -82,8 +82,8 @@ const steps = [
   },
   {
     n: "2",
-    t: "Spui ce ROAS minim vrei",
-    d: "Un singur camp. Sub cat consideri ca un produs nu merita bugetul. Iti explicam pe loc ce inseamna.",
+    t: "Spui cat iti ramane din 100 de lei",
+    d: "Un singur camp: marja ta, aproximativ. Din ea calculam noi pragul sub care un produs nu-si merita bugetul — nu trebuie sa stii ce inseamna ROAS.",
   },
   {
     n: "3",
@@ -383,7 +383,7 @@ export default function GoogleAdsLanding() {
             ))}
           </div>
           <p className="mt-5 text-[12px] leading-relaxed" style={{ color: C.gray400 }}>
-            Simulare, nu promisiune — un plafon optimist care presupune ca produsele bune tin acelasi randament la buget mai mare. E venit, nu profit: profitul depinde de marja ta, pe care nu ti-o cerem aici. Cifrele de mai sus sunt exemplu.
+            Simulare, nu promisiune — un plafon optimist care presupune ca produsele bune tin acelasi randament la buget mai mare. E venit, nu profit: profitul depinde de marja ta, pe care ti-o cerem la pasul 2. Cifrele de mai sus sunt exemplu.
           </p>
         </div>
       </section>
