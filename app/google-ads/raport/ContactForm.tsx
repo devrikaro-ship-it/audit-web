@@ -7,9 +7,9 @@ import { C, sora, brandGradient } from "@/lib/theme";
 // afacerea lui si vrea restul. Inainte de raport, acelasi formular ar fi doar o bariera.
 
 export default function ContactForm({ action }: { action: (fd: FormData) => Promise<{ ok: boolean } | void> }) {
-  const [trimis, setTrimis] = useState(false);
+  const [stare, setStare] = useState<"gata" | "trimis" | "esuat">("gata");
 
-  if (trimis) {
+  if (stare === "trimis") {
     return (
       <p className="rounded-xl px-5 py-4 text-[14.5px]" style={{ background: C.greenBg, color: C.green }}>
         Am notat. Te cautam in cel mult o zi lucratoare cu raportul complet.
@@ -19,9 +19,23 @@ export default function ContactForm({ action }: { action: (fd: FormData) => Prom
 
   return (
     <form
-      action={async (fd) => { await action(fd); setTrimis(true); }}
+      // "Am notat" se spune DOAR daca s-a notat. Cand salvarea pica, omul afla pe loc si are
+      // alternativa la indemana — altfel lead-ul dispare si el crede ca ne-a scris.
+      action={async (fd) => {
+        const rez = await action(fd);
+        setStare(rez && rez.ok === false ? "esuat" : "trimis");
+      }}
       className="flex flex-col gap-3"
     >
+      {stare === "esuat" && (
+        <p className="rounded-xl px-5 py-4 text-[14px] leading-relaxed" style={{ background: C.redBg, color: C.red }}>
+          Nu am putut salva datele acum. Scrie-ne direct la{" "}
+          <a href="mailto:hello@devrika.ro?subject=Audit%20Google%20Ads%20-%20raport%20complet" className="font-bold underline">
+            hello@devrika.ro
+          </a>{" "}
+          si iti trimitem raportul complet, sau incearca inca o data butonul de mai jos.
+        </p>
+      )}
       <div className="flex flex-col gap-3 sm:flex-row">
         <label className="flex-1">
           <span className="mb-1.5 block text-[13px] font-semibold" style={{ color: "#334155" }}>Nume</span>

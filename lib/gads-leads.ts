@@ -59,6 +59,22 @@ export async function saveLead(rec: Omit<GadsLead, "id" | "createdAt">): Promise
   return lead;
 }
 
+/**
+ * Varianta care nu arunca. Pagina de raport are nevoie sa STIE daca lead-ul s-a salvat, ca sa
+ * nu-i spuna omului "am notat" cand de fapt nu a notat nimeni. Daca scrierea pica, lead-ul
+ * pleaca in log-ul serverului — de acolo se poate recupera manual, ceea ce e infinit mai bine
+ * decat sa dispara.
+ */
+export async function saveLeadSafe(rec: Omit<GadsLead, "id" | "createdAt">): Promise<{ ok: boolean }> {
+  try {
+    await saveLead(rec);
+    return { ok: true };
+  } catch (e) {
+    console.error("[gads-lead] SALVARE ESUATA — lead recuperabil din linia asta:", JSON.stringify(rec), e);
+    return { ok: false };
+  }
+}
+
 export async function listLeads(): Promise<GadsLead[]> {
   return [...(await load())].sort((a, b) => b.createdAt - a.createdAt);
 }
