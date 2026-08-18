@@ -16,6 +16,7 @@ import { fetchKeywordData, analizeazaCuvinte } from "@/lib/gads-keywords";
 import ContactForm from "./ContactForm";
 import { salveazaContact } from "./actions";
 import { demoOn, demoData } from "@/lib/gads-demo";
+import { roasImbunatatit } from "@/lib/calc";
 import type { GadsSession } from "@/lib/gads-session";
 import type { Product } from "@/lib/gads-audit";
 import type { StructuraAudit } from "@/lib/gads-structure";
@@ -134,6 +135,13 @@ export default async function Raport() {
     catalogComplete,
     { structura, cuvinte, pmax, shopping, cautari }
   );
+
+  // Ipoteza casei pentru sectiunea "Cu Devrika": CPC -20% si conversie +20%, adica exact ce
+  // misca omul cu cursoarele in pagina urmatoare. Cifra vine din acelasi motor, nu dintr-un
+  // inmultitor scris de mana aici.
+  const bugetLunar = structura ? Math.round(structura.cheltuialaTotala / 12) : 0;
+  const roasAzi = structura?.roasCont ?? 0;
+  const venitInPlusLunar = Math.round(bugetLunar * ((roasImbunatatit(roasAzi, 20, 20) ?? roasAzi) - roasAzi));
 
   // Doua sectiuni, nu o lista plata: banii pierduti si setarile de reparat sunt lucruri
   // diferite, iar un om care le vede amestecate nu stie ce sa faca luni dimineata.
@@ -305,6 +313,36 @@ export default async function Raport() {
             ))}
           </div>
         )}
+
+        {/* ── Cu Devrika ── */}
+        {/* Sectiune intreaga, nu un buton in subsol: e a doua jumatate a discutiei, dupa ce omul
+            a vazut ce pierde. Cifra de aici e SIMULARE si o spune, iar detaliul se joaca in
+            pagina lui, unde el misca ipoteza si completeaza pretul din oferta. */}
+        {structura && structura.roasCont ? (
+          <div className="mb-6 overflow-hidden rounded-2xl" style={{ background: brandGradient }}>
+            <div className="p-8 text-center text-white">
+              <p className="mb-2 text-[12.5px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.75)" }}>
+                Simulare · cu Devrika, la acelasi buget
+              </p>
+              <p className="mb-2 font-black leading-none tabular-nums" style={{ fontFamily: sora, fontSize: "clamp(32px,7vw,54px)" }}>
+                +{lei(venitInPlusLunar)}
+              </p>
+              <p className="mx-auto mb-6 max-w-[520px] text-[15px] leading-relaxed" style={{ color: "rgba(255,255,255,0.92)" }}>
+                Atat ar insemna in plus pe luna din reclame daca clicurile ajung cu 20% mai ieftine
+                si conversia creste cu 20% — cele doua lucruri la care lucram efectiv. Nu e o
+                promisiune: intra si misca tu ipoteza, pana la zero daca vrei.
+              </p>
+              <Link href="/google-ads/impreuna"
+                className="inline-flex min-h-11 items-center gap-2.5 rounded-[14px] bg-white px-7 py-[14px] text-[15.5px] font-bold no-underline transition-all hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                style={{ color: "#1e1b4b", fontFamily: sora }}>
+                Vezi calculul pe cifrele tale
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        ) : null}
 
         {/* Contact — dupa ce a vazut valoarea, nu inainte */}
         <div className="mb-6 rounded-2xl border bg-white p-7" style={{ borderColor: C.border }}>

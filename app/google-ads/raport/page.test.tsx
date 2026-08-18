@@ -105,6 +105,13 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain("SIMULARE");
   });
 
+  it("are sectiunea 'cu Devrika' la final, inaintea formularului de contact", async () => {
+    const h = await html();
+    expect(h).toContain("Vezi calculul pe cifrele tale");
+    expect(h).toContain("Simulare");
+    expect(h.indexOf("Vezi calculul pe cifrele tale")).toBeLessThan(h.indexOf('data-test="contact"'));
+  });
+
   it("formularul de contact vine dupa constatari, nu inaintea lor", async () => {
     const h = await html();
     expect(h.indexOf("Unde pierzi bani")).toBeLessThan(h.indexOf('data-test="contact"'));
