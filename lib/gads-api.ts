@@ -11,13 +11,26 @@
  * repeta. De aceea: un singur loc de schimbat, plus `GADS_API_VERSION` in mediu, ca pe
  * server sa se poata muta fara sa asteptam un build.
  *
- * Cum afli rapid ce mai e viu (fara token, doar dupa codul de raspuns):
- *   401 = versiunea exista, 404 = a fost retrasa
- *   curl -s -o /dev/null -w "%{http_code}" https://googleads.googleapis.com/v26/customers:listAccessibleCustomers
+ * Cum verifici, si de ce nu e de ajuns un curl:
+ *   curl -s -o /dev/null -w "%{http_code}" https://googleads.googleapis.com/v23/customers:listAccessibleCustomers
+ *   404 = versiunea a fost retrasa (raspunsul e pagina HTML a Google, nu JSON).
+ *   401 = versiunea e rutata — DAR nimic mai mult: autentificarea raspunde inainte ca Google
+ *   sa verifice metoda, deci o versiune prea NOUA da tot 401 aici si abia cu token real
+ *   arata `404 {"error":{"message":"Method not found."}}`. Proba adevarata cere token.
  */
 
-/** Verificat pe 19.08.2026: v21 si mai vechi -> 404; v22..v26 -> 401; v27 nu exista inca. */
-const IMPLICIT = "v26";
+/**
+ * Verificat pe 19.08.2026, in doi pasi:
+ *  - fara token: v21 si mai vechi -> 404 (pagina HTML = versiunea nu mai exista);
+ *    v22..v26 -> 401. ATENTIE: 401 vine de la autentificare, INAINTE ca Google sa se uite
+ *    daca metoda exista — deci nu dovedeste decat ca versiunea traieste.
+ *  - cu token real, pe cont adevarat: v26 raspunde
+ *    `404 {"error":{"code":404,"message":"Method not found."}}` la listAccessibleCustomers.
+ *    Adica versiunea e rutata, dar metoda nu e in ea.
+ * v23 e cea mai noua versiune pentru care metoda e documentata explicit
+ * (developers.google.com/google-ads/api/reference/rpc/v23/CustomerService/ListAccessibleCustomers).
+ */
+const IMPLICIT = "v23";
 
 export function gadsApiVersion(): string {
   const v = process.env.GADS_API_VERSION?.trim();
