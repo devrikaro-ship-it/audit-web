@@ -9,6 +9,7 @@
 
 import { googleAdsSearch, type GoogleAdsAuth } from "./net";
 import { demoOn } from "./gads-demo";
+import { gadsApiUrl } from "./gads-api";
 
 export const SCOPE = "https://www.googleapis.com/auth/adwords";
 const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -107,7 +108,7 @@ export type AccessibleAccount = {
  */
 export async function listAccounts(accessToken: string): Promise<AccessibleAccount[]> {
   const c = oauthConfig();
-  const res = await fetch("https://googleads.googleapis.com/v21/customers:listAccessibleCustomers", {
+  const res = await fetch(gadsApiUrl("customers:listAccessibleCustomers"), {
     headers: { Authorization: `Bearer ${accessToken}`, "developer-token": c.developerToken },
   });
   if (!res.ok) throw new Error(`listare conturi esuata: ${res.status} ${(await res.text()).slice(0, 200)}`);

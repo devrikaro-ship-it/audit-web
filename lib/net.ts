@@ -4,6 +4,8 @@
 // amestecate cu scoring-ul. Concentrarea lor da: (a) un punct unic de mock in teste
 // si (b) chokepoint-ul unde s-ar adauga o garda SSRF (validare IP) daca e nevoie.
 
+import { gadsApiUrl } from "./gads-api";
+
 export const FETCH_TIMEOUT = 12000;
 
 export type GoogleAdsAuth = {
@@ -14,7 +16,7 @@ export type GoogleAdsAuth = {
 };
 
 /**
- * Un search GAQL pe Google Ads API (REST, v21), cu paginare.
+ * Un search GAQL pe Google Ads API (REST), cu paginare. Versiunea vine din lib/gads-api.
  * NB: endpointul `search` nu accepta `pageSize` (PAGE_SIZE_NOT_SUPPORTED) — doar pageToken.
  * Aici, nu in intake, pentru ca acesta e singurul fisier care are voie sa atinga fetch().
  * READ-ONLY prin natura endpoint-ului: `search` doar citeste.
@@ -65,7 +67,7 @@ async function interogheaza(
   auth: GoogleAdsAuth
 ): Promise<Record<string, unknown>[]> {
   const cid = customerId.replace(/-/g, "");
-  const url = `https://googleads.googleapis.com/v21/customers/${cid}/googleAds:search`;
+  const url = gadsApiUrl(`customers/${cid}/googleAds:search`);
   const headers: Record<string, string> = {
     Authorization: `Bearer ${auth.accessToken}`,
     "developer-token": auth.developerToken,

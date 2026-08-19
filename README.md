@@ -11,6 +11,7 @@ Auditul pe cont Google Ads conectat (`/google-ads`):
 | `GADS_REDIRECT_URI` | implicit `http://localhost:3000/api/google-ads/callback` |
 | `GADS_SESSION_SECRET` | semnatura cookie-ului de sesiune (**obligatoriu in productie**) |
 | `GADS_DEMO=1` | mod demo: tot fluxul merge pe cifre simulate, fara Google si fara chei |
+| `GADS_API_VERSION` | versiunea Google Ads API; implicit cea din `lib/gads-api.ts`. De schimbat cand Google retrage versiunea curenta (semnul: 404 cu pagina HTML de la Google, nu eroare JSON) |
 | `DASH_USER` / `DASH_PASS` | parola dashboard-ului intern `/dashboard` (**obligatorii in productie** — fara ele raspunde 503) |
 
 Mod demo, pentru demonstratii si testare fara cont real:
