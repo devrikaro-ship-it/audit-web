@@ -136,7 +136,7 @@ export default async function Raport() {
     session.marginPct,
     minRoas,
     catalogComplete,
-    { structura, cuvinte, pmax, shopping, cautari }
+    { structura, cuvinte, pmax, shopping, cautari, an }
   );
 
   // Ipoteza casei pentru sectiunea "Cu Devrika": CPC -20% si conversie +20%, adica exact ce

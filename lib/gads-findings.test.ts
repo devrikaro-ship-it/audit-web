@@ -277,3 +277,44 @@ describe("puncte de atac", () => {
     expect(rep.headline.ron).toBe(0);
   });
 });
+
+describe("cifra mare se potriveste cu interfata Google Ads", () => {
+  // MagazinFitness.ro, 20.08.2026: raportul pe produse dadea 129.155 RON, interfata 148.817.
+  // Diferenta = campanii Search fara produs in spate. Prospectul deschide interfata si compara.
+  const products = [P("A", 100000, 0, 5000), P("B", 29155, 0, 2000)];
+  const r = audit(products, breakEvenRoas(30));
+  const an = { cost: 148817, valoare: 1567000, roas: 10.53 };
+
+  it("cu totalurile contului, cifra e a CONTULUI, nu doar a produselor", () => {
+    const rep = buildReport(r, BROKEN_TRACKING, 30, breakEvenRoas(30), true, { an });
+    expect(rep.findings[0].ron).toBe(148817);
+    expect(rep.headline.ron).toBe(148817);
+  });
+
+  it("spune si cat s-a dus pe Shopping, ca sa nu para ca am ascuns diferenta", () => {
+    const rep = buildReport(r, BROKEN_TRACKING, 30, breakEvenRoas(30), true, { an });
+    expect(rep.findings[0].body).toContain("148.817 RON");
+    expect(rep.findings[0].body).toContain("129.155 RON");
+    expect(rep.findings[0].body).toContain("Shopping");
+  });
+
+  it("fara campanii Search nu desface cifra in doua degeaba", () => {
+    const egal = { cost: 129155, valoare: 0, roas: null };
+    const rep = buildReport(r, BROKEN_TRACKING, 30, breakEvenRoas(30), true, { an: egal });
+    expect(rep.findings[0].ron).toBe(129155);
+    expect(rep.findings[0].body).not.toContain("Shopping —");
+  });
+
+  it("fara totalurile contului ramane pe cifra pe produse, ca pana acum", () => {
+    const rep = buildReport(r, BROKEN_TRACKING, 30, breakEvenRoas(30));
+    expect(rep.findings[0].ron).toBe(129155);
+  });
+
+  it("un total al contului mai MIC decat cel pe produse nu e crezut", () => {
+    // Nu se poate cheltui pe produse mai mult decat pe tot contul: daca iese asa, interogarea
+    // anuala e trunchiata, si atunci cifra sigura e cea pe produse.
+    const rupt = { cost: 90000, valoare: 0, roas: null };
+    const rep = buildReport(r, BROKEN_TRACKING, 30, breakEvenRoas(30), true, { an: rupt });
+    expect(rep.findings[0].ron).toBe(129155);
+  });
+});

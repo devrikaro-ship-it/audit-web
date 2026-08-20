@@ -15,6 +15,7 @@ import type { KeywordAudit } from "./gads-keywords";
 import type { PmaxAudit } from "./gads-pmax";
 import type { ShoppingAudit } from "./gads-shopping";
 import type { SearchAudit } from "./gads-search";
+import type { TotaluriAn } from "./gads-an";
 
 /** Cele trei niveluri de onestitate. Nu se amesteca niciodata. */
 export type Tier = "MASURAT" | "ESTIMARE" | "SIMULARE";
@@ -93,6 +94,14 @@ export type ExtraAudit = {
   pmax?: PmaxAudit;
   shopping?: ShoppingAudit;
   cautari?: SearchAudit;
+  /**
+   * Totalurile pe tot contul, pe 12 luni. Cand exista, ELE sunt cifra pe care o vede
+   * prospectul cand deschide Google Ads — raportul pe produse acopera doar banii legati de
+   * un produs din feed, deci rateaza campaniile Search fara produs (pe MagazinFitness.ro:
+   * 129.155 din 148.817 RON). Cifra mare trebuie sa se potriveasca cu interfata, altfel omul
+   * crede ca nu stim sa numaram si nu mai citeste restul.
+   */
+  an?: TotaluriAn | null;
 };
 
 const ron = (n: number) => `${Math.round(n).toLocaleString("ro-RO")} RON`;
@@ -116,15 +125,26 @@ export function buildReport(
   const t = result.totals;
 
   // ── 1. Masurarea stricata: cea mai scumpa greseala, si e MASURATA ──────────
+  // Masurarea e o setare a CONTULUI, nu a unei campanii: daca e stricata, s-a cheltuit orb tot
+  // ce a trecut prin cont, nu doar banii legati de un produs din feed. De aceea cifra de aici e
+  // totalul contului cand il avem.
+  const costCont = extra.an && extra.an.cost > t.totalCost ? extra.an.cost : t.totalCost;
+  // Sub 1% diferenta = acelasi numar rotunjit; a-l desface in doua ar deruta degeaba.
+  const areSearchPeLangaShopping = costCont - t.totalCost > costCont * 0.01;
+
   if (!tracking.ok) {
     findings.push({
       key: "tracking",
       title: "Cheltuiesti fara sa stii ce aduce bani",
-      ron: t.totalCost,
+      ron: costCont,
       tier: "MASURAT",
       body:
-        `In ultimele 12 luni au trecut ${ron(t.totalCost)} prin cont, iar Google nu a stiut ` +
+        `In ultimele 12 luni au trecut ${ron(costCont)} prin cont, iar Google nu a stiut ` +
         `care dintre ei au adus vanzari. ` +
+        (areSearchPeLangaShopping
+          ? `Din ei, ${ron(t.totalCost)} s-au dus pe produsele din Shopping — despre acelea ` +
+            `e restul raportului; diferenta e pe campanii fara produs in spate. `
+          : "") +
         (tracking.junkPrimary.length
           ? `Motivul: ${tracking.reasons[0]}. Licitarea automata cumpara clicuri de la oamenii ` +
             `care fac acele actiuni, nu de la cei care cumpara. `
