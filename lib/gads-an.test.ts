@@ -5,8 +5,9 @@ describe("totalurile contului pe 12 luni", () => {
   it("intreaba pe fereastra de un an, nu pe 30 de zile", () => {
     // Nepotrivirea gasita pe MagazinFitness.ro (20.08.2026): pagina spunea "ultimele 12 luni"
     // dar cifrele veneau din LAST_30_DAYS.
-    expect(anQuery()).toContain("LAST_365_DAYS");
-    expect(anQuery()).not.toContain("LAST_30_DAYS");
+    const q = anQuery("2025-08-20", "2026-08-20");
+    expect(q).toContain("2025-08-20");
+    expect(q).not.toContain("LAST_30_DAYS");
   });
 
   it("aduna toate campaniile, indiferent de stare — ca 'Toate campaniile' din interfata", () => {
@@ -48,13 +49,20 @@ describe("forma interogarii", () => {
     // Google Ads respinge un SELECT format numai din metrici. Interogarea asta a picat exact
     // asa, in tacere, si raportul a aratat cifra gresita pana cand a comparat-o cineva cu
     // interfata. Testul e aici ca sa nu se mai intample.
-    const q = anQuery();
+    const q = anQuery("2025-08-20", "2026-08-20");
     const campuri = q.slice(q.indexOf("SELECT") + 6, q.indexOf("FROM")).split(",").map((c) => c.trim());
     expect(campuri.some((c) => !c.startsWith("metrics."))).toBe(true);
   });
 
-  it("intreaba tot contul pe 12 luni, fara filtru de status", () => {
-    expect(anQuery()).toContain("LAST_365_DAYS");
-    expect(anQuery()).not.toContain("campaign.status");
+  it("intreaba tot contul pe un interval de date, fara filtru de status", () => {
+    const q = anQuery("2025-08-20", "2026-08-20");
+    expect(q).toContain("BETWEEN '2025-08-20' AND '2026-08-20'");
+    expect(q).not.toContain("campaign.status");
+  });
+
+  it("NU foloseste DURING pentru ferestre mai lungi de 30 de zile", () => {
+    // `DURING` accepta doar constante dintr-o lista inchisa; `LAST_365_DAYS` nu exista si
+    // intoarce INVALID_VALUE_WITH_DURING_OPERATOR. Interogarea a picat asa luni intregi.
+    expect(anQuery("2025-08-20", "2026-08-20")).not.toContain("DURING");
   });
 });

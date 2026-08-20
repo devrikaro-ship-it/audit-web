@@ -7,6 +7,7 @@
 // interfata trebuie sa fie cifra din interfata.
 
 import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { dateRange, WINDOW_DAYS } from "./gads-intake";
 
 export type TotaluriAn = { cost: number; valoare: number; roas: number | null };
 
@@ -15,15 +16,18 @@ export type RandAn = { metrics?: { costMicros?: string | number; conversionsValu
 /**
  * Fara filtru de status: interfata arata "Toate campaniile", deci si noi.
  *
- * `campaign.id` NU e decorativ. Un SELECT format numai din metrici e respins de Google Ads, iar
- * interogarea asta a picat exact asa, in tacere, de la scrierea ei: pe MagazinFitness.ro raportul
- * arata luni intregi cifra pe produse (129.195 RON) in loc de totalul contului, pentru ca aici
- * nu venea niciodata nimic. Toate celelalte interogari din proiect cereau si un camp de resursa;
- * doar asta nu.
+ * Interval explicit de date, NU `DURING LAST_365_DAYS`. Operatorul `DURING` accepta doar o lista
+ * inchisa de constante, iar cea mai lunga e `LAST_30_DAYS` — pentru un an nu exista niciuna.
+ * Scrisa cu `DURING LAST_365_DAYS`, interogarea raspundea de fiecare data cu
+ * `INVALID_VALUE_WITH_DURING_OPERATOR`, iar raportul cadea tacut pe cifra din feed: pe
+ * MagazinFitness.ro arata 129.195 RON in loc de totalul contului — exact cifra pe care prospectul
+ * o compara cu interfata si n-o regaseste. Peste 30 de zile se folosesc date calendaristice.
+ *
+ * `campaign.id` are si el rostul lui: un SELECT format numai din metrici e respins.
  */
-export function anQuery(): string {
+export function anQuery(from: string, to: string): string {
   return `SELECT campaign.id, metrics.cost_micros, metrics.conversions_value
-          FROM campaign WHERE segments.date DURING LAST_365_DAYS`;
+          FROM campaign WHERE segments.date BETWEEN '${from}' AND '${to}'`;
 }
 
 export function agregaAn(randuri: RandAn[]): TotaluriAn {
@@ -57,7 +61,8 @@ export async function citesteAn(
   auth: GoogleAdsAuth
 ): Promise<TotaluriAn | null> {
   try {
-    const randuri = (await googleAdsSearch(customerId, anQuery(), auth)) as RandAn[];
+    const { from, to } = dateRange(new Date(), WINDOW_DAYS);
+    const randuri = (await googleAdsSearch(customerId, anQuery(from, to), auth)) as RandAn[];
     const t = agregaAn(randuri);
     if (t.cost > 0) return t;
     console.error("[gads-an] totaluri pe 12 luni fara cheltuiala; raportul cade pe 30 de zile");

@@ -46,6 +46,10 @@ vi.mock("@/lib/gads-intake", () => ({
       catalogComplete: true,
     };
   },
+  // `gads-an` isi ia intervalul de date de aici, deci mock-ul trebuie sa le aiba si pe astea —
+  // altfel citirea totalurilor pe 12 luni crapa in tacere si testul n-ar observa.
+  WINDOW_DAYS: 365,
+  dateRange: () => ({ from: "2025-08-20", to: "2026-08-20" }),
   // Pagina cere catalogul si pe ferestrele scurte, pentru harta pe performanta.
   FERESTRE: [
     { zile: 30, eticheta: "30 de zile" },
