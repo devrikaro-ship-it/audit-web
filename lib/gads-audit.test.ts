@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { audit, breakEvenRoas, suggestMargin, pragPentruFereastra, type Product } from "./gads-audit";
+import { audit, breakEvenRoas, suggestMargin, PRAG_CLICURI, type Product } from "./gads-audit";
 
 // Cele 12 teste portate din test_engine.py (repo audit-google-ads-devrika) — valorile
 // asteptate sunt calculate de mana, nu preluate din output. Plus testele pentru stratul
@@ -204,9 +204,12 @@ describe("segmentarea pe performanta: Heroes / Sidekicks / Villains / Zombies / 
     expect(cuPragMic.heroes.map((h) => h.productId)).toContain("sidekick");
   });
 
-  it("pragul creste cu fereastra, ca 40 de clicuri pe un an sa nu treaca drept dovada", () => {
-    expect(pragPentruFereastra(30)).toBe(40);
-    expect(pragPentruFereastra(90)).toBe(120);
-    expect(pragPentruFereastra(365)).toBe(487);
+  it("pragul e acelasi indiferent de fereastra analizata", () => {
+    // Scalat cu fereastra, pe 12 luni nu mai trecea nimic de prag si Villains ajungea la zero
+    // pe un cont real (MagazinFitness, 20.08.2026). Un produs cu 40 de clicuri si nicio vanzare
+    // spune acelasi lucru si intr-o luna, si intr-un an.
+    expect(PRAG_CLICURI).toBe(40);
+    const peAn = audit([P("v", 400, 100, 20000, undefined, 45, 0)], 4);
+    expect(peAn.villains.map((v) => v.productId)).toEqual(["v"]);
   });
 });

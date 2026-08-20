@@ -42,3 +42,19 @@ describe("totalurile contului pe 12 luni", () => {
     expect(bugetLunarDin(null, 11868)).toBe(11868);
   });
 });
+
+describe("forma interogarii", () => {
+  it("cere si un camp de resursa, nu doar metrici", () => {
+    // Google Ads respinge un SELECT format numai din metrici. Interogarea asta a picat exact
+    // asa, in tacere, si raportul a aratat cifra gresita pana cand a comparat-o cineva cu
+    // interfata. Testul e aici ca sa nu se mai intample.
+    const q = anQuery();
+    const campuri = q.slice(q.indexOf("SELECT") + 6, q.indexOf("FROM")).split(",").map((c) => c.trim());
+    expect(campuri.some((c) => !c.startsWith("metrics."))).toBe(true);
+  });
+
+  it("intreaba tot contul pe 12 luni, fara filtru de status", () => {
+    expect(anQuery()).toContain("LAST_365_DAYS");
+    expect(anQuery()).not.toContain("campaign.status");
+  });
+});

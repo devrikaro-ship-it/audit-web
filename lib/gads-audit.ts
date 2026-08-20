@@ -65,9 +65,15 @@ export type AuditResult = {
 };
 
 /**
- * Cat trafic trebuie sa fi strans un produs in fereastra analizata ca sa merite judecat.
- * 40 de clicuri pe 30 de zile e pragul de casa: sub el, lipsa unei vanzari nu dovedeste nimic.
- * Se scaleaza cu fereastra (vezi `pragPentruFereastra`) si NU se arata clientului.
+ * Cat trafic trebuie sa fi strans un produs ca sa merite judecat. Sub 40 de clicuri fara nicio
+ * vanzare nu se poate spune nimic: la o rata de conversie normala de magazin, nici nu te astepti
+ * la o comanda. Pragul NU se arata clientului.
+ *
+ * Fix, nu proportional cu fereastra. Am incercat sa-l scalez (40 pe 30 de zile -> 487 pe un an)
+ * si pe cont real a iesit o prostie: pe 12 luni nu mai trecea aproape nimic de prag, **Villains
+ * ajungea la ZERO produse** iar tot ce ardea bani se ascundea in Sidekicks. Intrebarea "am
+ * destule date?" nu depinde de cat de lunga e fereastra — 40 de clicuri fara vanzare inseamna
+ * acelasi lucru si intr-o luna, si intr-un an.
  */
 export const PRAG_CLICURI = 40;
 
@@ -278,11 +284,3 @@ function sum(xs: number[]): number {
   return xs.reduce((a, b) => a + b, 0);
 }
 
-/**
- * Pragul de trafic, ajustat la fereastra analizata. 40 de clicuri stranse in 30 de zile
- * inseamna altceva decat 40 stranse in 12 luni — al doilea nu dovedeste nimic, si daca nu
- * scalam, aproape tot catalogul ar parea "judecabil" pe ferestrele lungi.
- */
-export function pragPentruFereastra(zile: number, pragLa30Zile = PRAG_CLICURI): number {
-  return Math.max(1, Math.round((pragLa30Zile * zile) / 30));
-}

@@ -6,7 +6,7 @@ import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import { fetchShoppingProducts, FERESTRE } from "@/lib/gads-intake";
 import { fetchTracking } from "@/lib/gads-tracking";
-import { audit, breakEvenRoas, pragPentruFereastra } from "@/lib/gads-audit";
+import { audit, breakEvenRoas } from "@/lib/gads-audit";
 import { buildReport, segmenteaza, type Tier, type Segmentare } from "@/lib/gads-findings";
 import CatalogPePerformanta from "./CatalogPePerformanta";
 import { fetchStructura } from "@/lib/gads-structure";
@@ -151,16 +151,13 @@ export default async function Raport() {
     { structura, cuvinte, pmax, shopping, cautari, an }
   );
 
-  // Harta catalogului, cate una pe fereastra. Pragul de trafic creste odata cu fereastra:
-  // 40 de clicuri stranse in 30 de zile sunt o dovada, aceleasi 40 stranse in 12 luni nu sunt.
+  // Harta catalogului, cate una pe fereastra. Pragul de trafic e acelasi pe toate: intrebarea
+  // "am destule date cat sa judec produsul asta" nu se schimba cu lungimea ferestrei.
   const hartiCatalog: { eticheta: string; segmentare: Segmentare }[] = (s.ferestre ?? [])
     .filter((w): w is NonNullable<typeof w> => w !== null)
     .map((w) => ({
       eticheta: w.eticheta,
-      segmentare: segmenteaza(
-        audit(w.products, minRoas, true, pragPentruFereastra(w.zile)),
-        tracking.ok
-      ),
+      segmentare: segmenteaza(audit(w.products, minRoas), tracking.ok),
     }));
 
   // Ipoteza casei pentru sectiunea "Cu Devrika": CPC -20% si conversie +20%, adica exact ce

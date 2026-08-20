@@ -12,9 +12,17 @@ export type TotaluriAn = { cost: number; valoare: number; roas: number | null };
 
 export type RandAn = { metrics?: { costMicros?: string | number; conversionsValue?: string | number } };
 
-/** Fara filtru de status: interfata arata "Toate campaniile", deci si noi. */
+/**
+ * Fara filtru de status: interfata arata "Toate campaniile", deci si noi.
+ *
+ * `campaign.id` NU e decorativ. Un SELECT format numai din metrici e respins de Google Ads, iar
+ * interogarea asta a picat exact asa, in tacere, de la scrierea ei: pe MagazinFitness.ro raportul
+ * arata luni intregi cifra pe produse (129.195 RON) in loc de totalul contului, pentru ca aici
+ * nu venea niciodata nimic. Toate celelalte interogari din proiect cereau si un camp de resursa;
+ * doar asta nu.
+ */
 export function anQuery(): string {
-  return `SELECT metrics.cost_micros, metrics.conversions_value
+  return `SELECT campaign.id, metrics.cost_micros, metrics.conversions_value
           FROM campaign WHERE segments.date DURING LAST_365_DAYS`;
 }
 
@@ -37,7 +45,13 @@ export function bugetLunarDin(an: TotaluriAn | null, cheltuiala30z = 0): number 
   return Math.round(cheltuiala30z);
 }
 
-/** Nu aruncam: fara totaluri, paginile cad pe fereastra de 30 de zile. */
+/**
+ * Nu aruncam: fara totaluri, paginile cad pe fereastra de 30 de zile.
+ *
+ * Dar nici nu tacem. Prima versiune inghitea eroarea fara urma, si de aceea o interogare gresita
+ * a trecut neobservata pana cand cineva a comparat cifra cu interfata Google Ads. Un esec aici
+ * schimba cifra de pe prima pagina a raportului, deci merita un rand in log.
+ */
 export async function citesteAn(
   customerId: string,
   auth: GoogleAdsAuth
@@ -45,8 +59,11 @@ export async function citesteAn(
   try {
     const randuri = (await googleAdsSearch(customerId, anQuery(), auth)) as RandAn[];
     const t = agregaAn(randuri);
-    return t.cost > 0 ? t : null;
-  } catch {
+    if (t.cost > 0) return t;
+    console.error("[gads-an] totaluri pe 12 luni fara cheltuiala; raportul cade pe 30 de zile");
+    return null;
+  } catch (e) {
+    console.error("[gads-an] totalurile pe 12 luni nu au putut fi citite:", e);
     return null;
   }
 }
