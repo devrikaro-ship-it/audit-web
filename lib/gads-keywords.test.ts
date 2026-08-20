@@ -7,7 +7,8 @@ import type { Product } from "./gads-audit";
 // reale, gasite pe catalogul DeHome (06-08-2026).
 
 const P = (titlu: string): Product =>
-  ({ productId: titlu.slice(0, 8), title: titlu, cost: 10, conversionValue: 0, impressions: 100 });
+  ({ productId: titlu.slice(0, 8), title: titlu, cost: 10, conversionValue: 0, impressions: 100,
+     clicks: 5, conversions: 0 });
 
 const CATALOG = [
   P("Canapea extensibila DeHome Luna, 3 locuri, gri"),

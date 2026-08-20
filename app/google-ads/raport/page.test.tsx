@@ -30,8 +30,9 @@ vi.mock("@/lib/gads-oauth", () => ({
   oauthConfig: () => ({ developerToken: "dev" }),
 }));
 
-const P = (id: string, cost: number, val: number, imp: number): Product =>
-  ({ productId: id, title: `Canapea extensibila model ${id}`, cost, conversionValue: val, impressions: imp });
+const P = (id: string, cost: number, val: number, imp: number, clicks = 100): Product =>
+  ({ productId: id, title: `Canapea extensibila model ${id}`, cost, conversionValue: val,
+     impressions: imp, clicks, conversions: val > 0 ? 1 : 0 });
 
 const stareTracking = { ok: true, reasons: [] as string[], junkPrimary: [] as string[] };
 
@@ -41,10 +42,15 @@ vi.mock("@/lib/gads-intake", () => ({
   fetchShoppingProducts: async () => {
     if (stareCatalog.cade) throw new Error("Google Ads API 401");
     return {
-      products: [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0), P("D", 50, 900, 300)],
+      products: [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0, 0), P("D", 50, 900, 300)],
       catalogComplete: true,
     };
   },
+  // Pagina cere catalogul si pe ferestrele scurte, pentru harta pe performanta.
+  FERESTRE: [
+    { zile: 30, eticheta: "30 de zile" },
+    { zile: 90, eticheta: "3 luni" },
+  ] as const,
 }));
 vi.mock("@/lib/gads-tracking", () => ({ fetchTracking: async () => stareTracking }));
 vi.mock("@/lib/gads-structure", async (orig) => ({
@@ -93,6 +99,27 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain("Unde pierzi bani");
     expect(h).toContain("Ce e setat gresit in cont");
     expect(h).toContain("Produse analizate");
+  });
+
+  it("arata harta catalogului pe cele cinci grupe, cu perioada comutabila", async () => {
+    const h = await html();
+    expect(h).toContain("Cum sta catalogul tau");
+    for (const grupa of ["Heroes", "Sidekicks", "Villains", "Zombies", "0 Zombies"]) {
+      expect(h).toContain(grupa);
+    }
+    // Cele trei lentile peste aceleasi grupe — ele fac argumentul, nu grupele singure.
+    expect(h).toContain("Cat mananca");
+    expect(h).toContain("Cat aduc");
+    expect(h).toContain("30 de zile");
+  });
+
+  it("nu scapa in raportul clientului mecanica din spatele clasificarii", async () => {
+    // Pragul de trafic e o setare de-a noastra. Daca ajunge pe pagina, clientul incepe sa
+    // negocieze parametrul in loc sa se uite la produse.
+    const h = await html();
+    expect(h).not.toContain("prag de clicuri");
+    expect(h).not.toContain("Producthero");
+    expect(h).not.toContain("ProductHero");
   });
 
   it("arata si cautarile care au ars bani", async () => {

@@ -1,17 +1,24 @@
 import { describe, it, expect } from "vitest";
-import { audit, breakEvenRoas, suggestMargin, type Product } from "./gads-audit";
+import { audit, breakEvenRoas, suggestMargin, pragPentruFereastra, type Product } from "./gads-audit";
 
 // Cele 12 teste portate din test_engine.py (repo audit-google-ads-devrika) — valorile
 // asteptate sunt calculate de mana, nu preluate din output. Plus testele pentru stratul
 // nou: pragul derivat din marja + sugestia pe industrie.
 
+// Implicit: trafic peste prag si o vanzare daca a adus valoare — asa testele scrise
+// inainte de segmentarea pe trafic isi pastreaza intelesul (ele judecau randamentul).
 const P = (
   productId: string,
   cost: number,
   conversionValue: number,
   impressions: number,
-  category?: string
-): Product => ({ productId, title: `Produs ${productId}`, cost, conversionValue, impressions, category });
+  category?: string,
+  clicks = 100,
+  conversions = conversionValue > 0 ? 1 : 0
+): Product => ({
+  productId, title: `Produs ${productId}`, cost, conversionValue, impressions, category,
+  clicks, conversions,
+});
 
 describe("clasificare", () => {
   it("produs sub minRoas e villain", () => {
@@ -31,21 +38,25 @@ describe("clasificare", () => {
     expect(r.villains).toEqual([]);
   });
 
-  it("produs cu cost 0 nu e niciodata villain (si nu imparte la zero)", () => {
-    const r = audit([P("A", 0, 0, 500)], 4);
-    expect(r.villains).toEqual([]);
-  });
-
-  it("produs cu 0 afisari e zombie, NU villain", () => {
-    const r = audit([P("A", 0, 0, 0)], 4);
+  it("produs afisat dar fara clicuri nu e villain, e zombie (si nu imparte la zero)", () => {
+    const r = audit([P("A", 0, 0, 500, undefined, 0, 0)], 4);
     expect(r.villains).toEqual([]);
     expect(r.zombies.count).toBe(1);
   });
 
-  it("zombies raporteaza numar si procent din catalog", () => {
-    const r = audit([P("A", 0, 0, 0), P("B", 0, 0, 0), P("C", 100, 800, 5), P("D", 100, 800, 5)], 4);
-    expect(r.zombies.count).toBe(2);
-    expect(r.zombies.pctOfCatalog).toBe(0.5); // 2 din 4
+  it("produs cu 0 afisari e 0 Zombie, NU villain", () => {
+    const r = audit([P("A", 0, 0, 0, undefined, 0, 0)], 4);
+    expect(r.villains).toEqual([]);
+    expect(r.zeroZombies.count).toBe(1);
+  });
+
+  it("cele nevazute raporteaza numar si procent din catalog", () => {
+    const r = audit([
+      P("A", 0, 0, 0, undefined, 0, 0), P("B", 0, 0, 0, undefined, 0, 0),
+      P("C", 100, 800, 5000), P("D", 100, 800, 5000),
+    ], 4);
+    expect(r.zeroZombies.count).toBe(2);
+    expect(r.zeroZombies.pctOfCatalog).toBe(0.5); // 2 din 4
   });
 });
 
@@ -140,63 +151,62 @@ describe("marja sugerata din industria lui", () => {
   });
 });
 
-describe("segmentarea ProductHero: Heroes / Sidekicks / Villains / Zombies", () => {
-  // Prag 4. Cheltuiesc ceva: 400 / 300 / 200 / 100 / 350 -> sortate 100,200,300,350,400,
-  // deci mediana 300. Villainul intra si el in mediana: linia "cheltuie mult" se trage peste
-  // tot ce consuma buget, nu doar peste castigatori.
+describe("segmentarea pe performanta: Heroes / Sidekicks / Villains / Zombies / 0 Zombies", () => {
+  // Tinta 4,00. Pragul de trafic implicit: 40 de clicuri.
+  // P(id, cost, valoare, afisari, categorie, clicuri, vanzari)
   const catalog = [
-    P("hero-mare", 400, 2400, 9000),   // roas 6,0 · peste mediana -> Hero
-    P("hero-mic", 300, 1500, 7000),    // roas 5,0 · exact peste mediana -> Hero
-    P("sidekick", 200, 1600, 4000),    // roas 8,0 · sub mediana -> Sidekick
-    P("sidekick-2", 100, 500, 2000),   // roas 5,0 · sub mediana -> Sidekick
-    P("villain", 350, 350, 8000),      // roas 1,0 -> Villain, indiferent cat cheltuie
-    P("neclicat", 0, 0, 3000),         // afisat, zero clicuri
-    P("zombie", 0, 0, 0),              // nevazut
+    P("hero", 400, 2400, 9000, undefined, 200, 6),      // trafic destul + peste tinta
+    P("hero-2", 300, 1500, 7000, undefined, 55, 3),     // idem, exact peste prag
+    P("villain", 350, 350, 8000, undefined, 180, 1),    // trafic destul, sub tinta
+    P("villain-0", 120, 0, 5000, undefined, 90, 0),     // trafic destul, nicio vanzare
+    P("sidekick", 40, 600, 900, undefined, 12, 1),      // trafic putin, DAR a vandut
+    P("zombie", 30, 0, 600, undefined, 8, 0),           // trafic putin si nicio vanzare
+    P("zero", 0, 0, 0, undefined, 0, 0),                // nicio afisare
   ];
   const r = audit(catalog, 4);
 
-  it("mediana se ia doar pe produsele care au cheltuit ceva", () => {
-    expect(r.medianaCost).toBe(300);
+  it("trafic destul + randament peste tinta = Hero", () => {
+    expect(r.heroes.map((h) => h.productId).sort()).toEqual(["hero", "hero-2"]);
   });
 
-  it("randament bun + cheltuiala peste mediana = Hero", () => {
-    expect(r.heroes.map((h) => h.productId)).toEqual(["hero-mare", "hero-mic"]);
+  it("trafic destul + sub tinta = Villain, si cel fara nicio vanzare intra tot aici", () => {
+    expect(r.villains.map((v) => v.productId).sort()).toEqual(["villain", "villain-0"]);
   });
 
-  it("randament bun + cheltuiala mica = Sidekick, nu Hero", () => {
-    expect(r.sidekicks.map((h) => h.productId)).toEqual(["sidekick", "sidekick-2"]);
+  it("trafic putin DAR cu vanzare = Sidekick, nu Villain", () => {
+    // Miezul regulii: produsul asta are randament bun (15x), dar nu de aia e Sidekick, ci
+    // pentru ca n-a fost lasat sa se arate. Confundat cu un Villain, l-ai opri exact invers.
+    expect(r.sidekicks.map((s) => s.productId)).toEqual(["sidekick"]);
+    expect(r.sidekicks[0].productRoas).toBe(15);
   });
 
-  it("Sidekicks vin sortate dupa randament — cine merita crescut primul", () => {
-    expect(r.sidekicks[0].productId).toBe("sidekick");
-    expect(r.sidekicks[0].productRoas).toBe(8);
-  });
-
-  it("sub prag ramane Villain oricat ar cheltui", () => {
-    expect(r.villains.map((v) => v.productId)).toEqual(["villain"]);
-  });
-
-  it("produsul afisat pe care nu da nimeni clic nu mai dispare din raport", () => {
-    expect(r.neClicate.count).toBe(1);
-    expect(r.neClicate.list[0].productId).toBe("neclicat");
-  });
-
-  it("nevazutul ramane Zombie, separat de cel neclicat", () => {
+  it("trafic putin si nicio vanzare = Zombie: netestat, nu condamnat", () => {
     expect(r.zombies.count).toBe(1);
     expect(r.zombies.list[0].productId).toBe("zombie");
+  });
+
+  it("fara nicio afisare = 0 Zombie, tinut separat de Zombies", () => {
+    expect(r.zeroZombies.count).toBe(1);
+    expect(r.zeroZombies.list[0].productId).toBe("zero");
   });
 
   it("fiecare produs cade intr-o singura grupa, si toate sunt acoperite", () => {
     const total =
       r.heroes.length + r.sidekicks.length + r.villains.length +
-      r.neClicate.count + r.zombies.count;
+      r.zombies.count + r.zeroZombies.count;
     expect(total).toBe(catalog.length);
   });
 
-  it("fara niciun produs cu cheltuiala nu exista mediana de impartit", () => {
-    const gol = audit([P("z", 0, 0, 0)], 4);
-    expect(gol.medianaCost).toBe(0);
-    expect(gol.heroes).toEqual([]);
-    expect(gol.sidekicks).toEqual([]);
+  it("acelasi produs isi schimba grupa cand pragul de trafic se schimba", () => {
+    // Cu prag 10, produsul cu 12 clicuri are brusc "destul trafic" si e judecat pe randament.
+    const cuPragMic = audit(catalog, 4, true, 10);
+    expect(cuPragMic.sidekicks).toEqual([]);
+    expect(cuPragMic.heroes.map((h) => h.productId)).toContain("sidekick");
+  });
+
+  it("pragul creste cu fereastra, ca 40 de clicuri pe un an sa nu treaca drept dovada", () => {
+    expect(pragPentruFereastra(30)).toBe(40);
+    expect(pragPentruFereastra(90)).toBe(120);
+    expect(pragPentruFereastra(365)).toBe(487);
   });
 });

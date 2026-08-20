@@ -8,8 +8,11 @@ import { audit, suggestMargin } from "./gads-audit";
 
 const PET = "productCategoryConstants/LEVEL1~1"; // Animals & Pet Supplies
 
-const perf = (itemId: string, costMicros: number, conversionsValue: number, impressions: number): PerfRow =>
-  ({ itemId, title: `Produs ${itemId}`, costMicros, conversionsValue, impressions });
+const perf = (
+  itemId: string, costMicros: number, conversionsValue: number, impressions: number,
+  clicks = 100, conversions = conversionsValue > 0 ? 1 : 0
+): PerfRow =>
+  ({ itemId, title: `Produs ${itemId}`, costMicros, conversionsValue, impressions, clicks, conversions });
 
 const cat = (itemId: string, category?: string): CatalogRow =>
   ({ itemId, title: `Produs ${itemId}`, category });
@@ -80,8 +83,8 @@ describe("intake -> motor, cap la cap", () => {
 
     expect(r.villains.map((v) => v.productId)).toEqual(["A"]);
     expect(r.villainsTotalCost).toBe(100);
-    expect(r.zombies.count).toBe(2); // C si D
-    expect(r.zombies.pctOfCatalog).toBe(0.5); // 2 din 4
+    expect(r.zeroZombies.count).toBe(2); // C si D, fara nicio afisare
+    expect(r.zeroZombies.pctOfCatalog).toBe(0.5); // 2 din 4
 
     // industria se deduce din categoria standard venita prin join
     expect(suggestMargin(products).detected).toBe(true);

@@ -1,13 +1,18 @@
 import { describe, it, expect } from "vitest";
-import { buildReport } from "./gads-findings";
+import { buildReport, segmenteaza } from "./gads-findings";
 import { assessTracking, type ConversionAction } from "./gads-tracking";
 import { audit, breakEvenRoas, type Product } from "./gads-audit";
 
 // Testele de aici apara promisiunea raportului: spune cati bani pierde omul ACUM, dar nu-l
 // acuza de lucruri pe care datele lui nu le pot dovedi.
 
-const P = (id: string, cost: number, value: number, impressions: number): Product =>
-  ({ productId: id, title: `Produs ${id}`, cost, conversionValue: value, impressions });
+// Implicit: trafic peste prag si o vanzare daca a adus valoare — asa testele scrise
+// inainte de segmentarea pe trafic isi pastreaza intelesul (ele judecau randamentul).
+const P = (
+  id: string, cost: number, value: number, impressions: number,
+  clicks = 100, conversions = value > 0 ? 1 : 0
+): Product =>
+  ({ productId: id, title: `Produs ${id}`, cost, conversionValue: value, impressions, clicks, conversions });
 
 const conv = (name: string, category: string, primary: boolean): ConversionAction =>
   ({ name, category, primary });
@@ -188,10 +193,10 @@ describe("plafonul simularii", () => {
 
 describe("produsele din spatele cifrei", () => {
   const products: Product[] = [
-    { productId: "a", title: "Canapea Luna gri", cost: 900, conversionValue: 100, impressions: 500 },
-    { productId: "b", title: "Masa cafea sticla", cost: 300, conversionValue: 0, impressions: 200 },
-    { productId: "c", title: "Leagan Joy 500", cost: 0, conversionValue: 0, impressions: 0 },
-    { productId: "d", title: "Fotoliu Nord", cost: 50, conversionValue: 900, impressions: 300 },
+    { productId: "a", title: "Canapea Luna gri", cost: 900, conversionValue: 100, impressions: 500, clicks: 180, conversions: 1 },
+    { productId: "b", title: "Masa cafea sticla", cost: 300, conversionValue: 0, impressions: 200, clicks: 60, conversions: 0 },
+    { productId: "c", title: "Leagan Joy 500", cost: 0, conversionValue: 0, impressions: 0, clicks: 0, conversions: 0 },
+    { productId: "d", title: "Fotoliu Nord", cost: 50, conversionValue: 900, impressions: 300, clicks: 90, conversions: 2 },
   ];
 
   it("numeste produsele care ard bani, cele mai scumpe primele", () => {
@@ -320,40 +325,41 @@ describe("cifra mare se potriveste cu interfata Google Ads", () => {
 });
 
 describe("catalogul impartit pe performanta ajunge in raport", () => {
-  // Cheltuiesc: 400, 300, 200, 350 -> mediana 325. Prag 4 (marja 25%).
+  const prag = breakEvenRoas(25); // tinta 4,00
+  // P(id, cost, valoare, afisari, clicuri, vanzari) — pragul de trafic implicit e 40.
   const catalog = [
-    P("H", 400, 2400, 9000),
-    P("S", 200, 1600, 4000),
-    P("V", 350, 350, 8000),
-    P("H2", 300, 1500, 7000),
-    P("N", 0, 0, 3000),
-    P("Z", 0, 0, 0),
+    P("H", 400, 2400, 9000, 200, 6),  // trafic destul, peste tinta -> Hero
+    P("V", 350, 350, 8000, 180, 1),   // trafic destul, sub tinta   -> Villain
+    P("S", 40, 600, 900, 12, 1),      // trafic putin, dar a vandut -> Sidekick
+    P("S2", 25, 300, 700, 9, 1),      // idem
+    P("Zz", 30, 0, 600, 8, 0),        // trafic putin, nicio vanzare -> Zombie
+    P("O", 0, 0, 0, 0, 0),            // nicio afisare -> 0 Zombie
   ];
-  const prag = breakEvenRoas(25);
 
-  it("cont sanatos: fiecare grupa ajunge cu numarul si banii ei", () => {
-    const rep = buildReport(audit(catalog, prag), OK_TRACKING, 25, prag);
+  it("fiecare grupa ajunge in raport cu numarul, banii si valoarea ei", () => {
+    const rep = { segmentare: segmenteaza(audit(catalog, prag), OK_TRACKING.ok) };
     expect(rep.segmentare.heroes.count).toBe(1);
     expect(rep.segmentare.heroes.cost).toBe(400);
-    expect(rep.segmentare.sidekicks.count).toBe(2);
+    expect(rep.segmentare.heroes.valoare).toBe(2400);
     expect(rep.segmentare.villains.count).toBe(1);
-    expect(rep.segmentare.neClicate.count).toBe(1);
+    expect(rep.segmentare.sidekicks.count).toBe(2);
     expect(rep.segmentare.zombies.count).toBe(1);
+    expect(rep.segmentare.zeroZombies.count).toBe(1);
     expect(rep.segmentare.judecabila).toBe(true);
   });
 
   it("randamentul pe produs se afiseaza doar cand masurarea e de incredere", () => {
-    const bun = buildReport(audit(catalog, prag), OK_TRACKING, 25, prag);
-    expect(bun.segmentare.heroes.produse[0].roas).toBeCloseTo(6, 5);
+    const bun = segmenteaza(audit(catalog, prag), OK_TRACKING.ok);
+    expect(bun.heroes.produse[0].roas).toBeCloseTo(6, 5);
 
-    const rupt = buildReport(audit(catalog, prag), BROKEN_TRACKING, 25, prag);
-    expect(rupt.segmentare.judecabila).toBe(false);
-    expect(rupt.segmentare.heroes.produse[0].roas).toBeUndefined();
+    const rupt = segmenteaza(audit(catalog, prag), BROKEN_TRACKING.ok);
+    expect(rupt.judecabila).toBe(false);
+    expect(rupt.heroes.produse[0].roas).toBeUndefined();
   });
 
-  it("cele nevazute si cele neclicate se numara corect si cu masurarea stricata", () => {
-    const rupt = buildReport(audit(catalog, prag), BROKEN_TRACKING, 25, prag);
-    expect(rupt.segmentare.zombies.count).toBe(1);
-    expect(rupt.segmentare.neClicate.count).toBe(1);
+  it("grupele care nu depind de vanzari se numara corect si cu masurarea stricata", () => {
+    const rupt = segmenteaza(audit(catalog, prag), BROKEN_TRACKING.ok);
+    expect(rupt.zeroZombies.count).toBe(1);
+    expect(rupt.zombies.count).toBe(1);
   });
 });

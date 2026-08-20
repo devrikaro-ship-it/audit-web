@@ -11,6 +11,7 @@
 
 import type { AccessibleAccount } from "./gads-oauth";
 import type { Product } from "./gads-audit";
+import { FERESTRE } from "./gads-intake";
 import type { StructuraAudit } from "./gads-structure";
 import type { TrackingState } from "./gads-tracking";
 import type { PmaxData } from "./gads-pmax";
@@ -41,6 +42,12 @@ export function demoAccounts(): AccessibleAccount[] {
 
 export type DemoData = {
   products: Product[];
+  /**
+   * Acelasi catalog, dat ca "ferestre" de timp, ca demonstratia sa aiba si comutatorul de
+   * perioada. Cifrele nu se schimba intre ferestre — sunt simulate, si a le inventa diferite
+   * ar da impresia unei precizii pe care demo-ul n-o are.
+   */
+  ferestre: { zile: number; eticheta: string; products: Product[] }[];
   catalogComplete: boolean;
   tracking: TrackingState;
   structura: StructuraAudit;
@@ -55,36 +62,53 @@ export type DemoData = {
 // Shopping = suma costurilor produselor, iar ROAS-ul contului iese din valorile de mai jos.
 const CATEGORIE_MOBILA = "productCategoryConstants/LEVEL1~436";
 
-const P = (title: string, cost: number, conversionValue: number, impressions: number): Product => ({
+const P = (
+  title: string,
+  cost: number,
+  conversionValue: number,
+  impressions: number,
+  clicks: number,
+  conversions: number
+): Product => ({
   productId: title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
   title,
   cost,
   conversionValue,
   impressions,
+  clicks,
+  conversions,
   category: CATEGORIE_MOBILA,
 });
 
 export function demoData(): DemoData {
+  // Catalogul demo acopera INTENTIONAT toate cele cinci etichete — altfel demonstratia arata
+  // un raport pe jumatate si nu se vede la ce foloseste segmentarea.
+  //        titlu, cost, valoare, afisari, clicuri, vanzari
   const products: Product[] = [
-    // Castigatori
-    P("Canapea premium 3 locuri", 6200, 41000, 120400),
-    P("Masa extensibila stejar", 4100, 24800, 88300),
-    P("Fotoliu tapitat gri", 2600, 12900, 51200),
-    // Produse care ard bani (sub prag)
-    P("Set 4 scaune bucatarie", 5400, 9800, 62700),
-    P("Comoda 6 sertare alba", 3900, 4100, 40100),
-    P("Birou reglabil pe inaltime", 3100, 2600, 33400),
-    P("Covor shaggy 200x300", 2450, 0, 21800),
-    P("Lampadar arcuit", 1180, 900, 14200),
-    // Produse moarte (zero afisari)
-    P("Noptiera stejar natur", 0, 0, 0),
-    P("Etajera metalica industriala", 0, 0, 0),
-    P("Suport TV rotativ", 0, 0, 0),
-    P("Perna decorativa catifea", 0, 0, 0),
+    // Heroes: trafic destul + randament peste tinta
+    P("Canapea premium 3 locuri", 6200, 41000, 120400, 1240, 16),
+    P("Masa extensibila stejar", 4100, 24800, 88300, 820, 14),
+    P("Fotoliu tapitat gri", 2600, 12900, 51200, 520, 10),
+    // Villains: trafic destul, dar nu se acopera
+    P("Set 4 scaune bucatarie", 5400, 9800, 62700, 1080, 11),
+    P("Comoda 6 sertare alba", 3900, 4100, 40100, 780, 4),
+    P("Birou reglabil pe inaltime", 3100, 2600, 33400, 620, 2),
+    P("Covor shaggy 200x300", 2450, 0, 21800, 490, 0),
+    // Sidekicks: putin trafic, dar au vandut
+    P("Lampadar arcuit", 210, 900, 4200, 18, 1),
+    P("Masuta cafea nuc", 165, 1400, 3600, 14, 1),
+    // Zombies: trafic sub prag si nicio vanzare — netestate, nu proaste
+    P("Taburet catifea rotativ", 95, 0, 3100, 14, 0),
+    P("Oglinda decorativa 80 cm", 40, 0, 1500, 7, 0),
+    // 0 Zombies: nicio afisare
+    P("Noptiera stejar natur", 0, 0, 0, 0, 0),
+    P("Etajera metalica industriala", 0, 0, 0, 0, 0),
+    P("Suport TV rotativ", 0, 0, 0, 0, 0),
+    P("Perna decorativa catifea", 0, 0, 0, 0, 0),
   ];
 
-  const costShopping = 28930; // suma costurilor de mai sus
-  const valoareShopping = 96100;
+  const costShopping = 28260; // suma costurilor de mai sus
+  const valoareShopping = 97500;
 
   const structura: StructuraAudit = {
     campanii: [
@@ -128,6 +152,7 @@ export function demoData(): DemoData {
 
   return {
     products,
+    ferestre: FERESTRE.map((w) => ({ zile: w.zile, eticheta: w.eticheta, products })),
     catalogComplete: true,
     tracking: {
       ok: true,

@@ -4,10 +4,11 @@ import { redirect } from "next/navigation";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
-import { fetchShoppingProducts } from "@/lib/gads-intake";
+import { fetchShoppingProducts, FERESTRE } from "@/lib/gads-intake";
 import { fetchTracking } from "@/lib/gads-tracking";
-import { audit, breakEvenRoas } from "@/lib/gads-audit";
-import { buildReport, type Tier } from "@/lib/gads-findings";
+import { audit, breakEvenRoas, pragPentruFereastra } from "@/lib/gads-audit";
+import { buildReport, segmenteaza, type Tier, type Segmentare } from "@/lib/gads-findings";
+import CatalogPePerformanta from "./CatalogPePerformanta";
 import { fetchStructura } from "@/lib/gads-structure";
 import { citesteAn, bugetLunarDin, type TotaluriAn } from "@/lib/gads-an";
 import { fetchPmaxData, analizeazaPmax } from "@/lib/gads-pmax";
@@ -52,6 +53,8 @@ type SurseAudit = {
   tracking: TrackingState;
   structura?: StructuraAudit;
   an?: TotaluriAn | null;
+  /** Catalogul pe fiecare fereastra scurta. `null` acolo unde interogarea a cazut. */
+  ferestre?: ({ zile: number; eticheta: string; products: Product[] } | null)[];
   brutCuvinte?: { negative: string[]; termeni: TermenBrut[] };
   brutPmax?: PmaxData;
   brutShop?: ShoppingData;
@@ -91,7 +94,7 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
 
   // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
   // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
-  const [catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari, an] = await Promise.all([
+  const [catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari, an, ferestre] = await Promise.all([
     fetchShoppingProducts(customerId, auth).catch(() => null),
     fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT),
     fetchStructura(customerId, auth).catch(() => undefined),
@@ -100,12 +103,21 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
     fetchShoppingData(customerId, auth).catch(() => undefined),
     fetchSearchData(customerId, auth).catch(() => undefined),
     citesteAn(customerId, auth),
+    // Harta catalogului se citeste pe ferestre scurte, deci le cerem pe toate odata: patru
+    // interogari in paralel costa cat cea mai lenta dintre ele, iar omul comuta apoi instant.
+    Promise.all(
+      FERESTRE.map((w) =>
+        fetchShoppingProducts(customerId, auth, new Date(), w.zile)
+          .then((r) => ({ zile: w.zile, eticheta: w.eticheta, products: r.products }))
+          .catch(() => null)
+      )
+    ),
   ]);
 
   // Catalogul e singurul de care depinde tot restul: fara el nu exista nici produse, nici cifra
   // de impact. Atunci spunem cinstit ca nu am putut citi, in loc sa aruncam o pagina de eroare.
   if (!catalog) return null;
-  return { ...catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari, an };
+  return { ...catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari, an, ferestre };
 }
 
 export default async function Raport() {
@@ -138,6 +150,18 @@ export default async function Raport() {
     catalogComplete,
     { structura, cuvinte, pmax, shopping, cautari, an }
   );
+
+  // Harta catalogului, cate una pe fereastra. Pragul de trafic creste odata cu fereastra:
+  // 40 de clicuri stranse in 30 de zile sunt o dovada, aceleasi 40 stranse in 12 luni nu sunt.
+  const hartiCatalog: { eticheta: string; segmentare: Segmentare }[] = (s.ferestre ?? [])
+    .filter((w): w is NonNullable<typeof w> => w !== null)
+    .map((w) => ({
+      eticheta: w.eticheta,
+      segmentare: segmenteaza(
+        audit(w.products, minRoas, true, pragPentruFereastra(w.zile)),
+        tracking.ok
+      ),
+    }));
 
   // Ipoteza casei pentru sectiunea "Cu Devrika": CPC -20% si conversie +20%, adica exact ce
   // misca omul cu cursoarele in pagina urmatoare. Cifra vine din acelasi motor, nu dintr-un
@@ -256,54 +280,12 @@ export default async function Raport() {
         </div>
 
         {/* ── Catalogul pe performanta ── */}
-        {/* Modelul ProductHero: acelasi buget nu se comporta la fel pe tot catalogul. Omul are
-            nevoie sa stie CARE produse duc contul si CARE il mananca, pentru ca actiunea de luni
-            dimineata e diferita pe fiecare grupa. */}
-        <SectionTitle nr="2" text="Cum sta catalogul tau" />
-        <p className="mb-4 text-[14px] leading-relaxed" style={{ color: C.gray500 }}>
-          Produsele impartite dupa cum se poarta cu banii tai. Linia dintre &bdquo;duce greul&rdquo; si
-          &bdquo;merge cu firimituri&rdquo; e cheltuiala mediana pe produs: {lei(rep.segmentare.medianaCost)}.
-        </p>
-
-        {!rep.segmentare.judecabila && (
-          // Fara masurare de incredere, impartirea dupa vanzari e o ipoteza. O spunem inainte
-          // ca omul sa citeasca grupele, nu dupa.
-          <div className="mb-4 rounded-xl border px-5 py-3.5 text-[13.5px] leading-relaxed"
-            style={{ borderColor: C.border, background: C.yellowBg, color: C.yellow }}>
-            Masurarea contului e stricata, deci impartirea dupa vanzari (Duc greul / Subexpuse /
-            Consuma degeaba) e o <b>ipoteza</b>, nu un verdict — se sprijina pe niste vanzari in
-            care nu putem avea incredere. Ultimele doua grupe raman valabile oricum: zero afisari
-            si zero clicuri se numara corect si asa.
-          </div>
+        {hartiCatalog.length > 0 && (
+          <>
+            <SectionTitle nr="2" text="Cum sta catalogul tau" />
+            <CatalogPePerformanta harti={hartiCatalog} />
+          </>
         )}
-
-        <div className="mb-9 grid gap-3 sm:grid-cols-2">
-          {[
-            { g: rep.segmentare.heroes, nume: "Duc greul", culoare: C.green, fundal: C.greenBg,
-              ce: "Randament peste prag si cheltuiala peste mediana. Aici pui mai mult buget, nu tai." },
-            { g: rep.segmentare.sidekicks, nume: "Subexpuse", culoare: C.cyan, fundal: C.slate,
-              ce: "Merg bine, dar primesc firimituri. Cele mai ieftine cresteri din tot contul." },
-            { g: rep.segmentare.villains, nume: "Consuma degeaba", culoare: C.red, fundal: C.redBg,
-              ce: "Sub prag: fiecare leu dat pe ele se intoarce incomplet. Aici se taie licitarea." },
-            { g: rep.segmentare.neClicate, nume: "Aratate si ignorate", culoare: C.orange, fundal: C.orangeBg,
-              ce: "Le vede lumea si trece mai departe. Se lucreaza la poza, titlu si pret — nu la buget." },
-            { g: rep.segmentare.zombies, nume: "Nevazute", culoare: C.gray600, fundal: C.slate,
-              ce: "Zero afisari in 12 luni. Nu e problema de performanta, ci de feed sau structura." },
-          ].map((x) => (
-            <article key={x.nume} className="overflow-hidden rounded-2xl border bg-white" style={{ borderColor: C.border }}>
-              <div className="flex items-baseline gap-2.5 px-5 py-3.5" style={{ background: x.fundal }}>
-                <span className="text-[22px] font-black leading-none tabular-nums" style={{ fontFamily: sora, color: x.culoare }}>
-                  {x.g.count}
-                </span>
-                <span className="text-[14.5px] font-bold" style={{ fontFamily: sora, color: C.navy }}>{x.nume}</span>
-                <span className="ml-auto text-[13px] font-semibold tabular-nums" style={{ color: C.gray600 }}>
-                  {x.g.cost > 0 ? lei(x.g.cost) : "0 lei"}
-                </span>
-              </div>
-              <p className="px-5 py-3.5 text-[13.5px] leading-relaxed" style={{ color: C.gray600 }}>{x.ce}</p>
-            </article>
-          ))}
-        </div>
 
         {/* ── Setari gresite ── */}
         {rep.puncte.length > 0 && (
@@ -534,3 +516,4 @@ function Tabel({
     </div>
   );
 }
+

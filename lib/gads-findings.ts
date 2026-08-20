@@ -88,9 +88,9 @@ export type Grupa = {
 };
 
 /**
- * Catalogul impartit pe performanta, dupa modelul ProductHero: Heroes (duc greul),
- * Sidekicks (merg bine cu bani putini), Villains (consuma fara sa se acopere),
- * neClicate (aratate si ignorate) si Zombies (nevazute).
+ * Catalogul impartit pe performanta: Heroes (dovediti), Sidekicks (au vandut cu trafic putin),
+ * Villains (trafic real, dar nu se acopera), Zombies (prea putin trafic ca sa stim ceva) si
+ * 0 Zombies (nicio afisare).
  *
  * `judecabila` e false cand masurarea contului e stricata. Atunci despartirea in Heroes /
  * Sidekicks / Villains se sprijina pe niste vanzari in care nu putem avea incredere, deci
@@ -101,9 +101,8 @@ export type Segmentare = {
   heroes: Grupa;
   sidekicks: Grupa;
   villains: Grupa;
-  neClicate: Grupa;
   zombies: Grupa;
-  medianaCost: number;
+  zeroZombies: Grupa;
   judecabila: boolean;
 };
 
@@ -115,8 +114,6 @@ export type ReportModel = {
   puncte: PunctDeAtac[];
   /** Ce nu s-a putut verifica — onestitatea care face restul credibil. */
   caveats: string[];
-  /** Catalogul impartit pe performanta. */
-  segmentare: Segmentare;
 };
 
 /** Analizele optionale. Lipsa lor nu opreste raportul — doar il face mai sarac. */
@@ -232,22 +229,22 @@ export function buildReport(
   }
 
   // ── 3. Catalog mort — valid indiferent de masurare ─────────────────────────
-  if (catalogComplete && result.zombies.count > 0) {
+  if (catalogComplete && result.zeroZombies.count > 0) {
     findings.push({
       key: "zombies",
-      title: `${result.zombies.count} produse nu au fost vazute de niciun client`,
+      title: `${result.zeroZombies.count} produse nu au fost vazute de niciun client`,
       // Fapt, fara suma inventata: nu stim cat ar fi adus, deci nu punem cifra in bani.
       ron: 0,
       tier: "MASURAT",
       body:
-        `Sunt ${pct(result.zombies.pctOfCatalog)} din catalogul tau — produse care nu au avut ` +
+        `Sunt ${pct(result.zeroZombies.pctOfCatalog)} din catalogul tau — produse care nu au avut ` +
         `nicio afisare in 12 luni. Nu au costat nimic, dar nici nu exista pentru cumparatori: ` +
         `stau in magazin fara sa ajunga vreodata in fata cuiva.`,
-      produse: result.zombies.list.slice(0, MAX_PRODUSE).map((p) => ({
+      produse: result.zeroZombies.list.slice(0, MAX_PRODUSE).map((p) => ({
         titlu: p.title,
         cost: 0,
       })),
-      produseRestante: Math.max(0, result.zombies.count - MAX_PRODUSE),
+      produseRestante: Math.max(0, result.zeroZombies.count - MAX_PRODUSE),
     });
   }
   if (!catalogComplete) {
@@ -415,32 +412,7 @@ export function buildReport(
     .filter((f) => f.tier === "MASURAT" && !f.quarantined && !f.exclusDinTotal)
     .reduce((s, f) => s + f.ron, 0);
 
-  const grupa = (list: { title: string; cost: number; conversionValue: number; productRoas?: number }[]): Grupa => ({
-    count: list.length,
-    cost: Math.round(sumar(list.map((p) => p.cost))),
-    valoare: Math.round(sumar(list.map((p) => p.conversionValue))),
-    produse: list.slice(0, MAX_PRODUSE).map((p) => ({
-      titlu: p.title,
-      cost: Math.round(p.cost),
-      // Fara masurare de incredere nu afisam randament pe produs: ar fi o cifra pe care nu
-      // o putem apara daca ne intreaba cineva de unde vine.
-      roas: tracking.ok ? p.productRoas : undefined,
-    })),
-    produseRestante: Math.max(0, list.length - MAX_PRODUSE),
-  });
-
-  const segmentare: Segmentare = {
-    heroes: grupa(result.heroes),
-    sidekicks: grupa(result.sidekicks),
-    villains: grupa(result.villains),
-    neClicate: grupa(result.neClicate.list),
-    zombies: grupa(result.zombies.list),
-    medianaCost: Math.round(result.medianaCost),
-    judecabila: tracking.ok,
-  };
-
   return {
-    segmentare,
     // Rotunjit la sursa: altfel fiecare consumator (pagina, PDF, email) trebuie sa-si aduca
     // aminte s-o faca, iar unul va uita si va livra "1.236,687 RON" catre client.
     headline: {
@@ -458,4 +430,42 @@ export function buildReport(
 
 function sumar(xs: number[]): number {
   return xs.reduce((a, b) => a + b, 0);
+}
+
+/**
+ * Imparte catalogul pe cele cinci etichete, gata de afisat.
+ *
+ * Sta SEPARAT de `buildReport` pentru ca raspunde la alta intrebare si pe alta fereastra de
+ * timp: constatarile numara banii pierduti pe 12 luni, harta catalogului se citeste pe o
+ * fereastra scurta, unde "n-a vandut" chiar inseamna ceva. Amestecate intr-o singura functie,
+ * una din ele ar fi ajuns pe fereastra gresita.
+ *
+ * @param trackingOk masurarea contului e de incredere? Daca nu, grupele care depind de vanzari
+ *                   raman afisate, dar ca ipoteza, si randamentul pe produs nu se mai arata.
+ */
+export function segmenteaza(result: AuditResult, trackingOk: boolean): Segmentare {
+  const grupa = (
+    list: { title: string; cost: number; conversionValue: number; productRoas?: number }[]
+  ): Grupa => ({
+    count: list.length,
+    cost: Math.round(sumar(list.map((p) => p.cost))),
+    valoare: Math.round(sumar(list.map((p) => p.conversionValue))),
+    produse: list.slice(0, MAX_PRODUSE).map((p) => ({
+      titlu: p.title,
+      cost: Math.round(p.cost),
+      // Fara masurare de incredere nu afisam randament pe produs: ar fi o cifra pe care nu
+      // o putem apara daca ne intreaba cineva de unde vine.
+      roas: trackingOk ? p.productRoas : undefined,
+    })),
+    produseRestante: Math.max(0, list.length - MAX_PRODUSE),
+  });
+
+  return {
+    heroes: grupa(result.heroes),
+    sidekicks: grupa(result.sidekicks),
+    villains: grupa(result.villains),
+    zombies: grupa(result.zombies.list),
+    zeroZombies: grupa(result.zeroZombies.list),
+    judecabila: trackingOk,
+  };
 }
