@@ -255,10 +255,60 @@ export default async function Raport() {
           })}
         </div>
 
+        {/* ── Catalogul pe performanta ── */}
+        {/* Modelul ProductHero: acelasi buget nu se comporta la fel pe tot catalogul. Omul are
+            nevoie sa stie CARE produse duc contul si CARE il mananca, pentru ca actiunea de luni
+            dimineata e diferita pe fiecare grupa. */}
+        <SectionTitle nr="2" text="Cum sta catalogul tau" />
+        <p className="mb-4 text-[14px] leading-relaxed" style={{ color: C.gray500 }}>
+          Produsele impartite dupa cum se poarta cu banii tai. Linia dintre &bdquo;duce greul&rdquo; si
+          &bdquo;merge cu firimituri&rdquo; e cheltuiala mediana pe produs: {lei(rep.segmentare.medianaCost)}.
+        </p>
+
+        {!rep.segmentare.judecabila && (
+          // Fara masurare de incredere, impartirea dupa vanzari e o ipoteza. O spunem inainte
+          // ca omul sa citeasca grupele, nu dupa.
+          <div className="mb-4 rounded-xl border px-5 py-3.5 text-[13.5px] leading-relaxed"
+            style={{ borderColor: C.border, background: C.yellowBg, color: C.yellow }}>
+            Masurarea contului e stricata, deci impartirea dupa vanzari (Duc greul / Subexpuse /
+            Consuma degeaba) e o <b>ipoteza</b>, nu un verdict — se sprijina pe niste vanzari in
+            care nu putem avea incredere. Ultimele doua grupe raman valabile oricum: zero afisari
+            si zero clicuri se numara corect si asa.
+          </div>
+        )}
+
+        <div className="mb-9 grid gap-3 sm:grid-cols-2">
+          {[
+            { g: rep.segmentare.heroes, nume: "Duc greul", culoare: C.green, fundal: C.greenBg,
+              ce: "Randament peste prag si cheltuiala peste mediana. Aici pui mai mult buget, nu tai." },
+            { g: rep.segmentare.sidekicks, nume: "Subexpuse", culoare: C.cyan, fundal: C.slate,
+              ce: "Merg bine, dar primesc firimituri. Cele mai ieftine cresteri din tot contul." },
+            { g: rep.segmentare.villains, nume: "Consuma degeaba", culoare: C.red, fundal: C.redBg,
+              ce: "Sub prag: fiecare leu dat pe ele se intoarce incomplet. Aici se taie licitarea." },
+            { g: rep.segmentare.neClicate, nume: "Aratate si ignorate", culoare: C.orange, fundal: C.orangeBg,
+              ce: "Le vede lumea si trece mai departe. Se lucreaza la poza, titlu si pret — nu la buget." },
+            { g: rep.segmentare.zombies, nume: "Nevazute", culoare: C.gray600, fundal: C.slate,
+              ce: "Zero afisari in 12 luni. Nu e problema de performanta, ci de feed sau structura." },
+          ].map((x) => (
+            <article key={x.nume} className="overflow-hidden rounded-2xl border bg-white" style={{ borderColor: C.border }}>
+              <div className="flex items-baseline gap-2.5 px-5 py-3.5" style={{ background: x.fundal }}>
+                <span className="text-[22px] font-black leading-none tabular-nums" style={{ fontFamily: sora, color: x.culoare }}>
+                  {x.g.count}
+                </span>
+                <span className="text-[14.5px] font-bold" style={{ fontFamily: sora, color: C.navy }}>{x.nume}</span>
+                <span className="ml-auto text-[13px] font-semibold tabular-nums" style={{ color: C.gray600 }}>
+                  {x.g.cost > 0 ? lei(x.g.cost) : "0 lei"}
+                </span>
+              </div>
+              <p className="px-5 py-3.5 text-[13.5px] leading-relaxed" style={{ color: C.gray600 }}>{x.ce}</p>
+            </article>
+          ))}
+        </div>
+
         {/* ── Setari gresite ── */}
         {rep.puncte.length > 0 && (
           <>
-            <SectionTitle nr="2" text="Ce e setat gresit in cont" />
+            <SectionTitle nr="3" text="Ce e setat gresit in cont" />
             <p className="mb-4 text-[14px] leading-relaxed" style={{ color: C.gray500 }}>
               Astea nu sunt bani deja pierduti, ci robinete deschise gresit. Sumele arata cat
               buget trece prin fiecare — nu cat s-a irosit.

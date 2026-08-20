@@ -139,3 +139,64 @@ describe("marja sugerata din industria lui", () => {
     expect(s.label).toBe("imbracaminte si accesorii");
   });
 });
+
+describe("segmentarea ProductHero: Heroes / Sidekicks / Villains / Zombies", () => {
+  // Prag 4. Cheltuiesc ceva: 400 / 300 / 200 / 100 / 350 -> sortate 100,200,300,350,400,
+  // deci mediana 300. Villainul intra si el in mediana: linia "cheltuie mult" se trage peste
+  // tot ce consuma buget, nu doar peste castigatori.
+  const catalog = [
+    P("hero-mare", 400, 2400, 9000),   // roas 6,0 · peste mediana -> Hero
+    P("hero-mic", 300, 1500, 7000),    // roas 5,0 · exact peste mediana -> Hero
+    P("sidekick", 200, 1600, 4000),    // roas 8,0 · sub mediana -> Sidekick
+    P("sidekick-2", 100, 500, 2000),   // roas 5,0 · sub mediana -> Sidekick
+    P("villain", 350, 350, 8000),      // roas 1,0 -> Villain, indiferent cat cheltuie
+    P("neclicat", 0, 0, 3000),         // afisat, zero clicuri
+    P("zombie", 0, 0, 0),              // nevazut
+  ];
+  const r = audit(catalog, 4);
+
+  it("mediana se ia doar pe produsele care au cheltuit ceva", () => {
+    expect(r.medianaCost).toBe(300);
+  });
+
+  it("randament bun + cheltuiala peste mediana = Hero", () => {
+    expect(r.heroes.map((h) => h.productId)).toEqual(["hero-mare", "hero-mic"]);
+  });
+
+  it("randament bun + cheltuiala mica = Sidekick, nu Hero", () => {
+    expect(r.sidekicks.map((h) => h.productId)).toEqual(["sidekick", "sidekick-2"]);
+  });
+
+  it("Sidekicks vin sortate dupa randament — cine merita crescut primul", () => {
+    expect(r.sidekicks[0].productId).toBe("sidekick");
+    expect(r.sidekicks[0].productRoas).toBe(8);
+  });
+
+  it("sub prag ramane Villain oricat ar cheltui", () => {
+    expect(r.villains.map((v) => v.productId)).toEqual(["villain"]);
+  });
+
+  it("produsul afisat pe care nu da nimeni clic nu mai dispare din raport", () => {
+    expect(r.neClicate.count).toBe(1);
+    expect(r.neClicate.list[0].productId).toBe("neclicat");
+  });
+
+  it("nevazutul ramane Zombie, separat de cel neclicat", () => {
+    expect(r.zombies.count).toBe(1);
+    expect(r.zombies.list[0].productId).toBe("zombie");
+  });
+
+  it("fiecare produs cade intr-o singura grupa, si toate sunt acoperite", () => {
+    const total =
+      r.heroes.length + r.sidekicks.length + r.villains.length +
+      r.neClicate.count + r.zombies.count;
+    expect(total).toBe(catalog.length);
+  });
+
+  it("fara niciun produs cu cheltuiala nu exista mediana de impartit", () => {
+    const gol = audit([P("z", 0, 0, 0)], 4);
+    expect(gol.medianaCost).toBe(0);
+    expect(gol.heroes).toEqual([]);
+    expect(gol.sidekicks).toEqual([]);
+  });
+});

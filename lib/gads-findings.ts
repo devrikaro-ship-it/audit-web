@@ -77,6 +77,36 @@ export type PunctDeAtac = {
   exemple?: string[];
 };
 
+/** O grupa din segmentarea pe performanta. */
+export type Grupa = {
+  count: number;
+  cost: number;
+  /** Cat aduc, pentru grupele unde asta se poate spune. */
+  valoare: number;
+  produse: RandProdus[];
+  produseRestante: number;
+};
+
+/**
+ * Catalogul impartit pe performanta, dupa modelul ProductHero: Heroes (duc greul),
+ * Sidekicks (merg bine cu bani putini), Villains (consuma fara sa se acopere),
+ * neClicate (aratate si ignorate) si Zombies (nevazute).
+ *
+ * `judecabila` e false cand masurarea contului e stricata. Atunci despartirea in Heroes /
+ * Sidekicks / Villains se sprijina pe niste vanzari in care nu putem avea incredere, deci
+ * raportul o arata ca IPOTEZA, nu ca verdict. Zombies si neClicate raman valabile oricum:
+ * zero afisari si zero clicuri se numara corect si intr-un cont cu masurarea stricata.
+ */
+export type Segmentare = {
+  heroes: Grupa;
+  sidekicks: Grupa;
+  villains: Grupa;
+  neClicate: Grupa;
+  zombies: Grupa;
+  medianaCost: number;
+  judecabila: boolean;
+};
+
 export type ReportModel = {
   headline: { ron: number; label: string };
   trackingBroken: boolean;
@@ -85,6 +115,8 @@ export type ReportModel = {
   puncte: PunctDeAtac[];
   /** Ce nu s-a putut verifica — onestitatea care face restul credibil. */
   caveats: string[];
+  /** Catalogul impartit pe performanta. */
+  segmentare: Segmentare;
 };
 
 /** Analizele optionale. Lipsa lor nu opreste raportul — doar il face mai sarac. */
@@ -383,7 +415,32 @@ export function buildReport(
     .filter((f) => f.tier === "MASURAT" && !f.quarantined && !f.exclusDinTotal)
     .reduce((s, f) => s + f.ron, 0);
 
+  const grupa = (list: { title: string; cost: number; conversionValue: number; productRoas?: number }[]): Grupa => ({
+    count: list.length,
+    cost: Math.round(sumar(list.map((p) => p.cost))),
+    valoare: Math.round(sumar(list.map((p) => p.conversionValue))),
+    produse: list.slice(0, MAX_PRODUSE).map((p) => ({
+      titlu: p.title,
+      cost: Math.round(p.cost),
+      // Fara masurare de incredere nu afisam randament pe produs: ar fi o cifra pe care nu
+      // o putem apara daca ne intreaba cineva de unde vine.
+      roas: tracking.ok ? p.productRoas : undefined,
+    })),
+    produseRestante: Math.max(0, list.length - MAX_PRODUSE),
+  });
+
+  const segmentare: Segmentare = {
+    heroes: grupa(result.heroes),
+    sidekicks: grupa(result.sidekicks),
+    villains: grupa(result.villains),
+    neClicate: grupa(result.neClicate.list),
+    zombies: grupa(result.zombies.list),
+    medianaCost: Math.round(result.medianaCost),
+    judecabila: tracking.ok,
+  };
+
   return {
+    segmentare,
     // Rotunjit la sursa: altfel fiecare consumator (pagina, PDF, email) trebuie sa-si aduca
     // aminte s-o faca, iar unul va uita si va livra "1.236,687 RON" catre client.
     headline: {
@@ -397,4 +454,8 @@ export function buildReport(
     puncte,
     caveats,
   };
+}
+
+function sumar(xs: number[]): number {
+  return xs.reduce((a, b) => a + b, 0);
 }

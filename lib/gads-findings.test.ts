@@ -318,3 +318,42 @@ describe("cifra mare se potriveste cu interfata Google Ads", () => {
     expect(rep.findings[0].ron).toBe(129155);
   });
 });
+
+describe("catalogul impartit pe performanta ajunge in raport", () => {
+  // Cheltuiesc: 400, 300, 200, 350 -> mediana 325. Prag 4 (marja 25%).
+  const catalog = [
+    P("H", 400, 2400, 9000),
+    P("S", 200, 1600, 4000),
+    P("V", 350, 350, 8000),
+    P("H2", 300, 1500, 7000),
+    P("N", 0, 0, 3000),
+    P("Z", 0, 0, 0),
+  ];
+  const prag = breakEvenRoas(25);
+
+  it("cont sanatos: fiecare grupa ajunge cu numarul si banii ei", () => {
+    const rep = buildReport(audit(catalog, prag), OK_TRACKING, 25, prag);
+    expect(rep.segmentare.heroes.count).toBe(1);
+    expect(rep.segmentare.heroes.cost).toBe(400);
+    expect(rep.segmentare.sidekicks.count).toBe(2);
+    expect(rep.segmentare.villains.count).toBe(1);
+    expect(rep.segmentare.neClicate.count).toBe(1);
+    expect(rep.segmentare.zombies.count).toBe(1);
+    expect(rep.segmentare.judecabila).toBe(true);
+  });
+
+  it("randamentul pe produs se afiseaza doar cand masurarea e de incredere", () => {
+    const bun = buildReport(audit(catalog, prag), OK_TRACKING, 25, prag);
+    expect(bun.segmentare.heroes.produse[0].roas).toBeCloseTo(6, 5);
+
+    const rupt = buildReport(audit(catalog, prag), BROKEN_TRACKING, 25, prag);
+    expect(rupt.segmentare.judecabila).toBe(false);
+    expect(rupt.segmentare.heroes.produse[0].roas).toBeUndefined();
+  });
+
+  it("cele nevazute si cele neclicate se numara corect si cu masurarea stricata", () => {
+    const rupt = buildReport(audit(catalog, prag), BROKEN_TRACKING, 25, prag);
+    expect(rupt.segmentare.zombies.count).toBe(1);
+    expect(rupt.segmentare.neClicate.count).toBe(1);
+  });
+});
