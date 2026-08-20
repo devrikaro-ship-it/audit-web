@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { exchangeCode } from "@/lib/gads-oauth";
 import { seal, SESSION_COOKIE, cookieOptions } from "@/lib/gads-session";
+import { publicUrl } from "@/lib/public-url";
 
 // Intoarcerea de la Google. Verifica state-ul, schimba codul pe refresh token, il pune in
 // cookie-ul semnat si trimite omul mai departe la alegerea contului.
@@ -9,7 +10,7 @@ import { seal, SESSION_COOKIE, cookieOptions } from "@/lib/gads-session";
 export const dynamic = "force-dynamic";
 
 function back(req: NextRequest, params: Record<string, string>) {
-  const url = new URL("/google-ads/connect", req.url);
+  const url = new URL(publicUrl(req, "/google-ads/connect"));
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
   return NextResponse.redirect(url);
 }
@@ -33,7 +34,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const { refreshToken } = await exchangeCode(code);
-    const res = NextResponse.redirect(new URL("/google-ads/conturi", req.url));
+    const res = NextResponse.redirect(publicUrl(req, "/google-ads/conturi"));
     res.cookies.set(SESSION_COOKIE, seal({ refreshToken }), cookieOptions());
     res.cookies.delete("gads_state");
     return res;
