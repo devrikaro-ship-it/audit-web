@@ -30,14 +30,20 @@ export default function Simulator({
   const [conv, setConv] = useState(20);
   const [fee, setFee] = useState("");
   const [comision, setComision] = useState("");
+  const [buget, setBuget] = useState(String(bugetLunar));
 
   const numar = (v: string) => {
     const n = parseFloat(v.replace(",", "."));
     return Number.isFinite(n) ? n : 0;
   };
 
+  // Bugetul e singura cifra din cont pe care are sens sa o miste: un onorariu fix apasa altfel
+  // pe 6.000 de lei decat pe 12.000. Daca sterge campul, ramanem pe cifra reala, nu pe zero.
+  const bugetFolosit = numar(buget) > 0 ? numar(buget) : bugetLunar;
+  const bugetSchimbat = Math.round(bugetFolosit) !== Math.round(bugetLunar);
+
   const p = proiectie({
-    bugetLunar,
+    bugetLunar: bugetFolosit,
     roasAzi,
     marjaPct,
     cpcScadePct: cpc,
@@ -82,6 +88,28 @@ export default function Simulator({
         <Cursor eticheta="Cost pe clic, in scadere" valoare={cpc} set={setCpc} />
         <Cursor eticheta="Rata de conversie, in crestere" valoare={conv} set={setConv} />
 
+        <label className="mt-1 block">
+          <span className="mb-1.5 flex flex-wrap items-baseline justify-between gap-2">
+            <span className="text-[13.5px] font-semibold" style={{ color: "#334155" }}>
+              Buget de reclame pe luna (RON)
+            </span>
+            {bugetSchimbat ? (
+              <button type="button" onClick={() => setBuget(String(bugetLunar))}
+                className="text-[12.5px] font-semibold underline" style={{ color: C.indigo }}>
+                inapoi la cat cheltui acum ({lei(bugetLunar)})
+              </button>
+            ) : (
+              <span className="text-[12.5px]" style={{ color: C.gray400 }}>
+                atat cheltui acum, citit din cont
+              </span>
+            )}
+          </span>
+          <input value={buget} onChange={(e) => setBuget(e.target.value)} inputMode="decimal"
+            placeholder={String(bugetLunar)}
+            className="w-full rounded-xl border px-4 text-[15px]"
+            style={{ borderColor: "#e2e8f0", minHeight: 44 }} />
+        </label>
+
         <p className="mt-4 rounded-xl px-4 py-3 text-[13.5px]" style={{ background: C.slate, color: C.gray600 }}>
           Asta inseamna un randament al reclamelor de la <b>{roasAzi.toFixed(2)}x</b> la{" "}
           <b>{(p.roasNou ?? roasAzi).toFixed(2)}x</b> — adica <b>+{ipoteza.toFixed(0)}%</b>.
@@ -116,7 +144,7 @@ export default function Simulator({
         <Coloana
           titlu="Acum"
           randuri={[
-            ["Buget de reclame", lei(bugetLunar)],
+            ["Buget de reclame", lei(bugetFolosit)],
             ["Vanzari din reclame", lei(p.venitAcum)],
             ["Iti ramane pe luna", p.profitAcum === null ? "—" : lei(p.profitAcum)],
             ["Platesti agentiei", "—"],
@@ -126,7 +154,7 @@ export default function Simulator({
           titlu="Cu Devrika"
           accent
           randuri={[
-            ["Buget de reclame", lei(bugetLunar)],
+            ["Buget de reclame", lei(bugetFolosit)],
             ["Vanzari din reclame", lei(p.venitCu)],
             ["Iti ramane pe luna", p.profitCu === null ? "—" : lei(p.profitCu)],
             ["Platesti agentiei", arePret ? lei(p.plataDevrika) : "—"],
@@ -144,7 +172,10 @@ export default function Simulator({
       )}
 
       <p className="text-[12.5px] leading-relaxed" style={{ color: C.gray400 }}>
-        <b>SIMULARE.</b> Bugetul, randamentul si marja sunt cifrele tale reale, citite din cont.
+        <b>SIMULARE.</b> Randamentul si marja sunt cifrele tale reale, citite din cont
+        {bugetSchimbat
+          ? `, iar bugetul e cel pus de tine aici (acum cheltui ${lei(bugetLunar)} pe luna)`
+          : ", la fel si bugetul"}.
         Cresterea e o ipoteza pe care o misti tu, nu o promisiune. Profitul de aici e inainte de
         salarii, chirii si celelalte costuri ale magazinului.
       </p>

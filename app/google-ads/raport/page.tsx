@@ -9,6 +9,7 @@ import { fetchTracking } from "@/lib/gads-tracking";
 import { audit, breakEvenRoas } from "@/lib/gads-audit";
 import { buildReport, type Tier } from "@/lib/gads-findings";
 import { fetchStructura } from "@/lib/gads-structure";
+import { citesteAn, bugetLunarDin, type TotaluriAn } from "@/lib/gads-an";
 import { fetchPmaxData, analizeazaPmax } from "@/lib/gads-pmax";
 import { fetchShoppingData, analizeazaShopping } from "@/lib/gads-shopping";
 import { fetchSearchData, analizeazaSearch } from "@/lib/gads-search";
@@ -50,6 +51,7 @@ type SurseAudit = {
   catalogComplete: boolean;
   tracking: TrackingState;
   structura?: StructuraAudit;
+  an?: TotaluriAn | null;
   brutCuvinte?: { negative: string[]; termeni: TermenBrut[] };
   brutPmax?: PmaxData;
   brutShop?: ShoppingData;
@@ -89,7 +91,7 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
 
   // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
   // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
-  const [catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari] = await Promise.all([
+  const [catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari, an] = await Promise.all([
     fetchShoppingProducts(customerId, auth).catch(() => null),
     fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT),
     fetchStructura(customerId, auth).catch(() => undefined),
@@ -97,12 +99,13 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
     fetchPmaxData(customerId, auth).catch(() => undefined),
     fetchShoppingData(customerId, auth).catch(() => undefined),
     fetchSearchData(customerId, auth).catch(() => undefined),
+    citesteAn(customerId, auth),
   ]);
 
   // Catalogul e singurul de care depinde tot restul: fara el nu exista nici produse, nici cifra
   // de impact. Atunci spunem cinstit ca nu am putut citi, in loc sa aruncam o pagina de eroare.
   if (!catalog) return null;
-  return { ...catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari };
+  return { ...catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari, an };
 }
 
 export default async function Raport() {
@@ -115,7 +118,7 @@ export default async function Raport() {
   const demo = demoOn();
   const s = await surse(session);
   if (!s) return <Indisponibil />;
-  const { products, catalogComplete, tracking, structura } = s;
+  const { products, catalogComplete, tracking, structura, an } = s;
 
   // Doar potrivirile care au nevoie de alt rezultat se fac dupa: cuvintele au nevoie de
   // catalog, PMax de cheltuiala pe campanie.
@@ -139,8 +142,8 @@ export default async function Raport() {
   // Ipoteza casei pentru sectiunea "Cu Devrika": CPC -20% si conversie +20%, adica exact ce
   // misca omul cu cursoarele in pagina urmatoare. Cifra vine din acelasi motor, nu dintr-un
   // inmultitor scris de mana aici.
-  const bugetLunar = structura ? Math.round(structura.cheltuialaTotala / 12) : 0;
-  const roasAzi = structura?.roasCont ?? 0;
+  const bugetLunar = bugetLunarDin(an ?? null, structura?.cheltuialaTotala ?? 0);
+  const roasAzi = an?.roas ?? structura?.roasCont ?? 0;
   const venitInPlusLunar = Math.round(bugetLunar * ((roasImbunatatit(roasAzi, 20, 20) ?? roasAzi) - roasAzi));
 
   // Doua sectiuni, nu o lista plata: banii pierduti si setarile de reparat sunt lucruri

@@ -5,6 +5,7 @@ import { C, sora, inter } from "@/lib/theme";
 import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import { fetchStructura } from "@/lib/gads-structure";
+import { citesteAn, bugetLunarDin, type TotaluriAn } from "@/lib/gads-an";
 import { demoOn, demoData } from "@/lib/gads-demo";
 import Simulator from "./Simulator";
 
@@ -23,7 +24,7 @@ export default async function Impreuna() {
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.marginPct) redirect("/google-ads/marja");
 
-  const structura = await citesteStructura(session.refreshToken, session.customerId, session.loginCustomerId);
+  const { structura, an } = await citesteCifre(session.refreshToken, session.customerId, session.loginCustomerId);
 
   return (
     <div className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
@@ -52,8 +53,8 @@ export default async function Impreuna() {
 
         {structura ? (
           <Simulator
-            bugetLunar={Math.round(structura.cheltuialaTotala / 12)}
-            roasAzi={structura.roasCont ?? 0}
+            bugetLunar={bugetLunarDin(an, structura.cheltuialaTotala)}
+            roasAzi={an?.roas ?? structura.roasCont ?? 0}
             marjaPct={session.marginPct}
           />
         ) : (
@@ -78,17 +79,22 @@ export default async function Impreuna() {
   );
 }
 
-/** Cheltuiala si randamentul contului — singurele doua cifre de care are nevoie proiectia. */
-async function citesteStructura(refreshToken: string, customerId: string, loginCustomerId?: string) {
-  if (demoOn()) return demoData().structura;
+/**
+ * Cheltuiala si randamentul contului — singurele doua cifre de care are nevoie proiectia.
+ * Totalurile pe 12 luni sunt cele pe care omul le vede in interfata; structura ramane pentru
+ * cazul in care interogarea pe an nu raspunde.
+ */
+async function citesteCifre(refreshToken: string, customerId: string, loginCustomerId?: string) {
+  if (demoOn()) return { structura: demoData().structura, an: null as TotaluriAn | null };
 
   const cfg = oauthConfig();
   const token = await accessTokenFrom(refreshToken).catch(() => null);
   if (!token) redirect("/google-ads/connect?eroare=expirat");
 
-  return fetchStructura(customerId, {
-    accessToken: token,
-    developerToken: cfg.developerToken,
-    loginCustomerId,
-  }).catch(() => null);
+  const auth = { accessToken: token, developerToken: cfg.developerToken, loginCustomerId };
+  const [structura, an] = await Promise.all([
+    fetchStructura(customerId, auth).catch(() => null),
+    citesteAn(customerId, auth),
+  ]);
+  return { structura, an };
 }
