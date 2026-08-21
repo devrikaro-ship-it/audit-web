@@ -103,7 +103,10 @@ export function analizeazaSearch(date: SearchData): SearchAudit {
   if (expuse.length) {
     probleme.push({
       cod: "ai-max-expunere",
-      titlu: `${expuse.length === 1 ? "O campanie urmeaza" : `${expuse.length} campanii urmeaza`} sa fie mutate automat de Google pe alt mod de functionare`,
+      titlu:
+        expuse.length === 1
+          ? `O campanie urmeaza sa fie mutata automat de Google pe alt mod de functionare`
+          : `${expuse.length} campanii urmeaza sa fie mutate automat de Google pe alt mod de functionare`,
       ron: 0,
       grad: "reglaj",
       detaliu:

@@ -363,3 +363,47 @@ describe("catalogul impartit pe performanta ajunge in raport", () => {
     expect(rupt.zombies.count).toBe(1);
   });
 });
+
+// Acordul in limba romana, la UN singur element. Un raport care ii spune clientului "1 produse"
+// arata a iesire de masina, si defectul e invizibil in orice cont cu doua sau mai multe — adica
+// in aproape toate datele pe care s-a testat pana acum. Gasit plimband fluxul in modul demo,
+// unde un singur cuvant blocat oprea un singur produs.
+describe("acordul la un singur produs", () => {
+  const unSingurVillain = [P("A", 1000, 500, 5000), P("B", 200, 4000, 2000)];
+  const minRoas = breakEvenRoas(28);
+  const rep = buildReport(audit(unSingurVillain, minRoas), OK_TRACKING, 28, minRoas);
+
+  it("titlul spune 'Un produs', nu '1 produse'", () => {
+    const v = rep.findings.find((f) => f.key === "villains")!;
+    expect(v.title).toContain("Un produs consuma");
+    expect(v.title).not.toMatch(/\b1 produse\b/);
+  });
+
+  it("corpul acorda verbul si scoate 'impreuna', care nu are sens la unul singur", () => {
+    const v = rep.findings.find((f) => f.key === "villains")!;
+    expect(v.body).toContain("Un produs sta sub pragul asta si a consumat");
+    expect(v.body).not.toContain("impreuna");
+  });
+
+  it("catalogul mort, la un singur produs, acorda participiul", () => {
+    const unuNevazut = [P("A", 500, 2000, 3000), P("Z", 0, 0, 0)];
+    const r = buildReport(audit(unuNevazut, 4), OK_TRACKING, 28, 4);
+    const z = r.findings.find((f) => f.key === "zombies");
+    if (z) {
+      expect(z.title).toContain("Un produs nu a fost vazut");
+      expect(z.title).not.toMatch(/\b1 produse\b/);
+    }
+  });
+});
+
+// Nivelul SIMULARE era folosit ca eticheta pe o constatare, dar lipsea din legenda de la finalul
+// raportului, unde erau explicate doar MASURAT si ESTIMARE. SPEC-ul cere trei niveluri, fiecare
+// etichetat oriunde apare — un client vedea un cuvant pe care raportul nu i-l explica nicaieri.
+describe("cele trei niveluri sunt toate folosite", () => {
+  it("simularea exista ca nivel in raport", () => {
+    const products = [P("A", 1000, 500, 5000), P("B", 200, 4000, 2000)];
+    const minRoas = breakEvenRoas(28);
+    const rep = buildReport(audit(products, minRoas), OK_TRACKING, 28, minRoas);
+    expect(rep.findings.some((f) => f.tier === "SIMULARE")).toBe(true);
+  });
+});

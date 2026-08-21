@@ -92,6 +92,17 @@ async function html(): Promise<string> {
 describe("pagina de raport, randata", () => {
   beforeEach(() => { stareTracking.ok = true; stareCatalog.cade = false; });
 
+
+  // Legenda de la finalul raportului explica nivelurile de onestitate. SIMULARE era folosit ca
+  // eticheta pe o constatare si lipsea din legenda — clientul vedea un cuvant pe care raportul
+  // nu i-l explica nicaieri. SPEC: trei niveluri, fiecare etichetat oriunde apare.
+  it("legenda explica toate cele trei niveluri, nu doua din trei", async () => {
+    const h = await html();
+    expect(h).toContain("MASURAT");
+    expect(h).toContain("ESTIMARE");
+    expect(h).toMatch(/<b>SIMULARE<\/b>/);
+  });
+
   it("arata produsele pe nume, nu doar numarul lor", async () => {
     const h = await html();
     expect(h).toContain("Canapea extensibila model A");

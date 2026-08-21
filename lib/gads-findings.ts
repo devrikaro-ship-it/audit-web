@@ -188,14 +188,19 @@ export function buildReport(
     if (tracking.ok) {
       findings.push({
         key: "villains",
-        title: `${result.villains.length} produse consuma buget fara sa se acopere`,
+        title:
+          result.villains.length === 1
+            ? `Un produs consuma buget fara sa se acopere`
+            : `${result.villains.length} produse consuma buget fara sa se acopere`,
         ron: result.villainsTotalCost,
         tier: "MASURAT",
         body:
           `La marja ta de ${marginPct}%, un produs trebuie sa aduca cel putin ` +
           `${minRoas.toFixed(2)} lei la fiecare leu cheltuit ca sa iasa pe zero. ` +
-          `${result.villains.length} produse stau sub pragul asta si au consumat impreuna ` +
-          `${ron(result.villainsTotalCost)}.`,
+          (result.villains.length === 1
+            ? `Un produs sta sub pragul asta si a consumat ${ron(result.villainsTotalCost)}.`
+            : `${result.villains.length} produse stau sub pragul asta si au consumat impreuna ` +
+              `${ron(result.villainsTotalCost)}.`),
         // Cele mai scumpe primele: alea sunt produsele pe care le opresti luni dimineata.
         produse: result.villains.slice(0, MAX_PRODUSE).map((v) => ({
           titlu: v.title,
@@ -207,7 +212,10 @@ export function buildReport(
     } else {
       findings.push({
         key: "villains-quarantined",
-        title: `${result.villains.length} produse nu pot fi judecate pana nu repari masurarea`,
+        title:
+          result.villains.length === 1
+            ? `Un produs nu poate fi judecat pana nu repari masurarea`
+            : `${result.villains.length} produse nu pot fi judecate pana nu repari masurarea`,
         ron: 0,
         tier: "MASURAT",
         quarantined: true,
@@ -232,7 +240,10 @@ export function buildReport(
   if (catalogComplete && result.zeroZombies.count > 0) {
     findings.push({
       key: "zombies",
-      title: `${result.zeroZombies.count} produse nu au fost vazute de niciun client`,
+      title:
+        result.zeroZombies.count === 1
+          ? `Un produs nu a fost vazut de niciun client`
+          : `${result.zeroZombies.count} produse nu au fost vazute de niciun client`,
       // Fapt, fara suma inventata: nu stim cat ar fi adus, deci nu punem cifra in bani.
       ron: 0,
       tier: "MASURAT",
@@ -363,7 +374,10 @@ export function buildReport(
       detaliu:
         `Ai pus "${tox.cuvant}" pe lista de cuvinte blocate. Cand cineva cauta exact numele ` +
         `magazinului tau — cel mai ieftin si cel mai sigur client pe care il poti avea — ` +
-        `reclama ta nu apare. Sunt ${tox.produseBlocate} produse afectate.`,
+        `reclama ta nu apare. ` +
+        (tox.produseBlocate === 1
+          ? `Este un produs afectat.`
+          : `Sunt ${tox.produseBlocate} produse afectate.`),
       exemple: tox.exemple,
     });
   }
@@ -383,9 +397,13 @@ export function buildReport(
       grad: "costa",
       detaliu:
         `Lista ta de cuvinte blocate contine termeni care apar in titlurile unor produse aflate ` +
-        `la vanzare. Reclamele pentru ele nu au voie sa se afiseze — ${produseBlocate} produse ` +
-        `sunt oprite asa, fara sa se vada nicaieri in rapoarte.`,
-      exemple: altele.map((t2) => `${t2.cuvant} — ${t2.produseBlocate} produse`),
+        `la vanzare. Reclamele pentru ele nu au voie sa se afiseze — ` +
+        (produseBlocate === 1
+          ? `un produs e oprit asa, fara sa se vada nicaieri in rapoarte.`
+          : `${produseBlocate} produse sunt oprite asa, fara sa se vada nicaieri in rapoarte.`),
+      exemple: altele.map(
+        (t2) => `${t2.cuvant} — ${t2.produseBlocate} ${t2.produseBlocate === 1 ? "produs" : "produse"}`
+      ),
     });
   }
 

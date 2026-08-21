@@ -205,7 +205,11 @@ export default async function Raport() {
         <div className="mb-7 grid grid-cols-2 gap-px rounded-b-2xl border border-t-0 sm:grid-cols-4"
           style={{ borderColor: C.border, background: C.border }}>
           {[
-            { k: "Constatari care costa bani", v: String(bani.length) },
+            // Numara doar constatarile care CHIAR au o suma. Catalogul mort e o constatare reala
+            // cu `ron: 0` deliberat — nu inventam o suma pentru el — deci nu are ce cauta
+            // intr-un contor care promite bani. Altfel antetul spune "5 costa bani" si a
+            // cincea isi scrie singura in text ca nu a costat nimic.
+            { k: "Constatari care costa bani", v: String(bani.filter((f) => f.ron > 0).length) },
             { k: "Setari de reparat", v: String(rep.puncte.length) },
             { k: "Produse analizate", v: String(products.length) },
             { k: "Pragul tau minim", v: `ROAS ${minRoas.toFixed(2)}x` },
@@ -403,7 +407,9 @@ export default async function Raport() {
           </ul>
           <p className="text-[12.5px] leading-relaxed" style={{ color: C.gray400 }}>
             <b>MASURAT</b> = citit direct din contul tau. <b>ESTIMARE</b> = cifra reala inmultita
-            cu un reper de piata, marcata ca atare. Nu prezentam niciodata o estimare drept fapt.
+            cu un reper de piata, marcata ca atare. <b>SIMULARE</b> = o proiectie sub ipoteze scrise,
+            plafon optimist si incasari, niciodata profit. Nu prezentam niciodata o estimare sau o
+            simulare drept fapt.
           </p>
         </div>
       </div>
