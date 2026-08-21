@@ -205,11 +205,14 @@ export default async function Raport() {
         <div className="mb-7 grid grid-cols-2 gap-px rounded-b-2xl border border-t-0 sm:grid-cols-4"
           style={{ borderColor: C.border, background: C.border }}>
           {[
-            // Numara doar constatarile care CHIAR au o suma. Catalogul mort e o constatare reala
-            // cu `ron: 0` deliberat — nu inventam o suma pentru el — deci nu are ce cauta
-            // intr-un contor care promite bani. Altfel antetul spune "5 costa bani" si a
-            // cincea isi scrie singura in text ca nu a costat nimic.
-            { k: "Constatari care costa bani", v: String(bani.filter((f) => f.ron > 0).length) },
+            // REVERTED 2026-08-21. A `ron > 0` filter here was worse than the defect it removed:
+            // it also counts the SIMULARE finding, which is a projected GAIN rendered green with a
+            // "+", and it left the header saying 4 above five numbered cards. Two reviews measured
+            // it independently. The honest number on the demo account is 3, and reaching it needs
+            // the sign of the money to be a declared property of a Finding rather than a guess made
+            // in three places. That is a change with a contract, not a one-line filter, so this
+            // stays as it was until then and the mismatch it carries is a known open point.
+            { k: "Constatari care costa bani", v: String(bani.length) },
             { k: "Setari de reparat", v: String(rep.puncte.length) },
             { k: "Produse analizate", v: String(products.length) },
             { k: "Pragul tau minim", v: `ROAS ${minRoas.toFixed(2)}x` },
