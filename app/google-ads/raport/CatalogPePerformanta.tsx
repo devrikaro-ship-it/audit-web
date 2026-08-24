@@ -182,7 +182,6 @@ function Inel({ segmente }: { segmente: { nume: string; val: number; culoare: st
   const total = segmente.reduce((s, x) => s + x.val, 0);
   const R = 52;
   const CIRC = 2 * Math.PI * R;
-  let parcurs = 0;
 
   if (total <= 0) {
     return (
@@ -191,6 +190,14 @@ function Inel({ segmente }: { segmente: { nume: string; val: number; culoare: st
       </div>
     );
   }
+
+  const arcs = segmente.map((segment, index) => {
+    const length = (segment.val / total) * CIRC;
+    const traveled = segmente
+      .slice(0, index)
+      .reduce((sum, preceding) => sum + (preceding.val / total) * CIRC, 0);
+    return { segment, drawnLength: length - 2, offset: -traveled };
+  });
 
   return (
     <svg
@@ -201,22 +208,18 @@ function Inel({ segmente }: { segmente: { nume: string; val: number; culoare: st
         .map((s) => `${s.nume}: ${Math.round((s.val / total) * 100)}%`)
         .join(", ")}
     >
-      {segmente.map((s) => {
-        const lungime = (s.val / total) * CIRC;
-        const desenata = lungime - 2;
-        const offset = -parcurs;
-        parcurs += lungime;
-        if (desenata <= 0) return null;
+      {arcs.map(({ segment, drawnLength, offset }) => {
+        if (drawnLength <= 0) return null;
         return (
           <circle
-            key={s.nume}
+            key={segment.nume}
             cx="70"
             cy="70"
             r={R}
             fill="none"
-            stroke={s.culoare}
+            stroke={segment.culoare}
             strokeWidth="20"
-            strokeDasharray={`${desenata} ${CIRC - desenata}`}
+            strokeDasharray={`${drawnLength} ${CIRC - drawnLength}`}
             strokeDashoffset={offset}
             transform="rotate(-90 70 70)"
           />
