@@ -338,6 +338,15 @@
     {
       "source": "app/google-ads/impreuna/page.tsx",
       "kind": "IfStatement",
+      "predicate": "demoOn()",
+      "states": [
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "app/google-ads/impreuna/page.tsx",
+      "kind": "IfStatement",
       "predicate": "marginPct === null",
       "states": [
         "simulator:normal",
@@ -348,6 +357,15 @@
       "source": "app/google-ads/impreuna/Simulator.tsx",
       "kind": "BinaryExpression",
       "predicate": "arePret && crestere !== null",
+      "states": [
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "app/google-ads/impreuna/Simulator.tsx",
+      "kind": "BinaryExpression",
+      "predicate": "numar(fee) > 0",
       "states": [
         "simulator:normal",
         "simulator:page-normal"
@@ -419,6 +437,15 @@
     {
       "source": "app/google-ads/impreuna/Simulator.tsx",
       "kind": "ConditionalExpression",
+      "predicate": "numar(buget) > 0",
+      "states": [
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "app/google-ads/impreuna/Simulator.tsx",
+      "kind": "ConditionalExpression",
       "predicate": "p.profitAcum === null",
       "states": [
         "simulator:normal",
@@ -432,6 +459,15 @@
       "states": [
         "simulator:normal",
         "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "app/google-ads/marja/actions.ts",
+      "kind": "ConditionalExpression",
+      "predicate": "submittedMargins.length === 1",
+      "states": [
+        "margin:error",
+        "margin:normal"
       ]
     },
     {
@@ -507,9 +543,44 @@
       ]
     },
     {
+      "source": "app/google-ads/marja/page.tsx",
+      "kind": "IfStatement",
+      "predicate": "demoOn()",
+      "states": [
+        "margin:error",
+        "margin:normal"
+      ]
+    },
+    {
       "source": "app/google-ads/raport/CatalogPePerformanta.tsx",
       "kind": "BinaryExpression",
       "predicate": "!seg.judecabila",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success"
+      ]
+    },
+    {
+      "source": "app/google-ads/raport/CatalogPePerformanta.tsx",
+      "kind": "BinaryExpression",
+      "predicate": "g.cost > 0",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success"
+      ]
+    },
+    {
+      "source": "app/google-ads/raport/CatalogPePerformanta.tsx",
+      "kind": "BinaryExpression",
+      "predicate": "g.valoare > 0",
       "states": [
         "report:catalog-map-many",
         "report:catalog-map-one",
@@ -679,6 +750,19 @@
       "source": "app/google-ads/raport/page.tsx",
       "kind": "ConditionalExpression",
       "predicate": "f.termeni?.length",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success"
+      ]
+    },
+    {
+      "source": "app/google-ads/raport/page.tsx",
+      "kind": "ConditionalExpression",
+      "predicate": "f.tier === \"SIMULARE\"",
       "states": [
         "report:catalog-map-many",
         "report:catalog-map-one",
@@ -925,6 +1009,19 @@
     {
       "source": "app/google-ads/raport/page.tsx",
       "kind": "IfStatement",
+      "predicate": "demoOn()",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success"
+      ]
+    },
+    {
+      "source": "app/google-ads/raport/page.tsx",
+      "kind": "IfStatement",
       "predicate": "marginPct === null",
       "states": [
         "report:catalog-map-many",
@@ -978,6 +1075,36 @@
     {
       "source": "lib/calc/calc.js",
       "kind": "BinaryExpression",
+      "predicate": "!d || !c",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success",
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "lib/calc/calc.js",
+      "kind": "BinaryExpression",
+      "predicate": "ales === null",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success",
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "lib/calc/calc.js",
+      "kind": "BinaryExpression",
       "predicate": "varianta",
       "states": [
         "report:catalog-map-many",
@@ -1023,7 +1150,97 @@
     {
       "source": "lib/calc/calc.js",
       "kind": "ConditionalExpression",
+      "predicate": "nume === canal",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success",
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "lib/calc/calc.js",
+      "kind": "ConditionalExpression",
+      "predicate": "peBuget",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success",
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "lib/calc/calc.js",
+      "kind": "ConditionalExpression",
+      "predicate": "peBuget",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success",
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "lib/calc/calc.js",
+      "kind": "ConditionalExpression",
+      "predicate": "peBuget",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success",
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "lib/calc/calc.js",
+      "kind": "ConditionalExpression",
+      "predicate": "peBuget",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success",
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "lib/calc/calc.js",
+      "kind": "ConditionalExpression",
       "predicate": "v == null",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success",
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "lib/calc/calc.js",
+      "kind": "ConditionalExpression",
+      "predicate": "varianta && varianta.baza === \"buget\"",
       "states": [
         "report:catalog-map-many",
         "report:catalog-map-one",
@@ -1151,6 +1368,19 @@
       "source": "lib/gads-findings.ts",
       "kind": "ConditionalExpression",
       "predicate": "produseBlocate === 1",
+      "states": [
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success"
+      ]
+    },
+    {
+      "source": "lib/gads-findings.ts",
+      "kind": "ConditionalExpression",
+      "predicate": "result.villains.length === 1",
       "states": [
         "report:catalog-map-many",
         "report:catalog-map-one",
@@ -1418,6 +1648,39 @@
       "source": "lib/gads-keywords.ts",
       "kind": "BinaryExpression",
       "predicate": "s",
+      "states": [
+        "account-picker:account-error",
+        "account-picker:demo",
+        "account-picker:list-error",
+        "account-picker:success-many",
+        "account-picker:success-one",
+        "account-picker:success-zero",
+        "connect:error-anulat",
+        "connect:error-config",
+        "connect:error-expirat",
+        "connect:error-fara-cod",
+        "connect:error-google",
+        "connect:error-schimb",
+        "connect:error-sesiune",
+        "connect:error-state",
+        "connect:normal",
+        "connect:unconfigured",
+        "margin:error",
+        "margin:normal",
+        "report:catalog-map-many",
+        "report:catalog-map-one",
+        "report:catalog-map-zero",
+        "report:catalog-unavailable",
+        "report:demo",
+        "report:success",
+        "simulator:normal",
+        "simulator:page-normal"
+      ]
+    },
+    {
+      "source": "lib/gads-keywords.ts",
+      "kind": "ConditionalExpression",
+      "predicate": "m",
       "states": [
         "account-picker:account-error",
         "account-picker:demo",

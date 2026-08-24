@@ -371,10 +371,23 @@ function responseBodyEmitters(sourceFile: ts.SourceFile): ts.Node[] {
 
 function outputAffectingBranches(sourceFile: ts.SourceFile): ts.Node[] {
   const found: ts.Node[] = [];
-  const containsOutput = (node: ts.Node) => {
+  const containsOutput = (node: ts.Node, seen = new Set<ts.Node>()) => {
+    if (seen.has(node)) return false;
+    seen.add(node);
     let output = false;
     const visit = (child: ts.Node) => {
       if (ts.isJsxElement(child) || ts.isJsxSelfClosingElement(child) || ts.isJsxText(child) || ts.isStringLiteralLike(child)) output = true;
+      if (!output && ts.isCallExpression(child)) {
+        const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(child.expression));
+        for (const declaration of symbol?.declarations ?? []) {
+          const body = (ts.isFunctionDeclaration(declaration) || ts.isMethodDeclaration(declaration) || ts.isFunctionExpression(declaration) || ts.isArrowFunction(declaration))
+            ? declaration.body
+            : ts.isVariableDeclaration(declaration) && declaration.initializer
+              ? declaration.initializer
+              : null;
+          if (body && containsOutput(body, seen)) output = true;
+        }
+      }
       if (!output) ts.forEachChild(child, visit);
     };
     visit(node);
