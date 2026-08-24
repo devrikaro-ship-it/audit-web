@@ -1,4 +1,5 @@
 import type { HTMLAttributes } from "react";
+import { googleAdsReadCategories, projectGoogleAdsReadCategories } from "./gads-read-disclosure";
 
 export const publicOAuthContract = {
   providerScope: "adwords",
@@ -101,6 +102,8 @@ export function projectPublicOAuth(contract: typeof publicOAuthContract) {
   if (contract.permissionCapability !== "broad") throw new Error("Unsupported public OAuth permission capability");
   if (contract.applicationBehavior !== "read-operations-only") throw new Error("Unsupported public OAuth application behavior");
   if (contract.mutationBehavior !== "none") throw new Error("Unsupported public OAuth mutation behavior");
+  const auditDataCategories = projectGoogleAdsReadCategories(googleAdsReadCategories);
+  const auditDataReadDisclosure = `Aplicatia citeste datele necesare auditului: ${auditDataCategories}.`;
   return Object.freeze({
   readsOnlyLabel: "Doar citim",
   applicationReadsData: "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc.",
@@ -109,11 +112,13 @@ export function projectPublicOAuth(contract: typeof publicOAuthContract) {
   noCampaignMutations: "Nu putem porni sau opri campanii si nu putem cheltui bani.",
   googleAdsPermission: "Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive.",
   officialAccessMechanism: "Cand un audit are nevoie de acces la un cont de publicitate, ti-l cerem prin mecanismul oficial al platformei.",
-  shoppingReadAndNoMutation: "Citim doar datele de Shopping. Nu modificam nimic in contul tau.",
-  shoppingReadNoMutationAndRevoke: "Citim doar datele de Shopping. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.",
+  auditDataCategories,
+  auditDataReadDisclosure,
+  auditDataReadAndNoMutation: `${auditDataReadDisclosure} Nu modificam nimic in contul tau.`,
+  auditDataReadNoMutationAndRevoke: `${auditDataReadDisclosure} Nu modificam nimic si poti retrage accesul oricand din contul tau Google.`,
   connectNoMutations: "NU putem modifica nimic — nici bugete, nici campanii",
   rootMetadata: "Afla in 2 minute de ce magazinul tau nu vinde cat ar putea: masurare, SEO, experienta si Google Ads/Shopping. Gratuit, fara cont.",
-  landingMetadata: (windowLabel: string) => `Audit Devrika analizeaza contul tau de Google Ads si iti arata ce produse consuma buget fara sa vanda. Citim doar datele de Shopping din ultimele ${windowLabel}, nu modificam nimic in cont.`,
+  landingMetadata: (windowLabel: string) => `Audit Devrika analizeaza contul tau de Google Ads pe ultimele ${windowLabel}. ${auditDataReadDisclosure} Nu modificam nimic in cont.`,
   hubMetadata: "Audit Devrika analizeaza magazinul si conturile tale de publicitate si iti arata unde pierzi bani: pe site, in Google Ads si in campaniile de Shopping.",
   privacyMetadata: "Cum trateaza aplicatia Devrika datele contului tau Google Ads: ce citim, cat pastram, cu cine NU impartim si cum retragi accesul.",
   termsMetadata: "Conditiile in care poti folosi aplicatia Devrika de audit Google Ads.",

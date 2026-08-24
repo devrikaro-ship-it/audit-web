@@ -34,6 +34,7 @@
     "lib/gads-oauth.ts",
     "lib/gads-pmax.ts",
     "lib/gads-public-oauth-contract.ts",
+    "lib/gads-read-disclosure.ts",
     "lib/gads-search.ts",
     "lib/gads-session.ts",
     "lib/gads-shopping.ts",

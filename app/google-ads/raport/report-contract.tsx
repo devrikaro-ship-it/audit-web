@@ -1,15 +1,16 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { validateGoogleAdsReadCoverage, type GoogleAdsReadCategory } from "@/lib/gads-read-disclosure";
 
 export const reportContract = {
   pipeline: {
-    fetchShoppingProducts: { role: "source", module: "@/lib/gads-intake", operation: "fetchShoppingProducts", dependencies: [], availability: "required-primary-optional-secondary", failureVisibility: "explicit-primary-silent-secondary" },
-    fetchTracking: { role: "source", module: "@/lib/gads-tracking", operation: "fetchTracking", dependencies: [], availability: "optional-with-fallback", failureVisibility: "explicit" },
-    fetchStructura: { role: "source", module: "@/lib/gads-structure", operation: "fetchStructura", dependencies: [], availability: "optional", failureVisibility: "silent" },
-    fetchKeywordData: { role: "source", module: "@/lib/gads-keywords", operation: "fetchKeywordData", dependencies: [], availability: "optional", failureVisibility: "silent-with-specific-visibility-caveat" },
-    fetchPmaxData: { role: "source", module: "@/lib/gads-pmax", operation: "fetchPmaxData", dependencies: [], availability: "optional", failureVisibility: "silent" },
-    fetchShoppingData: { role: "source", module: "@/lib/gads-shopping", operation: "fetchShoppingData", dependencies: [], availability: "optional", failureVisibility: "silent" },
-    fetchSearchData: { role: "source", module: "@/lib/gads-search", operation: "fetchSearchData", dependencies: [], availability: "optional", failureVisibility: "silent" },
-    citesteAn: { role: "source", module: "@/lib/gads-an", operation: "citesteAn", dependencies: [], availability: "optional-with-fallback", failureVisibility: "server-log-only" },
+    fetchShoppingProducts: { role: "source", module: "@/lib/gads-intake", operation: "fetchShoppingProducts", dependencies: [], readCategories: ["shopping-product-performance"], availability: "required-primary-optional-secondary", failureVisibility: "explicit-primary-silent-secondary" },
+    fetchTracking: { role: "source", module: "@/lib/gads-tracking", operation: "fetchTracking", dependencies: [], readCategories: ["conversion-tracking"], availability: "optional-with-fallback", failureVisibility: "explicit" },
+    fetchStructura: { role: "source", module: "@/lib/gads-structure", operation: "fetchStructura", dependencies: [], readCategories: ["campaign-structure"], availability: "optional", failureVisibility: "silent" },
+    fetchKeywordData: { role: "source", module: "@/lib/gads-keywords", operation: "fetchKeywordData", dependencies: [], readCategories: ["negative-keywords", "search-terms"], availability: "optional", failureVisibility: "silent-with-specific-visibility-caveat" },
+    fetchPmaxData: { role: "source", module: "@/lib/gads-pmax", operation: "fetchPmaxData", dependencies: [], readCategories: ["performance-max"], availability: "optional", failureVisibility: "silent" },
+    fetchShoppingData: { role: "source", module: "@/lib/gads-shopping", operation: "fetchShoppingData", dependencies: [], readCategories: ["shopping-campaigns"], availability: "optional", failureVisibility: "silent" },
+    fetchSearchData: { role: "source", module: "@/lib/gads-search", operation: "fetchSearchData", dependencies: [], readCategories: ["search-campaigns"], availability: "optional", failureVisibility: "silent" },
+    citesteAn: { role: "source", module: "@/lib/gads-an", operation: "citesteAn", dependencies: [], readCategories: ["annual-account-totals"], availability: "optional-with-fallback", failureVisibility: "server-log-only" },
     analizeazaCuvinte: { role: "analysis", module: "@/lib/gads-keywords", operation: "analizeazaCuvinte", dependencies: ["fetchKeywordData", "fetchShoppingProducts"], availability: "optional", failureVisibility: "not-applicable" },
     analizeazaPmax: { role: "analysis", module: "@/lib/gads-pmax", operation: "analizeazaPmax", dependencies: ["fetchPmaxData", "fetchStructura"], availability: "optional", failureVisibility: "not-applicable" },
     analizeazaSearch: { role: "analysis", module: "@/lib/gads-search", operation: "analizeazaSearch", dependencies: ["fetchSearchData"], availability: "optional", failureVisibility: "not-applicable" },
@@ -35,6 +36,14 @@ export const reportContract = {
     "catalog-unavailable-recovery": { rendering: "alternative", dependencies: [], effect: "Replaces the report when the primary catalog read fails." },
   },
 } as const;
+
+export const reportSourceReadCategories = Object.fromEntries(
+  Object.entries(reportContract.pipeline)
+    .filter(([, step]) => step.role === "source")
+    .map(([id, step]) => [id, (step as { readCategories: readonly GoogleAdsReadCategory[] }).readCategories]),
+) as Record<string, readonly GoogleAdsReadCategory[]>;
+
+validateGoogleAdsReadCoverage(reportSourceReadCategories);
 
 type PipelineId = keyof typeof reportContract.pipeline;
 type SurfaceId = keyof typeof reportContract.surfaces;

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
-import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 import { publicOAuthAttributes, publicOAuthProjection, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
 // Politica de confidentialitate a APLICATIEI (nu a agentiei). Google o cere pe acelasi host
@@ -62,8 +61,8 @@ export default function Confidentialitate() {
         <ul className="mb-3 flex flex-col gap-2">
           {[
             "lista conturilor de Google Ads la care ai acces, ca sa poti alege pe care il analizam",
-            `produsele din campaniile de Shopping si datele lor pe ultimele ${AUDIT_WINDOW_LABEL}: cheltuiala, afisari, conversii si valoarea vanzarilor`,
-            "modul in care sunt configurate conversiile din cont, ca sa iti putem spune daca masurarea e corecta",
+            publicOAuthProjection.auditDataReadDisclosure,
+            publicOAuthProjection.applicationReadsData,
           ].map((t) => (
             <li key={t} className="flex items-start gap-2.5 text-[15px]" style={{ color: C.gray600 }}>
               <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: C.indigo }} />
@@ -79,9 +78,8 @@ export default function Confidentialitate() {
 
         <H2>Ce facem cu ele</H2>
         <P>
-          Le folosim intr-un singur scop: sa generam raportul pe care il vezi pe ecran — ce produse
-          consuma buget fara sa vanda, ce produse nu au fost afisate niciodata si daca masurarea
-          conversiilor e configurata corect. Analiza se face in momentul in care esti pe site.
+          Le folosim intr-un singur scop: sa generam raportul pe care il vezi pe ecran, folosind
+          categoriile de date enumerate mai sus. Analiza se face in momentul in care esti pe site.
         </P>
         <P>
           <b>Nu stocam datele contului tau de Google Ads</b> pe serverele noastre dupa generarea

@@ -21,8 +21,7 @@ const audituri = [
     titlu: "Audit Google Ads",
     text:
       `Iti conectezi contul de Google Ads si vezi pe cifrele tale reale din ultimele ${AUDIT_WINDOW_LABEL} `
-      + "ce produse consuma buget fara sa vanda, cate produse nu au fost afisate niciodata si "
-      + "daca masurarea conversiilor e configurata corect.",
+      + "ce produse consuma buget fara sa vanda si cum functioneaza campaniile, masurarea si cautarile.",
     date: "Se conecteaza la contul tau de Google Ads.",
     activ: true,
     icon: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" /><circle cx="12" cy="12" r="1" /></>,
@@ -164,7 +163,7 @@ export default function Hub() {
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {[
-              { t: "Citim doar ce e necesar", d: "Pentru Google Ads: campaniile de Shopping si configurarea conversiilor. Nimic din Gmail, Drive sau alte servicii." },
+              { t: "Citim doar ce e necesar", d: `${publicOAuthProjection.auditDataReadDisclosure} Nimic din Gmail, Drive sau alte servicii.` },
               { t: publicOAuthProjection.noChangesBadge, d: publicOAuthProjection.noCampaignMutations },
               { t: GADS_LOCALIZED_COPY.accountDataRetention, d: "Analiza se face cat esti pe site. Dupa raport, datele contului nu raman la noi." },
               { t: "Retragi accesul cand vrei", d: "Dintr-un click, din setarile contului tau — fara sa ne intrebi pe noi." },

@@ -100,8 +100,8 @@ const safety = [
     icon: <><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></>,
   },
   {
-    t: "Doar datele de Shopping",
-    d: publicOAuthProjection.googleAdsPermission,
+    t: "Datele necesare auditului",
+    d: `${publicOAuthProjection.auditDataReadDisclosure} ${publicOAuthProjection.googleAdsPermission}`,
     icon: <><rect x="3" y="8" width="18" height="13" rx="2" /><path d="M8 8V6a4 4 0 0 1 8 0v2" /></>,
   },
   {
@@ -170,9 +170,7 @@ export default function GoogleAdsLanding() {
           campaniile de Shopping.
         </p>
         <p className="mx-auto mb-10 max-w-[640px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
-          Iti conectezi contul de Google Ads, aplicatia citeste datele campaniilor de Shopping din
-          ultimele {AUDIT_WINDOW_LABEL} si iti spune care produse consuma buget fara sa vanda —
-          produs cu produs, cu suma exacta. Nu modifica nimic in contul tau.
+          {publicOAuthProjection.auditDataReadAndNoMutation}
         </p>
 
         <Link href={CONNECT_HREF}
@@ -188,7 +186,7 @@ export default function GoogleAdsLanding() {
           <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          {publicOAuthProjection.shoppingReadAndNoMutation}
+          {publicOAuthProjection.auditDataReadAndNoMutation}
         </div>
 
         {/* Preview raport */}
@@ -245,10 +243,8 @@ export default function GoogleAdsLanding() {
             declarata ca home page explica ce face aplicatia si cu ce date lucreaza. */}
         <p className="mx-auto mb-10 max-w-[760px] text-center text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
           <b style={{ color: "#0f172a" }}>Audit Devrika</b> este aplicatia care face aceasta analiza. Cu
-          acordul tau, se conecteaza la contul tau de Google Ads si citeste <b>doar</b> datele
-          campaniilor de Shopping din {AUDIT_WINDOW_LABEL} — cheltuiala, afisarile si vanzarile pe
-          fiecare produs. Pe baza lor iti arata unde se duc banii. Nu stocam datele contului tau si
-          nu facem nicio modificare in el.
+          acordul tau, se conecteaza la contul tau de Google Ads si citeste <b>doar</b>
+          {` ${publicOAuthProjection.auditDataCategories}. Nu stocam datele contului tau si nu facem nicio modificare in el.`}
         </p>
         <div className="mx-auto grid max-w-[960px] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {safety.map((s) => (

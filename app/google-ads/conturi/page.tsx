@@ -118,7 +118,7 @@ export default async function Conturi({
         </div>
 
         <p className="mt-6 text-center text-[12.5px]" style={{ color: C.gray400 }}>
-          {publicOAuthProjection.shoppingReadNoMutationAndRevoke}
+          {publicOAuthProjection.auditDataReadNoMutationAndRevoke}
         </p>
       </div>
     </div>

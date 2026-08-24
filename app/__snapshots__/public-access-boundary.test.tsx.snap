@@ -10,7 +10,7 @@ title="Audit Devrika — audit gratuit pentru magazine online""
 `;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:landing 1`] = `
-"description="Audit Devrika analizeaza contul tau de Google Ads si iti arata ce produse consuma buget fara sa vanda. Citim doar datele de Shopping din ultimele 365 de zile, nu modificam nimic in cont."
+"description="Audit Devrika analizeaza contul tau de Google Ads pe ultimele 365 de zile. Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic in cont."
 title="Audit Devrika — analiza contului tau de Google Ads""
 `;
 
@@ -53,7 +53,7 @@ root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
@@ -105,7 +105,7 @@ root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
@@ -157,7 +157,7 @@ root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
@@ -209,7 +209,7 @@ root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
@@ -261,7 +261,7 @@ root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
@@ -313,7 +313,7 @@ root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
@@ -365,7 +365,7 @@ root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
@@ -417,7 +417,7 @@ root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
@@ -467,7 +467,7 @@ root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
@@ -566,7 +566,7 @@ root/div[0]/section[1]/div[0]/a[0]/div[0]/h3[0]/text "Audit Google Ads"
 root/div[0]/section[1]/div[0]/a[0]/div[0]/span[0]
 root/div[0]/section[1]/div[0]/a[0]/div[0]/span[0]/text "Disponibil"
 root/div[0]/section[1]/div[0]/a[0]/p[0]
-root/div[0]/section[1]/div[0]/a[0]/p[0]/text "Iti conectezi contul de Google Ads si vezi pe cifrele tale reale din ultimele 365 de zile ce produse consuma buget fara sa vanda, cate produse nu au fost afisate niciodata si daca masurarea conversiilor e configurata corect."
+root/div[0]/section[1]/div[0]/a[0]/p[0]/text "Iti conectezi contul de Google Ads si vezi pe cifrele tale reale din ultimele 365 de zile ce produse consuma buget fara sa vanda si cum functioneaza campaniile, masurarea si cautarile."
 root/div[0]/section[1]/div[0]/a[0]/p[1]
 root/div[0]/section[1]/div[0]/a[0]/p[1]/text "Se conecteaza la contul tau de Google Ads."
 root/div[0]/section[1]/div[0]/a[0]/span[0]
@@ -616,7 +616,7 @@ root/div[0]/section[2]/div[0]/div[0]/div[0]
 root/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]
 root/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "Citim doar ce e necesar"
 root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]/text "Pentru Google Ads: campaniile de Shopping si configurarea conversiilor. Nimic din Gmail, Drive sau alte servicii."
+root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nimic din Gmail, Drive sau alte servicii."
 root/div[0]/section[2]/div[0]/div[0]/div[1]
 root/div[0]/section[2]/div[0]/div[0]/div[1]/p[0]
 root/div[0]/section[2]/div[0]/div[0]/div[1]/p[0]/text "Nu modificam nimic"
@@ -684,7 +684,7 @@ root/div[0]/section[0]/p[0]/a[0] href="/"
 root/div[0]/section[0]/p[0]/a[0]/text "Audit Devrika"
 root/div[0]/section[0]/p[0]/text ", aplicatia web care analizeaza magazinul si conturile tale de publicitate. Auditul de fata se conecteaza la contul tau de Google Ads si iti arata pe ce produse pierzi bani in campaniile de Shopping."
 root/div[0]/section[0]/p[1]
-root/div[0]/section[0]/p[1]/text "Iti conectezi contul de Google Ads, aplicatia citeste datele campaniilor de Shopping din ultimele 365 de zile si iti spune care produse consuma buget fara sa vanda — produs cu produs, cu suma exacta. Nu modifica nimic in contul tau."
+root/div[0]/section[0]/p[1]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic in contul tau."
 root/div[0]/section[0]/a[0] href="/google-ads/connect"
 root/div[0]/section[0]/a[0]/text "Conecteaza contul Google Ads"
 root/div[0]/section[0]/a[0]/svg[0] aria-hidden="true"
@@ -693,7 +693,7 @@ root/div[0]/section[0]/div[2]
 root/div[0]/section[0]/div[2]/svg[0] aria-hidden="true"
 root/div[0]/section[0]/div[2]/svg[0]/rect[0]
 root/div[0]/section[0]/div[2]/svg[0]/path[0]
-root/div[0]/section[0]/div[2]/text "Citim doar datele de Shopping. Nu modificam nimic in contul tau."
+root/div[0]/section[0]/div[2]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic in contul tau."
 root/div[0]/section[0]/div[3]
 root/div[0]/section[0]/div[3]/div[0]
 root/div[0]/section[0]/div[3]/div[0]/div[0]
@@ -752,7 +752,7 @@ root/div[0]/section[1]/p[0]/b[0]/text "Audit Devrika"
 root/div[0]/section[1]/p[0]/text "este aplicatia care face aceasta analiza. Cu acordul tau, se conecteaza la contul tau de Google Ads si citeste"
 root/div[0]/section[1]/p[0]/b[1]
 root/div[0]/section[1]/p[0]/b[1]/text "doar"
-root/div[0]/section[1]/p[0]/text "datele campaniilor de Shopping din 365 de zile — cheltuiala, afisarile si vanzarile pe fiecare produs. Pe baza lor iti arata unde se duc banii. Nu stocam datele contului tau si nu facem nicio modificare in el."
+root/div[0]/section[1]/p[0]/text "produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu stocam datele contului tau si nu facem nicio modificare in el."
 root/div[0]/section[1]/div[0]
 root/div[0]/section[1]/div[0]/div[0]
 root/div[0]/section[1]/div[0]/div[0]/div[0]
@@ -769,9 +769,9 @@ root/div[0]/section[1]/div[0]/div[1]/div[0]/svg[0] aria-hidden="true"
 root/div[0]/section[1]/div[0]/div[1]/div[0]/svg[0]/rect[0]
 root/div[0]/section[1]/div[0]/div[1]/div[0]/svg[0]/path[0]
 root/div[0]/section[1]/div[0]/div[1]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/p[0]/text "Doar datele de Shopping"
+root/div[0]/section[1]/div[0]/div[1]/p[0]/text "Datele necesare auditului"
 root/div[0]/section[1]/div[0]/div[1]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/p[1]/text "Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive."
+root/div[0]/section[1]/div[0]/div[1]/p[1]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive."
 root/div[0]/section[1]/div[0]/div[2]
 root/div[0]/section[1]/div[0]/div[2]/div[0]
 root/div[0]/section[1]/div[0]/div[2]/div[0]/svg[0] aria-hidden="true"
@@ -1006,10 +1006,10 @@ root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[0]/text "lista conturilor de Google Ads la care ai acces, ca sa poti alege pe care il analizam"
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
-root/div[0]/div[0]/ul[0]/li[1]/text "produsele din campaniile de Shopping si datele lor pe ultimele 365 de zile: cheltuiala, afisari, conversii si valoarea vanzarilor"
+root/div[0]/div[0]/ul[0]/li[1]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[2]
 root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
-root/div[0]/div[0]/ul[0]/li[2]/text "modul in care sunt configurate conversiile din cont, ca sa iti putem spune daca masurarea e corecta"
+root/div[0]/div[0]/ul[0]/li[2]/text "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc."
 root/div[0]/div[0]/p[4]
 root/div[0]/div[0]/p[4]/b[0]
 root/div[0]/div[0]/p[4]/b[0]/text "Nu cerem si nu obtinem acces"
@@ -1017,7 +1017,7 @@ root/div[0]/div[0]/p[4]/text "la Gmail, Google Drive, contacte, calendar sau ori
 root/div[0]/div[0]/h2[2]
 root/div[0]/div[0]/h2[2]/text "Ce facem cu ele"
 root/div[0]/div[0]/p[5]
-root/div[0]/div[0]/p[5]/text "Le folosim intr-un singur scop: sa generam raportul pe care il vezi pe ecran — ce produse consuma buget fara sa vanda, ce produse nu au fost afisate niciodata si daca masurarea conversiilor e configurata corect. Analiza se face in momentul in care esti pe site."
+root/div[0]/div[0]/p[5]/text "Le folosim intr-un singur scop: sa generam raportul pe care il vezi pe ecran, folosind categoriile de date enumerate mai sus. Analiza se face in momentul in care esti pe site."
 root/div[0]/div[0]/p[6]
 root/div[0]/div[0]/p[6]/b[0]
 root/div[0]/div[0]/p[6]/b[0]/text "Nu stocam datele contului tau de Google Ads"
