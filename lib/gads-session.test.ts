@@ -1,7 +1,7 @@
 // LANG: pending full translation to EN
 import { describe, it, expect, beforeAll } from "vitest";
 import { createHmac } from "node:crypto";
-import { seal, unseal, SESSION_MAX_AGE } from "./gads-session";
+import { cookieOptions, seal, unseal, SESSION_MAX_AGE } from "./gads-session";
 
 // Cookie-ul asta poarta refresh token-ul prospectului. Daca semnatura poate fi falsificata,
 // cineva isi poate fabrica o sesiune. Testele apara exact asta.
@@ -111,7 +111,23 @@ describe("sesiunea prospectului", () => {
   });
 
   it("nu accepta o sesiune fara refresh token", () => {
-    const payload = Buffer.from(JSON.stringify({ exp: 9e9 })).toString("base64url");
-    expect(unseal(`${payload}.orice`)).toBeNull();
+    expect(unseal(signedSession({ exp: 9e9 }))).toBeNull();
+    expect(unseal(signedSession({ refreshToken: "token", exp: 1 }))).toBeNull();
+    const payload = Buffer.from("not-json").toString("base64url");
+    const signature = createHmac("sha256", "secret-de-test").update(payload).digest("base64url");
+    expect(unseal(`${payload}.${signature}`)).toBeNull();
+  });
+
+  it("uses a development fallback but refuses a missing production secret", () => {
+    const priorSecret = process.env.GADS_SESSION_SECRET;
+    const priorNodeEnv = process.env.NODE_ENV;
+    delete process.env.GADS_SESSION_SECRET;
+    process.env.NODE_ENV = "development";
+    expect(seal({ refreshToken: "token" })).toContain(".");
+    expect(cookieOptions().secure).toBe(false);
+    process.env.NODE_ENV = "production";
+    expect(() => seal({ refreshToken: "token" })).toThrow("GADS_SESSION_SECRET");
+    process.env.GADS_SESSION_SECRET = priorSecret;
+    process.env.NODE_ENV = priorNodeEnv;
   });
 });

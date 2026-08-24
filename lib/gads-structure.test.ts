@@ -136,3 +136,39 @@ describe("cont oprit", () => {
     expect(r.probleme.map((p) => p.cod)).toEqual(["cont-oprit"]);
   });
 });
+
+it("renders plural structure findings, low brand return, unknown reasons, and campaign capacity", () => {
+  const r = analizeazaStructura([
+    C({ nume: "No target A", tRoas: 0, cost: 400, conversii: 100, valoare: 100 }),
+    C({ nume: "No target B", tRoas: 0, cost: 400, conversii: 100, valoare: 100 }),
+    C({ nume: "Search - [BP]", cost: 60, conversii: 1, valoare: 80 }),
+    C({ nume: "Limited A", stare: "LIMITED", motive: ["CUSTOM_REASON"], cost: 80, conversii: 1 }),
+    C({ nume: "Limited B", stare: "LIMITED", motive: [], cost: 80, conversii: 1 }),
+  ]);
+  expect(r.probleme.find((problem) => problem.cod === "bidding-fara-tinta")?.ron).toBe(800);
+  expect(r.probleme.find((problem) => problem.cod === "brand-scurgere")).toBeDefined();
+  expect(r.probleme.find((problem) => problem.cod === "livrare-limitata")?.detaliu).toContain("custom reason");
+  const spread = analizeazaStructura(Array.from({ length: 5 }, (_, index) => C({ nume: `Campaign ${index}`, cost: 100, conversii: 1 })));
+  expect(spread.probleme.find((problem) => problem.cod === "prea-multe-campanii")).toBeDefined();
+});
+
+it("covers the zero-conversion capacity branch and a paused non-winner", () => {
+  const r = analizeazaStructura([
+    C({ nume: "Live", cost: 100, conversii: 0, valoare: 0 }),
+    C({ nume: "Paused", status: "PAUSED", cost: 0, conversii: 0, valoare: 10 }),
+  ]);
+  expect(r.probleme.some((problem) => problem.cod === "prea-multe-campanii")).toBe(false);
+  expect(r.probleme.some((problem) => problem.cod === "castigatori-opriti")).toBe(false);
+});
+
+it("renders an explicitly paused brand and plural learned campaign capacity", () => {
+  const pausedBrand = analizeazaStructura([
+    C({ nume: "Live", cost: 100, conversii: 1 }),
+    C({ nume: "Search - [BP]", status: "PAUSED", cost: 0, conversii: 0 }),
+  ]);
+  expect(pausedBrand.probleme.find((problem) => problem.cod === "brand-inactiv")).toBeDefined();
+
+  const campaigns = Array.from({ length: 70 }, (_, index) => C({ nume: `Campaign ${index}`, cost: 100, conversii: 1 }));
+  const spread = analizeazaStructura(campaigns);
+  expect(spread.probleme.find((problem) => problem.cod === "prea-multe-campanii")).toBeDefined();
+});

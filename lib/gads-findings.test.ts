@@ -269,6 +269,23 @@ describe("puncte de atac", () => {
     expect(rep.puncte[0].exemple).toContain("Canapea DeHome");
   });
 
+  it("renders singular brand impact and plural non-brand toxic impact", () => {
+    const cuvinte = {
+      negativeTotal: 3,
+      toxice: [
+        { cuvant: "brand", produseBlocate: 1, exemple: ["Brand product"], eBrand: true },
+        { cuvant: "chair", produseBlocate: 1, exemple: ["Chair"], eBrand: false },
+        { cuvant: "table", produseBlocate: 2, exemple: ["Table"], eBrand: false },
+      ],
+      risipa: [],
+      risipaTotal: 0,
+      areVizibilitateTermeni: true,
+    };
+    const report = buildReport(audit([], 4), OK_TRACKING, 25, 4, true, { cuvinte });
+    expect(report.puncte.find((point) => point.cod === "negativ-brand")?.exemple).toHaveLength(1);
+    expect(report.puncte.find((point) => point.cod === "negative-toxice")?.exemple).toHaveLength(2);
+  });
+
   it("banii din structura NU se aduna in cifra mare a raportului", () => {
     const structura = {
       campanii: [],

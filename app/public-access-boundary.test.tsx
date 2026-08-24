@@ -591,34 +591,7 @@ describe("public Google Ads access boundary", () => {
       normalizeNextRoute(source.replace(/\/layout\.tsx$/, "/page.tsx")).startsWith("/google-ads") ||
       ["/", "/hub", "/confidentialitate", "/termeni"].includes(normalizeNextRoute(source.replace(/\/layout\.tsx$/, "/page.tsx")))
     ));
-    const reachable = reachableSourceGraph(publicPageSources);
-    const observedSet = new Set<string>();
-    for (const source of reachable) {
-        const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
-        if (!sourceFile) continue;
-        let emitsJsx = false;
-        const visit = (node: ts.Node) => {
-          if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node) || ts.isJsxFragment(node)) {
-            emitsJsx = true;
-            const trace = (child: ts.Node) => {
-              if (ts.isIdentifier(child)) {
-                const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(child));
-                for (const declaration of symbol?.declarations ?? []) {
-                  const dependency = path.relative(process.cwd(), declaration.getSourceFile().fileName);
-                  if (reachable.includes(dependency)) observedSet.add(dependency);
-                }
-              }
-              ts.forEachChild(child, trace);
-            };
-            trace(node);
-          }
-          ts.forEachChild(node, visit);
-        };
-        visit(sourceFile);
-        if (emitsJsx) observedSet.add(source);
-    }
-    observedSet.add("lib/gads-public-oauth-contract.ts");
-    const observed = [...observedSet].sort();
+    const observed = reachableSourceGraph(publicPageSources).sort();
     if (process.env.UPDATE_PUBLIC_OUTPUT_REACHABLE_FILES === "1") {
       fs.writeFileSync(reachableOutputManifestPath, `${JSON.stringify({ files: observed }, null, 2)}\n`);
     }

@@ -106,3 +106,8 @@ describe("vizibilitate pe termeni", () => {
     expect(analizeazaCuvinte([], CATALOG, multi, "DeHome").areVizibilitateTermeni).toBe(true);
   });
 });
+
+it("skips empty negatives and orders multiple toxic terms by brand then product count", () => {
+  const result = analizeazaCuvinte(["", "canapea", "masa", "dehome"], CATALOG, [], "DeHome");
+  expect(result.toxice.map((item) => item.cuvant)).toEqual(["dehome", "canapea", "masa"]);
+});

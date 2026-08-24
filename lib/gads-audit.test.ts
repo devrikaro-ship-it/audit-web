@@ -1,6 +1,6 @@
 // LANG: pending full translation to EN
 import { describe, it, expect } from "vitest";
-import { audit, breakEvenRoas, suggestMargin, PRAG_CLICURI, type Product } from "./gads-audit";
+import { audit, breakEvenRoas, categoryId, suggestMargin, PRAG_CLICURI, type Product } from "./gads-audit";
 import { parseGrossMargin } from "./gads-margin";
 
 // Cele 12 teste portate din test_engine.py (repo audit-google-ads-devrika) — valorile
@@ -20,6 +20,10 @@ const P = (
 ): Product => ({
   productId, title: `Produs ${productId}`, cost, conversionValue, impressions, category,
   clicks, conversions,
+});
+
+it("returns no category for a nonnumeric taxonomy value", () => {
+  expect(categoryId("not-a-category")).toBeNull();
 });
 
 describe("clasificare", () => {

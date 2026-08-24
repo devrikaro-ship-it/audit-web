@@ -128,3 +128,23 @@ describe("ordonare", () => {
     expect(r.probleme[0].cod).toBe("extindere-url");
   });
 });
+
+it("renders plural and zero-cost findings plus every group reason fallback", () => {
+  const campaigns = [camp("A", { cost: 1 }), camp("B", { cost: 1 })];
+  const result = analizeazaPmax({
+    campanii: [
+      pmax("A", { extindereUrl: true, areListaBrand: false }),
+      pmax("B", { extindereUrl: true, areListaBrand: false }),
+    ],
+    grupuri: [
+      grup("A1", "A", { total: 1, motive: ["CUSTOM_REASON"] }),
+      grup("B1", "B", { total: 2, motive: ["CAMPAIGN_PAUSED", "ASSET_GROUP_DISAPPROVED"] }),
+      grup("B2", "B", { total: 8, motive: ["", "CAMPAIGN_PAUSED", "ASSET_GROUP_LIMITED"] }),
+    ],
+  }, campaigns);
+  expect(result.probleme.find((problem) => problem.cod === "extindere-url")?.exemple).toHaveLength(2);
+  expect(result.probleme.find((problem) => problem.cod === "grup-schelet")?.exemple).toHaveLength(2);
+  expect(result.probleme.find((problem) => problem.cod === "grup-franat")?.exemple?.join(" ")).toContain("custom reason");
+  const zeroCost = analizeazaPmax({ campanii: [pmax("Zero", { extindereUrl: true })], grupuri: [] }, [camp("Zero", { cost: 0 })]);
+  expect(zeroCost.probleme.find((problem) => problem.cod === "extindere-url")?.ron).toBe(0);
+});

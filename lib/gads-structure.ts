@@ -97,7 +97,7 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
   );
   if (faraTinta.reduce((s, c) => s + c.cost, 0) >= prag) {
     const bani = faraTinta.reduce((s, c) => s + c.cost, 0);
-    const cota = cheltuialaTotala > 0 ? Math.round((bani / cheltuialaTotala) * 100) : 0;
+    const cota = Math.round((bani / cheltuialaTotala) * 100);
     probleme.push({
       cod: "bidding-fara-tinta",
       titlu: `${faraTinta.length === 1 ? "O campanie liciteaza" : `${faraTinta.length} campanii liciteaza`} fara nicio tinta de randament`,
@@ -116,7 +116,7 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
   const brandLive = brand.filter((c) => c.status === "ENABLED");
   const brandCost = brandLive.reduce((s, c) => s + c.cost, 0);
   const brandVal = brandLive.reduce((s, c) => s + c.valoare, 0);
-  const brandCota = cheltuialaTotala > 0 ? (brandCost / cheltuialaTotala) * 100 : 0;
+  const brandCota = (brandCost / cheltuialaTotala) * 100;
   const brandRoas = brandCost > 0 ? brandVal / brandCost : 0;
 
   if (!brand.length) {
@@ -197,7 +197,7 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
   const opriteCuIstoric = campanii.filter((c) => c.status !== "ENABLED" && c.valoare > 0);
   const cheltuieAcum = live.some((c) => c.cost > 0);
   if (opriteCuIstoric.length && cheltuieAcum) {
-    const bune = opriteCuIstoric.filter((c) => c.cost > 0 && c.valoare / c.cost > (roasCont ?? 0));
+    const bune = opriteCuIstoric.filter((c) => c.cost > 0 && c.valoare / c.cost > roasCont!);
     if (bune.length) {
       probleme.push({
         cod: "castigatori-opriti",

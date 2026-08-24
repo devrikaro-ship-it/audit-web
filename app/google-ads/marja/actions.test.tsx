@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { cookieSet, seal, redirect } = vi.hoisted(() => ({
+const { cookieSet, seal, redirect, sessionState } = vi.hoisted(() => ({
   cookieSet: vi.fn(),
   seal: vi.fn(() => "sealed"),
   redirect: vi.fn((url: string) => { throw new Error(`REDIRECT ${url}`); }),
+  sessionState: { value: { refreshToken: "token", exp: 9e12 } as object | null },
 }));
 
 vi.mock("next/headers", () => ({
@@ -12,7 +13,7 @@ vi.mock("next/headers", () => ({
 vi.mock("next/navigation", () => ({ redirect }));
 vi.mock("@/lib/gads-session", async (original) => ({
   ...(await original<Record<string, unknown>>()),
-  unseal: () => ({ refreshToken: "token", exp: 9e12 }),
+  unseal: () => sessionState.value,
   seal,
 }));
 
@@ -25,7 +26,15 @@ const submission = (...values: unknown[]) => {
 };
 
 describe("gross margin server boundary", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    sessionState.value = { refreshToken: "token", exp: 9e12 };
+  });
+
+  it("redirects an absent session before reading margin input", async () => {
+    sessionState.value = null;
+    await expect(submission(28)).rejects.toThrow("REDIRECT /google-ads/connect?eroare=sesiune");
+  });
 
   it.each([undefined, "", "margin", "12 percent", "0x10", "1e1", 0, 0.5, 99.5, 100, "Infinity"])("refuses invalid input %s without sealing it", async (value) => {
     await expect(submission(value)).rejects.toThrow("REDIRECT /google-ads/marja?eroare=marja");

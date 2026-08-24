@@ -90,3 +90,16 @@ describe("migrarea automata catre AI Max", () => {
     expect(r.probleme.some((p) => p.cod === "ai-max-expunere")).toBe(false);
   });
 });
+
+it("renders plural findings and both sort outcomes", () => {
+  const result = analizeazaSearch({
+    campanii: [camp({ nume: "A", subtip: "SEARCH_DYNAMIC" }), camp({ nume: "B", potrivireLarga: true })],
+    reclame: [
+      rec({ campanie: "A", grup: "One", tip: "EXPANDED_TEXT_AD" }),
+      rec({ campanie: "B", grup: "Two", tip: "EXPANDED_DYNAMIC_SEARCH_AD" }),
+    ],
+  });
+  expect(result.probleme.find((problem) => problem.cod === "grup-fara-rsa")?.exemple).toHaveLength(2);
+  expect(result.probleme.find((problem) => problem.cod === "reclame-vechi")?.exemple).toHaveLength(2);
+  expect(result.probleme.find((problem) => problem.cod === "ai-max-expunere")?.exemple).toHaveLength(2);
+});

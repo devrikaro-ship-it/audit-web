@@ -94,3 +94,16 @@ describe("licitare si prioritati", () => {
     expect(r.probleme.some((p) => p.cod === "shopping-prioritate")).toBe(false);
   });
 });
+
+it("renders the moderate, singular-sale, and plural bidding outcomes", () => {
+  const moderate = analizeazaShopping(date({
+    produseCuAfisari: 3,
+    conversii30z: 1,
+    campanii: [
+      c("A", { bidding: "MANUAL_CPC" }),
+      c("B", { bidding: "MAXIMIZE_CLICKS", prioritate: 1 }),
+    ],
+  }), true);
+  expect(moderate.probleme.find((problem) => problem.cod === "diluare")?.grad).toBe("costa");
+  expect(moderate.probleme.find((problem) => problem.cod === "shopping-bidding")?.exemple).toHaveLength(2);
+});

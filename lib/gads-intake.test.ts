@@ -62,6 +62,10 @@ describe("join catalog <-> performanta", () => {
     const { products } = buildProducts([perf("A", 1_000_000, 400, 10)], [cat("A"), cat("B")]);
     expect(products.every((p) => p.productId)).toBe(true);
   });
+
+  it("uses a catalog identifier when the catalog title is absent", () => {
+    expect(buildProducts([], [{ itemId: "catalog-only", title: "" }]).products[0].title).toBe("catalog-only");
+  });
 });
 
 describe("interogari", () => {

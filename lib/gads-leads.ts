@@ -39,7 +39,7 @@ async function load(): Promise<GadsLead[]> {
 }
 
 async function persist(): Promise<void> {
-  const data = global.__gadsLeads ?? [];
+  const data = global.__gadsLeads!;
   await fs.mkdir(path.dirname(FILE), { recursive: true });
   const tmp = `${FILE}.tmp`;
   await fs.writeFile(tmp, JSON.stringify(data, null, 2), "utf8");

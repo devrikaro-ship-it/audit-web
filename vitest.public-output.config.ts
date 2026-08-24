@@ -12,7 +12,7 @@ export default defineConfig({
     include: ["lib/**/*.test.ts", "app/**/*.test.tsx"],
     coverage: {
       provider: "v8",
-      include: manifest.files.filter((file) => file.endsWith(".tsx") || file === "lib/gads-public-oauth-contract.ts"),
+      include: manifest.files,
       reporter: ["text", "json", "json-summary"],
       reportsDirectory: "coverage/public-output",
       thresholds: { branches: 100 },

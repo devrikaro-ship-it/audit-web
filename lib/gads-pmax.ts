@@ -73,7 +73,7 @@ export function analizeazaPmax(date: PmaxData, campanii: Campanie[]): PmaxAudit 
   // ── Google isi alege singur unde trimite clientul ──────────────────────────
   const cuExtindere = live.filter((c) => c.extindereUrl);
   if (cuExtindere.length) {
-    const bani = cuExtindere.reduce((s, c) => s + (cost.get(c.nume) ?? 0), 0);
+    const bani = cuExtindere.reduce((s, c) => s + cost.get(c.nume)!, 0);
     probleme.push({
       cod: "extindere-url",
       titlu: `${cuExtindere.length === 1 ? "O campanie trimite" : `${cuExtindere.length} campanii trimit`} clientii pe pagini alese de Google`,
@@ -95,7 +95,7 @@ export function analizeazaPmax(date: PmaxData, campanii: Campanie[]): PmaxAudit 
     probleme.push({
       cod: "pmax-fara-brand",
       titlu: `${faraBrand.length === 1 ? "O campanie" : `${faraBrand.length} campanii`} Performance Max cumpara traficul pe numele tau`,
-      ron: faraBrand.reduce((s, c) => s + (cost.get(c.nume) ?? 0), 0),
+      ron: faraBrand.reduce((s, c) => s + cost.get(c.nume)!, 0),
       grad: "costa",
       detaliu:
         `Oamenii care cauta direct numele magazinului tau te-ar gasi oricum, pe cel mai ieftin ` +
@@ -162,7 +162,7 @@ function traduMotivGrup(motive: string[]): string {
     CAMPAIGN_ENDED: "campania s-a incheiat",
   };
   const curate = motive.filter((m) => m && m !== "CAMPAIGN_PAUSED");
-  return curate.map((m) => t[m] ?? m.toLowerCase().replace(/_/g, " ")).join("; ") || "motiv neraportat";
+  return curate.map((m) => t[m] ?? m.toLowerCase().replace(/_/g, " ")).join("; ");
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
