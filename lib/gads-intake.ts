@@ -94,11 +94,11 @@ export function buildProducts(
   return { products, catalogComplete: true };
 }
 
-/** Interval [acum-N zile, azi] in formatul cerut de GAQL. `today` injectabil pentru teste. */
+/** Inclusive GAQL window containing exactly `zile` UTC calendar dates. */
 export function dateRange(today = new Date(), zile = WINDOW_DAYS): { from: string; to: string } {
   const to = new Date(today);
   const from = new Date(today);
-  from.setDate(from.getDate() - zile);
+  from.setUTCDate(from.getUTCDate() - (zile - 1));
   const iso = (d: Date) => d.toISOString().slice(0, 10);
   return { from: iso(from), to: iso(to) };
 }

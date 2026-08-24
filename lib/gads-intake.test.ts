@@ -53,10 +53,21 @@ describe("join catalog <-> performanta", () => {
 });
 
 describe("interogari", () => {
-  it("performanta acopera exact 12 luni", () => {
+  it("uses exactly 365 inclusive calendar dates for the 12-month window", () => {
     const { from, to } = dateRange(new Date("2026-08-06T12:00:00Z"));
     expect(to).toBe("2026-08-06");
-    expect(from).toBe("2025-08-06");
+    expect(from).toBe("2025-08-07");
+
+    const inclusiveDates =
+      (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000 + 1;
+    expect(inclusiveDates).toBe(365);
+  });
+
+  it("keeps every configured window exact under inclusive GAQL boundaries", () => {
+    expect(dateRange(new Date("2026-08-06T23:59:59Z"), 30)).toEqual({
+      from: "2026-07-08",
+      to: "2026-08-06",
+    });
   });
 
   it("catalogul NU e filtrat pe data — altfel produsele moarte dispar", () => {
