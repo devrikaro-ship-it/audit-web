@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Sora, Inter } from "next/font/google";
+import { publicOAuthProjection } from "@/lib/gads-public-oauth-contract";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,7 +27,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Audit gratuit pentru magazine online — Devrika",
-  description: "Afla in 2 minute de ce magazinul tau nu vinde cat ar putea: masurare, SEO, experienta si Google Ads/Shopping. Gratuit, fara cont.",
+  description: publicOAuthProjection.rootMetadata,
 };
 
 export default function RootLayout({

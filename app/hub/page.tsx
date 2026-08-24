@@ -2,7 +2,7 @@ import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
-import { publicOAuthAttributes, publicOAuthProjection } from "@/lib/gads-public-oauth-contract";
+import { publicOAuthAttributes, publicOAuthProjection, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
 // Pagina-umbrela: "Audit Devrika" = locul din care pleaca TOATE auditurile.
 // Serveste la radacina audit.devrika.ro (vezi rewrite-ul din next.config.ts) si e pagina
@@ -54,7 +54,6 @@ const audituri = [
 export default function Hub() {
   return (
     <div {...publicOAuthAttributes("hub")} className="overflow-x-hidden" style={{ fontFamily: inter }}>
-      <span className="sr-only">{publicOAuthProjection.surfaceDisclosure}</span>
 
       <nav className="fixed top-0 left-0 right-0 z-50 border-b px-8"
         style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(12px)", borderColor: "rgba(71,73,158,0.08)" }}>
@@ -89,8 +88,7 @@ export default function Hub() {
         </p>
         <p className="mx-auto mb-10 max-w-[660px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
           Alegi ce vrei analizat, iar acolo unde e nevoie iti conectezi contul de publicitate.
-          {publicOAuthProjection.applicationReadsData} <b>Nu modifica nimic</b> in conturile tale
-          si poti retrage accesul oricand.
+          {publicOAuthStatement("application-performs-no-mutations")} Poti retrage accesul oricand.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-2.5 text-[13px]" style={{ color: C.gray500 }}>

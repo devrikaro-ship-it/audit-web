@@ -20,7 +20,6 @@ const P = ({ children }: { children: React.ReactNode }) => (
 export default function Termeni() {
   return (
     <div {...publicOAuthAttributes("terms")} className="min-h-dvh px-6 py-14" style={{ fontFamily: inter, background: "#fff" }}>
-      <span className="sr-only">{publicOAuthProjection.surfaceDisclosure}</span>
       <div className="mx-auto w-full max-w-[720px]">
         <Link href="/google-ads" className="mb-9 flex items-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}

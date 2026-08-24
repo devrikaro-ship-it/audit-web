@@ -43,7 +43,6 @@ export default async function Conturi({
 
   return (
     <div {...publicOAuthAttributes("account-picker", requestedError ? "account-error" : errorDetails !== null ? "list-error" : "success")} className="min-h-dvh px-6 py-16" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
-      <span className="sr-only">{publicOAuthProjection.surfaceDisclosure}</span>
       <div className="mx-auto w-full max-w-[620px]">
         <Link href="/google-ads" className="mb-8 flex items-center justify-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}

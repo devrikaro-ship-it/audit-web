@@ -119,7 +119,6 @@ const safety = [
 export default function GoogleAdsLanding() {
   return (
     <div {...publicOAuthAttributes("landing")} className="overflow-x-hidden" style={{ fontFamily: inter }}>
-      <span className="sr-only">{publicOAuthProjection.surfaceDisclosure}</span>
 
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b px-8"

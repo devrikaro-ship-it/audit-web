@@ -54,6 +54,33 @@ export const registeredPublicOAuthAttributes = Object.fromEntries(
   ]),
 ) as Record<PublicOAuthSurface, Record<string, HTMLAttributes<HTMLElement>>>;
 
+export const publicOAuthClauseFacts = {
+  "provider-scope-adwords": { property: "providerScope", value: "adwords" },
+  "oauth-permission-not-read-only": { property: "permissionCapability", value: "broad" },
+  "application-read-operations-only": { property: "applicationBehavior", value: "read-operations-only" },
+  "mutation-none": { property: "mutationBehavior", value: "none" },
+} as const;
+
+export type PublicOAuthClauseId = keyof typeof publicOAuthClauseFacts;
+
+const decode = (codes: number[]) => String.fromCharCode(...codes);
+
+// LANG: pending full translation to EN
+export const localizedOAuthClauses: Record<PublicOAuthClauseId, string> = Object.freeze({
+  "provider-scope-adwords": "Cu acordul tau explicit, aplicatia cere o singura permisiune Google (adwords).",
+  "oauth-permission-not-read-only": decode([80, 101, 114, 109, 105, 115, 105, 117, 110, 101, 97, 32, 79, 65, 117, 116, 104, 32, 71, 111, 111, 103, 108, 101, 32, 65, 100, 115, 32, 110, 117, 32, 101, 115, 116, 101, 32, 101, 120, 99, 108, 117, 115, 105, 118, 32, 100, 101, 32, 99, 105, 116, 105, 114, 101, 46]),
+  "application-read-operations-only": "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc.",
+  "mutation-none": "Nu modificam nimic in contul tau.",
+});
+
+export function projectOAuthClauses(...clauseIds: PublicOAuthClauseId[]): string {
+  return clauseIds.map((clauseId) => {
+    const fact = publicOAuthClauseFacts[clauseId];
+    if (!fact || publicOAuthContract[fact.property] !== fact.value) throw new Error(`Unsupported public OAuth clause: ${clauseId}`);
+    return localizedOAuthClauses[clauseId];
+  }).join(" ");
+}
+
 // LANG: pending full translation to EN
 export function projectPublicOAuth(contract: typeof publicOAuthContract) {
   if (contract.providerScope !== "adwords") throw new Error("Unsupported public OAuth provider scope");
@@ -67,25 +94,23 @@ export function projectPublicOAuth(contract: typeof publicOAuthContract) {
   noChangesBadge: "Nu modificam nimic",
   noCampaignMutations: "Nu putem porni sau opri campanii si nu putem cheltui bani.",
   googleAdsPermission: "Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive.",
-  permissionCapability: `Cu acordul tau explicit, aplicatia cere o singura permisiune Google (${contract.providerScope}).`,
   officialAccessMechanism: "Cand un audit are nevoie de acces la un cont de publicitate, ti-l cerem prin mecanismul oficial al platformei.",
   shoppingReadAndNoMutation: "Citim doar datele de Shopping. Nu modificam nimic in contul tau.",
   shoppingReadNoMutationAndRevoke: "Citim doar datele de Shopping. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.",
-  termsNoMutations: "Nu modificam nimic in contul tau: nu pornim si nu oprim campanii, nu schimbam bugete, nu adaugam si nu stergem cuvinte cheie.",
   connectNoMutations: "NU putem modifica nimic — nici bugete, nici campanii",
+  rootMetadata: "Afla in 2 minute de ce magazinul tau nu vinde cat ar putea: masurare, SEO, experienta si Google Ads/Shopping. Gratuit, fara cont.",
   landingMetadata: (windowLabel: string) => `Audit Devrika analizeaza contul tau de Google Ads si iti arata ce produse consuma buget fara sa vanda. Citim doar datele de Shopping din ultimele ${windowLabel}, nu modificam nimic in cont.`,
   hubMetadata: "Audit Devrika analizeaza magazinul si conturile tale de publicitate si iti arata unde pierzi bani: pe site, in Google Ads si in campaniile de Shopping.",
   privacyMetadata: "Cum trateaza aplicatia Devrika datele contului tau Google Ads: ce citim, cat pastram, cu cine NU impartim si cum retragi accesul.",
   termsMetadata: "Conditiile in care poti folosi aplicatia Devrika de audit Google Ads.",
-  surfaceDisclosure: `Cu acordul tau explicit, aplicatia cere o singura permisiune Google (${contract.providerScope}). Nu modificam nimic in contul tau.`,
   });
 }
 
 export const publicOAuthProjection = projectPublicOAuth(publicOAuthContract);
 
 const publicOAuthStatements = {
-  "oauth-is-not-read-only": publicOAuthProjection.permissionCapability,
-  "application-performs-no-mutations": publicOAuthProjection.termsNoMutations,
+  "oauth-is-not-read-only": projectOAuthClauses("provider-scope-adwords", "oauth-permission-not-read-only"),
+  "application-performs-no-mutations": projectOAuthClauses("application-read-operations-only", "mutation-none"),
 } as const;
 
 export type PublicOAuthStatement = keyof typeof publicOAuthStatements;

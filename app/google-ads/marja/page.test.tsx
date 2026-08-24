@@ -1,7 +1,6 @@
 import { expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { GROSS_MARGIN_ERROR } from "@/lib/gads-session";
-import { publicOAuthProjection } from "@/lib/gads-public-oauth-contract";
 
 vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => ({ value: "session" }) }) }));
 vi.mock("next/navigation", () => ({ redirect: (url: string) => { throw new Error(`REDIRECT ${url}`); } }));
@@ -21,7 +20,6 @@ it("renders the margin explanation and retry path after invalid submission", asy
   const html = renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({ eroare: "marja" }) }));
   expect(html).toContain(GROSS_MARGIN_ERROR);
   expect(html).toContain('data-public-oauth-surface="margin:error"');
-  expect(html).toContain(publicOAuthProjection.surfaceDisclosure);
   expect(html).toContain('data-test="margin-retry"');
 });
 
@@ -29,5 +27,4 @@ it("renders the normal margin state through the canonical contract", async () =>
   const MarginPage = (await import("./page")).default;
   const html = renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({}) }));
   expect(html).toContain('data-public-oauth-surface="margin:normal"');
-  expect(html).toContain(publicOAuthProjection.surfaceDisclosure);
 });

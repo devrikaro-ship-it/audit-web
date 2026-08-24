@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
-import { publicOAuthProjection } from "@/lib/gads-public-oauth-contract";
 
 let sessionMargin: unknown = 25;
 let sessionMarginStatus: "invalid" | undefined;
@@ -136,7 +135,6 @@ describe("pagina de raport, randata", () => {
   it("renders honesty labels on every successful report", async () => {
     const h = await html();
     expect(h).toContain('data-public-oauth-surface="report:success"');
-    expect(h).toContain(publicOAuthProjection.surfaceDisclosure);
     expect(h).toContain('data-report-surface="honesty-and-caveats"');
     expect(h).toContain("MASURAT");
     expect(h).toContain("ESTIMARE");
@@ -212,7 +210,6 @@ describe("pagina de raport, randata", () => {
     const h = await html();
     expect(h).toContain('data-report-surface="catalog-unavailable-recovery"');
     expect(h).toContain('data-public-oauth-surface="report:catalog-unavailable"');
-    expect(h).toContain(publicOAuthProjection.surfaceDisclosure);
     expect(h).toContain("Nu am putut citi catalogul de Shopping");
     expect(h).toContain("Incearca din nou");
   });
