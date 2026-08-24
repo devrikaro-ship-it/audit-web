@@ -67,40 +67,69 @@ const parsedConfig = ts.parseJsonConfigFileContent(
 const sourceProgram = ts.createProgram(parsedConfig.fileNames, parsedConfig.options);
 const sourceChecker = sourceProgram.getTypeChecker();
 
-function staticString(node: ts.Expression): string | null {
-  if (ts.isStringLiteralLike(node)) return node.text;
+function staticStrings(node: ts.Expression, seen = new Set<ts.Node>()): string[] | null {
+  if (seen.has(node)) return null;
+  seen.add(node);
+  if (ts.isStringLiteralLike(node)) return [node.text];
   if (ts.isIdentifier(node)) {
     const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(node));
     const declaration = symbol?.valueDeclaration ?? symbol?.declarations?.[0];
-    if (declaration && ts.isVariableDeclaration(declaration) && declaration.initializer) return staticString(declaration.initializer);
+    if (declaration && ts.isVariableDeclaration(declaration) && declaration.initializer) return staticStrings(declaration.initializer, seen);
   }
-  if (ts.isParenthesizedExpression(node) || ts.isAsExpression(node)) return staticString(node.expression);
+  if (ts.isParenthesizedExpression(node) || ts.isAsExpression(node) || ts.isAwaitExpression(node)) return staticStrings(node.expression, seen);
+  if (ts.isConditionalExpression(node)) {
+    const whenTrue = staticStrings(node.whenTrue, new Set(seen));
+    const whenFalse = staticStrings(node.whenFalse, new Set(seen));
+    return whenTrue && whenFalse ? [...new Set([...whenTrue, ...whenFalse])] : null;
+  }
   if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
-    const left = staticString(node.left);
-    const right = staticString(node.right);
-    return left === null || right === null ? null : left + right;
+    const left = staticStrings(node.left, new Set(seen));
+    const right = staticStrings(node.right, new Set(seen));
+    return left && right ? left.flatMap((leftValue) => right.map((rightValue) => leftValue + rightValue)) : null;
   }
   if (ts.isTemplateExpression(node)) {
-    let value = node.head.text;
+    let values = [node.head.text];
     for (const span of node.templateSpans) {
-      const expression = staticString(span.expression);
-      if (expression === null) return null;
-      value += expression + span.literal.text;
+      const expressions = staticStrings(span.expression, new Set(seen));
+      if (!expressions) return null;
+      values = values.flatMap((value) => expressions.map((expression) => value + expression + span.literal.text));
     }
-    return value;
+    return values;
+  }
+  if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
+    const key = ts.isPropertyAccessExpression(node) ? node.name.text : node.argumentExpression && staticString(node.argumentExpression);
+    const owner = resolveExpression(node.expression, seen);
+    if (key && owner && ts.isObjectLiteralExpression(owner)) {
+      const property = owner.properties.find((candidate) => ts.isPropertyAssignment(candidate) && propertyName(candidate.name, owner.getSourceFile()) === key);
+      if (property && ts.isPropertyAssignment(property)) return staticStrings(property.initializer, seen);
+    }
+  }
+  if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression) && node.expression.name.text === "join") {
+    const owner = finalSymbol(sourceChecker.getSymbolAtLocation(node.expression.expression));
+    if (owner?.name === "path") {
+      const parts = node.arguments.map((argument) => staticStrings(argument, new Set(seen)));
+      if (parts.every((part): part is string[] => part !== null)) return parts.reduce<string[]>((values, part) => values.flatMap((value) => part.map((item) => path.posix.join(value, item))), [""]);
+    }
   }
   return null;
+}
+
+function staticString(node: ts.Expression): string | null {
+  const values = staticStrings(node);
+  return values?.length === 1 ? values[0] : null;
 }
 
 function moduleSpecifiers(sourceFile: ts.SourceFile): string[] {
   const specifiers: string[] = [];
   const visit = (node: ts.Node) => {
     if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier && ts.isExpression(node.moduleSpecifier)) {
-      const value = staticString(node.moduleSpecifier);
-      if (value !== null) specifiers.push(value);
+      const values = staticStrings(node.moduleSpecifier);
+      if (!values) throw new Error(`Unresolved module specifier: ${sourceFile.fileName}:${node.getStart(sourceFile)}`);
+      specifiers.push(...values);
     } else if (ts.isCallExpression(node) && (node.expression.kind === ts.SyntaxKind.ImportKeyword || (ts.isIdentifier(node.expression) && node.expression.text === "require"))) {
-      const value = node.arguments[0] && staticString(node.arguments[0]);
-      if (value !== null) specifiers.push(value);
+      const values = node.arguments[0] && staticStrings(node.arguments[0]);
+      if (!values) throw new Error(`Unresolved dynamic module specifier: ${sourceFile.fileName}:${node.getStart(sourceFile)}`);
+      specifiers.push(...values);
     }
     ts.forEachChild(node, visit);
   };
@@ -142,6 +171,65 @@ function finalSymbol(symbol: ts.Symbol | undefined): ts.Symbol | undefined {
   return current;
 }
 
+function propertyName(name: ts.PropertyName, sourceFile: ts.SourceFile): string | null {
+  if (ts.isComputedPropertyName(name)) return staticString(name.expression);
+  return name.getText(sourceFile).replace(/["']/g, "");
+}
+
+function functionReturns(node: ts.Node): ts.Expression[] {
+  if ((ts.isArrowFunction(node) || ts.isFunctionExpression(node)) && !ts.isBlock(node.body)) return [node.body];
+  const returns: ts.Expression[] = [];
+  const visit = (candidate: ts.Node) => {
+    if (candidate !== node && (ts.isFunctionLike(candidate) || ts.isClassLike(candidate))) return;
+    if (ts.isReturnStatement(candidate) && candidate.expression) returns.push(candidate.expression);
+    else ts.forEachChild(candidate, visit);
+  };
+  visit(node);
+  return returns;
+}
+
+function resolveExpression(node: ts.Expression, seen = new Set<ts.Node>()): ts.Expression | null {
+  if (seen.has(node)) return null;
+  seen.add(node);
+  if (ts.isParenthesizedExpression(node) || ts.isAsExpression(node) || ts.isAwaitExpression(node)) return resolveExpression(node.expression, seen);
+  if (ts.isIdentifier(node)) {
+    const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(node));
+    const declaration = symbol?.valueDeclaration ?? symbol?.declarations?.[0];
+    if (declaration && ts.isVariableDeclaration(declaration) && declaration.initializer) return resolveExpression(declaration.initializer, seen);
+    if (declaration && ts.isBindingElement(declaration)) {
+      const variable = declaration.parent.parent;
+      if (ts.isVariableDeclaration(variable) && variable.initializer) {
+        const owner = resolveExpression(variable.initializer, seen);
+        const key = declaration.propertyName ? propertyName(declaration.propertyName, declaration.getSourceFile()) : declaration.name.getText(declaration.getSourceFile());
+        if (owner && key && ts.isObjectLiteralExpression(owner)) {
+          const property = owner.properties.find((candidate) => ts.isPropertyAssignment(candidate) && propertyName(candidate.name, owner.getSourceFile()) === key);
+          if (property && ts.isPropertyAssignment(property)) return resolveExpression(property.initializer, seen);
+        }
+      }
+    }
+    return node;
+  }
+  if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
+    const owner = resolveExpression(node.expression, seen);
+    const key = ts.isPropertyAccessExpression(node) ? node.name.text : node.argumentExpression && staticString(node.argumentExpression);
+    if (owner && key && ts.isObjectLiteralExpression(owner)) {
+      const property = owner.properties.find((candidate) => ts.isPropertyAssignment(candidate) && propertyName(candidate.name, owner.getSourceFile()) === key);
+      if (property && ts.isPropertyAssignment(property)) return resolveExpression(property.initializer, seen);
+    }
+    return node;
+  }
+  if (ts.isCallExpression(node)) {
+    if (ts.isPropertyAccessExpression(node.expression) && node.expression.name.text === "resolve" && node.arguments[0]) return resolveExpression(node.arguments[0], seen);
+    const callable = finalSymbol(sourceChecker.getSymbolAtLocation(node.expression));
+    const declaration = callable?.valueDeclaration ?? callable?.declarations?.[0];
+    if (declaration) {
+      const returns = functionReturns(declaration);
+      if (returns.length === 1) return resolveExpression(returns[0], seen);
+    }
+  }
+  return node;
+}
+
 function expressionUsesProjection(node: ts.Node): boolean {
   let found = false;
   const visit = (candidate: ts.Node) => {
@@ -155,42 +243,129 @@ function expressionUsesProjection(node: ts.Node): boolean {
   return found;
 }
 
-function descriptionExpressions(sourceFile: ts.SourceFile): ts.Expression[] {
-  const expressions: ts.Expression[] = [];
-  const visit = (node: ts.Node) => {
-    if (ts.isPropertyAssignment(node)) {
-      const name = ts.isComputedPropertyName(node.name) ? staticString(node.name.expression) : node.name.getText(sourceFile).replace(/["']/g, "");
-      if (name === "description") expressions.push(node.initializer);
+function finalObjectValues(expression: ts.Expression, key: string, seen = new Set<ts.Node>()): ts.Expression[] | null {
+  if (seen.has(expression)) return null;
+  seen.add(expression);
+  const resolved = resolveExpression(expression, new Set(seen));
+  if (resolved && resolved !== expression) return finalObjectValues(resolved, key, seen);
+  if (ts.isConditionalExpression(expression)) {
+    const whenTrue = finalObjectValues(expression.whenTrue, key, new Set(seen));
+    const whenFalse = finalObjectValues(expression.whenFalse, key, new Set(seen));
+    return whenTrue && whenFalse ? [...whenTrue, ...whenFalse] : null;
+  }
+  if (ts.isCallExpression(expression)) {
+    const callable = finalSymbol(sourceChecker.getSymbolAtLocation(expression.expression));
+    const declaration = callable?.valueDeclaration ?? callable?.declarations?.[0];
+    if (!declaration) return null;
+    const returns = functionReturns(declaration);
+    const values = returns.map((returned) => finalObjectValues(returned, key, new Set(seen)));
+    return values.every((value): value is ts.Expression[] => value !== null) ? values.flat() : null;
+  }
+  if (!ts.isObjectLiteralExpression(expression)) return null;
+  let values: ts.Expression[] = [];
+  for (const member of expression.properties) {
+    if (ts.isSpreadAssignment(member)) {
+      const spreadValues = finalObjectValues(member.expression, key, new Set(seen));
+      if (spreadValues === null) return null;
+      if (spreadValues.length) values = spreadValues;
+      continue;
     }
-    ts.forEachChild(node, visit);
-  };
-  visit(sourceFile);
-  return expressions;
+    const name = propertyName(member.name, expression.getSourceFile());
+    if (name !== key) continue;
+    if (ts.isPropertyAssignment(member)) values = [member.initializer];
+    else if (ts.isShorthandPropertyAssignment(member)) values = [member.name];
+    else if (ts.isMethodDeclaration(member) || ts.isGetAccessorDeclaration(member)) values = functionReturns(member);
+    else return null;
+  }
+  return values;
+}
+
+function emittedMetadataValues(sourceFile: ts.SourceFile, key: "description" | "title"): ts.Expression[] {
+  const values: ts.Expression[] = [];
+  const moduleSymbol = sourceChecker.getSymbolAtLocation(sourceFile);
+  if (!moduleSymbol) return values;
+  for (const exported of sourceChecker.getExportsOfModule(moduleSymbol)) {
+    const symbol = finalSymbol(exported);
+    if (!symbol || (exported.name !== "metadata" && exported.name !== "generateMetadata")) continue;
+    const declaration = symbol.valueDeclaration ?? symbol.declarations?.[0];
+    if (!declaration) throw new Error(`Unresolved metadata export: ${sourceFile.fileName}:${exported.name}`);
+    const outputs = ts.isVariableDeclaration(declaration) && declaration.initializer
+      ? [declaration.initializer]
+      : functionReturns(declaration);
+    if (!outputs.length) throw new Error(`Metadata export has no statically reachable value: ${sourceFile.fileName}:${exported.name}`);
+    for (const output of outputs) {
+      const finalValues = finalObjectValues(output, key);
+      if (finalValues === null) throw new Error(`Unresolved final metadata ${key}: ${sourceFile.fileName}:${exported.name}`);
+      values.push(...finalValues);
+    }
+  }
+  return values;
 }
 
 function responseBodyEmitters(sourceFile: ts.SourceFile): ts.Node[] {
   const emitters: ts.Node[] = [];
-  const responseIdentity = (expression: ts.Expression): string | null => {
+  const responseIdentity = (expression: ts.Expression, seen = new Set<ts.Expression>()): string | null => {
+    if (seen.has(expression)) return null;
+    seen.add(expression);
+    const resolved = resolveExpression(expression);
+    if (resolved && resolved !== expression) return responseIdentity(resolved, seen);
     const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(expression));
     if (symbol?.name === "Response" || symbol?.name === "NextResponse") return symbol.name;
     const declaration = symbol?.valueDeclaration ?? symbol?.declarations?.[0];
-    if (declaration && ts.isVariableDeclaration(declaration) && declaration.initializer) return responseIdentity(declaration.initializer);
+    if (declaration && ts.isVariableDeclaration(declaration) && declaration.initializer) return responseIdentity(declaration.initializer, seen);
     if (ts.isPropertyAccessExpression(expression) || ts.isElementAccessExpression(expression)) {
       const memberSymbol = finalSymbol(sourceChecker.getSymbolAtLocation(expression));
       if (memberSymbol?.name === "Response" || memberSymbol?.name === "NextResponse") return memberSymbol.name;
     }
     return null;
   };
+  const responseJsonIdentity = (expression: ts.Expression): boolean => {
+    if (ts.isPropertyAccessExpression(expression) || ts.isElementAccessExpression(expression)) {
+      const member = ts.isPropertyAccessExpression(expression) ? expression.name.text : expression.argumentExpression && staticString(expression.argumentExpression);
+      return member === "json" && Boolean(responseIdentity(expression.expression));
+    }
+    const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(expression));
+    const declaration = symbol?.valueDeclaration ?? symbol?.declarations?.[0];
+    if (declaration && ts.isVariableDeclaration(declaration) && declaration.initializer) return responseJsonIdentity(declaration.initializer);
+    if (declaration && ts.isBindingElement(declaration)) {
+      const key = declaration.propertyName ? propertyName(declaration.propertyName, declaration.getSourceFile()) : declaration.name.getText(declaration.getSourceFile());
+      const variable = declaration.parent.parent;
+      return key === "json" && ts.isVariableDeclaration(variable) && Boolean(variable.initializer && responseIdentity(variable.initializer));
+    }
+    return false;
+  };
   const visit = (node: ts.Node) => {
     if (ts.isNewExpression(node) && responseIdentity(node.expression) === "Response") emitters.push(node);
-    if (ts.isCallExpression(node) && (ts.isPropertyAccessExpression(node.expression) || ts.isElementAccessExpression(node.expression))) {
-      const member = ts.isPropertyAccessExpression(node.expression) ? node.expression.name.text : node.expression.argumentExpression && staticString(node.expression.argumentExpression);
-      if (member === "json" && responseIdentity(node.expression.expression)) emitters.push(node);
-    }
+    if (ts.isCallExpression(node) && responseJsonIdentity(node.expression)) emitters.push(node);
     ts.forEachChild(node, visit);
   };
   visit(sourceFile);
   return emitters;
+}
+
+function freeBoundaryLiterals(sourceFile: ts.SourceFile): Array<{ text: string; position: number }> {
+  const literals: Array<{ text: string; position: number }> = [];
+  const hasProjectionProvenance = (node: ts.Node) => {
+    let current: ts.Node | undefined = node;
+    while (current && current !== sourceFile) {
+      if (ts.isCallExpression(current)) {
+        const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(current.expression));
+        if (symbol?.declarations?.some((declaration) => path.relative(process.cwd(), declaration.getSourceFile().fileName) === "lib/gads-public-oauth-contract.ts")) return true;
+      }
+      current = current.parent;
+    }
+    return false;
+  };
+  const visit = (node: ts.Node) => {
+    if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node) || ts.isImportTypeNode(node)) return;
+    const text = ts.isJsxText(node) ? node.text : ts.isStringLiteralLike(node) ? node.text : null;
+    if (text !== null && !hasProjectionProvenance(node) && (/\boauth\b/i.test(text) || /\badwords\b/i.test(text) || /\bpermission\b/i.test(text))) {
+      literals.push({ text, position: node.getStart(sourceFile) });
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return literals;
 }
 
 describe("public Google Ads access boundary", () => {
@@ -201,6 +376,13 @@ describe("public Google Ads access boundary", () => {
     expect(normalizeNextRoute("app/google-ads/current/(..)nou/page.tsx")).toBe("/google-ads/nou");
     expect(normalizeNextRoute("app/google-ads/a/b/(..)(..)nou/page.tsx")).toBe("/google-ads/nou");
     expect(normalizeNextRoute("app/google-ads/(...)nou/page.tsx")).toBe("/nou");
+  });
+
+  it("requires every dynamic module target to resolve to a finite source set", () => {
+    const finite = ts.createSourceFile("finite.ts", "void import(flag ? './first' : './second');", ts.ScriptTarget.Latest, true);
+    expect(moduleSpecifiers(finite).sort()).toEqual(["./first", "./second"]);
+    const unresolved = ts.createSourceFile("unresolved.ts", "void import('./copy/' + runtimeName);", ts.ScriptTarget.Latest, true);
+    expect(() => moduleSpecifiers(unresolved)).toThrow("Unresolved dynamic module specifier");
   });
   it("exposes the one closed executable OAuth contract", () => {
     expect(publicOAuthContract).toEqual({
@@ -308,8 +490,11 @@ describe("public Google Ads access boundary", () => {
         if (reachable.endsWith(".json")) throw new Error(`Unregistered public JSON emitter: ${reachable}`);
         const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), reachable));
         if (!sourceFile) throw new Error(`Source is outside the TypeScript program: ${reachable}`);
-        for (const description of descriptionExpressions(sourceFile)) {
+        for (const description of emittedMetadataValues(sourceFile, "description")) {
           expect(expressionUsesProjection(description), `${reachable}:${description.getStart(sourceFile)}`).toBe(true);
+        }
+        for (const title of emittedMetadataValues(sourceFile, "title")) {
+          expect(staticStrings(title) ?? (expressionUsesProjection(title) ? ["projected"] : null), `${reachable}:${title.getStart(sourceFile)}`).not.toBeNull();
         }
       }
     }
@@ -324,6 +509,11 @@ describe("public Google Ads access boundary", () => {
       expect(responseBodyEmitters(sourceFile), source).toEqual([]);
     }
     expect(reachableSourceGraph(pageRoots).filter((source) => source.endsWith(".json"))).toEqual([]);
+    for (const source of [...pageRoots, "lib/gads-localized-copy.ts"]) {
+      const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
+      if (!sourceFile) throw new Error(`Source is outside the TypeScript program: ${source}`);
+      expect(freeBoundaryLiterals(sourceFile), source).toEqual([]);
+    }
   });
 
   it("seals every registered state with the canonical capability attributes", () => {
