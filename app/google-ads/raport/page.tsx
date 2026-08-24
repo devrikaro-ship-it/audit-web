@@ -177,21 +177,23 @@ export default async function Raport() {
 
   return (
     <div className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
-      <div className="mx-auto w-full max-w-[780px]">
+      <main data-report-root className="mx-auto w-full max-w-[780px]">
+        <ReportSurface id="navigation" className="contents">
         <Link href="/google-ads" className="mb-8 flex items-center justify-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-devrika.png" alt="Devrika" width={34} height={34} className="h-[34px] w-[34px]" />
           <span className="text-base font-extrabold tracking-[-0.3px]" style={{ color: "#1e1b4b" }}>Devrika</span>
         </Link>
+        </ReportSurface>
 
-        {demo && (
-          // Un raport demo care se da drept cifrele lui e o minciuna care ajunge la un client.
-          // Banda sta sus, inaintea cifrei de impact, si nu se poate rata.
+        <ReportSurface id="demo-banner" when={reportGuards.demoBanner(demo)} className="contents">
+          {/* Un raport demo care se da drept cifrele lui e o minciuna care ajunge la un client.
+              Banda sta sus, inaintea cifrei de impact, si nu se poate rata. */}
           <div className="mb-4 rounded-xl px-5 py-3.5 text-center text-[13.5px] font-bold"
             style={{ background: C.yellowBg, color: C.yellow }}>
             MOD DEMO — cifrele de mai jos sunt simulate, nu vin din niciun cont real
           </div>
-        )}
+        </ReportSurface>
 
         {/* Cifra de impact */}
         <ReportSurface id="headline-summary" className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
@@ -202,8 +204,6 @@ export default async function Raport() {
             {lei(rep.headline.ron)}
           </p>
           <p className="text-[15.5px]" style={{ color: "rgba(255,255,255,0.9)" }}>{rep.headline.label}</p>
-        </ReportSurface>
-
         {/* Sumarul: ce urmeaza, inainte de detaliu */}
         <div className="mb-7 grid grid-cols-2 gap-px rounded-b-2xl border border-t-0 sm:grid-cols-4"
           style={{ borderColor: C.border, background: C.border }}>
@@ -226,8 +226,10 @@ export default async function Raport() {
             </div>
           ))}
         </div>
+        </ReportSurface>
 
         {/* ── Unde pierzi bani ── */}
+        <ReportSurface id="money-findings" className="contents">
         <SectionTitle nr="1" text="Unde pierzi bani" />
         <div className="mb-9 flex flex-col gap-3.5">
           {bani.map((f, i) => {
@@ -285,6 +287,7 @@ export default async function Raport() {
             );
           })}
         </div>
+        </ReportSurface>
 
         {/* ── Catalogul pe performanta ── */}
         <ReportSurface id="catalog-map" when={reportGuards.catalogMap(hartiCatalog.length)} className="contents">
@@ -410,7 +413,7 @@ export default async function Raport() {
             simulare drept fapt.
           </p>
         </ReportSurface>
-      </div>
+      </main>
     </div>
   );
 }

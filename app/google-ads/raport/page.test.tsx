@@ -39,7 +39,7 @@ const P = (id: string, cost: number, val: number, imp: number, clicks = 100): Pr
 const stareTracking = { ok: true, reasons: [] as string[], junkPrimary: [] as string[] };
 const sourceState = {
   primaryCatalogFails: false,
-  secondaryCatalogFails: false,
+  secondaryCatalogSuccessCount: Number.POSITIVE_INFINITY,
   structureAvailable: true,
   optionalModulesAvailable: true,
 };
@@ -50,7 +50,7 @@ vi.mock("@/lib/gads-intake", async (orig) => ({
   fetchShoppingProducts: async () => {
     catalogReadCount += 1;
     if (sourceState.primaryCatalogFails && catalogReadCount === 1) throw new Error("Google Ads API 401");
-    if (sourceState.secondaryCatalogFails && catalogReadCount > 1) throw new Error("Google Ads API 503");
+    if (catalogReadCount > sourceState.secondaryCatalogSuccessCount + 1) throw new Error("Google Ads API 503");
     return {
       products: [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0, 0), P("D", 50, 900, 300)],
       catalogComplete: true,
@@ -99,7 +99,7 @@ describe("pagina de raport, randata", () => {
     stareTracking.ok = true;
     stareTracking.reasons = [];
     sourceState.primaryCatalogFails = false;
-    sourceState.secondaryCatalogFails = false;
+    sourceState.secondaryCatalogSuccessCount = Number.POSITIVE_INFINITY;
     sourceState.structureAvailable = true;
     sourceState.optionalModulesAvailable = true;
     catalogReadCount = 0;
@@ -198,10 +198,14 @@ describe("pagina de raport, randata", () => {
   });
 
   it("exercises both catalog-map guard branches", async () => {
+    sourceState.secondaryCatalogSuccessCount = 0;
+    expect(await html()).not.toContain('data-report-surface="catalog-map"');
+    catalogReadCount = 0;
+    sourceState.secondaryCatalogSuccessCount = 1;
     expect(await html()).toContain('data-report-surface="catalog-map"');
     catalogReadCount = 0;
-    sourceState.secondaryCatalogFails = true;
-    expect(await html()).not.toContain('data-report-surface="catalog-map"');
+    sourceState.secondaryCatalogSuccessCount = 7;
+    expect(await html()).toContain('data-report-surface="catalog-map"');
   });
 
   it("exercises account, simulator, and contact availability branches", async () => {
