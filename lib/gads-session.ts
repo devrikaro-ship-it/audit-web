@@ -10,6 +10,9 @@
 // site; dupa aceea accesul nu ne mai trebuie, iar un token stocat degeaba e o raspundere.
 
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { parseGrossMargin, requireGrossMargin } from "./gads-margin";
+
+export { GROSS_MARGIN_ERROR, parseGrossMargin, requireGrossMargin } from "./gads-margin";
 
 export const SESSION_COOKIE = "gads_session";
 /** O ora: destul pentru un audit, nu destul cat sa devina un token uitat prin browser. */
@@ -47,6 +50,7 @@ function sign(payload: string): string {
 }
 
 export function seal(session: Omit<GadsSession, "exp">): string {
+  if (session.marginPct !== undefined) requireGrossMargin(session.marginPct);
   const withExp: GadsSession = { ...session, exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE };
   const payload = Buffer.from(JSON.stringify(withExp)).toString("base64url");
   return `${payload}.${sign(payload)}`;
@@ -67,6 +71,7 @@ export function unseal(raw: string | undefined): GadsSession | null {
   try {
     const s = JSON.parse(Buffer.from(payload, "base64url").toString()) as GadsSession;
     if (!s.refreshToken || s.exp * 1000 < Date.now()) return null;
+    if (s.marginPct !== undefined && parseGrossMargin(s.marginPct) === null) delete s.marginPct;
     return s;
   } catch {
     return null;

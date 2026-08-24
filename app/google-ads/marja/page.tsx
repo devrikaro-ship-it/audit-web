@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { C, sora, inter } from "@/lib/theme";
-import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
+import { GROSS_MARGIN_ERROR, unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import { fetchShoppingProducts } from "@/lib/gads-intake";
 import { suggestMargin } from "@/lib/gads-audit";
@@ -17,7 +17,12 @@ import MarginForm from "./MarginForm";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Marja ta · Audit Google Ads Devrika" };
 
-export default async function Marja() {
+export default async function Marja({
+  searchParams,
+}: {
+  searchParams: Promise<{ eroare?: string }>;
+}) {
+  const { eroare } = await searchParams;
   const jar = await cookies();
   const session = unseal(jar.get(SESSION_COOKIE)?.value);
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
@@ -67,6 +72,13 @@ export default async function Marja() {
               {sugestie.detected
                 ? `Am citit ${nrProduse} produse din contul tau si arata a ${sugestie.label}. Magazinele din categoria asta au tipic ${sugestie.marginPct}% — am pornit de acolo, schimba daca la tine e altfel.`
                 : `Am citit ${nrProduse} produse din contul tau, dar nu am putut deduce categoria. Am pus o valoare medie de ${sugestie.marginPct}% — pune-o pe a ta.`}
+            </p>
+          )}
+
+          {eroare === "marja" && (
+            <p className="mb-6 rounded-xl px-4 py-3 text-[13.5px] leading-relaxed"
+              style={{ background: C.yellowBg, color: C.yellow }}>
+              {GROSS_MARGIN_ERROR}
             </p>
           )}
 

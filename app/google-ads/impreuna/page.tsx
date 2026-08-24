@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { C, sora, inter } from "@/lib/theme";
-import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
+import { parseGrossMargin, unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import { fetchStructura } from "@/lib/gads-structure";
 import { citesteAn, bugetLunarDin, type TotaluriAn } from "@/lib/gads-an";
@@ -24,7 +24,8 @@ export default async function Impreuna() {
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.customerTimeZone) redirect("/google-ads/conturi");
-  if (!session.marginPct) redirect("/google-ads/marja");
+  const marginPct = parseGrossMargin(session.marginPct);
+  if (marginPct === null) redirect("/google-ads/marja");
 
   const { structura, an } = await citesteCifre(
     session.refreshToken,
@@ -62,7 +63,7 @@ export default async function Impreuna() {
           <Simulator
             bugetLunar={bugetLunarDin(an, structura.cheltuialaTotala)}
             roasAzi={an?.roas ?? structura.roasCont ?? 0}
-            marjaPct={session.marginPct}
+            marjaPct={marginPct}
           />
         ) : (
           <div className="rounded-2xl border bg-white p-7" style={{ borderColor: C.border }}>

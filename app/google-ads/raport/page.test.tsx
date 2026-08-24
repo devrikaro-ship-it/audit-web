@@ -4,6 +4,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 
+let sessionMargin: unknown = 25;
+
 // Randam PAGINA REALA, nu o copie a ei. Verificarea la nivel de date spune ca cifrele sunt
 // corecte; asta spune ca ajung pe ecran — tabelul de produse chiar apare, sectiunile chiar
 // exista, iar cazurile de margine (cont fara constatari, masurare stricata) nu strica pagina.
@@ -20,11 +22,12 @@ vi.mock("next/link", () => ({
 vi.mock("./ContactForm", () => ({ default: () => <form data-test="contact" /> }));
 vi.mock("./actions", () => ({ salveazaContact: async () => {} }));
 
-vi.mock("@/lib/gads-session", () => ({
+vi.mock("@/lib/gads-session", async (original) => ({
+  ...(await original<Record<string, unknown>>()),
   SESSION_COOKIE: "gads_session",
   unseal: () => ({
     refreshToken: "r", customerId: "123", customerName: "DeHome",
-    customerTimeZone: "Europe/Bucharest", loginCustomerId: "999", marginPct: 25, exp: 9e12,
+    customerTimeZone: "Europe/Bucharest", loginCustomerId: "999", marginPct: sessionMargin, exp: 9e12,
   }),
 }));
 vi.mock("@/lib/gads-oauth", () => ({
@@ -108,7 +111,13 @@ describe("pagina de raport, randata", () => {
     sourceState.structureAvailable = true;
     sourceState.optionalModulesAvailable = true;
     demoState.enabled = false;
+    sessionMargin = 25;
     catalogReadCount = 0;
+  });
+
+  it.each([undefined, "margin", 0, 0.5, 99.5, 100])("refuses invalid session margin %s before report calculations", async (margin) => {
+    sessionMargin = margin;
+    await expect(html()).rejects.toThrow("REDIRECT /google-ads/marja");
   });
 
 

@@ -1,5 +1,6 @@
 // LANG: pending full translation to EN
 import { describe, it, expect, beforeAll } from "vitest";
+import { createHmac } from "node:crypto";
 import { seal, unseal, SESSION_MAX_AGE } from "./gads-session";
 
 // Cookie-ul asta poarta refresh token-ul prospectului. Daca semnatura poate fi falsificata,
@@ -8,6 +9,12 @@ import { seal, unseal, SESSION_MAX_AGE } from "./gads-session";
 beforeAll(() => {
   process.env.GADS_SESSION_SECRET = "secret-de-test";
 });
+
+const signedSession = (session: Record<string, unknown>) => {
+  const payload = Buffer.from(JSON.stringify(session)).toString("base64url");
+  const signature = createHmac("sha256", "secret-de-test").update(payload).digest("base64url");
+  return `${payload}.${signature}`;
+};
 
 describe("sesiunea prospectului", () => {
   it("dus-intors pastreaza datele", () => {
@@ -21,6 +28,20 @@ describe("sesiunea prospectului", () => {
     expect(s?.customerId).toBe("999");
     expect(s?.customerTimeZone).toBe("Europe/Bucharest");
     expect(s?.marginPct).toBe(28);
+  });
+
+  it("preserves valid decimal margins and refuses invalid margins before signing", () => {
+    expect(unseal(seal({ refreshToken: "rt-123", marginPct: 28.5 }))?.marginPct).toBe(28.5);
+    for (const marginPct of [0, 0.5, 99.5, 100, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(() => seal({ refreshToken: "rt-123", marginPct })).toThrow(RangeError);
+    }
+  });
+
+  it("removes invalid margins from previously signed sessions", () => {
+    for (const marginPct of ["margin", 0, 0.5, 99.5, 100, null]) {
+      const raw = signedSession({ refreshToken: "rt-123", marginPct, exp: 9e9 });
+      expect(unseal(raw)?.marginPct).toBeUndefined();
+    }
   });
 
   it("respinge un cookie cu continut modificat", () => {

@@ -1,6 +1,7 @@
 // LANG: pending full translation to EN
 import { describe, it, expect } from "vitest";
 import { audit, breakEvenRoas, suggestMargin, PRAG_CLICURI, type Product } from "./gads-audit";
+import { parseGrossMargin } from "./gads-margin";
 
 // Cele 12 teste portate din test_engine.py (repo audit-google-ads-devrika) — valorile
 // asteptate sunt calculate de mana, nu preluate din output. Plus testele pentru stratul
@@ -111,6 +112,16 @@ describe("totaluri si cazuri limita", () => {
 });
 
 describe("pragul derivat din marja (nu-l mai intrebam pe om)", () => {
+  it("accepts only finite gross margins from 1 through 99 without changing valid decimals", () => {
+    expect(parseGrossMargin(1)).toBe(1);
+    expect(parseGrossMargin("28.5")).toBe(28.5);
+    expect(parseGrossMargin("28,5")).toBe(28.5);
+    expect(parseGrossMargin(99)).toBe(99);
+    for (const value of [undefined, null, "", "margin", "12 percent", "0x10", "1e1", Number.NaN, Number.POSITIVE_INFINITY, 0, -1, 0.5, 99.5, 100]) {
+      expect(parseGrossMargin(value)).toBeNull();
+    }
+  });
+
   it("break-even ROAS = 1 / marja", () => {
     expect(breakEvenRoas(50)).toBe(2); // marja 50% -> 2x
     expect(breakEvenRoas(25)).toBe(4); // marja 25% -> 4x
@@ -121,6 +132,8 @@ describe("pragul derivat din marja (nu-l mai intrebam pe om)", () => {
     expect(() => breakEvenRoas(0)).toThrow(RangeError);
     expect(() => breakEvenRoas(-10)).toThrow(RangeError);
     expect(() => breakEvenRoas(100)).toThrow(RangeError);
+    expect(() => breakEvenRoas(Number.NaN)).toThrow(RangeError);
+    expect(() => breakEvenRoas(Number.POSITIVE_INFINITY)).toThrow(RangeError);
   });
 
   it("marja mica cere ROAS mare — legatura care se explica in raport", () => {

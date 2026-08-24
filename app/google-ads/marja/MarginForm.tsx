@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { C, sora, brandGradient } from "@/lib/theme";
+import { GROSS_MARGIN_MAX, GROSS_MARGIN_MIN, GROSS_MARGIN_STEP } from "@/lib/gads-margin";
 
 // Sliderul care raspunde in timp real cu ROAS-ul minim. Momentul "aha" al fluxului: omul
 // misca marja si vede cum se schimba pragul sub care fiecare vanzare il costa bani.
@@ -35,9 +36,9 @@ export default function MarginForm({
         id="marja"
         name="marjaSlider"
         type="range"
-        min={5}
-        max={90}
-        step={1}
+        min={GROSS_MARGIN_MIN}
+        max={GROSS_MARGIN_MAX}
+        step={GROSS_MARGIN_STEP}
         value={pct}
         onChange={(e) => setPct(Number(e.target.value))}
         className="mb-1 w-full cursor-pointer"
@@ -45,8 +46,8 @@ export default function MarginForm({
         aria-describedby="prag"
       />
       <div className="mb-6 flex justify-between text-[12px]" style={{ color: C.gray400 }}>
-        <span>5% (electronice, volum mare)</span>
-        <span>90% (servicii, digital)</span>
+        <span>{GROSS_MARGIN_MIN}%</span>
+        <span>{GROSS_MARGIN_MAX}%</span>
       </div>
 
       <div id="prag" aria-live="polite" className="mb-7 rounded-xl px-5 py-4 text-center" style={{ background: "#f0f4ff" }}>

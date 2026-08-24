@@ -1,6 +1,7 @@
 // LANG: pending full translation to EN
 // Motorul auditului de Google Ads pe cont conectat (modul CONNECTED).
 // Functie PURA de (produse, marja) — fara I/O, fara API. Intake-ul si raportul stau in afara.
+import { requireGrossMargin } from "./gads-margin";
 // Portat 1:1 din engine.py (repo audit-google-ads-devrika), cu testele lui hand-computed.
 //
 // Diferenta fata de originalul Python: acolo clientul era intrebat direct ROAS-ul minim.
@@ -93,10 +94,7 @@ export const CSS_DELTA = 0.2;
  * @param marginPct marja bruta in procente (ex 30 pentru 30%)
  */
 export function breakEvenRoas(marginPct: number): number {
-  if (!(marginPct > 0) || marginPct >= 100) {
-    throw new RangeError("marja trebuie sa fie intre 1 si 99 la suta");
-  }
-  return 100 / marginPct;
+  return 100 / requireGrossMargin(marginPct);
 }
 
 /**

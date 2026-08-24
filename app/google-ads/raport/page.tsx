@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
-import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
+import { parseGrossMargin, unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import { AUDIT_WINDOW_LABEL, fetchShoppingProducts, FERESTRE } from "@/lib/gads-intake";
 import { fetchTracking } from "@/lib/gads-tracking";
@@ -128,7 +128,8 @@ export default async function Raport() {
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.customerTimeZone) redirect("/google-ads/conturi");
-  if (!session.marginPct) redirect("/google-ads/marja");
+  const marginPct = parseGrossMargin(session.marginPct);
+  if (marginPct === null) redirect("/google-ads/marja");
 
   const demo = demoOn();
   const s = await surse(session);
@@ -144,11 +145,11 @@ export default async function Raport() {
   const shopping = s.brutShop ? runReportStep("analizeazaShopping", () => analizeazaShopping(s.brutShop!, tracking.ok)) : undefined;
   const cautari = s.brutCautari ? runReportStep("analizeazaSearch", () => analizeazaSearch(s.brutCautari!)) : undefined;
 
-  const minRoas = runReportStep("breakEvenRoas", () => breakEvenRoas(session.marginPct!));
+  const minRoas = runReportStep("breakEvenRoas", () => breakEvenRoas(marginPct));
   const rep = runReportStep("buildReport", () => buildReport(
     runReportStep("audit", () => audit(products, minRoas)),
     tracking,
-    session.marginPct!,
+    marginPct,
     minRoas,
     catalogComplete,
     { structura, cuvinte, pmax, shopping, cautari, an }
