@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
-import { publicOAuthAttributes, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
+import { publicOAuthAttributes, publicOAuthProjection, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
 // Termenii APLICATIEI, pe acelasi host cu home page-ul declarat in consent screen.
 // Vezi nota din app/confidentialitate/page.tsx pentru motivul tehnic.
 
 export const metadata = {
   title: "Termeni si conditii — Audit Devrika",
-  description: "Conditiile in care poti folosi aplicatia Devrika de audit Google Ads.",
+  description: publicOAuthProjection.termsMetadata,
 };
 
 const H2 = ({ children }: { children: React.ReactNode }) => (
@@ -20,6 +20,7 @@ const P = ({ children }: { children: React.ReactNode }) => (
 export default function Termeni() {
   return (
     <div {...publicOAuthAttributes("terms")} className="min-h-dvh px-6 py-14" style={{ fontFamily: inter, background: "#fff" }}>
+      <span className="sr-only">{publicOAuthProjection.surfaceDisclosure}</span>
       <div className="mx-auto w-full max-w-[720px]">
         <Link href="/google-ads" className="mb-9 flex items-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}

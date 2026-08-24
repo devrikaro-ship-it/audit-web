@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
+import { publicOAuthProjection } from "@/lib/gads-public-oauth-contract";
 
 const { listAccountsMock } = vi.hoisted(() => ({
   listAccountsMock: vi.fn(async () => []),
@@ -36,6 +37,7 @@ describe("account selection recovery", () => {
     const Page = (await import("./page")).default;
     const html = renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }));
     expect(html).toContain('data-public-oauth-surface="account-picker:success"');
+    expect(html).toContain(publicOAuthProjection.surfaceDisclosure);
   });
 
   it("identifies selected-account data as unavailable after account selection", async () => {
@@ -46,6 +48,7 @@ describe("account selection recovery", () => {
     const explanation = html.match(/data-testid="account-read-error"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
     expect(html).toContain('data-error-kind="selected-account-data-unavailable"');
     expect(html).toContain('data-public-oauth-surface="account-picker:account-error"');
+    expect(html).toContain(publicOAuthProjection.surfaceDisclosure);
     expect(explanation).toBe(GADS_LOCALIZED_COPY.selectedAccountDataReadFailure);
     expect(explanation).not.toBe(GADS_LOCALIZED_COPY.accountListReadFailure);
     expect(html).toContain('href="/api/google-ads/start"');
@@ -76,6 +79,7 @@ describe("account selection recovery", () => {
     const explanation = html.match(/data-testid="account-read-error"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
     expect(html).toContain('data-error-kind="account-list-unavailable"');
     expect(html).toContain('data-public-oauth-surface="account-picker:list-error"');
+    expect(html).toContain(publicOAuthProjection.surfaceDisclosure);
     expect(explanation).toBe(GADS_LOCALIZED_COPY.accountListReadFailure);
   });
 });

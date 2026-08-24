@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
-import { publicOAuthAttributes, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
+import { publicOAuthAttributes, publicOAuthProjection, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
 // Politica de confidentialitate a APLICATIEI (nu a agentiei). Google o cere pe acelasi host
 // cu home page-ul declarat in consent screen si linkata DIN home page — cele doua tipare
@@ -13,9 +13,7 @@ import { publicOAuthAttributes, publicOAuthStatement } from "@/lib/gads-public-o
 
 export const metadata = {
   title: "Politica de confidentialitate — Audit Devrika",
-  description:
-    "Cum trateaza aplicatia Devrika datele contului tau Google Ads: ce citim, cat pastram, "
-    + "cu cine NU impartim si cum retragi accesul.",
+  description: publicOAuthProjection.privacyMetadata,
 };
 
 const H2 = ({ children }: { children: React.ReactNode }) => (
@@ -28,6 +26,7 @@ const P = ({ children }: { children: React.ReactNode }) => (
 export default function Confidentialitate() {
   return (
     <div {...publicOAuthAttributes("privacy")} className="min-h-dvh px-6 py-14" style={{ fontFamily: inter, background: "#fff" }}>
+      <span className="sr-only">{publicOAuthProjection.surfaceDisclosure}</span>
       <div className="mx-auto w-full max-w-[720px]">
         <Link href="/google-ads" className="mb-9 flex items-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}
