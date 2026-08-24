@@ -7,6 +7,14 @@ import { normalizePublicOutput } from "@/app/public-output-goldens";
 
 let sessionMargin: unknown = 25;
 let sessionMarginStatus: "invalid" | undefined;
+let sessionVariant: "valid" | "missing" | "account" | "timezone" = "valid";
+let tokenAvailable = true;
+let sessionCustomerName: string | undefined = "DeHome";
+let annualTotalsAvailable = false;
+let returnImprovementAvailable = true;
+let expandedCatalog = false;
+let demoWithoutWindows = false;
+let emptyCatalog = false;
 
 // Randam PAGINA REALA, nu o copie a ei. Verificarea la nivel de date spune ca cifrele sunt
 // corecte; asta spune ca ajung pe ecran — tabelul de produse chiar apare, sectiunile chiar
@@ -27,13 +35,13 @@ vi.mock("./actions", () => ({ salveazaContact: async () => {} }));
 vi.mock("@/lib/gads-session", async (original) => ({
   ...(await original<Record<string, unknown>>()),
   SESSION_COOKIE: "gads_session",
-  unseal: () => ({
-    refreshToken: "r", customerId: "123", customerName: "DeHome",
-    customerTimeZone: "Europe/Bucharest", loginCustomerId: "999", marginPct: sessionMargin, marginStatus: sessionMarginStatus, exp: 9e12,
+  unseal: () => sessionVariant === "missing" ? null : ({
+    refreshToken: "r", customerId: sessionVariant === "account" ? undefined : "123", customerName: sessionCustomerName,
+    customerTimeZone: sessionVariant === "timezone" ? undefined : "Europe/Bucharest", loginCustomerId: "999", marginPct: sessionMargin, marginStatus: sessionMarginStatus, exp: 9e12,
   }),
 }));
 vi.mock("@/lib/gads-oauth", () => ({
-  accessTokenFrom: async () => "token",
+  accessTokenFrom: async () => tokenAvailable ? "token" : Promise.reject(new Error("token")),
   oauthConfig: () => ({ developerToken: "dev" }),
 }));
 
@@ -58,11 +66,18 @@ vi.mock("@/lib/gads-intake", async (orig) => ({
     if (sourceState.primaryCatalogFails && catalogReadCount === 1) throw new Error("Google Ads API 401");
     if (catalogReadCount > sourceState.secondaryCatalogSuccessCount + 1) throw new Error("Google Ads API 503");
     return {
-      products: [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0, 0), P("D", 50, 900, 300)],
+      products: emptyCatalog ? [] : [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0, 0), P("D", 50, 900, 300), ...(expandedCatalog ? Array.from({ length: 20 }, (_, index) => P(`X${index}`, 100, 0, 100)) : [])],
       catalogComplete: true,
     };
   },
 }));
+vi.mock("@/lib/calc", async (orig) => {
+  const actual = await orig<{ roasImbunatatit: (...values: unknown[]) => number }>();
+  return {
+    ...actual,
+    roasImbunatatit: (...args: unknown[]) => returnImprovementAvailable ? actual.roasImbunatatit(...args) : null,
+  };
+});
 vi.mock("@/lib/gads-tracking", () => ({ fetchTracking: async () => stareTracking }));
 vi.mock("@/lib/gads-structure", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
@@ -92,12 +107,23 @@ vi.mock("@/lib/gads-keywords", async (orig) => ({
 }));
 vi.mock("@/lib/gads-an", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
-  citesteAn: async () => null,
+  citesteAn: async () => annualTotalsAvailable ? ({ roas: 4, cheltuiala: 1200 }) : null,
 }));
-vi.mock("@/lib/gads-demo", async (orig) => ({
-  ...(await orig<Record<string, unknown>>()),
+vi.mock("@/lib/gads-demo", async (orig) => {
+  const actual = await orig<{ demoData: () => unknown }>();
+  return {
+  ...actual,
   demoOn: () => demoState.enabled,
-}));
+  demoData: () => demoWithoutWindows ? ({
+    products: [P("DEMO", 100, 0, 100)],
+    catalogComplete: true,
+    tracking: stareTracking,
+    structura: { campanii: [], cheltuialaTotala: 100, roasCont: 1, probleme: [] },
+    an: null,
+    ferestre: undefined,
+  }) : actual.demoData(),
+};
+});
 
 async function html(): Promise<string> {
   const Raport = (await import("./page")).default;
@@ -122,7 +148,47 @@ describe("pagina de raport, randata", () => {
     demoState.enabled = false;
     sessionMargin = 25;
     sessionMarginStatus = undefined;
+    sessionVariant = "valid";
+    tokenAvailable = true;
+    sessionCustomerName = "DeHome";
+    annualTotalsAvailable = false;
+    returnImprovementAvailable = true;
+    expandedCatalog = false;
+    demoWithoutWindows = false;
+    emptyCatalog = false;
     catalogReadCount = 0;
+  });
+
+  it.each([
+    ["missing", "/google-ads/connect?eroare=sesiune"],
+    ["account", "/google-ads/conturi"],
+    ["timezone", "/google-ads/conturi"],
+  ] as const)("refuses the %s report session boundary", async (variant, destination) => {
+    sessionVariant = variant;
+    await expect(html()).rejects.toThrow(`REDIRECT ${destination}`);
+  });
+
+  it("redirects when the access token cannot be refreshed", async () => {
+    tokenAvailable = false;
+    await expect(html()).rejects.toThrow("REDIRECT /google-ads/connect?eroare=expirat");
+  });
+
+  it("renders annual totals and the anonymous account fallback", async () => {
+    annualTotalsAvailable = true;
+    sessionCustomerName = undefined;
+    expect(await html()).toBeTruthy();
+  });
+
+  it("renders fallback return and remaining-product output", async () => {
+    returnImprovementAvailable = false;
+    expandedCatalog = true;
+    expect(await html()).toBeTruthy();
+  });
+
+  it("renders a demo source without short-window data", async () => {
+    demoState.enabled = true;
+    demoWithoutWindows = true;
+    expect(await html()).toBeTruthy();
   });
 
   it("sends a truly missing pre-step margin through the normal margin flow", async () => {
@@ -230,6 +296,12 @@ describe("pagina de raport, randata", () => {
     const h = await html();
     expect(h).toContain("nu se poate judeca inca");
     expect(h).toContain("necunoscut");
+  });
+
+  it("renders an unsupported conclusion without product rows", async () => {
+    stareTracking.ok = false;
+    emptyCatalog = true;
+    expect(await html()).toBeTruthy();
   });
 
   it("renders the catalog map at one and many windows but not zero", async () => {

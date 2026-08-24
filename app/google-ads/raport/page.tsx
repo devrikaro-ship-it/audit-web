@@ -344,15 +344,13 @@ export default async function Raport() {
                 </span>
                 <h3 className="mb-2 text-[17px] font-bold leading-snug" style={{ fontFamily: sora, color: "#0f172a" }}>{f.title}</h3>
                 <p className="text-[14.5px] leading-relaxed" style={{ color: C.gray600 }}>{f.body}</p>
-                {f.produse?.length ? (
-                  <Tabel
-                    capete={["Produs", "Cheltuit", "Se intoarce"]}
-                    randuri={f.produse.map((p) => ({ cheie: p.titlu, celule: [p.titlu, lei(p.cost), "necunoscut"], alarma: false }))}
-                    restante={f.produseRestante}
-                    numeRestante="produse"
-                    incastrat
-                  />
-                ) : null}
+                <Tabel
+                  capete={["Produs", "Cheltuit", "Se intoarce"]}
+                  randuri={f.produse!.map((p) => ({ cheie: p.titlu, celule: [p.titlu, lei(p.cost), "necunoscut"], alarma: false }))}
+                  restante={f.produseRestante}
+                  numeRestante="produse"
+                  incastrat
+                />
               </article>
             ))}
         </ReportSurface>

@@ -3,10 +3,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
 import { normalizePublicOutput } from "@/app/public-output-goldens";
 
-const { listAccountsMock, demoOnMock, demoAccountsMock } = vi.hoisted(() => ({
+const { listAccountsMock, demoOnMock, demoAccountsMock, sessionState } = vi.hoisted(() => ({
   listAccountsMock: vi.fn(async () => []),
   demoOnMock: vi.fn(() => false),
   demoAccountsMock: vi.fn(() => []),
+  sessionState: { available: true },
 }));
 
 vi.mock("next/headers", () => ({
@@ -22,7 +23,7 @@ vi.mock("next/link", () => ({
 }));
 vi.mock("@/lib/gads-session", () => ({
   SESSION_COOKIE: "gads_session",
-  unseal: () => ({ refreshToken: "refresh", exp: 9e12 }),
+  unseal: () => sessionState.available ? ({ refreshToken: "refresh", exp: 9e12 }) : null,
 }));
 vi.mock("@/lib/gads-oauth", () => ({
   accessTokenFrom: async () => "access",
@@ -40,6 +41,18 @@ describe("account selection recovery", () => {
     listAccountsMock.mockResolvedValue([]);
     demoOnMock.mockReturnValue(false);
     demoAccountsMock.mockReturnValue([]);
+    sessionState.available = true;
+  });
+  it("redirects an absent picker session", async () => {
+    sessionState.available = false;
+    const Page = (await import("./page")).default;
+    await expect(Page({ searchParams: Promise.resolve({}) })).rejects.toThrow("REDIRECT /google-ads/connect?eroare=sesiune");
+  });
+
+  it("renders a non-Error account-list failure", async () => {
+    listAccountsMock.mockRejectedValue("failure");
+    const Page = (await import("./page")).default;
+    expect(renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }))).toBeTruthy();
   });
   it("renders the successful picker state through the canonical contract", async () => {
     const Page = (await import("./page")).default;

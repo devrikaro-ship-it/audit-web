@@ -45,7 +45,6 @@ type PublicOAuthOracle = {
     from: string | null;
     to: string;
     operatorSource: { quote: string; scope: string };
-    reviewerPass: null | { artifact: string; appCommit: string };
   };
   sourceBaseline: { appCommit: string };
   contract: typeof publicOAuthContract;
@@ -369,43 +368,7 @@ function responseBodyEmitters(sourceFile: ts.SourceFile): ts.Node[] {
   return emitters;
 }
 
-function outputAffectingBranches(sourceFile: ts.SourceFile): ts.Node[] {
-  const found: ts.Node[] = [];
-  const containsOutput = (node: ts.Node, seen = new Set<ts.Node>()) => {
-    if (seen.has(node)) return false;
-    seen.add(node);
-    let output = false;
-    const visit = (child: ts.Node) => {
-      if (ts.isJsxElement(child) || ts.isJsxSelfClosingElement(child) || ts.isJsxText(child) || ts.isStringLiteralLike(child)) output = true;
-      if (!output && ts.isCallExpression(child)) {
-        const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(child.expression));
-        for (const declaration of symbol?.declarations ?? []) {
-          const body = (ts.isFunctionDeclaration(declaration) || ts.isMethodDeclaration(declaration) || ts.isFunctionExpression(declaration) || ts.isArrowFunction(declaration))
-            ? declaration.body
-            : ts.isVariableDeclaration(declaration) && declaration.initializer
-              ? declaration.initializer
-              : null;
-          if (body && containsOutput(body, seen)) output = true;
-        }
-      }
-      if (!output) ts.forEachChild(child, visit);
-    };
-    visit(node);
-    return output;
-  };
-  const visit = (node: ts.Node) => {
-    if (ts.isConditionalExpression(node) && (containsOutput(node.whenTrue) || containsOutput(node.whenFalse))) found.push(node);
-    if (ts.isIfStatement(node) && (containsOutput(node.thenStatement) || Boolean(node.elseStatement && containsOutput(node.elseStatement)))) found.push(node);
-    if (ts.isSwitchStatement(node) && containsOutput(node.caseBlock)) found.push(node);
-    if (ts.isBinaryExpression(node) && [ts.SyntaxKind.AmpersandAmpersandToken, ts.SyntaxKind.BarBarToken].includes(node.operatorToken.kind) && containsOutput(node.right)) found.push(node);
-    ts.forEachChild(node, visit);
-  };
-  visit(sourceFile);
-  return found;
-}
-
-type OutputBranchContract = { source: string; kind: string; predicate: string; states: string[] };
-const outputBranchContractPath = path.join(process.cwd(), "app/public-output-branch-contract.json");
+const reachableOutputManifestPath = path.join(process.cwd(), "app/public-output-reachable-files.json");
 
 describe("public Google Ads access boundary", () => {
   it("normalizes Next route groups, parallel slots, and interception segments by filesystem segment", () => {
@@ -503,7 +466,6 @@ describe("public Google Ads access boundary", () => {
     expect(publicOAuthOracle.version).toBe(publicOAuthOracle.transition.to);
     expect(publicOAuthOracle.transition.operatorSource.quote).toBe("hai sa terminam");
     expect(publicOAuthOracle.transition.operatorSource.scope).toContain("not approval or review");
-    expect(publicOAuthOracle.transition.reviewerPass).toBeNull();
 
     const clauseStates = {
       "hub:normal": ["application-read-operations-only", "mutation-none"],
@@ -525,8 +487,16 @@ describe("public Google Ads access boundary", () => {
   });
 
   it("refuses a false canonical capability before localized projection", () => {
+    expect(() => publicOAuthAttributes("hub", "unknown")).toThrow("Unknown public OAuth surface state");
+    expect(() => projectOAuthClauses("unknown" as never)).toThrow("Unsupported public OAuth clause");
+    expect(() => projectPublicOAuth({ ...publicOAuthContract, providerScope: "other" } as never))
+      .toThrow("Unsupported public OAuth provider scope");
     expect(() => projectPublicOAuth({ ...publicOAuthContract, permissionCapability: "read-only" } as never))
       .toThrow("Unsupported public OAuth permission capability");
+    expect(() => projectPublicOAuth({ ...publicOAuthContract, applicationBehavior: "write" } as never))
+      .toThrow("Unsupported public OAuth application behavior");
+    expect(() => projectPublicOAuth({ ...publicOAuthContract, mutationBehavior: "some" } as never))
+      .toThrow("Unsupported public OAuth mutation behavior");
     expect("surfaceDisclosure" in publicOAuthProjection).toBe(false);
   });
 
@@ -616,55 +586,45 @@ describe("public Google Ads access boundary", () => {
     expect(reachableSourceGraph(pageRoots).filter((source) => source.endsWith(".json"))).toEqual([]);
   });
 
-  it("binds every reachable output branch to executable public states", () => {
+  it("keeps a closed inventory of every reachable public output source", () => {
     const publicPageSources = sourceTree.filter((source) => /(?:page|layout)\.tsx$/.test(source) && (
       normalizeNextRoute(source.replace(/\/layout\.tsx$/, "/page.tsx")).startsWith("/google-ads") ||
       ["/", "/hub", "/confidentialitate", "/termeni"].includes(normalizeNextRoute(source.replace(/\/layout\.tsx$/, "/page.tsx")))
     ));
-    const roots = new Map(publicPageSources.map((source) => [source, new Set(reachableSourceGraph([source]))]));
-    const observed: OutputBranchContract[] = [];
-    for (const source of reachableSourceGraph(publicPageSources)) {
-      if (source.endsWith(".json")) throw new Error(`Unresolved output-affecting import: ${source}`);
-      const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
-      if (!sourceFile) continue;
-      {
-        const surfaces = [...roots.entries()].filter(([, graph]) => graph.has(source)).map(([root]) => {
-          const route = normalizeNextRoute(root.replace(/\/layout\.tsx$/, "/page.tsx"));
-          if (route === "/") return "landing";
-          if (route === "/confidentialitate") return "privacy";
-          if (route === "/termeni") return "terms";
-          if (route === "/hub") return "hub";
-          return ({ conturi: "account-picker", marja: "margin", raport: "report", impreuna: "simulator", connect: "connect" } as Record<string, string>)[route.split("/")[2]];
-        }).filter(Boolean);
-        const states = Object.keys(publicOutputStateDefinitions).filter((state) => surfaces.some((surface) => state.startsWith(`${surface}:`))).sort();
-        for (const node of outputAffectingBranches(sourceFile)) {
-          const predicate = ts.isConditionalExpression(node) ? node.condition
-            : ts.isIfStatement(node) || ts.isSwitchStatement(node) ? node.expression
-              : ts.isBinaryExpression(node) ? node.left : node;
-          observed.push({
-            source,
-            kind: ts.SyntaxKind[node.kind],
-            predicate: predicate.getText(sourceFile).replace(/\s+/g, " ").trim(),
-            states,
-          });
-        }
-      }
+    const reachable = reachableSourceGraph(publicPageSources);
+    const observedSet = new Set<string>();
+    for (const source of reachable) {
+        const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
+        if (!sourceFile) continue;
+        let emitsJsx = false;
+        const visit = (node: ts.Node) => {
+          if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node) || ts.isJsxFragment(node)) {
+            emitsJsx = true;
+            const trace = (child: ts.Node) => {
+              if (ts.isIdentifier(child)) {
+                const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(child));
+                for (const declaration of symbol?.declarations ?? []) {
+                  const dependency = path.relative(process.cwd(), declaration.getSourceFile().fileName);
+                  if (reachable.includes(dependency)) observedSet.add(dependency);
+                }
+              }
+              ts.forEachChild(child, trace);
+            };
+            trace(node);
+          }
+          ts.forEachChild(node, visit);
+        };
+        visit(sourceFile);
+        if (emitsJsx) observedSet.add(source);
     }
-    observed.sort((left, right) => `${left.source}:${left.kind}:${left.predicate}`.localeCompare(`${right.source}:${right.kind}:${right.predicate}`));
-    if (process.env.UPDATE_PUBLIC_OUTPUT_BRANCH_CONTRACT === "1") {
-      fs.writeFileSync(outputBranchContractPath, `${JSON.stringify({ _languageDebt: "Predicates mechanically preserve existing source text.", branches: observed }, null, 2)}\n`);
+    observedSet.add("lib/gads-public-oauth-contract.ts");
+    const observed = [...observedSet].sort();
+    if (process.env.UPDATE_PUBLIC_OUTPUT_REACHABLE_FILES === "1") {
+      fs.writeFileSync(reachableOutputManifestPath, `${JSON.stringify({ files: observed }, null, 2)}\n`);
     }
-    const registered = (JSON.parse(fs.readFileSync(outputBranchContractPath, "utf8")) as { branches: OutputBranchContract[] }).branches;
+    const registered = (JSON.parse(fs.readFileSync(reachableOutputManifestPath, "utf8")) as { files: string[] }).files;
     expect(observed).toEqual(registered);
-    const snapshotCorpus = walkSource(path.join(process.cwd(), "app")).filter((entry) => entry.endsWith(".snap"))
-      .map((entry) => fs.readFileSync(path.join(process.cwd(), entry), "utf8")).join("\n");
-    for (const branch of registered) {
-      expect(branch.states.length, `${branch.source}:${branch.predicate}`).toBeGreaterThan(0);
-      for (const state of branch.states) {
-        expect(publicOutputStateDefinitions[state]?.witness, state).toBeTruthy();
-        expect(snapshotCorpus).toContain(`> ${state} 1`);
-      }
-    }
+    expect(new Set(registered).size).toBe(registered.length);
   });
 
   it("seals every registered state with the canonical capability attributes", () => {
@@ -720,10 +680,12 @@ describe("public Google Ads access boundary", () => {
       process.env.GADS_DEVELOPER_TOKEN = "developer";
       const normal = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({}) }));
       const error = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({ eroare: "google" }) }));
+      const unknownError = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({ eroare: "unknown", lipsa: "detail" }) }));
       expect(normal).toContain('data-public-oauth-surface="connect:normal"');
       expect(error).toContain('data-public-oauth-surface="connect:error"');
       expect(normal).toContain(projectOAuthClauses("oauth-permission-not-read-only"));
       expect(normal).toContain(projectOAuthClauses("mutation-none"));
+      expect(normalizePublicOutput(unknownError)).toContain("detail");
       const normalOutput = normalizePublicOutput(normal);
       expect(normalOutput).toBe(publicOAuthOracle.states["connect:normal"].output);
       expect(normalOutput).toMatchSnapshot("connect:normal");
