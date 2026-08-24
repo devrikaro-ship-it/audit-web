@@ -27,6 +27,7 @@ import type { PmaxData } from "@/lib/gads-pmax";
 import type { ShoppingData } from "@/lib/gads-shopping";
 import type { SearchData } from "@/lib/gads-search";
 import type { TermenBrut } from "@/lib/gads-keywords";
+import { ReportSurface, reportGuards, runReportStep } from "./report-contract";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Raportul tau · Audit Google Ads Devrika" };
@@ -96,19 +97,19 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
   // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
   // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
   const [catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari, an, ferestre] = await Promise.all([
-    fetchShoppingProducts(customerId, auth, customerTimeZone).catch(() => null),
-    fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT),
-    fetchStructura(customerId, auth).catch(() => undefined),
-    fetchKeywordData(customerId, auth).catch(() => undefined),
-    fetchPmaxData(customerId, auth).catch(() => undefined),
-    fetchShoppingData(customerId, auth).catch(() => undefined),
-    fetchSearchData(customerId, auth).catch(() => undefined),
-    citesteAn(customerId, auth, customerTimeZone),
+    runReportStep("fetchShoppingProducts", () => fetchShoppingProducts(customerId, auth, customerTimeZone).catch(() => null)),
+    runReportStep("fetchTracking", () => fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT)),
+    runReportStep("fetchStructura", () => fetchStructura(customerId, auth).catch(() => undefined)),
+    runReportStep("fetchKeywordData", () => fetchKeywordData(customerId, auth).catch(() => undefined)),
+    runReportStep("fetchPmaxData", () => fetchPmaxData(customerId, auth).catch(() => undefined)),
+    runReportStep("fetchShoppingData", () => fetchShoppingData(customerId, auth).catch(() => undefined)),
+    runReportStep("fetchSearchData", () => fetchSearchData(customerId, auth).catch(() => undefined)),
+    runReportStep("citesteAn", () => citesteAn(customerId, auth, customerTimeZone)),
     // Harta catalogului se citeste pe ferestre scurte, deci le cerem pe toate odata: patru
     // interogari in paralel costa cat cea mai lenta dintre ele, iar omul comuta apoi instant.
     Promise.all(
       FERESTRE.map((w) =>
-        fetchShoppingProducts(customerId, auth, customerTimeZone, new Date(), w.zile)
+        runReportStep("fetchShoppingProducts", () => fetchShoppingProducts(customerId, auth, customerTimeZone, new Date(), w.zile))
           .then((r) => ({ zile: w.zile, eticheta: w.eticheta, products: r.products }))
           .catch(() => null)
       )
@@ -137,21 +138,21 @@ export default async function Raport() {
   // Doar potrivirile care au nevoie de alt rezultat se fac dupa: cuvintele au nevoie de
   // catalog, PMax de cheltuiala pe campanie.
   const cuvinte = s.brutCuvinte
-    ? analizeazaCuvinte(s.brutCuvinte.negative, products, s.brutCuvinte.termeni, session.customerName)
+    ? runReportStep("analizeazaCuvinte", () => analizeazaCuvinte(s.brutCuvinte!.negative, products, s.brutCuvinte!.termeni, session.customerName))
     : undefined;
-  const pmax = s.brutPmax && structura ? analizeazaPmax(s.brutPmax, structura.campanii) : undefined;
-  const shopping = s.brutShop ? analizeazaShopping(s.brutShop, tracking.ok) : undefined;
-  const cautari = s.brutCautari ? analizeazaSearch(s.brutCautari) : undefined;
+  const pmax = s.brutPmax && structura ? runReportStep("analizeazaPmax", () => analizeazaPmax(s.brutPmax!, structura.campanii)) : undefined;
+  const shopping = s.brutShop ? runReportStep("analizeazaShopping", () => analizeazaShopping(s.brutShop!, tracking.ok)) : undefined;
+  const cautari = s.brutCautari ? runReportStep("analizeazaSearch", () => analizeazaSearch(s.brutCautari!)) : undefined;
 
-  const minRoas = breakEvenRoas(session.marginPct);
-  const rep = buildReport(
-    audit(products, minRoas),
+  const minRoas = runReportStep("breakEvenRoas", () => breakEvenRoas(session.marginPct!));
+  const rep = runReportStep("buildReport", () => buildReport(
+    runReportStep("audit", () => audit(products, minRoas)),
     tracking,
-    session.marginPct,
+    session.marginPct!,
     minRoas,
     catalogComplete,
     { structura, cuvinte, pmax, shopping, cautari, an }
-  );
+  ));
 
   // Harta catalogului, cate una pe fereastra. Pragul de trafic e acelasi pe toate: intrebarea
   // "am destule date cat sa judec produsul asta" nu se schimba cu lungimea ferestrei.
@@ -159,15 +160,15 @@ export default async function Raport() {
     .filter((w): w is NonNullable<typeof w> => w !== null)
     .map((w) => ({
       eticheta: w.eticheta,
-      segmentare: segmenteaza(audit(w.products, minRoas), tracking.ok),
+      segmentare: runReportStep("segmenteaza", () => segmenteaza(runReportStep("audit", () => audit(w.products, minRoas)), tracking.ok)),
     }));
 
   // Ipoteza casei pentru sectiunea "Cu Devrika": CPC -20% si conversie +20%, adica exact ce
   // misca omul cu cursoarele in pagina urmatoare. Cifra vine din acelasi motor, nu dintr-un
   // inmultitor scris de mana aici.
-  const bugetLunar = bugetLunarDin(an ?? null, structura?.cheltuialaTotala ?? 0);
+  const bugetLunar = runReportStep("bugetLunarDin", () => bugetLunarDin(an ?? null, structura?.cheltuialaTotala ?? 0));
   const roasAzi = an?.roas ?? structura?.roasCont ?? 0;
-  const venitInPlusLunar = Math.round(bugetLunar * ((roasImbunatatit(roasAzi, 20, 20) ?? roasAzi) - roasAzi));
+  const venitInPlusLunar = Math.round(bugetLunar * ((runReportStep("roasImbunatatit", () => roasImbunatatit(roasAzi, 20, 20)) ?? roasAzi) - roasAzi));
 
   // Doua sectiuni, nu o lista plata: banii pierduti si setarile de reparat sunt lucruri
   // diferite, iar un om care le vede amestecate nu stie ce sa faca luni dimineata.
@@ -193,7 +194,7 @@ export default async function Raport() {
         )}
 
         {/* Cifra de impact */}
-        <div data-report-surface="headline-summary" className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
+        <ReportSurface id="headline-summary" className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
           <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.8)" }}>
             {session.customerName || "Contul tau"} · {AUDIT_WINDOW_LABEL}
           </p>
@@ -201,7 +202,7 @@ export default async function Raport() {
             {lei(rep.headline.ron)}
           </p>
           <p className="text-[15.5px]" style={{ color: "rgba(255,255,255,0.9)" }}>{rep.headline.label}</p>
-        </div>
+        </ReportSurface>
 
         {/* Sumarul: ce urmeaza, inainte de detaliu */}
         <div className="mb-7 grid grid-cols-2 gap-px rounded-b-2xl border border-t-0 sm:grid-cols-4"
@@ -286,16 +287,13 @@ export default async function Raport() {
         </div>
 
         {/* ── Catalogul pe performanta ── */}
-        {hartiCatalog.length > 0 && (
-          <div data-report-surface="catalog-map" className="contents">
+        <ReportSurface id="catalog-map" when={reportGuards.catalogMap(hartiCatalog.length)} className="contents">
             <SectionTitle nr="2" text="Cum sta catalogul tau" />
             <CatalogPePerformanta harti={hartiCatalog} />
-          </div>
-        )}
+        </ReportSurface>
 
         {/* ── Setari gresite ── */}
-        {rep.puncte.length > 0 && (
-          <div data-report-surface="account-settings" className="contents">
+        <ReportSurface id="account-settings" when={reportGuards.accountSettings(rep.puncte.length)} className="contents">
             <SectionTitle nr="3" text="Ce e setat gresit in cont" />
             <p className="mb-4 text-[14px] leading-relaxed" style={{ color: C.gray500 }}>
               Astea nu sunt bani deja pierduti, ci robinete deschise gresit. Sumele arata cat
@@ -328,12 +326,10 @@ export default async function Raport() {
                 );
               })}
             </div>
-          </div>
-        )}
+        </ReportSurface>
 
         {/* ── Ce nu se poate judeca inca ── */}
-        {nejudecabile.length > 0 && (
-          <div data-report-surface="unsupported-conclusions" className="mb-9 flex flex-col gap-3">
+        <ReportSurface id="unsupported-conclusions" when={reportGuards.unsupportedConclusions(nejudecabile.length)} className="mb-9 flex flex-col gap-3">
             {nejudecabile.map((f) => (
               <article key={f.key} className="overflow-hidden rounded-xl border p-6" style={{ borderColor: "#e2e8f0", background: "#fafbff" }}>
                 <span className="mb-3 inline-block rounded-full px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide" style={{ background: "#f1f5f9", color: C.gray600 }}>
@@ -352,15 +348,13 @@ export default async function Raport() {
                 ) : null}
               </article>
             ))}
-          </div>
-        )}
+        </ReportSurface>
 
         {/* ── Cu Devrika ── */}
         {/* Sectiune intreaga, nu un buton in subsol: e a doua jumatate a discutiei, dupa ce omul
             a vazut ce pierde. Cifra de aici e SIMULARE si o spune, iar detaliul se joaca in
             pagina lui, unde el misca ipoteza si completeaza pretul din oferta. */}
-        {structura && structura.roasCont ? (
-          <div data-report-surface="simulator-call-to-action" className="mb-6 overflow-hidden rounded-2xl" style={{ background: brandGradient }}>
+        <ReportSurface id="simulator-call-to-action" when={reportGuards.simulator(Boolean(structura), structura?.roasCont ?? 0)} className="mb-6 overflow-hidden rounded-2xl" style={{ background: brandGradient }}>
             <div className="p-8 text-center text-white">
               <p className="mb-2 text-[12.5px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.75)" }}>
                 Simulare · cu Devrika, la acelasi buget
@@ -382,11 +376,10 @@ export default async function Raport() {
                 </svg>
               </Link>
             </div>
-          </div>
-        ) : null}
+        </ReportSurface>
 
         {/* Contact — dupa ce a vazut valoarea, nu inainte */}
-        <div data-report-surface="contact-form" className="mb-6 rounded-2xl border bg-white p-7" style={{ borderColor: C.border }}>
+        <ReportSurface id="contact-form" className="mb-6 rounded-2xl border bg-white p-7" style={{ borderColor: C.border }}>
           <h2 className="mb-2 text-[19px] font-bold" style={{ fontFamily: sora, color: "#0f172a" }}>
             Vrei sa iti aratam si cum se repara?
           </h2>
@@ -395,10 +388,10 @@ export default async function Raport() {
             ordinea in care merita atacate. Fara obligatii.
           </p>
           <ContactForm action={salveazaContact} />
-        </div>
+        </ReportSurface>
 
         {/* Onestitate */}
-        <div data-report-surface="honesty-and-caveats" className="rounded-2xl border p-6" style={{ borderColor: C.border, background: "#fafbff" }}>
+        <ReportSurface id="honesty-and-caveats" className="rounded-2xl border p-6" style={{ borderColor: C.border, background: "#fafbff" }}>
           <h2 className="mb-3 text-[15px] font-bold" style={{ fontFamily: sora, color: "#0f172a" }}>
             Ce nu am putut verifica
           </h2>
@@ -416,7 +409,7 @@ export default async function Raport() {
             plafon optimist si incasari, niciodata profit. Nu prezentam niciodata o estimare sau o
             simulare drept fapt.
           </p>
-        </div>
+        </ReportSurface>
       </div>
     </div>
   );
@@ -428,7 +421,7 @@ export default async function Raport() {
  */
 function Indisponibil() {
   return (
-    <div data-report-surface="catalog-unavailable-recovery" data-report-alternative className="flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center"
+    <ReportSurface id="catalog-unavailable-recovery" className="flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center"
       style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
       <div className="w-full max-w-[520px] rounded-2xl border bg-white p-8 md:p-10"
         style={{ borderColor: "#e6ebf4", boxShadow: "0 8px 32px rgba(11,31,58,0.06)" }}>
@@ -452,7 +445,7 @@ function Indisponibil() {
           </a>
         </div>
       </div>
-    </div>
+    </ReportSurface>
   );
 }
 
