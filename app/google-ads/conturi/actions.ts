@@ -22,7 +22,7 @@ export async function alegeCont(formData: FormData) {
         accessToken: await accessTokenFrom(session.refreshToken),
         developerToken: oauthConfig().developerToken,
         loginCustomerId,
-      });
+      }).catch(() => redirect("/google-ads/conturi?eroare=cont"));
 
   jar.set(
     SESSION_COOKIE,

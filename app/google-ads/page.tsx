@@ -1,6 +1,6 @@
-// LANG: pending full translation to EN
 import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
+import { AUDIT_WINDOW_LABEL, localizeAuditWindow } from "@/lib/gads-intake";
 
 // Landing pentru auditul PE CONT CONECTAT (Google Shopping).
 // Sora vizuala a /audit-seo, dar alt produs: acolo scanam site-ul din exterior,
@@ -17,9 +17,10 @@ const CONNECT_HREF = "/google-ads/connect";
 // verificarea pica pe "app name does not match the app name on your home page".
 export const metadata = {
   title: "Audit Devrika — analiza contului tau de Google Ads",
-  description:
+  description: localizeAuditWindow(
     "Audit Devrika analizeaza contul tau de Google Ads si iti arata ce produse consuma buget fara sa "
-    + "vanda. We read only Shopping data from the latest 365 days and never modify the account.",
+    + "vanda. Citim doar datele de Shopping din ultimele 12 luni, nu modificam nimic in cont."
+  ),
 };
 
 // Randurile din mockup-ul de raport. Cifre exemplu, marcate ca atare sub tabel.
@@ -36,8 +37,9 @@ const findings = [
     tierBg: C.greenBg,
     tierFg: C.green,
     title: "Produsele care iti ard bugetul",
-    body:
-      "Every Shopping product below your minimum ROAS, with its exact spend over the latest 365 days. Together, they show the money spent on products that miss the target.",
+    body: localizeAuditWindow(
+      "Fiecare produs din Shopping care a cheltuit bani si a stat sub ROAS-ul tau minim, cu suma exacta pe ultimele 12 luni. Adunate, iti dau banii dusi pe produse care nu ating targetul."
+    ),
     icon: (
       <>
         <path d="M3 3v18h18" />
@@ -89,7 +91,7 @@ const steps = [
   {
     n: "3",
     t: "Primesti raportul",
-    d: "Immediately, using your latest 365 days of data. No waiting and no sales call first.",
+    d: localizeAuditWindow("Pe loc, pe cifrele tale din ultimele 12 luni. Fara asteptare si fara discutie de vanzare inainte."),
   },
 ];
 
@@ -170,9 +172,9 @@ export default function GoogleAdsLanding() {
           campaniile de Shopping.
         </p>
         <p className="mx-auto mb-10 max-w-[640px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
-          Iti conectezi contul de Google Ads, aplicatia citeste datele campaniilor de Shopping din
-          the latest 365 days and shows which products consume budget without selling, product by product,
-          cu suma exacta. Nu modifica nimic in contul tau.
+          {localizeAuditWindow(
+            "Iti conectezi contul de Google Ads, aplicatia citeste datele campaniilor de Shopping din ultimele 12 luni si iti spune care produse consuma buget fara sa vanda — produs cu produs, cu suma exacta. Nu modifica nimic in contul tau."
+          )}
         </p>
 
         <Link href={CONNECT_HREF}
@@ -204,7 +206,7 @@ export default function GoogleAdsLanding() {
             </div>
             <div className="rounded-xl p-5 text-left md:p-6" style={{ background: "linear-gradient(135deg,#f8f7ff,#f0fafa)" }}>
               <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                <span className="text-sm font-bold" style={{ color: "#1e293b" }}>Products below 4.0× ROAS · 365 days</span>
+                <span className="text-sm font-bold" style={{ color: "#1e293b" }}>Produse sub ROAS 4,0× · {AUDIT_WINDOW_LABEL}</span>
                 <span className="rounded-full px-3 py-1 text-[13px] font-extrabold text-white" style={{ background: C.red }}>
                   10.565 lei
                 </span>
@@ -229,7 +231,7 @@ export default function GoogleAdsLanding() {
               </table>
               <div className="mt-4 flex items-center gap-2 rounded-lg px-3 py-2 text-[12.5px]" style={{ background: "#fff", color: C.gray600 }}>
                 <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: C.orange }} />
-                <span><b style={{ color: C.gray800 }}>128 products</b> from the catalog had no impressions in 365 days.</span>
+                <span>{localizeAuditWindow("128 produse din catalog nu au avut nicio afisare in 12 luni.")}</span>
               </div>
             </div>
           </div>
@@ -246,7 +248,7 @@ export default function GoogleAdsLanding() {
         <p className="mx-auto mb-10 max-w-[760px] text-center text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
           <b style={{ color: "#0f172a" }}>Audit Devrika</b> este aplicatia care face aceasta analiza. Cu
           acordul tau, se conecteaza la contul tau de Google Ads si citeste <b>doar</b> datele
-          Shopping campaigns from the latest 365 days: spend, impressions, and sales for each
+          campaniilor de Shopping din {AUDIT_WINDOW_LABEL} — cheltuiala, afisarile si vanzarile pe
           fiecare produs. Pe baza lor iti arata unde se duc banii. Nu stocam datele contului tau si
           nu facem nicio modificare in el.
         </p>

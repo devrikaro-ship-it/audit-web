@@ -1,11 +1,10 @@
-// LANG: pending full translation to EN
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
-import { fetchShoppingProducts, FERESTRE } from "@/lib/gads-intake";
+import { AUDIT_WINDOW_LABEL, fetchShoppingProducts, FERESTRE, localizeAuditWindow } from "@/lib/gads-intake";
 import { fetchTracking } from "@/lib/gads-tracking";
 import { audit, breakEvenRoas } from "@/lib/gads-audit";
 import { buildReport, segmenteaza, type Tier, type Segmentare } from "@/lib/gads-findings";
@@ -110,7 +109,7 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
     Promise.all(
       FERESTRE.map((w) =>
         fetchShoppingProducts(customerId, auth, customerTimeZone, new Date(), w.zile)
-          .then((r) => ({ zile: w.zile, eticheta: w.eticheta, products: r.products }))
+          .then((r) => ({ zile: w.zile, eticheta: localizeAuditWindow(w.eticheta), products: r.products }))
           .catch(() => null)
       )
     ),
@@ -196,7 +195,7 @@ export default async function Raport() {
         {/* Cifra de impact */}
         <div className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
           <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.8)" }}>
-            {session.customerName || "Contul tau"} · latest 365 days
+            {session.customerName || "Contul tau"} · {AUDIT_WINDOW_LABEL}
           </p>
           <p className="mb-2 font-black leading-none tabular-nums" style={{ fontFamily: sora, fontSize: "clamp(38px,8vw,64px)" }}>
             {lei(rep.headline.ron)}

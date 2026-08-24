@@ -10,13 +10,18 @@ import { alegeCont } from "./actions";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Alege contul · Audit Google Ads Devrika" };
 
-export default async function Conturi() {
+export default async function Conturi({
+  searchParams,
+}: {
+  searchParams: Promise<{ eroare?: string }>;
+}) {
+  const { eroare } = await searchParams;
   const jar = await cookies();
   const session = unseal(jar.get(SESSION_COOKIE)?.value);
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
 
   let accounts: AccessibleAccount[] = [];
-  let error: string | null = null;
+  let error: string | null = eroare ? "" : null;
   if (demoOn()) {
     accounts = demoAccounts();
   } else {
@@ -50,7 +55,9 @@ export default async function Conturi() {
                 Nu am putut citi lista de conturi. Se intampla cand contul nu are inca acces la
                 Google Ads API sau cand conectarea a expirat.
               </p>
-              <p className="mb-6 rounded-lg px-4 py-3 text-[13px]" style={{ background: C.redBg, color: C.red }}>{error}</p>
+              {error && (
+                <p className="mb-6 rounded-lg px-4 py-3 text-[13px]" style={{ background: C.redBg, color: C.red }}>{error}</p>
+              )}
               <Link href="/api/google-ads/start" className="inline-flex min-h-11 items-center rounded-xl px-6 text-[15px] font-bold text-white" style={{ background: brandGradient }}>
                 Reincearca conectarea
               </Link>

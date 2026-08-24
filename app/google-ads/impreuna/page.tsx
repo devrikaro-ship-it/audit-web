@@ -1,4 +1,3 @@
-// LANG: pending full translation to EN
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -8,6 +7,7 @@ import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import { fetchStructura } from "@/lib/gads-structure";
 import { citesteAn, bugetLunarDin, type TotaluriAn } from "@/lib/gads-an";
 import { demoOn, demoData } from "@/lib/gads-demo";
+import { localizeAuditWindow } from "@/lib/gads-intake";
 import Simulator from "./Simulator";
 
 // Pagina "Cu Devrika": continuarea fireasca a raportului. Raportul spune ce pierde acum; asta
@@ -54,8 +54,9 @@ export default async function Impreuna() {
           Ce ar insemna sa lucram impreuna
         </h1>
         <p className="mb-8 text-[15.5px] leading-relaxed" style={{ color: C.gray500 }}>
-          Using your latest 365 days of data, not an example. You adjust the assumption and enter
-          pretul din oferta; noi nu ascundem nimic in spatele lor.
+          {localizeAuditWindow(
+            "Pe cifrele tale din ultimele 12 luni, nu pe un exemplu. Tu misti ipoteza si completezi pretul din oferta; noi nu ascundem nimic in spatele lor."
+          )}
         </p>
 
         {structura ? (
@@ -88,7 +89,7 @@ export default async function Impreuna() {
 
 /**
  * Cheltuiala si randamentul contului — singurele doua cifre de care are nevoie proiectia.
- * The 365-day totals match the account-calendar window shown in the audit; structure remains for
+ * Totalurile pe 12 luni sunt cele pe care omul le vede in interfata; structura ramane pentru
  * cazul in care interogarea pe an nu raspunde.
  */
 async function citesteCifre(

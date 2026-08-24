@@ -1,7 +1,7 @@
-// LANG: pending full translation to EN
 import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { missingConfig } from "@/lib/gads-oauth";
+import { localizeAuditWindow } from "@/lib/gads-intake";
 
 // Ecranul de dinaintea consimtamantului Google. Rolul lui e sa scada frica: omul e pe punctul
 // sa dea acces la contul in care tine bani, deci spune EXACT ce cerem si ce nu.
@@ -80,7 +80,7 @@ export default async function Connect({
 
             <ul className="mb-8 flex flex-col gap-2.5 text-left">
               {[
-                { ok: true, t: "We read Shopping data from the latest 365 days" },
+                { ok: true, t: localizeAuditWindow("Citim datele de Shopping din ultimele 12 luni") },
                 { ok: false, t: "NU putem modifica nimic — nici bugete, nici campanii" },
                 { ok: false, t: "NU cerem acces la Gmail, Drive sau alte servicii" },
                 { ok: true, t: "Poti retrage accesul oricand, dintr-un click, din contul tau Google" },

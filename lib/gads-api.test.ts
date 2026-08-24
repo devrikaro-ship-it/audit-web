@@ -108,6 +108,28 @@ describe("cine cheama Google Ads", () => {
     expect(queries[0]).toContain("customer.time_zone");
   });
 
+  it("accepts a valid IANA customer time zone", async () => {
+    const { validateCustomerTimeZone } = await import("./gads-oauth");
+    expect(validateCustomerTimeZone("Europe/Bucharest")).toBe("Europe/Bucharest");
+  });
+
+  it("rejects a missing customer time zone", async () => {
+    const { validateCustomerTimeZone } = await import("./gads-oauth");
+    expect(() => validateCustomerTimeZone(undefined)).toThrow(/unavailable/);
+  });
+
+  it("rejects an invalid customer time zone", async () => {
+    const { validateCustomerTimeZone } = await import("./gads-oauth");
+    expect(() => validateCustomerTimeZone("Not/A_Time_Zone")).toThrow(/invalid/);
+  });
+
+  it("validates the account time zone before sealing and routes failures back to selection", () => {
+    const action = readFileSync(join("app", "google-ads", "conturi", "actions.ts"), "utf8");
+    expect(action.indexOf("fetchCustomerTimeZone")).toBeLessThan(action.indexOf("seal({"));
+    expect(action).toMatch(/fetchCustomerTimeZone[\s\S]*\.catch\(\(\) => redirect\(/);
+    expect(action).toContain("/google-ads/conturi?eroare=cont");
+  });
+
   it("nimeni in afara de lib/gads-api.ts nu mai scrie versiunea de mana", () => {
     const rada = (dir: string): string[] =>
       readdirSync(dir, { withFileTypes: true }).flatMap((e) => {

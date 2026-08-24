@@ -102,6 +102,16 @@ export type AccessibleAccount = {
   loginCustomerId: string;
 };
 
+export function validateCustomerTimeZone(value: string | undefined): string {
+  if (!value) throw new Error("Google Ads account time zone is unavailable");
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: value }).format();
+  } catch {
+    throw new Error("Google Ads account time zone is invalid");
+  }
+  return value;
+}
+
 export async function fetchCustomerTimeZone(
   customerId: string,
   auth: GoogleAdsAuth
@@ -112,9 +122,7 @@ export async function fetchCustomerTimeZone(
     "SELECT customer.time_zone FROM customer LIMIT 1",
     auth
   )) as Row[];
-  const timeZone = rows[0]?.customer?.timeZone;
-  if (!timeZone) throw new Error("Google Ads account time zone is unavailable");
-  return timeZone;
+  return validateCustomerTimeZone(rows[0]?.customer?.timeZone);
 }
 
 /**

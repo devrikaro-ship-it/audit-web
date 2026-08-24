@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
+import { AUDIT_WINDOW_LABEL, FERESTRE } from "@/lib/gads-intake";
 
 // Randam PAGINA REALA, nu o copie a ei. Verificarea la nivel de date spune ca cifrele sunt
 // corecte; asta spune ca ajung pe ecran — tabelul de produse chiar apare, sectiunile chiar
@@ -39,7 +40,8 @@ const stareTracking = { ok: true, reasons: [] as string[], junkPrimary: [] as st
 
 const stareCatalog = { cade: false };
 
-vi.mock("@/lib/gads-intake", () => ({
+vi.mock("@/lib/gads-intake", async (orig) => ({
+  ...(await orig<Record<string, unknown>>()),
   fetchShoppingProducts: async () => {
     if (stareCatalog.cade) throw new Error("Google Ads API 401");
     return {
@@ -47,15 +49,6 @@ vi.mock("@/lib/gads-intake", () => ({
       catalogComplete: true,
     };
   },
-  // `gads-an` isi ia intervalul de date de aici, deci mock-ul trebuie sa le aiba si pe astea —
-  // The account-total reader shares this 365-day window; omitting it would hide a failure.
-  WINDOW_DAYS: 365,
-  dateRange: () => ({ from: "2025-08-20", to: "2026-08-20" }),
-  // Pagina cere catalogul si pe ferestrele scurte, pentru harta pe performanta.
-  FERESTRE: [
-    { zile: 30, eticheta: "30 de zile" },
-    { zile: 90, eticheta: "3 luni" },
-  ] as const,
 }));
 vi.mock("@/lib/gads-tracking", () => ({ fetchTracking: async () => stareTracking }));
 vi.mock("@/lib/gads-structure", async (orig) => ({
@@ -108,6 +101,13 @@ describe("pagina de raport, randata", () => {
     const h = await html();
     expect(h).toContain("Canapea extensibila model A");
     expect(h).toContain("900 RON");
+  });
+
+  it("renders the shared localized 365-day label instead of the legacy window label", async () => {
+    const h = await html();
+    const legacyLabel = FERESTRE[FERESTRE.length - 1].eticheta;
+    expect(h).toContain(AUDIT_WINDOW_LABEL);
+    expect(h).not.toContain(legacyLabel);
   });
 
   it("are amandoua sectiunile, si banda de sumar deasupra lor", async () => {

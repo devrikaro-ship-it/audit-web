@@ -1,6 +1,17 @@
 // LANG: pending full translation to EN
 import { describe, it, expect } from "vitest";
-import { buildProducts, dateRange, perfQuery, catalogQuery, type PerfRow, type CatalogRow } from "./gads-intake";
+import { readFileSync } from "node:fs";
+import {
+  AUDIT_WINDOW_LABEL,
+  FERESTRE,
+  buildProducts,
+  dateRange,
+  localizeAuditWindow,
+  perfQuery,
+  catalogQuery,
+  type PerfRow,
+  type CatalogRow,
+} from "./gads-intake";
 import { audit, suggestMargin } from "./gads-audit";
 
 // Join-ul catalog<->performanta e locul unde Zombies traiesc sau mor. Testele de aici apara
@@ -54,6 +65,38 @@ describe("join catalog <-> performanta", () => {
 });
 
 describe("interogari", () => {
+  it("derives the Romanian 365-day label from the existing localized day unit", () => {
+    const legacyLabel = FERESTRE[FERESTRE.length - 1].eticheta;
+    expect(AUDIT_WINDOW_LABEL).toBe(
+      FERESTRE[0].eticheta.replace(String(FERESTRE[0].zile), "365")
+    );
+    expect(localizeAuditWindow(legacyLabel)).toBe(AUDIT_WINDOW_LABEL);
+    expect(AUDIT_WINDOW_LABEL).not.toBe(legacyLabel);
+  });
+
+  it("keeps client-facing window copy localized and tied to the shared label", () => {
+    const legacyLabel = FERESTRE[FERESTRE.length - 1].eticheta;
+    const surfaces = [
+      "app/confidentialitate/page.tsx",
+      "app/google-ads/connect/page.tsx",
+      "app/google-ads/impreuna/page.tsx",
+      "app/google-ads/page.tsx",
+      "app/google-ads/raport/page.tsx",
+      "app/hub/page.tsx",
+      "lib/gads-findings.ts",
+    ];
+    for (const path of surfaces) {
+      const source = readFileSync(path, "utf8");
+      const executableSource = source
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .replace(/^\s*\/\/.*$/gm, "");
+      expect(executableSource).not.toMatch(/\b(?:latest )?365 days\b/i);
+      if (source.includes(legacyLabel)) {
+        expect(source).toMatch(/localizeAuditWindow|AUDIT_WINDOW_LABEL/);
+      }
+    }
+  });
+
   it("uses exactly 365 inclusive account-calendar dates", () => {
     const { from, to } = dateRange(new Date("2026-08-06T12:00:00Z"), 365, "Europe/Bucharest");
     expect(to).toBe("2026-08-06");

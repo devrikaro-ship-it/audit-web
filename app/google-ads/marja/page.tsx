@@ -1,4 +1,3 @@
-// LANG: pending full translation to EN
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
