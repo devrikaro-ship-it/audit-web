@@ -5,6 +5,7 @@ import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, listAccounts, type AccessibleAccount } from "@/lib/gads-oauth";
 import { demoOn, demoAccounts } from "@/lib/gads-demo";
+import { GADS_LOCALIZED_COPY, selectedAccountDataReadFailure } from "@/lib/gads-localized-copy";
 import { alegeCont } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,9 @@ export default async function Conturi({
 
   const usable = accounts.filter((a) => !a.manager);
   const hasAccountReadError = requestedError || errorDetails !== null;
+  const accountReadExplanation = requestedError
+    ? selectedAccountDataReadFailure()
+    : GADS_LOCALIZED_COPY.accountListReadFailure;
 
   return (
     <div className="min-h-dvh px-6 py-16" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
@@ -53,9 +57,13 @@ export default async function Conturi({
 
           {hasAccountReadError ? (
             <>
-              <p data-testid="account-read-error" className="mb-6 text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
-                Nu am putut citi lista de conturi. Se intampla cand contul nu are inca acces la
-                Google Ads API sau cand conectarea a expirat.
+              <p
+                data-testid="account-read-error"
+                data-error-kind={requestedError ? "selected-account-data-unavailable" : "account-list-unavailable"}
+                className="mb-6 text-[15px] leading-relaxed"
+                style={{ color: C.gray500 }}
+              >
+                {accountReadExplanation}
               </p>
               {errorDetails && (
                 <p className="mb-6 rounded-lg px-4 py-3 text-[13px]" style={{ background: C.redBg, color: C.red }}>{errorDetails}</p>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
+import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 
 // Pagina-umbrela: "Audit Devrika" = locul din care pleaca TOATE auditurile.
@@ -169,7 +170,7 @@ export default function Hub() {
             {[
               { t: "Citim doar ce e necesar", d: "Pentru Google Ads: campaniile de Shopping si configurarea conversiilor. Nimic din Gmail, Drive sau alte servicii." },
               { t: "Nu modificam nimic", d: "Accesul e exclusiv de citire. Nu putem porni sau opri campanii si nu putem cheltui bani." },
-              { t: "Nu pastram datele contului", d: "Analiza se face cat esti pe site. Dupa raport, datele contului nu raman la noi." },
+              { t: GADS_LOCALIZED_COPY.accountDataRetention, d: "Analiza se face cat esti pe site. Dupa raport, datele contului nu raman la noi." },
               { t: "Retragi accesul cand vrei", d: "Dintr-un click, din setarile contului tau — fara sa ne intrebi pe noi." },
             ].map((r) => (
               <div key={r.t} className="rounded-2xl border bg-white p-5" style={{ borderColor: "#e6ebf4" }}>

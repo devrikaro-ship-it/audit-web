@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
+
+const { listAccountsMock } = vi.hoisted(() => ({
+  listAccountsMock: vi.fn(async () => []),
+}));
 
 vi.mock("next/headers", () => ({
   cookies: async () => ({ get: () => ({ value: "signed-session" }) }),
@@ -18,7 +23,7 @@ vi.mock("@/lib/gads-session", () => ({
 }));
 vi.mock("@/lib/gads-oauth", () => ({
   accessTokenFrom: async () => "access",
-  listAccounts: async () => [],
+  listAccounts: listAccountsMock,
 }));
 vi.mock("@/lib/gads-demo", () => ({
   demoOn: () => false,
@@ -27,13 +32,30 @@ vi.mock("@/lib/gads-demo", () => ({
 vi.mock("./actions", () => ({ alegeCont: async () => {} }));
 
 describe("account selection recovery", () => {
-  it("renders a visible explanation and retry path for account-data failures", async () => {
+  it("identifies selected-account data as unavailable after account selection", async () => {
     const Page = (await import("./page")).default;
     const html = renderToStaticMarkup(await Page({
       searchParams: Promise.resolve({ eroare: "cont" }),
     }));
     const explanation = html.match(/data-testid="account-read-error"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
-    expect(explanation.replace(/<[^>]+>/g, "").trim().length).toBeGreaterThan(40);
+    const accountDataSubject = GADS_LOCALIZED_COPY.accountDataRetention
+      .split(" ")
+      .slice(2)
+      .join(" ");
+    expect(html).toContain('data-error-kind="selected-account-data-unavailable"');
+    expect(explanation).toContain(accountDataSubject);
+    expect(explanation).not.toBe(GADS_LOCALIZED_COPY.accountListReadFailure);
     expect(html).toContain('href="/api/google-ads/start"');
+  });
+
+  it("preserves the account-list explanation when listing accounts fails", async () => {
+    listAccountsMock.mockRejectedValueOnce(new Error("list failed"));
+    const Page = (await import("./page")).default;
+    const html = renderToStaticMarkup(await Page({
+      searchParams: Promise.resolve({}),
+    }));
+    const explanation = html.match(/data-testid="account-read-error"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
+    expect(html).toContain('data-error-kind="account-list-unavailable"');
+    expect(explanation).toBe(GADS_LOCALIZED_COPY.accountListReadFailure);
   });
 });
