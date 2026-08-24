@@ -37,13 +37,20 @@ const P = (id: string, cost: number, val: number, imp: number, clicks = 100): Pr
      impressions: imp, clicks, conversions: val > 0 ? 1 : 0 });
 
 const stareTracking = { ok: true, reasons: [] as string[], junkPrimary: [] as string[] };
-
-const stareCatalog = { cade: false };
+const sourceState = {
+  primaryCatalogFails: false,
+  secondaryCatalogFails: false,
+  structureAvailable: true,
+  optionalModulesAvailable: true,
+};
+let catalogReadCount = 0;
 
 vi.mock("@/lib/gads-intake", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
   fetchShoppingProducts: async () => {
-    if (stareCatalog.cade) throw new Error("Google Ads API 401");
+    catalogReadCount += 1;
+    if (sourceState.primaryCatalogFails && catalogReadCount === 1) throw new Error("Google Ads API 401");
+    if (sourceState.secondaryCatalogFails && catalogReadCount > 1) throw new Error("Google Ads API 503");
     return {
       products: [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0, 0), P("D", 50, 900, 300)],
       catalogComplete: true,
@@ -53,29 +60,29 @@ vi.mock("@/lib/gads-intake", async (orig) => ({
 vi.mock("@/lib/gads-tracking", () => ({ fetchTracking: async () => stareTracking }));
 vi.mock("@/lib/gads-structure", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
-  fetchStructura: async () => ({
+  fetchStructura: async () => sourceState.structureAvailable ? ({
     campanii: [], cheltuialaTotala: 3000, roasCont: 4,
     probleme: [{ cod: "bidding-fara-tinta", titlu: "O campanie liciteaza fara nicio tinta", ron: 2977, detaliu: "Detaliu.", grad: "costa" }],
-  }),
+  }) : undefined,
 }));
 vi.mock("@/lib/gads-pmax", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
-  fetchPmaxData: async () => ({ campanii: [], grupuri: [] }),
+  fetchPmaxData: async () => sourceState.optionalModulesAvailable ? ({ campanii: [], grupuri: [] }) : undefined,
 }));
 vi.mock("@/lib/gads-shopping", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
-  fetchShoppingData: async () => ({ campanii: [], produseCuAfisari: 0, conversii30z: 0, cost30z: 0 }),
+  fetchShoppingData: async () => sourceState.optionalModulesAvailable ? ({ campanii: [], produseCuAfisari: 0, conversii30z: 0, cost30z: 0 }) : undefined,
 }));
 vi.mock("@/lib/gads-search", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
-  fetchSearchData: async () => ({ campanii: [], reclame: [] }),
+  fetchSearchData: async () => sourceState.optionalModulesAvailable ? ({ campanii: [], reclame: [] }) : undefined,
 }));
 vi.mock("@/lib/gads-keywords", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
-  fetchKeywordData: async () => ({
+  fetchKeywordData: async () => sourceState.optionalModulesAvailable ? ({
     negative: ["dehome"],
     termeni: [{ termen: "canapea ieftina", cost: 120, conversii: 0, clicuri: 40 }],
-  }),
+  }) : undefined,
 }));
 vi.mock("@/lib/gads-an", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
@@ -88,14 +95,23 @@ async function html(): Promise<string> {
 }
 
 describe("pagina de raport, randata", () => {
-  beforeEach(() => { stareTracking.ok = true; stareCatalog.cade = false; });
+  beforeEach(() => {
+    stareTracking.ok = true;
+    stareTracking.reasons = [];
+    sourceState.primaryCatalogFails = false;
+    sourceState.secondaryCatalogFails = false;
+    sourceState.structureAvailable = true;
+    sourceState.optionalModulesAvailable = true;
+    catalogReadCount = 0;
+  });
 
 
   // Legenda de la finalul raportului explica nivelurile de onestitate. SIMULARE era folosit ca
   // eticheta pe o constatare si lipsea din legenda — clientul vedea un cuvant pe care raportul
   // nu i-l explica nicaieri. SPEC: trei niveluri, fiecare etichetat oriunde apare.
-  it("legenda explica toate cele trei niveluri, nu doua din trei", async () => {
+  it("renders honesty labels on every successful report", async () => {
     const h = await html();
+    expect(h).toContain('data-report-surface="honesty-and-caveats"');
     expect(h).toContain("MASURAT");
     expect(h).toContain("ESTIMARE");
     expect(h).toMatch(/<b>SIMULARE<\/b>/);
@@ -109,6 +125,7 @@ describe("pagina de raport, randata", () => {
 
   it("renders the shared localized 365-day label instead of the legacy window label", async () => {
     const h = await html();
+    expect(h).toContain('data-report-surface="headline-summary"');
     const visibleText = h.replace(/<[^>]*>/g, " ");
     expect(h).toContain(AUDIT_WINDOW_LABEL);
     expect(visibleText).not.toMatch(/\b12\s+\p{L}+/u);
@@ -164,9 +181,10 @@ describe("pagina de raport, randata", () => {
     expect(h.indexOf("Unde pierzi bani")).toBeLessThan(h.indexOf('data-test="contact"'));
   });
 
-  it("cand catalogul nu se poate citi, spune asta cinstit in loc sa cada cu 500", async () => {
-    stareCatalog.cade = true;
+  it("renders the alternative recovery surface when the primary catalog read fails", async () => {
+    sourceState.primaryCatalogFails = true;
     const h = await html();
+    expect(h).toContain('data-report-surface="catalog-unavailable-recovery"');
     expect(h).toContain("Nu am putut citi catalogul de Shopping");
     expect(h).toContain("Incearca din nou");
   });
@@ -177,5 +195,34 @@ describe("pagina de raport, randata", () => {
     const h = await html();
     expect(h).toContain("nu se poate judeca inca");
     expect(h).toContain("necunoscut");
+  });
+
+  it("exercises both catalog-map guard branches", async () => {
+    expect(await html()).toContain('data-report-surface="catalog-map"');
+    catalogReadCount = 0;
+    sourceState.secondaryCatalogFails = true;
+    expect(await html()).not.toContain('data-report-surface="catalog-map"');
+  });
+
+  it("exercises account, simulator, and contact availability branches", async () => {
+    const available = await html();
+    expect(available).toContain('data-report-surface="account-settings"');
+    expect(available).toContain('data-report-surface="simulator-call-to-action"');
+    expect(available).toContain('data-report-surface="contact-form"');
+    catalogReadCount = 0;
+    sourceState.structureAvailable = false;
+    sourceState.optionalModulesAvailable = false;
+    const h = await html();
+    expect(h).toContain('data-report-surface="contact-form"');
+    expect(h).not.toContain('data-report-surface="account-settings"');
+    expect(h).not.toContain('data-report-surface="simulator-call-to-action"');
+  });
+
+  it("exercises both unsupported-conclusion guard branches", async () => {
+    expect(await html()).not.toContain('data-report-surface="unsupported-conclusions"');
+    catalogReadCount = 0;
+    stareTracking.ok = false;
+    stareTracking.reasons = ["tracking unavailable"];
+    expect(await html()).toContain('data-report-surface="unsupported-conclusions"');
   });
 });

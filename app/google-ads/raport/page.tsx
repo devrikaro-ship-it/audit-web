@@ -193,7 +193,7 @@ export default async function Raport() {
         )}
 
         {/* Cifra de impact */}
-        <div className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
+        <div data-report-surface="headline-summary" className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
           <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.8)" }}>
             {session.customerName || "Contul tau"} · {AUDIT_WINDOW_LABEL}
           </p>
@@ -287,15 +287,15 @@ export default async function Raport() {
 
         {/* ── Catalogul pe performanta ── */}
         {hartiCatalog.length > 0 && (
-          <>
+          <div data-report-surface="catalog-map" className="contents">
             <SectionTitle nr="2" text="Cum sta catalogul tau" />
             <CatalogPePerformanta harti={hartiCatalog} />
-          </>
+          </div>
         )}
 
         {/* ── Setari gresite ── */}
         {rep.puncte.length > 0 && (
-          <>
+          <div data-report-surface="account-settings" className="contents">
             <SectionTitle nr="3" text="Ce e setat gresit in cont" />
             <p className="mb-4 text-[14px] leading-relaxed" style={{ color: C.gray500 }}>
               Astea nu sunt bani deja pierduti, ci robinete deschise gresit. Sumele arata cat
@@ -328,12 +328,12 @@ export default async function Raport() {
                 );
               })}
             </div>
-          </>
+          </div>
         )}
 
         {/* ── Ce nu se poate judeca inca ── */}
         {nejudecabile.length > 0 && (
-          <div className="mb-9 flex flex-col gap-3">
+          <div data-report-surface="unsupported-conclusions" className="mb-9 flex flex-col gap-3">
             {nejudecabile.map((f) => (
               <article key={f.key} className="overflow-hidden rounded-xl border p-6" style={{ borderColor: "#e2e8f0", background: "#fafbff" }}>
                 <span className="mb-3 inline-block rounded-full px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide" style={{ background: "#f1f5f9", color: C.gray600 }}>
@@ -360,7 +360,7 @@ export default async function Raport() {
             a vazut ce pierde. Cifra de aici e SIMULARE si o spune, iar detaliul se joaca in
             pagina lui, unde el misca ipoteza si completeaza pretul din oferta. */}
         {structura && structura.roasCont ? (
-          <div className="mb-6 overflow-hidden rounded-2xl" style={{ background: brandGradient }}>
+          <div data-report-surface="simulator-call-to-action" className="mb-6 overflow-hidden rounded-2xl" style={{ background: brandGradient }}>
             <div className="p-8 text-center text-white">
               <p className="mb-2 text-[12.5px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.75)" }}>
                 Simulare · cu Devrika, la acelasi buget
@@ -386,7 +386,7 @@ export default async function Raport() {
         ) : null}
 
         {/* Contact — dupa ce a vazut valoarea, nu inainte */}
-        <div className="mb-6 rounded-2xl border bg-white p-7" style={{ borderColor: C.border }}>
+        <div data-report-surface="contact-form" className="mb-6 rounded-2xl border bg-white p-7" style={{ borderColor: C.border }}>
           <h2 className="mb-2 text-[19px] font-bold" style={{ fontFamily: sora, color: "#0f172a" }}>
             Vrei sa iti aratam si cum se repara?
           </h2>
@@ -398,7 +398,7 @@ export default async function Raport() {
         </div>
 
         {/* Onestitate */}
-        <div className="rounded-2xl border p-6" style={{ borderColor: C.border, background: "#fafbff" }}>
+        <div data-report-surface="honesty-and-caveats" className="rounded-2xl border p-6" style={{ borderColor: C.border, background: "#fafbff" }}>
           <h2 className="mb-3 text-[15px] font-bold" style={{ fontFamily: sora, color: "#0f172a" }}>
             Ce nu am putut verifica
           </h2>
@@ -428,7 +428,7 @@ export default async function Raport() {
  */
 function Indisponibil() {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center"
+    <div data-report-surface="catalog-unavailable-recovery" data-report-alternative className="flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center"
       style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
       <div className="w-full max-w-[520px] rounded-2xl border bg-white p-8 md:p-10"
         style={{ borderColor: "#e6ebf4", boxShadow: "0 8px 32px rgba(11,31,58,0.06)" }}>
