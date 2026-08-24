@@ -196,7 +196,8 @@ export default async function Raport() {
         </ReportSurface>
 
         {/* Cifra de impact */}
-        <ReportSurface id="headline-summary" className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
+        <ReportSurface id="headline-summary" className="contents">
+        <div data-report-part="headline-gradient" className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
           <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.8)" }}>
             {session.customerName || "Contul tau"} · {AUDIT_WINDOW_LABEL}
           </p>
@@ -204,8 +205,9 @@ export default async function Raport() {
             {lei(rep.headline.ron)}
           </p>
           <p className="text-[15.5px]" style={{ color: "rgba(255,255,255,0.9)" }}>{rep.headline.label}</p>
+        </div>
         {/* Sumarul: ce urmeaza, inainte de detaliu */}
-        <div className="mb-7 grid grid-cols-2 gap-px rounded-b-2xl border border-t-0 sm:grid-cols-4"
+        <div data-report-part="summary-grid" className="mb-7 grid grid-cols-2 gap-px rounded-b-2xl border border-t-0 sm:grid-cols-4"
           style={{ borderColor: C.border, background: C.border }}>
           {[
             // REVERTED 2026-08-21. A `ron > 0` filter here was worse than the defect it removed:

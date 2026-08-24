@@ -43,6 +43,7 @@ const sourceState = {
   structureAvailable: true,
   optionalModulesAvailable: true,
 };
+const demoState = { enabled: false };
 let catalogReadCount = 0;
 
 vi.mock("@/lib/gads-intake", async (orig) => ({
@@ -88,6 +89,10 @@ vi.mock("@/lib/gads-an", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
   citesteAn: async () => null,
 }));
+vi.mock("@/lib/gads-demo", async (orig) => ({
+  ...(await orig<Record<string, unknown>>()),
+  demoOn: () => demoState.enabled,
+}));
 
 async function html(): Promise<string> {
   const Raport = (await import("./page")).default;
@@ -102,6 +107,7 @@ describe("pagina de raport, randata", () => {
     sourceState.secondaryCatalogSuccessCount = Number.POSITIVE_INFINITY;
     sourceState.structureAvailable = true;
     sourceState.optionalModulesAvailable = true;
+    demoState.enabled = false;
     catalogReadCount = 0;
   });
 
@@ -197,7 +203,7 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain("necunoscut");
   });
 
-  it("exercises both catalog-map guard branches", async () => {
+  it("renders the catalog map at one and many windows but not zero", async () => {
     sourceState.secondaryCatalogSuccessCount = 0;
     expect(await html()).not.toContain('data-report-surface="catalog-map"');
     catalogReadCount = 0;
@@ -206,6 +212,28 @@ describe("pagina de raport, randata", () => {
     catalogReadCount = 0;
     sourceState.secondaryCatalogSuccessCount = 7;
     expect(await html()).toContain('data-report-surface="catalog-map"');
+  });
+
+  it("renders every unconditional report surface", async () => {
+    const h = await html();
+    expect(h).toContain('data-report-surface="navigation"');
+    expect(h).toContain('data-report-surface="headline-summary"');
+    expect(h).toContain('data-report-surface="money-findings"');
+    expect(h).toContain('data-report-surface="contact-form"');
+    expect(h).toContain('data-report-surface="honesty-and-caveats"');
+  });
+
+  it("renders the demo banner only in demo mode", async () => {
+    expect(await html()).not.toContain('data-report-surface="demo-banner"');
+    catalogReadCount = 0;
+    demoState.enabled = true;
+    expect(await html()).toContain('data-report-surface="demo-banner"');
+  });
+
+  it("keeps the gradient headline and white summary as sibling parts", async () => {
+    const h = await html();
+    expect(h).toContain('data-report-surface="headline-summary"');
+    expect(h).toMatch(/data-report-surface="headline-summary" class="contents"><div data-report-part="headline-gradient"[^>]*>.*<\/div><div data-report-part="summary-grid"/s);
   });
 
   it("exercises account, simulator, and contact availability branches", async () => {
