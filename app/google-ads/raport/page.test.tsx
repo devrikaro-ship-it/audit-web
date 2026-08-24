@@ -223,6 +223,17 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain('data-report-surface="honesty-and-caveats"');
   });
 
+  it("renders all evidence tiers inside money findings", async () => {
+    const h = await html();
+    expect(h).toContain('data-report-surface="money-findings"');
+    const start = h.indexOf('data-report-surface="money-findings"');
+    const end = h.indexOf('data-report-surface="catalog-map"', start);
+    const moneySurface = h.slice(start, end);
+    expect(moneySurface).toContain("MASURAT");
+    expect(moneySurface).toContain("ESTIMARE");
+    expect(moneySurface).toContain("SIMULARE");
+  });
+
   it("renders the demo banner only in demo mode", async () => {
     expect(await html()).not.toContain('data-report-surface="demo-banner"');
     catalogReadCount = 0;
