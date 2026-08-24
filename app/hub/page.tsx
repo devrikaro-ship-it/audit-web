@@ -24,7 +24,7 @@ const audituri = [
       `Iti conectezi contul de Google Ads si vezi pe cifrele tale reale din ultimele ${AUDIT_WINDOW_LABEL} `
       + "ce produse consuma buget fara sa vanda, cate produse nu au fost afisate niciodata si "
       + "daca masurarea conversiilor e configurata corect.",
-    date: "Se conecteaza la contul tau de Google Ads, doar cu drept de citire.",
+    date: "Se conecteaza la contul tau de Google Ads.",
     activ: true,
     icon: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" /><circle cx="12" cy="12" r="1" /></>,
   },
@@ -46,7 +46,7 @@ const audituri = [
     text:
       "Aceeasi analiza pentru campaniile de Facebook si Instagram: ce reclame consuma buget "
       + "fara sa aduca vanzari si cat de credibile sunt cifrele raportate de platforma.",
-    date: "Va cere acces de citire la contul tau de reclame Meta.",
+    date: "Se conecteaza la contul tau de reclame Meta.",
     activ: false,
     icon: <><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></>,
   },
@@ -88,14 +88,14 @@ export default function Hub() {
           pe cifre, unde pierzi bani.
         </p>
         <p className="mx-auto mb-10 max-w-[660px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
-          Alegi ce vrei analizat, iar acolo unde e nevoie iti conectezi contul de publicitate — cu
-          drept <b>exclusiv de citire</b>. Aplicatia citeste datele, le compara cu pragurile
+          Alegi ce vrei analizat, iar acolo unde e nevoie iti conectezi contul de publicitate.
+          Aplicatia citeste datele, le compara cu pragurile
           afacerii tale si iti arata rezultatul pe loc. <b>Nu modifica nimic</b> in conturile tale
           si poti retrage accesul oricand.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-2.5 text-[13px]" style={{ color: C.gray500 }}>
-          {["Gratuit", "Fara card bancar", "Acces doar de citire", "Rezultat pe loc"].map((t) => (
+          {["Gratuit", "Fara card bancar", "Nu modificam nimic", "Rezultat pe loc"].map((t) => (
             <span key={t} className="rounded-full border px-3.5 py-1.5" style={{ borderColor: "#e2e8f0", background: "#fff" }}>{t}</span>
           ))}
         </div>
@@ -164,12 +164,12 @@ export default function Hub() {
           </h2>
           <p className="mb-8 text-center text-[15.5px] leading-relaxed" style={{ color: C.gray500 }}>
             Cand un audit are nevoie de acces la un cont de publicitate, ti-l cerem prin
-            mecanismul oficial al platformei si numai pentru citire.
+            mecanismul oficial al platformei.
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {[
               { t: "Citim doar ce e necesar", d: "Pentru Google Ads: campaniile de Shopping si configurarea conversiilor. Nimic din Gmail, Drive sau alte servicii." },
-              { t: "Nu modificam nimic", d: "Accesul e exclusiv de citire. Nu putem porni sau opri campanii si nu putem cheltui bani." },
+              { t: "Nu modificam nimic", d: "Nu putem porni sau opri campanii si nu putem cheltui bani." },
               { t: GADS_LOCALIZED_COPY.accountDataRetention, d: "Analiza se face cat esti pe site. Dupa raport, datele contului nu raman la noi." },
               { t: "Retragi accesul cand vrei", d: "Dintr-un click, din setarile contului tau — fara sa ne intrebi pe noi." },
             ].map((r) => (

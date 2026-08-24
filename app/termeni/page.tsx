@@ -44,7 +44,7 @@ export default function Termeni() {
 
         <H2>Ce iti cerem</H2>
         <P>
-          Sa ne dai acces de citire la contul tau de Google Ads, prin mecanismul oficial de
+          Sa ne dai acces la contul tau de Google Ads, prin mecanismul oficial de
           autorizare Google, si sa ne spui aproximativ ce marja de profit ai — din ea calculam
           pragul sub care un produs pierde bani. Nu iti cerem parole, date de card sau documente.
         </P>
@@ -66,8 +66,8 @@ export default function Termeni() {
         <H2>Ce nu facem niciodata</H2>
         <P>
           Nu modificam nimic in contul tau: nu pornim si nu oprim campanii, nu schimbam bugete, nu
-          adaugam si nu stergem cuvinte cheie. Accesul pe care ni-l dai este exclusiv de citire, iar
-          tu il poti retrage oricand din setarile contului tau Google.
+          adaugam si nu stergem cuvinte cheie. Accesul pe care ni-l dai il poti retrage oricand din
+          setarile contului tau Google.
         </P>
 
         <H2>Datele tale</H2>

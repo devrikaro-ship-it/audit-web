@@ -57,8 +57,8 @@ export default function Confidentialitate() {
 
         <H2>Ce date citim din contul tau Google</H2>
         <P>
-          Cu acordul tau explicit, aplicatia cere o singura permisiune Google (<i>adwords</i>) si
-          citeste, in regim <b>exclusiv de citire</b>, urmatoarele date din contul tau de Google Ads:
+          Cu acordul tau explicit, aplicatia cere o singura permisiune Google (<i>adwords</i>).
+          Aplicatia citeste urmatoarele date din contul tau de Google Ads:
         </P>
         <ul className="mb-3 flex flex-col gap-2">
           {[
