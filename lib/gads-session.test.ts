@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import { describe, it, expect, beforeAll } from "vitest";
 import { seal, unseal, SESSION_MAX_AGE } from "./gads-session";
 
@@ -10,9 +11,15 @@ beforeAll(() => {
 
 describe("sesiunea prospectului", () => {
   it("dus-intors pastreaza datele", () => {
-    const s = unseal(seal({ refreshToken: "rt-123", customerId: "999", marginPct: 28 }));
+    const s = unseal(seal({
+      refreshToken: "rt-123",
+      customerId: "999",
+      customerTimeZone: "Europe/Bucharest",
+      marginPct: 28,
+    }));
     expect(s?.refreshToken).toBe("rt-123");
     expect(s?.customerId).toBe("999");
+    expect(s?.customerTimeZone).toBe("Europe/Bucharest");
     expect(s?.marginPct).toBe(28);
   });
 

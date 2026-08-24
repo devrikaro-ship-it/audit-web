@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -80,6 +81,31 @@ describe("cine cheama Google Ads", () => {
     const { listAccounts } = await import("./gads-oauth");
     await listAccounts("at");
     expect(urls[0]).toBe("https://googleads.googleapis.com/v25/customers:listAccessibleCustomers");
+  });
+
+  it("reads the selected account time zone from the customer resource", async () => {
+    process.env.GADS_OAUTH_CLIENT_ID = "ci";
+    process.env.GADS_OAUTH_CLIENT_SECRET = "cs";
+    process.env.GADS_DEVELOPER_TOKEN = "dt";
+    process.env.GADS_REDIRECT_URI = "http://localhost:3000/api/google-ads/callback";
+    const queries: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((_u: string, init?: RequestInit) => {
+        queries.push(String(init?.body));
+        return Promise.resolve(new Response(JSON.stringify({
+          results: [{ customer: { timeZone: "America/Los_Angeles" } }],
+        }), { status: 200 }));
+      })
+    );
+    const { fetchCustomerTimeZone } = await import("./gads-oauth");
+    const timeZone = await fetchCustomerTimeZone("123", {
+      accessToken: "at",
+      developerToken: "dt",
+      loginCustomerId: "999",
+    });
+    expect(timeZone).toBe("America/Los_Angeles");
+    expect(queries[0]).toContain("customer.time_zone");
   });
 
   it("nimeni in afara de lib/gads-api.ts nu mai scrie versiunea de mana", () => {

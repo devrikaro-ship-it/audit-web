@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -22,9 +23,15 @@ export default async function Impreuna() {
   const session = unseal(jar.get(SESSION_COOKIE)?.value);
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
+  if (!session.customerTimeZone) redirect("/google-ads/conturi");
   if (!session.marginPct) redirect("/google-ads/marja");
 
-  const { structura, an } = await citesteCifre(session.refreshToken, session.customerId, session.loginCustomerId);
+  const { structura, an } = await citesteCifre(
+    session.refreshToken,
+    session.customerId,
+    session.customerTimeZone,
+    session.loginCustomerId
+  );
 
   return (
     <div className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
@@ -47,7 +54,7 @@ export default async function Impreuna() {
           Ce ar insemna sa lucram impreuna
         </h1>
         <p className="mb-8 text-[15.5px] leading-relaxed" style={{ color: C.gray500 }}>
-          Pe cifrele tale din ultimele 12 luni, nu pe un exemplu. Tu misti ipoteza si completezi
+          Using your latest 365 days of data, not an example. You adjust the assumption and enter
           pretul din oferta; noi nu ascundem nimic in spatele lor.
         </p>
 
@@ -81,10 +88,15 @@ export default async function Impreuna() {
 
 /**
  * Cheltuiala si randamentul contului — singurele doua cifre de care are nevoie proiectia.
- * Totalurile pe 12 luni sunt cele pe care omul le vede in interfata; structura ramane pentru
+ * The 365-day totals match the account-calendar window shown in the audit; structure remains for
  * cazul in care interogarea pe an nu raspunde.
  */
-async function citesteCifre(refreshToken: string, customerId: string, loginCustomerId?: string) {
+async function citesteCifre(
+  refreshToken: string,
+  customerId: string,
+  customerTimeZone: string,
+  loginCustomerId?: string
+) {
   if (demoOn()) return { structura: demoData().structura, an: null as TotaluriAn | null };
 
   const cfg = oauthConfig();
@@ -94,7 +106,7 @@ async function citesteCifre(refreshToken: string, customerId: string, loginCusto
   const auth = { accessToken: token, developerToken: cfg.developerToken, loginCustomerId };
   const [structura, an] = await Promise.all([
     fetchStructura(customerId, auth).catch(() => null),
-    citesteAn(customerId, auth),
+    citesteAn(customerId, auth, customerTimeZone),
   ]);
   return { structura, an };
 }

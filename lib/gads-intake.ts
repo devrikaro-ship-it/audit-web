@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 // Intake: aduce catalogul de Shopping al contului conectat si il transforma in randurile
 // pe care le mananca motorul (`lib/gads-audit.ts`).
 //
@@ -5,7 +6,7 @@
 // au avut activitate — Google arunca randurile cu totul pe zero. Daca ne-am opri acolo,
 // produsele moarte (Zombies) ar fi structural invizibile si am raporta mereu zero. Deci:
 //   1. CATALOG      — fara segments.date, fara metrici -> lista COMPLETA, inclusiv nevandute
-//   2. PERFORMANTA  — cu metrici pe 12 luni            -> doar cele care au rulat
+//   2. PERFORMANCE  — metrics over the latest 365 days -> products with activity
 // Join pe item id; ce e in catalog dar lipseste din performanta = Zombie (0/0/0).
 //
 // Verificat pe cont real (puria, 06-08-2026): ambele interogari raspund. Pentru industrie
@@ -16,19 +17,19 @@
 import { googleAdsSearch, type GoogleAdsAuth } from "./net";
 import type { Product } from "./gads-audit";
 
-/** Fereastra de analiza pentru constatari. 12 luni = un an intreg de sezonalitate, cum cere SPEC-ul. */
+/** The primary evidence window contains the latest 365 account-calendar dates. */
 export const WINDOW_DAYS = 365;
 
 /**
  * Ferestrele pe care se poate citi harta catalogului. Implicit prima: pe 30 de zile, "produsul
- * asta n-a vandut" chiar inseamna ceva, pe cand pe 12 luni aproape orice produs a prins candva
+ * asta n-a vandut" chiar inseamna ceva, pe cand pe 365 days aproape orice produs a prins candva
  * o vanzare si toate grupele se amesteca.
  */
 export const FERESTRE = [
   { zile: 30, eticheta: "30 de zile" },
   { zile: 90, eticheta: "3 luni" },
   { zile: 180, eticheta: "6 luni" },
-  { zile: 365, eticheta: "12 luni" },
+  { zile: 365, eticheta: "365 days" },
 ] as const;
 
 export type PerfRow = {
@@ -94,13 +95,25 @@ export function buildProducts(
   return { products, catalogComplete: true };
 }
 
-/** Inclusive GAQL window containing exactly `zile` UTC calendar dates. */
-export function dateRange(today = new Date(), zile = WINDOW_DAYS): { from: string; to: string } {
-  const to = new Date(today);
-  const from = new Date(today);
+/** Inclusive GAQL window containing exactly `zile` dates in the customer account calendar. */
+export function dateRange(
+  today: Date,
+  zile: number,
+  customerTimeZone: string
+): { from: string; to: string } {
+  const parts = new Intl.DateTimeFormat("en-US-u-ca-gregory-nu-latn", {
+    timeZone: customerTimeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(today);
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value);
+  const accountDate = new Date(Date.UTC(value("year"), value("month") - 1, value("day")));
+  const from = new Date(accountDate);
   from.setUTCDate(from.getUTCDate() - (zile - 1));
-  const iso = (d: Date) => d.toISOString().slice(0, 10);
-  return { from: iso(from), to: iso(to) };
+  const iso = (date: Date) => date.toISOString().slice(0, 10);
+  return { from: iso(from), to: iso(accountDate) };
 }
 
 export function catalogQuery(): string {
@@ -137,10 +150,11 @@ type RawRow = {
 export async function fetchShoppingProducts(
   customerId: string,
   auth: GoogleAdsAuth,
+  customerTimeZone: string,
   today = new Date(),
   zile = WINDOW_DAYS
 ): Promise<{ products: Product[]; catalogComplete: boolean }> {
-  const { from, to } = dateRange(today, zile);
+  const { from, to } = dateRange(today, zile, customerTimeZone);
 
   const perfRaw = (await googleAdsSearch(customerId, perfQuery(from, to), auth)) as RawRow[];
   const perfRows: PerfRow[] = perfRaw.map((r) => ({

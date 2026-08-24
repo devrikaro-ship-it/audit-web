@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 // Starea masurarii din contul conectat. Se citeste INAINTE de a judeca performanta.
 //
 // De ce exista fisierul asta: Google liciteaza pe ce ii spui tu ca e important. Daca in cont
@@ -7,7 +8,7 @@
 //
 // Consecinta pentru audit: pe un cont cu masurare stricata, "produsul X nu vinde" e o
 // acuzatie falsa. Verificat pe puria (06-08-2026): 3 din 4 conversii principale erau
-// YouTube/Directions, iar contul raporta valoare 0 pe 1.236 RON cheltuiti in 12 luni.
+// YouTube/Directions, while the account reported zero value on 1,236 RON over 365 days.
 
 import { googleAdsSearch, type GoogleAdsAuth } from "./net";
 

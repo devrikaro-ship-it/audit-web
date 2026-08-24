@@ -102,6 +102,21 @@ export type AccessibleAccount = {
   loginCustomerId: string;
 };
 
+export async function fetchCustomerTimeZone(
+  customerId: string,
+  auth: GoogleAdsAuth
+): Promise<string> {
+  type Row = { customer?: { timeZone?: string } };
+  const rows = (await googleAdsSearch(
+    customerId,
+    "SELECT customer.time_zone FROM customer LIMIT 1",
+    auth
+  )) as Row[];
+  const timeZone = rows[0]?.customer?.timeZone;
+  if (!timeZone) throw new Error("Google Ads account time zone is unavailable");
+  return timeZone;
+}
+
 /**
  * Conturile pe care le poate audita omul asta. `customer_client` cere un cont-radacina, deci
  * pornim de la lista bruta de resurse accesibile si intrebam fiecare radacina ce are sub ea.

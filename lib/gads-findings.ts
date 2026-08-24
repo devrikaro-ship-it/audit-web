@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 // Traduce rezultatul brut al auditului in GRESELI, fiecare cu banii pe care ii costa ACUM.
 // Asta e stratul care face diferenta intre un tabel de cifre si un raport pe care un om
 // il citeste si intelege ce pierde.
@@ -48,8 +49,8 @@ export type Finding = {
   /** Cate au ramas nearatate, cand lista e taiata. Se spune pe fata, nu se ascunde. */
   produseRestante?: number;
   /**
-   * Findings masurate pe alta fereastra decat restul raportului (12 luni). Nu intra in cifra
-   * mare — un cost pe 30 de zile adunat la unul pe 12 luni da un total pe care nu-l poti apara.
+   * Findings measured on a different window than the report's latest 365 days stay out of its
+   * headline total; adding a 30-day cost to a 365-day cost would create an indefensible number.
    */
   exclusDinTotal?: boolean;
   /** Termenii de cautare care au ars banii, cand asta e natura constatarii. */
@@ -124,7 +125,7 @@ export type ExtraAudit = {
   shopping?: ShoppingAudit;
   cautari?: SearchAudit;
   /**
-   * Totalurile pe tot contul, pe 12 luni. Cand exista, ELE sunt cifra pe care o vede
+   * Account-wide totals for the latest 365 days. When present, they are the figure shown to
    * prospectul cand deschide Google Ads — raportul pe produse acopera doar banii legati de
    * un produs din feed, deci rateaza campaniile Search fara produs (pe MagazinFitness.ro:
    * 129.155 din 148.817 RON). Cifra mare trebuie sa se potriveasca cu interfata, altfel omul
@@ -168,7 +169,7 @@ export function buildReport(
       ron: costCont,
       tier: "MASURAT",
       body:
-        `In ultimele 12 luni au trecut ${ron(costCont)} prin cont, iar Google nu a stiut ` +
+        `Over the latest 365 days, ${ron(costCont)} passed through the account, while Google could not ` +
         `care dintre ei au adus vanzari. ` +
         (areSearchPeLangaShopping
           ? `Din ei, ${ron(t.totalCost)} s-au dus pe produsele din Shopping — despre acelea ` +
@@ -249,7 +250,7 @@ export function buildReport(
       tier: "MASURAT",
       body:
         `Sunt ${pct(result.zeroZombies.pctOfCatalog)} din catalogul tau — produse care nu au avut ` +
-        `nicio afisare in 12 luni. Nu au costat nimic, dar nici nu exista pentru cumparatori: ` +
+        `no impressions in 365 days. They cost nothing, but buyers cannot see them: ` +
         `stau in magazin fara sa ajunga vreodata in fata cuiva.`,
       produse: result.zeroZombies.list.slice(0, MAX_PRODUSE).map((p) => ({
         titlu: p.title,
@@ -292,7 +293,7 @@ export function buildReport(
         `In ultimele 30 de zile, reclamele tale au aparut la cautari care au adus clicuri ` +
         `platite si zero comenzi — ${ron(cuv.risipaTotal)} in total. ` +
         `Sunt oameni care cautau altceva decat vinzi tu. ` +
-        `Cifra e pe 30 de zile, nu pe 12 luni ca restul raportului, si de asta nu am adunat-o ` +
+        `This figure covers 30 days, not the report's latest 365 days, so it is not added ` +
         `in totalul de sus.`,
       termeni: cuv.risipa.slice(0, MAX_PRODUSE),
       termeniRestanti: Math.max(0, cuv.risipa.length - MAX_PRODUSE),
@@ -436,8 +437,8 @@ export function buildReport(
     headline: {
       ron: Math.round(headlineRon),
       label: tracking.ok
-        ? "cheltuiti fara sa se acopere in ultimele 12 luni"
-        : "cheltuiti fara sa stii ce au adus, in ultimele 12 luni",
+        ? "spent without paying back over the latest 365 days"
+        : "spent without knowing what it produced over the latest 365 days",
     },
     trackingBroken: !tracking.ok,
     findings,
@@ -454,7 +455,7 @@ function sumar(xs: number[]): number {
  * Imparte catalogul pe cele cinci etichete, gata de afisat.
  *
  * Sta SEPARAT de `buildReport` pentru ca raspunde la alta intrebare si pe alta fereastra de
- * timp: constatarile numara banii pierduti pe 12 luni, harta catalogului se citeste pe o
+ * Time: findings count money over the latest 365 days, while the catalog map uses a
  * fereastra scurta, unde "n-a vandut" chiar inseamna ceva. Amestecate intr-o singura functie,
  * una din ele ar fi ajuns pe fereastra gresita.
  *

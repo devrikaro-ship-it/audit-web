@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -22,6 +23,7 @@ export default async function Marja() {
   const session = unseal(jar.get(SESSION_COOKIE)?.value);
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
+  if (!session.customerTimeZone) redirect("/google-ads/conturi");
 
   const cfg = oauthConfig();
   let sugestie = { label: "magazin online", marginPct: 35, detected: false };
@@ -36,7 +38,7 @@ export default async function Marja() {
       accessToken: token,
       developerToken: cfg.developerToken,
       loginCustomerId: session.loginCustomerId,
-    });
+    }, session.customerTimeZone);
     nrProduse = products.length;
     sugestie = suggestMargin(products);
   } catch {

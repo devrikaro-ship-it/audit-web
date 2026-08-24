@@ -1,9 +1,10 @@
+// LANG: pending full translation to EN
 import { describe, it, expect } from "vitest";
 import { anQuery, agregaAn, bugetLunarDin } from "./gads-an";
 
-describe("totalurile contului pe 12 luni", () => {
+describe("account totals over the latest 365 days", () => {
   it("intreaba pe fereastra de un an, nu pe 30 de zile", () => {
-    // Nepotrivirea gasita pe MagazinFitness.ro (20.08.2026): pagina spunea "ultimele 12 luni"
+    // The report promised the latest 365 days but previously read LAST_30_DAYS.
     // dar cifrele veneau din LAST_30_DAYS.
     const q = anQuery("2025-08-20", "2026-08-20");
     expect(q).toContain("2025-08-20");

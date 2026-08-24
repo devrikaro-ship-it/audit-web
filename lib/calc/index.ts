@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 // Invelisul tipat peste motorul de calcul al colaborarii (`calc.js`), copiat ca atare din
 // calculatorul de ofertare (repo `automatizare-ofertare-razvan`, skill-ul `oferta`).
 //
@@ -56,7 +57,7 @@ export const { bugetTotal, defalcare, plata, ramane, pragUniform, roasImbunatati
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type ProiectieIntrari = {
-  /** Buget lunar de reclame, din contul lui (cheltuiala pe 12 luni / 12). */
+  /** Monthly ad budget derived from latest-365-day spend divided by 12. */
   bugetLunar: number;
   /** ROAS-ul contului azi, masurat. */
   roasAzi: number;

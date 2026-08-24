@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import { describe, it, expect } from "vitest";
 import { buildProducts, dateRange, perfQuery, catalogQuery, type PerfRow, type CatalogRow } from "./gads-intake";
 import { audit, suggestMargin } from "./gads-audit";
@@ -53,8 +54,8 @@ describe("join catalog <-> performanta", () => {
 });
 
 describe("interogari", () => {
-  it("uses exactly 365 inclusive calendar dates for the 12-month window", () => {
-    const { from, to } = dateRange(new Date("2026-08-06T12:00:00Z"));
+  it("uses exactly 365 inclusive account-calendar dates", () => {
+    const { from, to } = dateRange(new Date("2026-08-06T12:00:00Z"), 365, "Europe/Bucharest");
     expect(to).toBe("2026-08-06");
     expect(from).toBe("2025-08-07");
 
@@ -64,9 +65,22 @@ describe("interogari", () => {
   });
 
   it("keeps every configured window exact under inclusive GAQL boundaries", () => {
-    expect(dateRange(new Date("2026-08-06T23:59:59Z"), 30)).toEqual({
-      from: "2026-07-08",
-      to: "2026-08-06",
+    expect(dateRange(new Date("2026-08-06T23:59:59Z"), 30, "Europe/Bucharest")).toEqual({
+      from: "2026-07-09",
+      to: "2026-08-07",
+    });
+  });
+
+  it("uses the account calendar date on opposite sides of UTC midnight", () => {
+    const now = new Date("2026-08-06T23:30:00Z");
+    expect(dateRange(now, 365, "America/Los_Angeles").to).toBe("2026-08-06");
+    expect(dateRange(now, 365, "Pacific/Kiritimati").to).toBe("2026-08-07");
+  });
+
+  it("counts exact account-calendar dates across a leap day and DST boundary", () => {
+    expect(dateRange(new Date("2024-03-10T09:30:00Z"), 30, "America/Los_Angeles")).toEqual({
+      from: "2024-02-10",
+      to: "2024-03-10",
     });
   });
 

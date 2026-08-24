@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 // Motorul auditului de Google Ads pe cont conectat (modul CONNECTED).
 // Functie PURA de (produse, marja) — fara I/O, fara API. Intake-ul si raportul stau in afara.
 // Portat 1:1 din engine.py (repo audit-google-ads-devrika), cu testele lui hand-computed.
@@ -70,7 +71,7 @@ export type AuditResult = {
  * la o comanda. Pragul NU se arata clientului.
  *
  * Fix, nu proportional cu fereastra. Am incercat sa-l scalez (40 pe 30 de zile -> 487 pe un an)
- * si pe cont real a iesit o prostie: pe 12 luni nu mai trecea aproape nimic de prag, **Villains
+ * and the 365-day version erased nearly the entire Villain population on real accounts; **Villains
  * ajungea la ZERO produse** iar tot ce ardea bani se ascundea in Sidekicks. Intrebarea "am
  * destule date?" nu depinde de cat de lunga e fereastra — 40 de clicuri fara vanzare inseamna
  * acelasi lucru si intr-o luna, si intr-un an.
@@ -283,4 +284,3 @@ export function audit(
 function sum(xs: number[]): number {
   return xs.reduce((a, b) => a + b, 0);
 }
-

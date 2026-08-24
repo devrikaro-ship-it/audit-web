@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 
@@ -19,7 +20,7 @@ const audituri = [
     eticheta: "Disponibil",
     titlu: "Audit Google Ads",
     text:
-      "Iti conectezi contul de Google Ads si vezi pe cifrele tale reale din ultimele 12 luni "
+      "Connect your Google Ads account and inspect your real numbers from the latest 365 days "
       + "ce produse consuma buget fara sa vanda, cate produse nu au fost afisate niciodata si "
       + "daca masurarea conversiilor e configurata corect.",
     date: "Se conecteaza la contul tau de Google Ads, doar cu drept de citire.",

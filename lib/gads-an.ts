@@ -1,6 +1,7 @@
-// Totalurile contului pe 12 luni, exact cum le vede omul in Google Ads la "Toate campaniile".
+// LANG: pending full translation to EN
+// Account totals use the latest 365 account-calendar dates.
 //
-// De ce exista fisierul asta: pagina de simulare promitea "pe cifrele tale din ultimele 12 luni",
+// This file exists because the simulator previously promised a long evidence window while reading
 // dar lua cheltuiala din `citesteStructura` — care intreaba `LAST_30_DAYS` — si o mai si impartea
 // la 12. Pe MagazinFitness.ro (20.08.2026) iesea un buget de 989 RON/luna in loc de ~12.400, iar
 // randamentul afisat era al ultimei luni, nu al anului. Cifra pe care prospectul o compara cu
@@ -58,17 +59,18 @@ export function bugetLunarDin(an: TotaluriAn | null, cheltuiala30z = 0): number 
  */
 export async function citesteAn(
   customerId: string,
-  auth: GoogleAdsAuth
+  auth: GoogleAdsAuth,
+  customerTimeZone: string
 ): Promise<TotaluriAn | null> {
   try {
-    const { from, to } = dateRange(new Date(), WINDOW_DAYS);
+    const { from, to } = dateRange(new Date(), WINDOW_DAYS, customerTimeZone);
     const randuri = (await googleAdsSearch(customerId, anQuery(from, to), auth)) as RandAn[];
     const t = agregaAn(randuri);
     if (t.cost > 0) return t;
-    console.error("[gads-an] totaluri pe 12 luni fara cheltuiala; raportul cade pe 30 de zile");
+    console.error("[gads-an] 365-day totals contain no spend; report falls back to 30 days");
     return null;
   } catch (e) {
-    console.error("[gads-an] totalurile pe 12 luni nu au putut fi citite:", e);
+    console.error("[gads-an] failed to read the latest 365-day totals:", e);
     return null;
   }
 }

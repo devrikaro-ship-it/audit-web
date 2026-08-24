@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import { describe, it, expect } from "vitest";
 import { audit, breakEvenRoas, suggestMargin, PRAG_CLICURI, type Product } from "./gads-audit";
 
@@ -205,7 +206,7 @@ describe("segmentarea pe performanta: Heroes / Sidekicks / Villains / Zombies / 
   });
 
   it("pragul e acelasi indiferent de fereastra analizata", () => {
-    // Scalat cu fereastra, pe 12 luni nu mai trecea nimic de prag si Villains ajungea la zero
+    // Scaling by the 365-day window erased the Villain population on real accounts.
     // pe un cont real (MagazinFitness, 20.08.2026). Un produs cu 40 de clicuri si nicio vanzare
     // spune acelasi lucru si intr-o luna, si intr-un an.
     expect(PRAG_CLICURI).toBe(40);

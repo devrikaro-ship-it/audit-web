@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import { describe, it, expect } from "vitest";
 import { buildReport, segmenteaza } from "./gads-findings";
 import { assessTracking, type ConversionAction } from "./gads-tracking";
@@ -237,7 +238,7 @@ describe("risipa pe cautari", () => {
     expect(f.termeni?.[0].termen).toBe("canapea ieftina");
   });
 
-  it("NU intra in cifra mare — e pe 30 de zile, restul raportului pe 12 luni", () => {
+  it("excludes 30-day findings from the latest-365-day headline", () => {
     const rep = buildReport(audit([], 4), OK_TRACKING, 25, 4, true, { cuvinte });
     expect(rep.headline.ron).toBe(0);
     expect(rep.findings.find((x) => x.key === "termeni-risipa")!.body).toMatch(/30 de zile/);

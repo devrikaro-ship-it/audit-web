@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -91,23 +92,24 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
     loginCustomerId: session.loginCustomerId,
   };
   const customerId = session.customerId as string;
+  const customerTimeZone = session.customerTimeZone as string;
 
   // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
   // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
   const [catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari, an, ferestre] = await Promise.all([
-    fetchShoppingProducts(customerId, auth).catch(() => null),
+    fetchShoppingProducts(customerId, auth, customerTimeZone).catch(() => null),
     fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT),
     fetchStructura(customerId, auth).catch(() => undefined),
     fetchKeywordData(customerId, auth).catch(() => undefined),
     fetchPmaxData(customerId, auth).catch(() => undefined),
     fetchShoppingData(customerId, auth).catch(() => undefined),
     fetchSearchData(customerId, auth).catch(() => undefined),
-    citesteAn(customerId, auth),
+    citesteAn(customerId, auth, customerTimeZone),
     // Harta catalogului se citeste pe ferestre scurte, deci le cerem pe toate odata: patru
     // interogari in paralel costa cat cea mai lenta dintre ele, iar omul comuta apoi instant.
     Promise.all(
       FERESTRE.map((w) =>
-        fetchShoppingProducts(customerId, auth, new Date(), w.zile)
+        fetchShoppingProducts(customerId, auth, customerTimeZone, new Date(), w.zile)
           .then((r) => ({ zile: w.zile, eticheta: w.eticheta, products: r.products }))
           .catch(() => null)
       )
@@ -125,6 +127,7 @@ export default async function Raport() {
   const session = unseal(jar.get(SESSION_COOKIE)?.value);
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
+  if (!session.customerTimeZone) redirect("/google-ads/conturi");
   if (!session.marginPct) redirect("/google-ads/marja");
 
   const demo = demoOn();
@@ -193,7 +196,7 @@ export default async function Raport() {
         {/* Cifra de impact */}
         <div className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
           <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.8)" }}>
-            {session.customerName || "Contul tau"} · ultimele 12 luni
+            {session.customerName || "Contul tau"} · latest 365 days
           </p>
           <p className="mb-2 font-black leading-none tabular-nums" style={{ fontFamily: sora, fontSize: "clamp(38px,8vw,64px)" }}>
             {lei(rep.headline.ron)}
@@ -522,4 +525,3 @@ function Tabel({
     </div>
   );
 }
-

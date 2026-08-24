@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 // Sesiunea prospectului in fluxul de audit Google Ads.
 //
 // Deliberat FARA dependinta noua (iron-session & co): tot ce trebuie e un cookie httpOnly
@@ -20,6 +21,8 @@ export type GadsSession = {
   customerId?: string;
   /** Numele contului, doar ca sa-l putem afisa fara inca un apel. */
   customerName?: string;
+  /** IANA time zone reported by Google Ads for account-calendar date boundaries. */
+  customerTimeZone?: string;
   /** Managerul prin care contul e accesibil (login-customer-id la interogari). */
   loginCustomerId?: string;
   /** Marja confirmata de om (procent). Lipsa = inca n-a raspuns. */

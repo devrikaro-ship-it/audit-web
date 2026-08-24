@@ -1,3 +1,4 @@
+// LANG: pending full translation to EN
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
@@ -22,7 +23,7 @@ vi.mock("@/lib/gads-session", () => ({
   SESSION_COOKIE: "gads_session",
   unseal: () => ({
     refreshToken: "r", customerId: "123", customerName: "DeHome",
-    loginCustomerId: "999", marginPct: 25, exp: 9e12,
+    customerTimeZone: "Europe/Bucharest", loginCustomerId: "999", marginPct: 25, exp: 9e12,
   }),
 }));
 vi.mock("@/lib/gads-oauth", () => ({
@@ -47,7 +48,7 @@ vi.mock("@/lib/gads-intake", () => ({
     };
   },
   // `gads-an` isi ia intervalul de date de aici, deci mock-ul trebuie sa le aiba si pe astea —
-  // altfel citirea totalurilor pe 12 luni crapa in tacere si testul n-ar observa.
+  // The account-total reader shares this 365-day window; omitting it would hide a failure.
   WINDOW_DAYS: 365,
   dateRange: () => ({ from: "2025-08-20", to: "2026-08-20" }),
   // Pagina cere catalogul si pe ferestrele scurte, pentru harta pe performanta.
