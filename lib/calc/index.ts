@@ -10,6 +10,7 @@
 // Aici exista doar ce completeaza el din oferta primita — onorariul si procentul.
 
 import Calc from "./calc.js";
+import { requireGrossMargin } from "../gads-margin";
 
 export type Canal = { buget: number; roas: number };
 
@@ -50,7 +51,26 @@ type CalcApi = {
 
 const C = Calc as unknown as CalcApi;
 
-export const { bugetTotal, defalcare, plata, ramane, pragUniform, roasImbunatatit } = C;
+export const { plata, roasImbunatatit } = C;
+
+export function bugetTotal(input: Intrari): number {
+  requireGrossMargin(input.marja_pct);
+  return C.bugetTotal(input);
+}
+
+export function defalcare(input: Intrari): Defalcare | null {
+  requireGrossMargin(input.marja_pct);
+  return C.defalcare(input);
+}
+
+export function ramane(breakdown: Defalcare | null, marginPct: number, budget: number, totalPayment: number): number | null {
+  return C.ramane(breakdown, requireGrossMargin(marginPct), budget, totalPayment);
+}
+
+export function pragUniform(input: Intrari, plan: Varianta, budget: number): Prag {
+  requireGrossMargin(input.marja_pct);
+  return C.pragUniform(input, plan, budget);
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Proiectia folosita in raportul de audit
@@ -86,7 +106,7 @@ export type Proiectie = {
 };
 
 function intrariDin(x: ProiectieIntrari, roas: number): Intrari {
-  return { canale: { reclame: { buget: x.bugetLunar, roas } }, marja_pct: x.marjaPct, tva_pct: 21 };
+  return { canale: { reclame: { buget: x.bugetLunar, roas } }, marja_pct: requireGrossMargin(x.marjaPct), tva_pct: 21 };
 }
 
 function varianta(x: ProiectieIntrari): Varianta {
@@ -95,6 +115,7 @@ function varianta(x: ProiectieIntrari): Varianta {
 
 /** Proiectia la un ROAS dat direct — folosita si de teste, ca sa poata verifica pragul. */
 export function proiectieCuRoas(x: ProiectieIntrari, roasNou: number): Proiectie {
+  requireGrossMargin(x.marjaPct);
   const acum = defalcare(intrariDin(x, x.roasAzi));
   const cu = defalcare(intrariDin(x, roasNou));
   const v = varianta(x);
@@ -121,6 +142,7 @@ export function proiectieCuRoas(x: ProiectieIntrari, roasNou: number): Proiectie
  * si de aceea cursoarele se pot trage pana la zero.
  */
 export function proiectie(x: ProiectieIntrari): Proiectie {
+  requireGrossMargin(x.marjaPct);
   const roasNou = roasImbunatatit(x.roasAzi, x.cpcScadePct, x.convCrestePct);
   return proiectieCuRoas(x, roasNou ?? x.roasAzi);
 }

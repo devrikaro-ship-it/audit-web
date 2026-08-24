@@ -9,7 +9,8 @@ export async function salveazaMarja(formData: FormData) {
   const session = unseal(jar.get(SESSION_COOKIE)?.value);
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
 
-  const marginPct = parseGrossMargin(formData.get("marginPct"));
+  const submittedMargins = formData.getAll("marginPct");
+  const marginPct = submittedMargins.length === 1 ? parseGrossMargin(submittedMargins[0]) : null;
   if (marginPct === null) redirect("/google-ads/marja?eroare=marja");
 
   jar.set(SESSION_COOKIE, seal({ ...session, marginPct }), cookieOptions());

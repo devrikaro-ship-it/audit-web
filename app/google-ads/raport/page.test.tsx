@@ -5,6 +5,7 @@ import type { Product } from "@/lib/gads-audit";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 
 let sessionMargin: unknown = 25;
+let sessionMarginStatus: "invalid" | undefined;
 
 // Randam PAGINA REALA, nu o copie a ei. Verificarea la nivel de date spune ca cifrele sunt
 // corecte; asta spune ca ajung pe ecran — tabelul de produse chiar apare, sectiunile chiar
@@ -27,7 +28,7 @@ vi.mock("@/lib/gads-session", async (original) => ({
   SESSION_COOKIE: "gads_session",
   unseal: () => ({
     refreshToken: "r", customerId: "123", customerName: "DeHome",
-    customerTimeZone: "Europe/Bucharest", loginCustomerId: "999", marginPct: sessionMargin, exp: 9e12,
+    customerTimeZone: "Europe/Bucharest", loginCustomerId: "999", marginPct: sessionMargin, marginStatus: sessionMarginStatus, exp: 9e12,
   }),
 }));
 vi.mock("@/lib/gads-oauth", () => ({
@@ -112,12 +113,19 @@ describe("pagina de raport, randata", () => {
     sourceState.optionalModulesAvailable = true;
     demoState.enabled = false;
     sessionMargin = 25;
+    sessionMarginStatus = undefined;
     catalogReadCount = 0;
   });
 
-  it.each([undefined, "margin", 0, 0.5, 99.5, 100])("refuses invalid session margin %s before report calculations", async (margin) => {
-    sessionMargin = margin;
+  it("sends a truly missing pre-step margin through the normal margin flow", async () => {
+    sessionMargin = undefined;
     await expect(html()).rejects.toThrow("REDIRECT /google-ads/marja");
+  });
+
+  it("sends an invalid stored margin to the visible recovery state", async () => {
+    sessionMargin = undefined;
+    sessionMarginStatus = "invalid";
+    await expect(html()).rejects.toThrow("REDIRECT /google-ads/marja?eroare=marja");
   });
 
 

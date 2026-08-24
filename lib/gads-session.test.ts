@@ -37,11 +37,31 @@ describe("sesiunea prospectului", () => {
     }
   });
 
+  it.each(["28,5", " 28.5 ", "028.50"])("normalizes valid submitted margin %s before JSON and after unseal", (marginPct) => {
+    const raw = seal({ refreshToken: "rt-123", marginPct: marginPct as never });
+    const [payload] = raw.split(".");
+    expect(JSON.parse(Buffer.from(payload, "base64url").toString()).marginPct).toBe(28.5);
+    expect(unseal(raw)?.marginPct).toBe(28.5);
+  });
+
+  it.each(["28,5", " 28.5 ", "028.50"])("normalizes valid legacy margin %s to a number", (marginPct) => {
+    const session = unseal(signedSession({ refreshToken: "rt-123", marginPct, exp: 9e9 }));
+    expect(session?.marginPct).toBe(28.5);
+    expect(typeof session?.marginPct).toBe("number");
+  });
+
   it("removes invalid margins from previously signed sessions", () => {
     for (const marginPct of ["margin", 0, 0.5, 99.5, 100, null]) {
       const raw = signedSession({ refreshToken: "rt-123", marginPct, exp: 9e9 });
       expect(unseal(raw)?.marginPct).toBeUndefined();
+      expect(unseal(raw)?.marginStatus).toBe("invalid");
     }
+  });
+
+  it("keeps a truly missing pre-step margin distinct from an invalid stored margin", () => {
+    const session = unseal(signedSession({ refreshToken: "rt-123", exp: 9e9 }));
+    expect(session?.marginPct).toBeUndefined();
+    expect(session?.marginStatus).toBeUndefined();
   });
 
   it("respinge un cookie cu continut modificat", () => {

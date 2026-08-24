@@ -25,7 +25,7 @@ export default async function Impreuna() {
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.customerTimeZone) redirect("/google-ads/conturi");
   const marginPct = parseGrossMargin(session.marginPct);
-  if (marginPct === null) redirect("/google-ads/marja");
+  if (marginPct === null) redirect(session.marginStatus === "invalid" ? "/google-ads/marja?eroare=marja" : "/google-ads/marja");
 
   const { structura, an } = await citesteCifre(
     session.refreshToken,

@@ -18,9 +18,9 @@ vi.mock("@/lib/gads-session", async (original) => ({
 
 import { salveazaMarja } from "./actions";
 
-const submission = (value: unknown) => {
+const submission = (...values: unknown[]) => {
   const data = new FormData();
-  if (value !== undefined) data.set("marginPct", String(value));
+  for (const value of values) data.append("marginPct", String(value));
   return salveazaMarja(data);
 };
 
@@ -37,5 +37,11 @@ describe("gross margin server boundary", () => {
     await expect(submission(value)).rejects.toThrow("REDIRECT /google-ads/raport");
     expect(seal).toHaveBeenCalledWith(expect.objectContaining({ marginPct: value }));
     expect(cookieSet).toHaveBeenCalledOnce();
+  });
+
+  it.each([[28, 35], ["margin", 28], [28, "margin"]])("refuses duplicate fields %s and %s independently of order", async (first, second) => {
+    await expect(submission(first, second)).rejects.toThrow("REDIRECT /google-ads/marja?eroare=marja");
+    expect(seal).not.toHaveBeenCalled();
+    expect(cookieSet).not.toHaveBeenCalled();
   });
 });

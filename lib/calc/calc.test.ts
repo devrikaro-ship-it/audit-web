@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { defalcare, roasImbunatatit, proiectie, proiectieCuRoas, pragUniform, type ProiectieIntrari } from "./index";
+import { bugetTotal, defalcare, ramane, roasImbunatatit, proiectie, proiectieCuRoas, pragUniform, type ProiectieIntrari } from "./index";
 
 // Motorul vine copiat din calculatorul de ofertare, unde are propriile teste. Aici verificam
 // exact ce foloseste raportul de audit: ca invelisul cheama corect formulele si ca pragul
@@ -33,6 +33,25 @@ describe("legatura cu motorul copiat", () => {
 });
 
 describe("proiectia din raport", () => {
+  it.each([0, 100, Number.NaN, Number.POSITIVE_INFINITY])("refuses invalid public margin %s at every calculation entry", (marginPct) => {
+    const input = { canale: { reclame: { buget: 6000, roas: 3.5 } }, marja_pct: marginPct, tva_pct: 21 };
+    const validBreakdown = defalcare({ ...input, marja_pct: 35 });
+    const plan = { fee_ron: 2000, comision_pct: 5, baza: "vanzari_nete" as const };
+    expect(() => bugetTotal(input)).toThrow(RangeError);
+    expect(() => defalcare(input)).toThrow(RangeError);
+    expect(() => ramane(validBreakdown, marginPct, 6000, 0)).toThrow(RangeError);
+    expect(() => pragUniform(input, plan, 6000)).toThrow(RangeError);
+    expect(() => proiectie({ ...BAZA, marjaPct: marginPct })).toThrow(RangeError);
+    expect(() => proiectieCuRoas({ ...BAZA, marjaPct: marginPct }, 5)).toThrow(RangeError);
+  });
+
+  it("preserves finite projection results for a valid decimal margin", () => {
+    const result = proiectie({ ...BAZA, marjaPct: 28.5 });
+    expect(result.profitAcum).not.toBeNull();
+    expect(Number.isFinite(result.profitAcum)).toBe(true);
+    expect(Number.isFinite(result.profitCu)).toBe(true);
+  });
+
   it("arata si cat plateste catre noi, nu doar cat castiga", () => {
     const p = proiectie(BAZA);
     expect(p.plataDevrika).toBeGreaterThan(BAZA.feeRon);

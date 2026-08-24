@@ -30,8 +30,11 @@ export type GadsSession = {
   loginCustomerId?: string;
   /** Marja confirmata de om (procent). Lipsa = inca n-a raspuns. */
   marginPct?: number;
+  marginStatus?: "invalid";
   exp: number;
 };
+
+type GadsSessionInput = Omit<GadsSession, "exp" | "marginPct"> & { marginPct?: unknown };
 
 function secret(): string {
   const s = process.env.GADS_SESSION_SECRET;
@@ -49,9 +52,16 @@ function sign(payload: string): string {
   return createHmac("sha256", secret()).update(payload).digest("base64url");
 }
 
-export function seal(session: Omit<GadsSession, "exp">): string {
-  if (session.marginPct !== undefined) requireGrossMargin(session.marginPct);
-  const withExp: GadsSession = { ...session, exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE };
+export function seal(session: GadsSessionInput): string {
+  const hasMargin = Object.prototype.hasOwnProperty.call(session, "marginPct");
+  const normalized = { ...session } as Record<string, unknown>;
+  if (hasMargin) {
+    normalized.marginPct = requireGrossMargin(session.marginPct);
+    delete normalized.marginStatus;
+  } else if (session.marginStatus !== "invalid") {
+    delete normalized.marginStatus;
+  }
+  const withExp = { ...normalized, exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE } as GadsSession;
   const payload = Buffer.from(JSON.stringify(withExp)).toString("base64url");
   return `${payload}.${sign(payload)}`;
 }
@@ -71,7 +81,20 @@ export function unseal(raw: string | undefined): GadsSession | null {
   try {
     const s = JSON.parse(Buffer.from(payload, "base64url").toString()) as GadsSession;
     if (!s.refreshToken || s.exp * 1000 < Date.now()) return null;
-    if (s.marginPct !== undefined && parseGrossMargin(s.marginPct) === null) delete s.marginPct;
+    const hasMargin = Object.prototype.hasOwnProperty.call(s, "marginPct");
+    const carriedInvalid = s.marginStatus === "invalid";
+    delete s.marginStatus;
+    if (hasMargin) {
+      const margin = parseGrossMargin(s.marginPct);
+      if (margin === null) {
+        delete s.marginPct;
+        s.marginStatus = "invalid";
+      } else {
+        s.marginPct = margin;
+      }
+    } else if (carriedInvalid) {
+      s.marginStatus = "invalid";
+    }
     return s;
   } catch {
     return null;
