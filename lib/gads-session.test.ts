@@ -64,6 +64,22 @@ describe("sesiunea prospectului", () => {
     expect(session?.marginStatus).toBeUndefined();
   });
 
+  it("treats an explicit undefined margin as absent and preserves only a derived invalid status", () => {
+    const missing = unseal(seal({ refreshToken: "rt-123", marginPct: undefined }));
+    expect(missing?.marginPct).toBeUndefined();
+    expect(missing?.marginStatus).toBeUndefined();
+
+    const invalid = unseal(seal({ refreshToken: "rt-123", marginPct: undefined, marginStatus: "invalid" }));
+    expect(invalid?.marginPct).toBeUndefined();
+    expect(invalid?.marginStatus).toBe("invalid");
+  });
+
+  it("clears an invalid status when a new valid margin is supplied", () => {
+    const session = unseal(seal({ refreshToken: "rt-123", marginPct: "28,5" as never, marginStatus: "invalid" }));
+    expect(session?.marginPct).toBe(28.5);
+    expect(session?.marginStatus).toBeUndefined();
+  });
+
   it("respinge un cookie cu continut modificat", () => {
     const raw = seal({ refreshToken: "rt-123" });
     const [payload, sig] = raw.split(".");

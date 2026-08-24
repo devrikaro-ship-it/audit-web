@@ -33,6 +33,7 @@ export async function alegeCont(formData: FormData) {
       customerTimeZone,
       loginCustomerId,
       marginPct: session.marginPct,
+      marginStatus: session.marginStatus,
     }),
     cookieOptions()
   );

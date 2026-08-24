@@ -53,13 +53,14 @@ function sign(payload: string): string {
 }
 
 export function seal(session: GadsSessionInput): string {
-  const hasMargin = Object.prototype.hasOwnProperty.call(session, "marginPct");
+  const hasMargin = session.marginPct !== undefined;
   const normalized = { ...session } as Record<string, unknown>;
   if (hasMargin) {
     normalized.marginPct = requireGrossMargin(session.marginPct);
     delete normalized.marginStatus;
-  } else if (session.marginStatus !== "invalid") {
-    delete normalized.marginStatus;
+  } else {
+    delete normalized.marginPct;
+    if (session.marginStatus !== "invalid") delete normalized.marginStatus;
   }
   const withExp = { ...normalized, exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE } as GadsSession;
   const payload = Buffer.from(JSON.stringify(withExp)).toString("base64url");
