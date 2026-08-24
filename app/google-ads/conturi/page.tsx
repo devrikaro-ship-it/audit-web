@@ -5,7 +5,7 @@ import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, listAccounts, type AccessibleAccount } from "@/lib/gads-oauth";
 import { demoOn, demoAccounts } from "@/lib/gads-demo";
-import { GADS_LOCALIZED_COPY, selectedAccountDataReadFailure } from "@/lib/gads-localized-copy";
+import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
 import { alegeCont } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -37,7 +37,7 @@ export default async function Conturi({
   const usable = accounts.filter((a) => !a.manager);
   const hasAccountReadError = requestedError || errorDetails !== null;
   const accountReadExplanation = requestedError
-    ? selectedAccountDataReadFailure()
+    ? GADS_LOCALIZED_COPY.selectedAccountDataReadFailure
     : GADS_LOCALIZED_COPY.accountListReadFailure;
 
   return (

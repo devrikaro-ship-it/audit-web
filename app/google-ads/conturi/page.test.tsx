@@ -38,14 +38,26 @@ describe("account selection recovery", () => {
       searchParams: Promise.resolve({ eroare: "cont" }),
     }));
     const explanation = html.match(/data-testid="account-read-error"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
-    const accountDataSubject = GADS_LOCALIZED_COPY.accountDataRetention
-      .split(" ")
-      .slice(2)
-      .join(" ");
     expect(html).toContain('data-error-kind="selected-account-data-unavailable"');
-    expect(explanation).toContain(accountDataSubject);
+    expect(explanation).toBe(GADS_LOCALIZED_COPY.selectedAccountDataReadFailure);
     expect(explanation).not.toBe(GADS_LOCALIZED_COPY.accountListReadFailure);
     expect(html).toContain('href="/api/google-ads/start"');
+  });
+
+  it("keeps technical recovery copy independent from marketing copy", () => {
+    const localizedCopy = GADS_LOCALIZED_COPY as {
+      accountDataRetention: string;
+      selectedAccountDataReadFailure: string;
+    };
+    const originalMarketingCopy = localizedCopy.accountDataRetention;
+    const expectedRecoveryCopy = localizedCopy.selectedAccountDataReadFailure;
+
+    try {
+      localizedCopy.accountDataRetention = "Changed marketing copy";
+      expect(localizedCopy.selectedAccountDataReadFailure).toBe(expectedRecoveryCopy);
+    } finally {
+      localizedCopy.accountDataRetention = originalMarketingCopy;
+    }
   });
 
   it("preserves the account-list explanation when listing accounts fails", async () => {
