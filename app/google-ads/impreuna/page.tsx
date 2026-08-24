@@ -9,6 +9,7 @@ import { citesteAn, bugetLunarDin, type TotaluriAn } from "@/lib/gads-an";
 import { demoOn, demoData } from "@/lib/gads-demo";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 import Simulator from "./Simulator";
+import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
 
 // Pagina "Cu Devrika": continuarea fireasca a raportului. Raportul spune ce pierde acum; asta
 // spune ce ar insemna sa lucram impreuna, pe aceleasi cifre reale ale lui.
@@ -35,7 +36,7 @@ export default async function Impreuna() {
   );
 
   return (
-    <div className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
+    <div {...publicOAuthAttributes("simulator")} className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
       <div className="mx-auto w-full max-w-[780px]">
         <Link href="/google-ads/raport" className="mb-8 flex items-center justify-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}

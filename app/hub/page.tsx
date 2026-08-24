@@ -2,6 +2,7 @@ import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
+import { publicOAuthAttributes, PUBLIC_OAUTH_LOCALIZED_COPY } from "@/lib/gads-public-oauth-contract";
 
 // Pagina-umbrela: "Audit Devrika" = locul din care pleaca TOATE auditurile.
 // Serveste la radacina audit.devrika.ro (vezi rewrite-ul din next.config.ts) si e pagina
@@ -54,7 +55,7 @@ const audituri = [
 
 export default function Hub() {
   return (
-    <div className="overflow-x-hidden" style={{ fontFamily: inter }}>
+    <div {...publicOAuthAttributes("hub")} className="overflow-x-hidden" style={{ fontFamily: inter }}>
 
       <nav className="fixed top-0 left-0 right-0 z-50 border-b px-8"
         style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(12px)", borderColor: "rgba(71,73,158,0.08)" }}>
@@ -89,13 +90,12 @@ export default function Hub() {
         </p>
         <p className="mx-auto mb-10 max-w-[660px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
           Alegi ce vrei analizat, iar acolo unde e nevoie iti conectezi contul de publicitate.
-          Aplicatia citeste datele, le compara cu pragurile
-          afacerii tale si iti arata rezultatul pe loc. <b>Nu modifica nimic</b> in conturile tale
+          {PUBLIC_OAUTH_LOCALIZED_COPY.applicationReadsData} <b>Nu modifica nimic</b> in conturile tale
           si poti retrage accesul oricand.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-2.5 text-[13px]" style={{ color: C.gray500 }}>
-          {["Gratuit", "Fara card bancar", "Nu modificam nimic", "Rezultat pe loc"].map((t) => (
+          {["Gratuit", "Fara card bancar", PUBLIC_OAUTH_LOCALIZED_COPY.noChangesBadge, "Rezultat pe loc"].map((t) => (
             <span key={t} className="rounded-full border px-3.5 py-1.5" style={{ borderColor: "#e2e8f0", background: "#fff" }}>{t}</span>
           ))}
         </div>
@@ -163,13 +163,12 @@ export default function Hub() {
             Ce facem cu datele tale
           </h2>
           <p className="mb-8 text-center text-[15.5px] leading-relaxed" style={{ color: C.gray500 }}>
-            Cand un audit are nevoie de acces la un cont de publicitate, ti-l cerem prin
-            mecanismul oficial al platformei.
+            {PUBLIC_OAUTH_LOCALIZED_COPY.officialAccessMechanism}
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {[
               { t: "Citim doar ce e necesar", d: "Pentru Google Ads: campaniile de Shopping si configurarea conversiilor. Nimic din Gmail, Drive sau alte servicii." },
-              { t: "Nu modificam nimic", d: "Nu putem porni sau opri campanii si nu putem cheltui bani." },
+              { t: PUBLIC_OAUTH_LOCALIZED_COPY.noChangesBadge, d: PUBLIC_OAUTH_LOCALIZED_COPY.noCampaignMutations },
               { t: GADS_LOCALIZED_COPY.accountDataRetention, d: "Analiza se face cat esti pe site. Dupa raport, datele contului nu raman la noi." },
               { t: "Retragi accesul cand vrei", d: "Dintr-un click, din setarile contului tau — fara sa ne intrebi pe noi." },
             ].map((r) => (

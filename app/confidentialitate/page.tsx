@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
+import { publicOAuthAttributes, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
 // Politica de confidentialitate a APLICATIEI (nu a agentiei). Google o cere pe acelasi host
 // cu home page-ul declarat in consent screen si linkata DIN home page — cele doua tipare
@@ -26,7 +27,7 @@ const P = ({ children }: { children: React.ReactNode }) => (
 
 export default function Confidentialitate() {
   return (
-    <div className="min-h-dvh px-6 py-14" style={{ fontFamily: inter, background: "#fff" }}>
+    <div {...publicOAuthAttributes("privacy")} className="min-h-dvh px-6 py-14" style={{ fontFamily: inter, background: "#fff" }}>
       <div className="mx-auto w-full max-w-[720px]">
         <Link href="/google-ads" className="mb-9 flex items-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -57,7 +58,7 @@ export default function Confidentialitate() {
 
         <H2>Ce date citim din contul tau Google</H2>
         <P>
-          Cu acordul tau explicit, aplicatia cere o singura permisiune Google (<i>adwords</i>).
+          {publicOAuthStatement("oauth-is-not-read-only")}
           Aplicatia citeste urmatoarele date din contul tau de Google Ads:
         </P>
         <ul className="mb-3 flex flex-col gap-2">

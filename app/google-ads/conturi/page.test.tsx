@@ -32,6 +32,12 @@ vi.mock("@/lib/gads-demo", () => ({
 vi.mock("./actions", () => ({ alegeCont: async () => {} }));
 
 describe("account selection recovery", () => {
+  it("renders the successful picker state through the canonical contract", async () => {
+    const Page = (await import("./page")).default;
+    const html = renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }));
+    expect(html).toContain('data-public-oauth-surface="account-picker:success"');
+  });
+
   it("identifies selected-account data as unavailable after account selection", async () => {
     const Page = (await import("./page")).default;
     const html = renderToStaticMarkup(await Page({
@@ -39,6 +45,7 @@ describe("account selection recovery", () => {
     }));
     const explanation = html.match(/data-testid="account-read-error"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
     expect(html).toContain('data-error-kind="selected-account-data-unavailable"');
+    expect(html).toContain('data-public-oauth-surface="account-picker:account-error"');
     expect(explanation).toBe(GADS_LOCALIZED_COPY.selectedAccountDataReadFailure);
     expect(explanation).not.toBe(GADS_LOCALIZED_COPY.accountListReadFailure);
     expect(html).toContain('href="/api/google-ads/start"');
@@ -68,6 +75,7 @@ describe("account selection recovery", () => {
     }));
     const explanation = html.match(/data-testid="account-read-error"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
     expect(html).toContain('data-error-kind="account-list-unavailable"');
+    expect(html).toContain('data-public-oauth-surface="account-picker:list-error"');
     expect(explanation).toBe(GADS_LOCALIZED_COPY.accountListReadFailure);
   });
 });

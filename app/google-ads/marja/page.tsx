@@ -9,6 +9,7 @@ import { suggestMargin } from "@/lib/gads-audit";
 import { demoOn, demoData } from "@/lib/gads-demo";
 import { salveazaMarja } from "./actions";
 import MarginForm from "./MarginForm";
+import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
 
 // Singura intrebare de business din tot fluxul. NU intrebam ROAS-ul minim — oamenii nu si-l
 // pot calcula si ii pierzi in formular. Intrebam marja, pe care orice comerciant o stie, si
@@ -50,7 +51,7 @@ export default async function Marja({
   }
 
   return (
-    <div className="min-h-dvh px-6 py-16" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
+    <div {...publicOAuthAttributes("margin", eroare === "marja" ? "error" : "normal")} className="min-h-dvh px-6 py-16" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
       <div className="mx-auto w-full max-w-[620px]">
         <Link href="/google-ads" className="mb-8 flex items-center justify-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}

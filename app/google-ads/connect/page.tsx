@@ -2,6 +2,7 @@ import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { missingConfig } from "@/lib/gads-oauth";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
+import { publicOAuthAttributes, PUBLIC_OAUTH_LOCALIZED_COPY } from "@/lib/gads-public-oauth-contract";
 
 // Ecranul de dinaintea consimtamantului Google. Rolul lui e sa scada frica: omul e pe punctul
 // sa dea acces la contul in care tine bani, deci spune EXACT ce cerem si ce nu.
@@ -30,7 +31,7 @@ export default async function Connect({
   const mesaj = eroare ? (ERORI[eroare] ?? ERORI.google) : null;
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center"
+    <div {...publicOAuthAttributes("connect", mesaj ? "error" : "normal")} className="flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center"
       style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
 
       <Link href="/google-ads" className="mb-10 flex items-center gap-2.5 no-underline">
@@ -81,7 +82,7 @@ export default async function Connect({
             <ul className="mb-8 flex flex-col gap-2.5 text-left">
               {[
                 { ok: true, t: `Citim datele de Shopping din ultimele ${AUDIT_WINDOW_LABEL}` },
-                { ok: false, t: "NU putem modifica nimic — nici bugete, nici campanii" },
+                { ok: false, t: PUBLIC_OAUTH_LOCALIZED_COPY.connectNoMutations },
                 { ok: false, t: "NU cerem acces la Gmail, Drive sau alte servicii" },
                 { ok: true, t: "Poti retrage accesul oricand, dintr-un click, din contul tau Google" },
               ].map((r) => (

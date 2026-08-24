@@ -19,5 +19,12 @@ it("renders the margin explanation and retry path after invalid submission", asy
   const MarginPage = (await import("./page")).default;
   const html = renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({ eroare: "marja" }) }));
   expect(html).toContain(GROSS_MARGIN_ERROR);
+  expect(html).toContain('data-public-oauth-surface="margin:error"');
   expect(html).toContain('data-test="margin-retry"');
+});
+
+it("renders the normal margin state through the canonical contract", async () => {
+  const MarginPage = (await import("./page")).default;
+  const html = renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({}) }));
+  expect(html).toContain('data-public-oauth-surface="margin:normal"');
 });

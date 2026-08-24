@@ -6,6 +6,7 @@ import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, listAccounts, type AccessibleAccount } from "@/lib/gads-oauth";
 import { demoOn, demoAccounts } from "@/lib/gads-demo";
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
+import { publicOAuthAttributes, PUBLIC_OAUTH_LOCALIZED_COPY } from "@/lib/gads-public-oauth-contract";
 import { alegeCont } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -41,7 +42,7 @@ export default async function Conturi({
     : GADS_LOCALIZED_COPY.accountListReadFailure;
 
   return (
-    <div className="min-h-dvh px-6 py-16" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
+    <div {...publicOAuthAttributes("account-picker", requestedError ? "account-error" : errorDetails !== null ? "list-error" : "success")} className="min-h-dvh px-6 py-16" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
       <div className="mx-auto w-full max-w-[620px]">
         <Link href="/google-ads" className="mb-8 flex items-center justify-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -117,7 +118,7 @@ export default async function Conturi({
         </div>
 
         <p className="mt-6 text-center text-[12.5px]" style={{ color: C.gray400 }}>
-          Citim doar datele de Shopping. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.
+          {PUBLIC_OAUTH_LOCALIZED_COPY.shoppingReadNoMutationAndRevoke}
         </p>
       </div>
     </div>

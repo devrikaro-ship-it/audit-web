@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
+import { publicOAuthAttributes, PUBLIC_OAUTH_LOCALIZED_COPY } from "@/lib/gads-public-oauth-contract";
 
 // Landing pentru auditul PE CONT CONECTAT (Google Shopping).
 // Sora vizuala a /audit-seo, dar alt produs: acolo scanam site-ul din exterior,
@@ -96,13 +97,13 @@ const steps = [
 
 const safety = [
   {
-    t: "Doar citim",
-    d: "Nu pornim, nu oprim si nu modificam nimic in contul tau.",
+    t: PUBLIC_OAUTH_LOCALIZED_COPY.readsOnlyLabel,
+    d: PUBLIC_OAUTH_LOCALIZED_COPY.noAccountChanges,
     icon: <><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></>,
   },
   {
     t: "Doar datele de Shopping",
-    d: "Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive.",
+    d: PUBLIC_OAUTH_LOCALIZED_COPY.googleAdsPermission,
     icon: <><rect x="3" y="8" width="18" height="13" rx="2" /><path d="M8 8V6a4 4 0 0 1 8 0v2" /></>,
   },
   {
@@ -119,7 +120,7 @@ const safety = [
 
 export default function GoogleAdsLanding() {
   return (
-    <div className="overflow-x-hidden" style={{ fontFamily: inter }}>
+    <div {...publicOAuthAttributes("landing")} className="overflow-x-hidden" style={{ fontFamily: inter }}>
 
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b px-8"
@@ -189,7 +190,7 @@ export default function GoogleAdsLanding() {
           <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          Citim doar datele de Shopping. Nu modificam nimic in contul tau.
+          {PUBLIC_OAUTH_LOCALIZED_COPY.shoppingReadAndNoMutation}
         </div>
 
         {/* Preview raport */}

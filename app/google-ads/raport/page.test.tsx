@@ -134,6 +134,7 @@ describe("pagina de raport, randata", () => {
   // nu i-l explica nicaieri. SPEC: trei niveluri, fiecare etichetat oriunde apare.
   it("renders honesty labels on every successful report", async () => {
     const h = await html();
+    expect(h).toContain('data-public-oauth-surface="report:success"');
     expect(h).toContain('data-report-surface="honesty-and-caveats"');
     expect(h).toContain("MASURAT");
     expect(h).toContain("ESTIMARE");
@@ -208,6 +209,7 @@ describe("pagina de raport, randata", () => {
     sourceState.primaryCatalogFails = true;
     const h = await html();
     expect(h).toContain('data-report-surface="catalog-unavailable-recovery"');
+    expect(h).toContain('data-public-oauth-surface="report:catalog-unavailable"');
     expect(h).toContain("Nu am putut citi catalogul de Shopping");
     expect(h).toContain("Incearca din nou");
   });

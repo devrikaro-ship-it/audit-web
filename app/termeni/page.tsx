@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
+import { publicOAuthAttributes, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
 // Termenii APLICATIEI, pe acelasi host cu home page-ul declarat in consent screen.
 // Vezi nota din app/confidentialitate/page.tsx pentru motivul tehnic.
@@ -18,7 +19,7 @@ const P = ({ children }: { children: React.ReactNode }) => (
 
 export default function Termeni() {
   return (
-    <div className="min-h-dvh px-6 py-14" style={{ fontFamily: inter, background: "#fff" }}>
+    <div {...publicOAuthAttributes("terms")} className="min-h-dvh px-6 py-14" style={{ fontFamily: inter, background: "#fff" }}>
       <div className="mx-auto w-full max-w-[720px]">
         <Link href="/google-ads" className="mb-9 flex items-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -65,8 +66,7 @@ export default function Termeni() {
 
         <H2>Ce nu facem niciodata</H2>
         <P>
-          Nu modificam nimic in contul tau: nu pornim si nu oprim campanii, nu schimbam bugete, nu
-          adaugam si nu stergem cuvinte cheie. Accesul pe care ni-l dai il poti retrage oricand din
+          {publicOAuthStatement("application-performs-no-mutations")} Accesul pe care ni-l dai il poti retrage oricand din
           setarile contului tau Google.
         </P>
 

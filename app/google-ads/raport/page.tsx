@@ -10,6 +10,7 @@ import { audit, breakEvenRoas } from "@/lib/gads-audit";
 import { buildReport, segmenteaza, type Tier, type Segmentare } from "@/lib/gads-findings";
 import CatalogPePerformanta from "./CatalogPePerformanta";
 import { fetchStructura } from "@/lib/gads-structure";
+import { registeredPublicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
 import { citesteAn, bugetLunarDin, type TotaluriAn } from "@/lib/gads-an";
 import { fetchPmaxData, analizeazaPmax } from "@/lib/gads-pmax";
 import { fetchShoppingData, analizeazaShopping } from "@/lib/gads-shopping";
@@ -177,7 +178,7 @@ export default async function Raport() {
   const nejudecabile = rep.findings.filter((f) => f.quarantined);
 
   return (
-    <div className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
+    <div {...registeredPublicOAuthAttributes.report.success} className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
       <main data-report-root className="mx-auto w-full max-w-[780px]">
         <ReportSurface id="navigation" className="contents">
         <Link href="/google-ads" className="mb-8 flex items-center justify-center gap-2.5 no-underline">
@@ -427,7 +428,7 @@ export default async function Raport() {
  */
 function Indisponibil() {
   return (
-    <ReportSurface id="catalog-unavailable-recovery" className="flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center"
+    <ReportSurface {...registeredPublicOAuthAttributes.report["catalog-unavailable"]} id="catalog-unavailable-recovery" className="flex min-h-dvh flex-col items-center justify-center px-6 py-16 text-center"
       style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
       <div className="w-full max-w-[520px] rounded-2xl border bg-white p-8 md:p-10"
         style={{ borderColor: "#e6ebf4", boxShadow: "0 8px 32px rgba(11,31,58,0.06)" }}>
