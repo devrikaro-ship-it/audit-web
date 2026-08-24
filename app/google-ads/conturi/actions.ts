@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { unseal, seal, SESSION_COOKIE, cookieOptions } from "@/lib/gads-session";
 import { accessTokenFrom, fetchCustomerTimeZone, oauthConfig } from "@/lib/gads-oauth";
 import { demoOn } from "@/lib/gads-demo";
+import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 
 /** Salveaza contul ales in sesiune si trece la pasul urmator (marja). */
 export async function alegeCont(formData: FormData) {
@@ -18,11 +19,11 @@ export async function alegeCont(formData: FormData) {
   const loginCustomerId = String(formData.get("loginCustomerId") ?? "").replace(/\D/g, "") || undefined;
   const customerTimeZone = demoOn()
     ? "UTC"
-    : await fetchCustomerTimeZone(customerId, {
+    : await runGoogleAdsRead("fetchCustomerTimeZone", async () => fetchCustomerTimeZone(customerId, {
         accessToken: await accessTokenFrom(session.refreshToken),
         developerToken: oauthConfig().developerToken,
         loginCustomerId,
-      }).catch(() => redirect("/google-ads/conturi?eroare=cont"));
+      })).catch(() => redirect("/google-ads/conturi?eroare=cont"));
 
   jar.set(
     SESSION_COOKIE,

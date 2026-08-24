@@ -60,7 +60,7 @@ export default function Confidentialitate() {
         </P>
         <ul className="mb-3 flex flex-col gap-2">
           {[
-            "lista conturilor de Google Ads la care ai acces, ca sa poti alege pe care il analizam",
+            publicOAuthProjection.auditDataCategories,
             publicOAuthProjection.auditDataReadDisclosure,
             publicOAuthProjection.applicationReadsData,
           ].map((t) => (

@@ -29,6 +29,7 @@ import type { ShoppingData } from "@/lib/gads-shopping";
 import type { SearchData } from "@/lib/gads-search";
 import type { TermenBrut } from "@/lib/gads-keywords";
 import { ReportSurface, reportGuards, runReportStep } from "./report-contract";
+import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Raportul tau · Audit Google Ads Devrika" };
@@ -98,19 +99,19 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
   // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
   // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
   const [catalog, tracking, structura, brutCuvinte, brutPmax, brutShop, brutCautari, an, ferestre] = await Promise.all([
-    runReportStep("fetchShoppingProducts", () => fetchShoppingProducts(customerId, auth, customerTimeZone).catch(() => null)),
-    runReportStep("fetchTracking", () => fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT)),
-    runReportStep("fetchStructura", () => fetchStructura(customerId, auth).catch(() => undefined)),
-    runReportStep("fetchKeywordData", () => fetchKeywordData(customerId, auth).catch(() => undefined)),
-    runReportStep("fetchPmaxData", () => fetchPmaxData(customerId, auth).catch(() => undefined)),
-    runReportStep("fetchShoppingData", () => fetchShoppingData(customerId, auth).catch(() => undefined)),
-    runReportStep("fetchSearchData", () => fetchSearchData(customerId, auth).catch(() => undefined)),
-    runReportStep("citesteAn", () => citesteAn(customerId, auth, customerTimeZone)),
+    runGoogleAdsRead("fetchShoppingProducts", () => fetchShoppingProducts(customerId, auth, customerTimeZone).catch(() => null)),
+    runGoogleAdsRead("fetchTracking", () => fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT)),
+    runGoogleAdsRead("fetchStructura", () => fetchStructura(customerId, auth).catch(() => undefined)),
+    runGoogleAdsRead("fetchKeywordData", () => fetchKeywordData(customerId, auth).catch(() => undefined)),
+    runGoogleAdsRead("fetchPmaxData", () => fetchPmaxData(customerId, auth).catch(() => undefined)),
+    runGoogleAdsRead("fetchShoppingData", () => fetchShoppingData(customerId, auth).catch(() => undefined)),
+    runGoogleAdsRead("fetchSearchData", () => fetchSearchData(customerId, auth).catch(() => undefined)),
+    runGoogleAdsRead("citesteAn", () => citesteAn(customerId, auth, customerTimeZone)),
     // Harta catalogului se citeste pe ferestre scurte, deci le cerem pe toate odata: patru
     // interogari in paralel costa cat cea mai lenta dintre ele, iar omul comuta apoi instant.
     Promise.all(
       FERESTRE.map((w) =>
-        runReportStep("fetchShoppingProducts", () => fetchShoppingProducts(customerId, auth, customerTimeZone, new Date(), w.zile))
+        runGoogleAdsRead("fetchShoppingProducts", () => fetchShoppingProducts(customerId, auth, customerTimeZone, new Date(), w.zile))
           .then((r) => ({ zile: w.zile, eticheta: w.eticheta, products: r.products }))
           .catch(() => null)
       )

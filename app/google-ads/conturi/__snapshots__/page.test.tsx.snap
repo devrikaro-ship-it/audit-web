@@ -18,7 +18,7 @@ root/div[0]/div[0]/div[0]/p[1]/text "Nu am putut citi datele contului."
 root/div[0]/div[0]/div[0]/a[0] href="/api/google-ads/start"
 root/div[0]/div[0]/div[0]/a[0]/text "Reincearca conectarea"
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
 `;
 
 exports[`account selection recovery > preserves the account-list explanation when listing accounts fails > account-picker:list-error 1`] = `
@@ -41,7 +41,7 @@ root/div[0]/div[0]/div[0]/p[2]/text "list failed"
 root/div[0]/div[0]/div[0]/a[0] href="/api/google-ads/start"
 root/div[0]/div[0]/div[0]/a[0]/text "Reincearca conectarea"
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
 `;
 
 exports[`account selection recovery > renders the successful picker state through the canonical contract > account-picker:success-zero 1`] = `
@@ -62,7 +62,7 @@ root/div[0]/div[0]/div[0]/p[1]/text "Contul cu care te-ai conectat nu are niciun
 root/div[0]/div[0]/div[0]/a[0] href="/api/google-ads/start"
 root/div[0]/div[0]/div[0]/a[0]/text "Incearca alt cont Google"
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
 `;
 
 exports[`account selection recovery > seals the complete demo picker text > account-picker:demo 1`] = `
@@ -94,7 +94,7 @@ root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]/text "<IDENTI
 root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
 `;
 
 exports[`account selection recovery > seals the complete picker text for many account results > account-picker:success-many 1`] = `
@@ -138,7 +138,7 @@ root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/span[0]/span[1]/text "<IDENTI
 root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
 `;
 
 exports[`account selection recovery > seals the complete picker text for one account results > account-picker:success-one 1`] = `
@@ -170,5 +170,5 @@ root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]/text "<IDENTI
 root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
 `;

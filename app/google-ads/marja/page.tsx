@@ -5,6 +5,7 @@ import { C, sora, inter } from "@/lib/theme";
 import { GROSS_MARGIN_ERROR, unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import { fetchShoppingProducts } from "@/lib/gads-intake";
+import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 import { suggestMargin } from "@/lib/gads-audit";
 import { demoOn, demoData } from "@/lib/gads-demo";
 import { salveazaMarja } from "./actions";
@@ -29,6 +30,8 @@ export default async function Marja({
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.customerTimeZone) redirect("/google-ads/conturi");
+  const customerId = session.customerId;
+  const customerTimeZone = session.customerTimeZone;
 
   const cfg = oauthConfig();
   let sugestie = { label: "magazin online", marginPct: 35, detected: false };
@@ -39,11 +42,11 @@ export default async function Marja({
     sugestie = suggestMargin(products);
   } else try {
     const token = await accessTokenFrom(session.refreshToken);
-    const { products } = await fetchShoppingProducts(session.customerId, {
+    const { products } = await runGoogleAdsRead("fetchShoppingProducts", () => fetchShoppingProducts(customerId, {
       accessToken: token,
       developerToken: cfg.developerToken,
       loginCustomerId: session.loginCustomerId,
-    }, session.customerTimeZone);
+    }, customerTimeZone));
     nrProduse = products.length;
     sugestie = suggestMargin(products);
   } catch {

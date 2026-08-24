@@ -7,6 +7,7 @@ import { accessTokenFrom, listAccounts, type AccessibleAccount } from "@/lib/gad
 import { demoOn, demoAccounts } from "@/lib/gads-demo";
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
 import { publicOAuthAttributes, publicOAuthProjection } from "@/lib/gads-public-oauth-contract";
+import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 import { alegeCont } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +30,7 @@ export default async function Conturi({
     accounts = demoAccounts();
   } else {
     try {
-      accounts = await listAccounts(await accessTokenFrom(session.refreshToken));
+      accounts = await runGoogleAdsRead("listAccounts", async () => listAccounts(await accessTokenFrom(session.refreshToken)));
     } catch (e) {
       errorDetails = e instanceof Error ? e.message : "necunoscuta";
     }

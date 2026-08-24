@@ -5,6 +5,7 @@ import { C, sora, inter } from "@/lib/theme";
 import { parseGrossMargin, unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import { fetchStructura } from "@/lib/gads-structure";
+import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 import { citesteAn, bugetLunarDin, type TotaluriAn } from "@/lib/gads-an";
 import { demoOn, demoData } from "@/lib/gads-demo";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
@@ -107,8 +108,8 @@ async function citesteCifre(
 
   const auth = { accessToken: token, developerToken: cfg.developerToken, loginCustomerId };
   const [structura, an] = await Promise.all([
-    fetchStructura(customerId, auth).catch(() => null),
-    citesteAn(customerId, auth, customerTimeZone),
+    runGoogleAdsRead("fetchStructura", () => fetchStructura(customerId, auth).catch(() => null)),
+    runGoogleAdsRead("citesteAn", () => citesteAn(customerId, auth, customerTimeZone)),
   ]);
   return { structura, an };
 }

@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { validateGoogleAdsReadCoverage, type GoogleAdsReadCategory } from "@/lib/gads-read-disclosure";
+import { googleAdsReadRegistry, type GoogleAdsReadCategory } from "@/lib/gads-read-disclosure";
 
 export const reportContract = {
   pipeline: {
@@ -43,7 +43,16 @@ export const reportSourceReadCategories = Object.fromEntries(
     .map(([id, step]) => [id, (step as { readCategories: readonly GoogleAdsReadCategory[] }).readCategories]),
 ) as Record<string, readonly GoogleAdsReadCategory[]>;
 
-validateGoogleAdsReadCoverage(reportSourceReadCategories);
+export function validateReportSourceReadCategories(sourceCategories: Readonly<Record<string, readonly GoogleAdsReadCategory[]>>): void {
+  for (const [id, categories] of Object.entries(sourceCategories)) {
+    const registered = googleAdsReadRegistry[id as keyof typeof googleAdsReadRegistry];
+    if (!registered || JSON.stringify(categories) !== JSON.stringify(registered.readCategories)) {
+      throw new Error(`Report source read categories contradict the public registry: ${id}`);
+    }
+  }
+}
+
+validateReportSourceReadCategories(reportSourceReadCategories);
 
 type PipelineId = keyof typeof reportContract.pipeline;
 type SurfaceId = keyof typeof reportContract.surfaces;
