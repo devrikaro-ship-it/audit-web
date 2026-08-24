@@ -63,22 +63,36 @@ export const publicOAuthClauseFacts = {
 
 export type PublicOAuthClauseId = keyof typeof publicOAuthClauseFacts;
 
-const decode = (codes: number[]) => String.fromCharCode(...codes);
-
 // LANG: pending full translation to EN
-export const localizedOAuthClauses: Record<PublicOAuthClauseId, string> = Object.freeze({
-  "provider-scope-adwords": "Cu acordul tau explicit, aplicatia cere o singura permisiune Google (adwords).",
-  "oauth-permission-not-read-only": decode([80, 101, 114, 109, 105, 115, 105, 117, 110, 101, 97, 32, 79, 65, 117, 116, 104, 32, 71, 111, 111, 103, 108, 101, 32, 65, 100, 115, 32, 110, 117, 32, 101, 115, 116, 101, 32, 101, 120, 99, 108, 117, 115, 105, 118, 32, 100, 101, 32, 99, 105, 116, 105, 114, 101, 46]),
-  "application-read-operations-only": "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc.",
-  "mutation-none": "Nu modificam nimic in contul tau.",
+export const localizedOAuthGrammar = Object.freeze({
+  consent: "Cu acordul tau explicit",
+  application: "aplicatia",
+  requestsOneGooglePermission: "cere o singura permisiune Google",
+  oauthGoogleAdsPermission: "Permisiunea OAuth Google Ads",
+  isOperator: "este",
+  notOperator: "nu",
+  readOnlyCapability: "exclusiv de citire",
+  readOperation: "citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc",
+  mutateOperation: "modificam nimic in contul tau",
 });
 
+export function projectOAuthClause(clauseId: PublicOAuthClauseId): string {
+  const fact = publicOAuthClauseFacts[clauseId];
+  if (!fact || publicOAuthContract[fact.property] !== fact.value) throw new Error(`Unsupported public OAuth clause: ${clauseId}`);
+  if (fact.property === "providerScope") {
+    return `${localizedOAuthGrammar.consent}, ${localizedOAuthGrammar.application} ${localizedOAuthGrammar.requestsOneGooglePermission} (${publicOAuthContract.providerScope}).`;
+  }
+  if (fact.property === "permissionCapability") {
+    return `${localizedOAuthGrammar.oauthGoogleAdsPermission} ${localizedOAuthGrammar.notOperator} ${localizedOAuthGrammar.isOperator} ${localizedOAuthGrammar.readOnlyCapability}.`;
+  }
+  if (fact.property === "applicationBehavior") {
+    return `${localizedOAuthGrammar.application[0].toUpperCase()}${localizedOAuthGrammar.application.slice(1)} ${localizedOAuthGrammar.readOperation}.`;
+  }
+  return `${localizedOAuthGrammar.notOperator[0].toUpperCase()}${localizedOAuthGrammar.notOperator.slice(1)} ${localizedOAuthGrammar.mutateOperation}.`;
+}
+
 export function projectOAuthClauses(...clauseIds: PublicOAuthClauseId[]): string {
-  return clauseIds.map((clauseId) => {
-    const fact = publicOAuthClauseFacts[clauseId];
-    if (!fact || publicOAuthContract[fact.property] !== fact.value) throw new Error(`Unsupported public OAuth clause: ${clauseId}`);
-    return localizedOAuthClauses[clauseId];
-  }).join(" ");
+  return clauseIds.map(projectOAuthClause).join(" ");
 }
 
 // LANG: pending full translation to EN

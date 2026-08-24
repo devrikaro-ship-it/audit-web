@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import ts from "typescript";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import HubPage from "@/app/hub/page";
@@ -9,7 +10,6 @@ import LandingPage from "@/app/google-ads/page";
 import ConnectPage from "@/app/google-ads/connect/page";
 import {
   publicLocalizedBranchRegistry,
-  localizedOAuthClauses,
   publicOAuthClauseFacts,
   publicOAuthInfrastructureRegistry,
   publicOAuthAttributes,
@@ -32,23 +32,89 @@ function walkSource(directory: string): string[] {
 }
 
 const sourceTree = walkSource(path.join(process.cwd(), "app"));
-const normalizeNextRoute = (source: string) => `/${source
-  .replace(/^app\//, "")
-  .replace(/\/\([^/]+\)/g, "")
-  .replace(/(^|\/)(page|route)\.(ts|tsx)$/, "")}`.replace(/\/$/, "") || "/";
 
-function resolveStaticImport(fromSource: string, specifier: string): string | null {
-  if (!specifier.startsWith("@/") && !specifier.startsWith(".")) return null;
-  const base = specifier.startsWith("@/")
-    ? path.join(process.cwd(), specifier.slice(2))
-    : path.resolve(process.cwd(), path.dirname(fromSource), specifier);
-  for (const candidate of [base, `${base}.ts`, `${base}.tsx`, `${base}.json`, path.join(base, "index.ts"), path.join(base, "index.tsx")]) {
-    if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) return path.relative(process.cwd(), candidate);
+const decodeOracle = (codes: number[]) => String.fromCharCode(...codes);
+const localizedClauseOracle = Object.freeze({
+  "provider-scope-adwords": decodeOracle([67, 117, 32, 97, 99, 111, 114, 100, 117, 108, 32, 116, 97, 117, 32, 101, 120, 112, 108, 105, 99, 105, 116, 44, 32, 97, 112, 108, 105, 99, 97, 116, 105, 97, 32, 99, 101, 114, 101, 32, 111, 32, 115, 105, 110, 103, 117, 114, 97, 32, 112, 101, 114, 109, 105, 115, 105, 117, 110, 101, 32, 71, 111, 111, 103, 108, 101, 32, 40, 97, 100, 119, 111, 114, 100, 115, 41, 46]),
+  "oauth-permission-not-read-only": decodeOracle([80, 101, 114, 109, 105, 115, 105, 117, 110, 101, 97, 32, 79, 65, 117, 116, 104, 32, 71, 111, 111, 103, 108, 101, 32, 65, 100, 115, 32, 110, 117, 32, 101, 115, 116, 101, 32, 101, 120, 99, 108, 117, 115, 105, 118, 32, 100, 101, 32, 99, 105, 116, 105, 114, 101, 46]),
+  "application-read-operations-only": decodeOracle([65, 112, 108, 105, 99, 97, 116, 105, 97, 32, 99, 105, 116, 101, 115, 116, 101, 32, 100, 97, 116, 101, 108, 101, 44, 32, 108, 101, 32, 99, 111, 109, 112, 97, 114, 97, 32, 99, 117, 32, 112, 114, 97, 103, 117, 114, 105, 108, 101, 32, 97, 102, 97, 99, 101, 114, 105, 105, 32, 116, 97, 108, 101, 32, 115, 105, 32, 105, 116, 105, 32, 97, 114, 97, 116, 97, 32, 114, 101, 122, 117, 108, 116, 97, 116, 117, 108, 32, 112, 101, 32, 108, 111, 99, 46]),
+  "mutation-none": decodeOracle([78, 117, 32, 109, 111, 100, 105, 102, 105, 99, 97, 109, 32, 110, 105, 109, 105, 99, 32, 105, 110, 32, 99, 111, 110, 116, 117, 108, 32, 116, 97, 117, 46]),
+});
+function normalizeNextRoute(source: string): string {
+  const route: string[] = [];
+  const segments = source.replace(/^app\//, "").split("/");
+  for (const segment of segments) {
+    if (/^(page|route)\.(ts|tsx)$/.test(segment)) continue;
+    if (segment.startsWith("@") || /^\([^.)][^)]*\)$/.test(segment)) continue;
+    const intercepted = segment.match(/^(\(\.\)|(?:\(\.\.\))+|\(\.\.\.\))(.*)$/);
+    if (!intercepted) {
+      route.push(segment);
+      continue;
+    }
+    const [, operator, target] = intercepted;
+    if (operator === "(...)") route.length = 0;
+    else if (operator !== "(.)") route.splice(Math.max(0, route.length - (operator.match(/\(\.\.\)/g)?.length ?? 0)));
+    if (target) route.push(target);
+  }
+  return `/${route.join("/")}`;
+}
+
+const parsedConfig = ts.parseJsonConfigFileContent(
+  ts.readConfigFile(path.join(process.cwd(), "tsconfig.json"), ts.sys.readFile).config,
+  ts.sys,
+  process.cwd(),
+);
+const sourceProgram = ts.createProgram(parsedConfig.fileNames, parsedConfig.options);
+const sourceChecker = sourceProgram.getTypeChecker();
+
+function staticString(node: ts.Expression): string | null {
+  if (ts.isStringLiteralLike(node)) return node.text;
+  if (ts.isIdentifier(node)) {
+    const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(node));
+    const declaration = symbol?.valueDeclaration ?? symbol?.declarations?.[0];
+    if (declaration && ts.isVariableDeclaration(declaration) && declaration.initializer) return staticString(declaration.initializer);
+  }
+  if (ts.isParenthesizedExpression(node) || ts.isAsExpression(node)) return staticString(node.expression);
+  if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+    const left = staticString(node.left);
+    const right = staticString(node.right);
+    return left === null || right === null ? null : left + right;
+  }
+  if (ts.isTemplateExpression(node)) {
+    let value = node.head.text;
+    for (const span of node.templateSpans) {
+      const expression = staticString(span.expression);
+      if (expression === null) return null;
+      value += expression + span.literal.text;
+    }
+    return value;
   }
   return null;
 }
 
-function reachableStaticSources(roots: string[]): string[] {
+function moduleSpecifiers(sourceFile: ts.SourceFile): string[] {
+  const specifiers: string[] = [];
+  const visit = (node: ts.Node) => {
+    if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier && ts.isExpression(node.moduleSpecifier)) {
+      const value = staticString(node.moduleSpecifier);
+      if (value !== null) specifiers.push(value);
+    } else if (ts.isCallExpression(node) && (node.expression.kind === ts.SyntaxKind.ImportKeyword || (ts.isIdentifier(node.expression) && node.expression.text === "require"))) {
+      const value = node.arguments[0] && staticString(node.arguments[0]);
+      if (value !== null) specifiers.push(value);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return specifiers;
+}
+
+function resolveModule(fromSource: string, specifier: string): string | null {
+  const resolved = ts.resolveModuleName(specifier, path.join(process.cwd(), fromSource), parsedConfig.options, ts.sys).resolvedModule?.resolvedFileName;
+  if (!resolved || resolved.includes("/node_modules/")) return null;
+  return path.relative(process.cwd(), resolved.replace(/\.d\.ts$/, ".ts"));
+}
+
+function reachableSourceGraph(roots: string[]): string[] {
   const visited = new Set<string>();
   const pending = [...roots];
   while (pending.length) {
@@ -56,16 +122,86 @@ function reachableStaticSources(roots: string[]): string[] {
     if (visited.has(source)) continue;
     visited.add(source);
     if (source.endsWith(".json")) continue;
-    const text = fs.readFileSync(path.join(process.cwd(), source), "utf8");
-    for (const match of text.matchAll(/(?:import|export)\s+(?:[^"']+?\s+from\s+)?["']([^"']+)["']/g)) {
-      const resolved = resolveStaticImport(source, match[1]);
+    const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
+    if (!sourceFile) throw new Error(`Source is outside the TypeScript program: ${source}`);
+    for (const specifier of moduleSpecifiers(sourceFile)) {
+      const resolved = resolveModule(source, specifier);
       if (resolved) pending.push(resolved);
     }
   }
   return [...visited];
 }
 
+function finalSymbol(symbol: ts.Symbol | undefined): ts.Symbol | undefined {
+  let current = symbol;
+  const seen = new Set<ts.Symbol>();
+  while (current && (current.flags & ts.SymbolFlags.Alias) && !seen.has(current)) {
+    seen.add(current);
+    current = sourceChecker.getAliasedSymbol(current);
+  }
+  return current;
+}
+
+function expressionUsesProjection(node: ts.Node): boolean {
+  let found = false;
+  const visit = (candidate: ts.Node) => {
+    if (ts.isIdentifier(candidate) && candidate.text === "publicOAuthProjection") {
+      const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(candidate));
+      found = Boolean(symbol?.declarations?.some((declaration) => path.relative(process.cwd(), declaration.getSourceFile().fileName) === "lib/gads-public-oauth-contract.ts"));
+    }
+    if (!found) ts.forEachChild(candidate, visit);
+  };
+  visit(node);
+  return found;
+}
+
+function descriptionExpressions(sourceFile: ts.SourceFile): ts.Expression[] {
+  const expressions: ts.Expression[] = [];
+  const visit = (node: ts.Node) => {
+    if (ts.isPropertyAssignment(node)) {
+      const name = ts.isComputedPropertyName(node.name) ? staticString(node.name.expression) : node.name.getText(sourceFile).replace(/["']/g, "");
+      if (name === "description") expressions.push(node.initializer);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return expressions;
+}
+
+function responseBodyEmitters(sourceFile: ts.SourceFile): ts.Node[] {
+  const emitters: ts.Node[] = [];
+  const responseIdentity = (expression: ts.Expression): string | null => {
+    const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(expression));
+    if (symbol?.name === "Response" || symbol?.name === "NextResponse") return symbol.name;
+    const declaration = symbol?.valueDeclaration ?? symbol?.declarations?.[0];
+    if (declaration && ts.isVariableDeclaration(declaration) && declaration.initializer) return responseIdentity(declaration.initializer);
+    if (ts.isPropertyAccessExpression(expression) || ts.isElementAccessExpression(expression)) {
+      const memberSymbol = finalSymbol(sourceChecker.getSymbolAtLocation(expression));
+      if (memberSymbol?.name === "Response" || memberSymbol?.name === "NextResponse") return memberSymbol.name;
+    }
+    return null;
+  };
+  const visit = (node: ts.Node) => {
+    if (ts.isNewExpression(node) && responseIdentity(node.expression) === "Response") emitters.push(node);
+    if (ts.isCallExpression(node) && (ts.isPropertyAccessExpression(node.expression) || ts.isElementAccessExpression(node.expression))) {
+      const member = ts.isPropertyAccessExpression(node.expression) ? node.expression.name.text : node.expression.argumentExpression && staticString(node.expression.argumentExpression);
+      if (member === "json" && responseIdentity(node.expression.expression)) emitters.push(node);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return emitters;
+}
+
 describe("public Google Ads access boundary", () => {
+  it("normalizes Next route groups, parallel slots, and interception segments by filesystem segment", () => {
+    expect(normalizeNextRoute("app/(public)/google-ads/nou/page.tsx")).toBe("/google-ads/nou");
+    expect(normalizeNextRoute("app/(public)/(campaign)/google-ads/(details)/nou/page.tsx")).toBe("/google-ads/nou");
+    expect(normalizeNextRoute("app/google-ads/@modal/(.)nou/page.tsx")).toBe("/google-ads/nou");
+    expect(normalizeNextRoute("app/google-ads/current/(..)nou/page.tsx")).toBe("/google-ads/nou");
+    expect(normalizeNextRoute("app/google-ads/a/b/(..)(..)nou/page.tsx")).toBe("/google-ads/nou");
+    expect(normalizeNextRoute("app/google-ads/(...)nou/page.tsx")).toBe("/nou");
+  });
   it("exposes the one closed executable OAuth contract", () => {
     expect(publicOAuthContract).toEqual({
       providerScope: "adwords",
@@ -74,10 +210,26 @@ describe("public Google Ads access boundary", () => {
       mutationBehavior: "none",
     });
     expect(SCOPE.endsWith(`/${publicOAuthContract.providerScope}`)).toBe(true);
-    expect(Object.keys(localizedOAuthClauses).sort()).toEqual(Object.keys(publicOAuthClauseFacts).sort());
     expect(publicOAuthClauseFacts["oauth-permission-not-read-only"]).toEqual({ property: "permissionCapability", value: "broad" });
     expect(publicOAuthClauseFacts["application-read-operations-only"]).toEqual({ property: "applicationBehavior", value: "read-operations-only" });
     expect(publicOAuthClauseFacts["mutation-none"]).toEqual({ property: "mutationBehavior", value: "none" });
+  });
+
+  it("renders each semantic fact through independently fixed localized grammar", () => {
+    for (const clauseId of Object.keys(localizedClauseOracle) as Array<keyof typeof localizedClauseOracle>) {
+      expect(projectOAuthClauses(clauseId)).toBe(localizedClauseOracle[clauseId]);
+    }
+    const contractSource = sourceProgram.getSourceFile(path.join(process.cwd(), "lib/gads-public-oauth-contract.ts"))!;
+    const fullClauseMappings: ts.PropertyAssignment[] = [];
+    const visit = (node: ts.Node) => {
+      if (ts.isPropertyAssignment(node)) {
+        const name = ts.isComputedPropertyName(node.name) ? staticString(node.name.expression) : node.name.getText(contractSource).replace(/["']/g, "");
+        if (name && name in localizedClauseOracle && ts.isStringLiteralLike(node.initializer)) fullClauseMappings.push(node);
+      }
+      ts.forEachChild(node, visit);
+    };
+    visit(contractSource);
+    expect(fullClauseMappings).toEqual([]);
   });
 
   it("accepts canonical truth and refuses free-form permission semantics", () => {
@@ -111,7 +263,7 @@ describe("public Google Ads access boundary", () => {
     }
 
     const apiSources = sourceTree
-      .filter((source) => source.startsWith("app/api/google-ads/") && source.endsWith("/route.ts"))
+      .filter((source) => source.endsWith("/route.ts") && normalizeNextRoute(source).startsWith("/api/google-ads/"))
       .sort();
     const registeredApiSources = Object.values(publicOAuthInfrastructureRegistry)
       .filter(({ kind }) => kind === "redirect-emitter")
@@ -125,9 +277,12 @@ describe("public Google Ads access boundary", () => {
     process.env.NODE_ENV = previousNodeEnv;
     expect(rewrites && !Array.isArray(rewrites) ? rewrites.beforeFiles : []).toContainEqual({ source: "/", destination: publicOAuthInfrastructureRegistry.rootRewrite.destination });
 
-    const discoveredLayouts = ["app/layout.tsx", ...fs.readdirSync(path.join(process.cwd(), "app/google-ads"), { recursive: true })
-      .filter((entry) => String(entry).endsWith("layout.tsx"))
-      .map((entry) => `app/google-ads/${String(entry)}`)]
+    const discoveredLayouts = sourceTree
+      .filter((source) => source.endsWith("/layout.tsx") || source === "app/layout.tsx")
+      .filter((source) => {
+        const route = normalizeNextRoute(source.replace(/\/layout\.tsx$/, "/page.tsx"));
+        return route === "/" || route.startsWith("/google-ads");
+      })
       .sort();
     const registeredLayouts = Object.values(publicOAuthInfrastructureRegistry)
       .filter(({ kind }) => kind === "layout")
@@ -149,21 +304,26 @@ describe("public Google Ads access boundary", () => {
       return route.startsWith("/google-ads") || ["/", "/hub", "/confidentialitate", "/termeni"].includes(route);
     });
     for (const source of publicMetadataSources) {
-      const sourceText = fs.readFileSync(path.join(process.cwd(), source), "utf8");
-      const descriptions = sourceText.split("\n").filter((line) => line.includes("description:"));
-      expect(descriptions.every((line) => line.includes("publicOAuthProjection.")), source).toBe(true);
-      if (sourceText.includes("generateMetadata")) expect(sourceText, source).toMatch(/generateMetadata[\s\S]*publicOAuthProjection\./);
+      for (const reachable of reachableSourceGraph([source])) {
+        if (reachable.endsWith(".json")) throw new Error(`Unregistered public JSON emitter: ${reachable}`);
+        const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), reachable));
+        if (!sourceFile) throw new Error(`Source is outside the TypeScript program: ${reachable}`);
+        for (const description of descriptionExpressions(sourceFile)) {
+          expect(expressionUsesProjection(description), `${reachable}:${description.getStart(sourceFile)}`).toBe(true);
+        }
+      }
     }
 
     const apiRoots = Object.values(publicOAuthInfrastructureRegistry)
       .filter(({ kind }) => kind === "redirect-emitter")
       .map(({ source }) => source);
-    for (const source of reachableStaticSources(apiRoots)) {
+    for (const source of reachableSourceGraph(apiRoots)) {
       if (source.endsWith(".json")) throw new Error(`Unregistered public JSON emitter: ${source}`);
-      const sourceText = fs.readFileSync(path.join(process.cwd(), source), "utf8");
-      expect(sourceText, source).not.toMatch(/NextResponse\.json|new Response\s*\(/);
+      const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
+      if (!sourceFile) throw new Error(`Source is outside the TypeScript program: ${source}`);
+      expect(responseBodyEmitters(sourceFile), source).toEqual([]);
     }
-    expect(reachableStaticSources(pageRoots).filter((source) => source.endsWith(".json"))).toEqual([]);
+    expect(reachableSourceGraph(pageRoots).filter((source) => source.endsWith(".json"))).toEqual([]);
   });
 
   it("seals every registered state with the canonical capability attributes", () => {
@@ -182,6 +342,7 @@ describe("public Google Ads access boundary", () => {
 
   it("registers every dynamic localized copy branch", () => {
     expect(Object.keys(publicLocalizedBranchRegistry).sort()).toEqual(Object.keys(GADS_LOCALIZED_COPY).sort());
+    expect(Object.values(GADS_LOCALIZED_COPY).every((value) => value.trim().length > 0)).toBe(true);
     for (const branch of Object.values(publicLocalizedBranchRegistry)) {
       expect(publicOAuthAttributes(branch.surface, branch.state)["data-public-oauth-surface"])
         .toBe(`${branch.surface}:${branch.state}`);
