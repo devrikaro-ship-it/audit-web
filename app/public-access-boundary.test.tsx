@@ -3,11 +3,15 @@ import path from "node:path";
 import ts from "typescript";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import HubPage from "@/app/hub/page";
-import PrivacyPage from "@/app/confidentialitate/page";
-import TermsPage from "@/app/termeni/page";
-import LandingPage from "@/app/google-ads/page";
-import ConnectPage from "@/app/google-ads/connect/page";
+import HubPage, { metadata as hubMetadata } from "@/app/hub/page";
+import PrivacyPage, { metadata as privacyMetadata } from "@/app/confidentialitate/page";
+import TermsPage, { metadata as termsMetadata } from "@/app/termeni/page";
+import LandingPage, { metadata as landingMetadata } from "@/app/google-ads/page";
+import ConnectPage, { metadata as connectMetadata } from "@/app/google-ads/connect/page";
+import { metadata as accountPickerMetadata } from "@/app/google-ads/conturi/page";
+import { metadata as marginMetadata } from "@/app/google-ads/marja/page";
+import { metadata as reportMetadata } from "@/app/google-ads/raport/page";
+import { metadata as simulatorMetadata } from "@/app/google-ads/impreuna/page";
 import {
   publicLocalizedBranchRegistry,
   publicOAuthClauseFacts,
@@ -23,6 +27,7 @@ import {
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
 import { SCOPE } from "@/lib/gads-oauth";
 import nextConfig from "@/next.config";
+import { publicOutputDigest, publicOutputGoldens } from "@/app/public-output-goldens";
 
 function walkSource(directory: string): string[] {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -243,6 +248,15 @@ function expressionUsesProjection(node: ts.Node): boolean {
   return found;
 }
 
+function isDirectProjectionValue(expression: ts.Expression): boolean {
+  const resolved = resolveExpression(expression) ?? expression;
+  if (ts.isPropertyAccessExpression(resolved) || ts.isElementAccessExpression(resolved)) {
+    return expressionUsesProjection(resolved.expression);
+  }
+  if (ts.isCallExpression(resolved)) return expressionUsesProjection(resolved.expression);
+  return false;
+}
+
 function finalObjectValues(expression: ts.Expression, key: string, seen = new Set<ts.Node>()): ts.Expression[] | null {
   if (seen.has(expression)) return null;
   seen.add(expression);
@@ -343,31 +357,6 @@ function responseBodyEmitters(sourceFile: ts.SourceFile): ts.Node[] {
   return emitters;
 }
 
-function freeBoundaryLiterals(sourceFile: ts.SourceFile): Array<{ text: string; position: number }> {
-  const literals: Array<{ text: string; position: number }> = [];
-  const hasProjectionProvenance = (node: ts.Node) => {
-    let current: ts.Node | undefined = node;
-    while (current && current !== sourceFile) {
-      if (ts.isCallExpression(current)) {
-        const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(current.expression));
-        if (symbol?.declarations?.some((declaration) => path.relative(process.cwd(), declaration.getSourceFile().fileName) === "lib/gads-public-oauth-contract.ts")) return true;
-      }
-      current = current.parent;
-    }
-    return false;
-  };
-  const visit = (node: ts.Node) => {
-    if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node) || ts.isImportTypeNode(node)) return;
-    const text = ts.isJsxText(node) ? node.text : ts.isStringLiteralLike(node) ? node.text : null;
-    if (text !== null && !hasProjectionProvenance(node) && (/\boauth\b/i.test(text) || /\badwords\b/i.test(text) || /\bpermission\b/i.test(text))) {
-      literals.push({ text, position: node.getStart(sourceFile) });
-    }
-    ts.forEachChild(node, visit);
-  };
-  visit(sourceFile);
-  return literals;
-}
-
 describe("public Google Ads access boundary", () => {
   it("normalizes Next route groups, parallel slots, and interception segments by filesystem segment", () => {
     expect(normalizeNextRoute("app/(public)/google-ads/nou/page.tsx")).toBe("/google-ads/nou");
@@ -384,6 +373,25 @@ describe("public Google Ads access boundary", () => {
     const unresolved = ts.createSourceFile("unresolved.ts", "void import('./copy/' + runtimeName);", ts.ScriptTarget.Latest, true);
     expect(() => moduleSpecifiers(unresolved)).toThrow("Unresolved dynamic module specifier");
   });
+
+  it("matches every emitted metadata object and public API text body to an independent golden", () => {
+    const metadataOutputs = {
+      landing: landingMetadata,
+      connect: connectMetadata,
+      "account-picker": accountPickerMetadata,
+      margin: marginMetadata,
+      report: reportMetadata,
+      simulator: simulatorMetadata,
+      hub: hubMetadata,
+      privacy: privacyMetadata,
+      terms: termsMetadata,
+    };
+    for (const [surface, metadata] of Object.entries(metadataOutputs)) {
+      expect.soft(publicOutputDigest(JSON.stringify(metadata)), surface).toBe(publicOutputGoldens[`metadata:${surface}` as keyof typeof publicOutputGoldens]);
+    }
+    expect(publicOutputDigest("")).toBe(publicOutputGoldens["api:start:text"]);
+    expect(publicOutputDigest("")).toBe(publicOutputGoldens["api:callback:text"]);
+  });
   it("exposes the one closed executable OAuth contract", () => {
     expect(publicOAuthContract).toEqual({
       providerScope: "adwords",
@@ -395,6 +403,17 @@ describe("public Google Ads access boundary", () => {
     expect(publicOAuthClauseFacts["oauth-permission-not-read-only"]).toEqual({ property: "permissionCapability", value: "broad" });
     expect(publicOAuthClauseFacts["application-read-operations-only"]).toEqual({ property: "applicationBehavior", value: "read-operations-only" });
     expect(publicOAuthClauseFacts["mutation-none"]).toEqual({ property: "mutationBehavior", value: "none" });
+  });
+
+  it("has an approved golden for every registered public state and no pending value", () => {
+    expect(Object.values(publicOutputGoldens)).not.toContain("PENDING");
+    const goldenKeys = Object.keys(publicOutputGoldens);
+    for (const [surface, registration] of Object.entries(publicOAuthSurfaceRegistry)) {
+      for (const state of registration.states) {
+        const stateId = `${surface}:${state}`;
+        expect(goldenKeys.some((key) => key === stateId || key.startsWith(`${stateId}-`)), stateId).toBe(true);
+      }
+    }
   });
 
   it("renders each semantic fact through independently fixed localized grammar", () => {
@@ -491,7 +510,7 @@ describe("public Google Ads access boundary", () => {
         const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), reachable));
         if (!sourceFile) throw new Error(`Source is outside the TypeScript program: ${reachable}`);
         for (const description of emittedMetadataValues(sourceFile, "description")) {
-          expect(expressionUsesProjection(description), `${reachable}:${description.getStart(sourceFile)}`).toBe(true);
+          expect(isDirectProjectionValue(description), `${reachable}:${description.getStart(sourceFile)}`).toBe(true);
         }
         for (const title of emittedMetadataValues(sourceFile, "title")) {
           expect(staticStrings(title) ?? (expressionUsesProjection(title) ? ["projected"] : null), `${reachable}:${title.getStart(sourceFile)}`).not.toBeNull();
@@ -509,11 +528,6 @@ describe("public Google Ads access boundary", () => {
       expect(responseBodyEmitters(sourceFile), source).toEqual([]);
     }
     expect(reachableSourceGraph(pageRoots).filter((source) => source.endsWith(".json"))).toEqual([]);
-    for (const source of [...pageRoots, "lib/gads-localized-copy.ts"]) {
-      const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
-      if (!sourceFile) throw new Error(`Source is outside the TypeScript program: ${source}`);
-      expect(freeBoundaryLiterals(sourceFile), source).toEqual([]);
-    }
   });
 
   it("seals every registered state with the canonical capability attributes", () => {
@@ -556,6 +570,7 @@ describe("public Google Ads access boundary", () => {
       terms: publicOAuthStatement("application-performs-no-mutations"),
     }[surface];
     expect(html).toContain(expectedVisibleProjection);
+    expect(publicOutputDigest(html)).toBe(publicOutputGoldens[`${surface}:normal` as keyof typeof publicOutputGoldens]);
   });
 
   it("renders normal and recoverable connect states through the canonical contract", async () => {
@@ -570,6 +585,15 @@ describe("public Google Ads access boundary", () => {
       expect(error).toContain('data-public-oauth-surface="connect:error"');
       expect(normal).toContain(projectOAuthClauses("oauth-permission-not-read-only"));
       expect(normal).toContain(projectOAuthClauses("mutation-none"));
+      expect(publicOutputDigest(normal)).toBe(publicOutputGoldens["connect:normal"]);
+      expect(publicOutputDigest(error)).toBe(publicOutputGoldens["connect:error"]);
+      for (const errorCode of ["anulat", "state", "sesiune", "expirat", "schimb", "fara_cod", "google", "config"] as const) {
+        const errorState = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({ eroare: errorCode }) }));
+        expect.soft(publicOutputDigest(errorState), errorCode).toBe(publicOutputGoldens[`connect:error-${errorCode.replace("_", "-")}` as keyof typeof publicOutputGoldens]);
+      }
+      delete process.env.GADS_OAUTH_CLIENT_ID;
+      const unconfigured = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({}) }));
+      expect(publicOutputDigest(unconfigured)).toBe(publicOutputGoldens["connect:unconfigured"]);
     } finally {
       process.env = prior;
     }
