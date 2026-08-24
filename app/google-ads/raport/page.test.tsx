@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
-import { publicOutputDigest, publicOutputGoldens } from "@/app/public-output-goldens";
+import { normalizePublicOutput } from "@/app/public-output-goldens";
 
 let sessionMargin: unknown = 25;
 let sessionMarginStatus: "invalid" | undefined;
@@ -105,10 +105,8 @@ async function html(): Promise<string> {
 }
 
 const reportPlaceholders = () => [
-  { kind: "account" as const, value: "DeHome" },
-  { kind: "identifier" as const, value: "123" },
-  { kind: "identifier" as const, value: "999" },
-  ...["A", "B", "C", "D"].map((value) => ({ kind: "product" as const, value: `Canapea extensibila model ${value}` })),
+  { kind: "account" as const, value: "DeHome", occurrences: 1 },
+  ...["A", "B", "C"].map((value) => ({ kind: "product" as const, value: `Canapea extensibila model ${value}`, occurrences: 1 })),
 ];
 
 describe("pagina de raport, randata", () => {
@@ -142,7 +140,7 @@ describe("pagina de raport, randata", () => {
   // nu i-l explica nicaieri. SPEC: trei niveluri, fiecare etichetat oriunde apare.
   it("renders honesty labels on every successful report", async () => {
     const h = await html();
-    expect(publicOutputDigest(h, reportPlaceholders())).toBe(publicOutputGoldens["report:success"]);
+    expect(normalizePublicOutput(h, reportPlaceholders())).toMatchSnapshot("report:success");
     expect(h).toContain('data-public-oauth-surface="report:success"');
     expect(h).toContain('data-report-surface="honesty-and-caveats"');
     expect(h).toContain("MASURAT");
@@ -221,7 +219,7 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain('data-public-oauth-surface="report:catalog-unavailable"');
     expect(h).toContain("Nu am putut citi catalogul de Shopping");
     expect(h).toContain("Incearca din nou");
-    expect(publicOutputDigest(h, [{ kind: "account", value: "DeHome" }])).toBe(publicOutputGoldens["report:catalog-unavailable"]);
+    expect(normalizePublicOutput(h)).toMatchSnapshot("report:catalog-unavailable");
   });
 
   it("pe masurare stricata nu afiseaza ROAS pe produse", async () => {
@@ -236,17 +234,17 @@ describe("pagina de raport, randata", () => {
     sourceState.secondaryCatalogSuccessCount = 0;
     const zero = await html();
     expect(zero).not.toContain('data-report-surface="catalog-map"');
-    expect(publicOutputDigest(zero, reportPlaceholders())).toBe(publicOutputGoldens["report:catalog-map-zero"]);
+    expect(normalizePublicOutput(zero, reportPlaceholders())).toMatchSnapshot("report:catalog-map-zero");
     catalogReadCount = 0;
     sourceState.secondaryCatalogSuccessCount = 1;
     const one = await html();
     expect(one).toContain('data-report-surface="catalog-map"');
-    expect(publicOutputDigest(one, reportPlaceholders())).toBe(publicOutputGoldens["report:catalog-map-one"]);
+    expect(normalizePublicOutput(one, reportPlaceholders())).toMatchSnapshot("report:catalog-map-one");
     catalogReadCount = 0;
     sourceState.secondaryCatalogSuccessCount = 7;
     const many = await html();
     expect(many).toContain('data-report-surface="catalog-map"');
-    expect(publicOutputDigest(many, reportPlaceholders())).toBe(publicOutputGoldens["report:catalog-map-many"]);
+    expect(normalizePublicOutput(many, reportPlaceholders())).toMatchSnapshot("report:catalog-map-many");
   });
 
   it("renders every unconditional report surface", async () => {
@@ -275,7 +273,7 @@ describe("pagina de raport, randata", () => {
     demoState.enabled = true;
     const demo = await html();
     expect(demo).toContain('data-report-surface="demo-banner"');
-    expect(publicOutputDigest(demo, reportPlaceholders())).toBe(publicOutputGoldens["report:demo"]);
+    expect(normalizePublicOutput(demo)).toMatchSnapshot("report:demo");
   });
 
   it("keeps the gradient headline and white summary as sibling parts", async () => {

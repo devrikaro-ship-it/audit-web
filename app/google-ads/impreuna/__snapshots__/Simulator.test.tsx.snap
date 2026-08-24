@@ -1,0 +1,116 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`collaboration simulator copy > renders the intended opening and closing quote characters around the ROAS claim > simulator:normal 1`] = `
+"root/div[0]
+root/div[0]/div[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Completeaza pretul din oferta ca sa vezi pragul"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "—"
+root/div[0]/div[0]/p[2]
+root/div[0]/div[0]/p[2]/text "Onorariul si procentul sunt cele din oferta pe care ai primit-o."
+root/div[0]/div[1]
+root/div[0]/div[1]/h2[0]
+root/div[0]/div[1]/h2[0]/text "Ce facem concret la reclame"
+root/div[0]/div[1]/p[0]
+root/div[0]/div[1]/p[0]/text "Nu iti spunem „creste ROAS-ul&quot;. Iti spunem ce doua lucruri lucram — clicuri mai ieftine si mai multe comenzi din acelasi trafic — iar ROAS-ul iese din ele. Trage cursoarele la cat crezi tu, inclusiv la zero."
+root/div[0]/div[1]/label[0]
+root/div[0]/div[1]/label[0]/span[0]
+root/div[0]/div[1]/label[0]/span[0]/span[0]
+root/div[0]/div[1]/label[0]/span[0]/span[0]/text "Cost pe clic, in scadere"
+root/div[0]/div[1]/label[0]/span[0]/span[1]
+root/div[0]/div[1]/label[0]/span[0]/span[1]/text "20%"
+root/div[0]/div[1]/label[0]/input[0] type="range" value="20"
+root/div[0]/div[1]/label[1]
+root/div[0]/div[1]/label[1]/span[0]
+root/div[0]/div[1]/label[1]/span[0]/span[0]
+root/div[0]/div[1]/label[1]/span[0]/span[0]/text "Rata de conversie, in crestere"
+root/div[0]/div[1]/label[1]/span[0]/span[1]
+root/div[0]/div[1]/label[1]/span[0]/span[1]/text "20%"
+root/div[0]/div[1]/label[1]/input[0] type="range" value="20"
+root/div[0]/div[1]/label[2]
+root/div[0]/div[1]/label[2]/span[0]
+root/div[0]/div[1]/label[2]/span[0]/span[0]
+root/div[0]/div[1]/label[2]/span[0]/span[0]/text "Buget de reclame pe luna (RON)"
+root/div[0]/div[1]/label[2]/span[0]/span[1]
+root/div[0]/div[1]/label[2]/span[0]/span[1]/text "atat cheltui acum, citit din cont"
+root/div[0]/div[1]/label[2]/input[0] value="1000"
+root/div[0]/div[1]/p[1]
+root/div[0]/div[1]/p[1]/text "Asta inseamna un randament al reclamelor de la"
+root/div[0]/div[1]/p[1]/b[0]
+root/div[0]/div[1]/p[1]/b[0]/text "4.00x"
+root/div[0]/div[1]/p[1]/text "la"
+root/div[0]/div[1]/p[1]/b[1]
+root/div[0]/div[1]/p[1]/b[1]/text "6.00x"
+root/div[0]/div[1]/p[1]/text "— adica"
+root/div[0]/div[1]/p[1]/b[2]
+root/div[0]/div[1]/p[1]/b[2]/text "+50%"
+root/div[0]/div[1]/p[1]/text "."
+root/div[0]/div[2]
+root/div[0]/div[2]/h2[0]
+root/div[0]/div[2]/h2[0]/text "Pretul din oferta ta"
+root/div[0]/div[2]/p[0]
+root/div[0]/div[2]/p[0]/text "Scrie aici cifrele din oferta pe care ai primit-o, ca sa vezi calculul pe banii tai."
+root/div[0]/div[2]/div[0]
+root/div[0]/div[2]/div[0]/label[0]
+root/div[0]/div[2]/div[0]/label[0]/span[0]
+root/div[0]/div[2]/div[0]/label[0]/span[0]/text "Onorariu lunar (RON)"
+root/div[0]/div[2]/div[0]/label[0]/input[0] value=""
+root/div[0]/div[2]/div[0]/label[1]
+root/div[0]/div[2]/div[0]/label[1]/span[0]
+root/div[0]/div[2]/div[0]/label[1]/span[0]/text "Comision din vanzari (%)"
+root/div[0]/div[2]/div[0]/label[1]/input[0] value=""
+root/div[0]/div[3]
+root/div[0]/div[3]/div[0]
+root/div[0]/div[3]/div[0]/p[0]
+root/div[0]/div[3]/div[0]/p[0]/text "Acum"
+root/div[0]/div[3]/div[0]/dl[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[0]/dt[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[0]/dt[0]/text "Buget de reclame"
+root/div[0]/div[3]/div[0]/dl[0]/div[0]/dd[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[0]/dd[0]/text "1.000 RON"
+root/div[0]/div[3]/div[0]/dl[0]/div[1]
+root/div[0]/div[3]/div[0]/dl[0]/div[1]/dt[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[1]/dt[0]/text "Vanzari din reclame"
+root/div[0]/div[3]/div[0]/dl[0]/div[1]/dd[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[1]/dd[0]/text "4.000 RON"
+root/div[0]/div[3]/div[0]/dl[0]/div[2]
+root/div[0]/div[3]/div[0]/dl[0]/div[2]/dt[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[2]/dt[0]/text "Iti ramane pe luna"
+root/div[0]/div[3]/div[0]/dl[0]/div[2]/dd[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[2]/dd[0]/text "-8 RON"
+root/div[0]/div[3]/div[0]/dl[0]/div[3]
+root/div[0]/div[3]/div[0]/dl[0]/div[3]/dt[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[3]/dt[0]/text "Platesti agentiei"
+root/div[0]/div[3]/div[0]/dl[0]/div[3]/dd[0]
+root/div[0]/div[3]/div[0]/dl[0]/div[3]/dd[0]/text "—"
+root/div[0]/div[3]/div[1]
+root/div[0]/div[3]/div[1]/p[0]
+root/div[0]/div[3]/div[1]/p[0]/text "Cu Devrika"
+root/div[0]/div[3]/div[1]/dl[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[0]/dt[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[0]/dt[0]/text "Buget de reclame"
+root/div[0]/div[3]/div[1]/dl[0]/div[0]/dd[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[0]/dd[0]/text "1.000 RON"
+root/div[0]/div[3]/div[1]/dl[0]/div[1]
+root/div[0]/div[3]/div[1]/dl[0]/div[1]/dt[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[1]/dt[0]/text "Vanzari din reclame"
+root/div[0]/div[3]/div[1]/dl[0]/div[1]/dd[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[1]/dd[0]/text "6.000 RON"
+root/div[0]/div[3]/div[1]/dl[0]/div[2]
+root/div[0]/div[3]/div[1]/dl[0]/div[2]/dt[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[2]/dt[0]/text "Iti ramane pe luna"
+root/div[0]/div[3]/div[1]/dl[0]/div[2]/dd[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[2]/dd[0]/text "488 RON"
+root/div[0]/div[3]/div[1]/dl[0]/div[3]
+root/div[0]/div[3]/div[1]/dl[0]/div[3]/dt[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[3]/dt[0]/text "Platesti agentiei"
+root/div[0]/div[3]/div[1]/dl[0]/div[3]/dd[0]
+root/div[0]/div[3]/div[1]/dl[0]/div[3]/dd[0]/text "—"
+root/div[0]/p[0]
+root/div[0]/p[0]/b[0]
+root/div[0]/p[0]/b[0]/text "SIMULARE."
+root/div[0]/p[0]/text "Randamentul si marja sunt cifrele tale reale, citite din cont, la fel si bugetul. Cresterea e o ipoteza pe care o misti tu, nu o promisiune. Profitul de aici e inainte de salarii, chirii si celelalte costuri ale magazinului.""
+`;

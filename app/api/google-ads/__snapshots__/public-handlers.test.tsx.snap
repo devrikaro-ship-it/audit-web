@@ -1,0 +1,59 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth callback branch > api-callback:access-denied 1`] = `
+"status=307
+location=https://audit.example/google-ads/connect?eroare=anulat
+body="""
+`;
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth callback branch > api-callback:exchange-error 1`] = `
+"status=307
+location=https://audit.example/google-ads/connect?eroare=schimb
+body="""
+`;
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth callback branch > api-callback:missing-code 1`] = `
+"status=307
+location=https://audit.example/google-ads/connect?eroare=fara_cod
+body="""
+`;
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth callback branch > api-callback:provider-error 1`] = `
+"status=307
+location=https://audit.example/google-ads/connect?eroare=google
+body="""
+`;
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth callback branch > api-callback:state-error 1`] = `
+"status=307
+location=https://audit.example/google-ads/connect?eroare=state
+body="""
+`;
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth callback branch > api-callback:success 1`] = `
+"status=307
+location=https://audit.example/google-ads/conturi
+set-cookie=gads_session=<SESSION>; Path=/; Secure; HttpOnly; SameSite=lax
+set-cookie=gads_state=; Path=/; Expires=<EXPIRY>
+body="""
+`;
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth start branch > api-start:config-error 1`] = `
+"status=307
+location=https://audit.example/google-ads/connect?eroare=config&lipsa=clientId,developerToken
+body="""
+`;
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth start branch > api-start:demo 1`] = `
+"status=307
+location=https://audit.example/google-ads/conturi
+set-cookie=gads_session=<SESSION>; Path=/; Secure; HttpOnly; SameSite=lax
+body="""
+`;
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth start branch > api-start:success 1`] = `
+"status=307
+location=https://accounts.google.test/authorize?state=Zml4ZWQtc3RhdGUtdmFsdWU
+set-cookie=gads_state=<STATE>; Path=/; Expires=<EXPIRY>; Max-Age=600; HttpOnly; SameSite=lax
+body="""
+`;

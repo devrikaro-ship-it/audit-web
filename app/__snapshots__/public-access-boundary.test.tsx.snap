@@ -1,0 +1,1126 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:account-picker 1`] = `"title="Alege contul · Audit Google Ads Devrika""`;
+
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:connect 1`] = `"title="Conecteaza contul Google Ads · Devrika""`;
+
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:hub 1`] = `
+"description="Audit Devrika analizeaza magazinul si conturile tale de publicitate si iti arata unde pierzi bani: pe site, in Google Ads si in campaniile de Shopping."
+title="Audit Devrika — audit gratuit pentru magazine online""
+`;
+
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:landing 1`] = `
+"description="Audit Devrika analizeaza contul tau de Google Ads si iti arata ce produse consuma buget fara sa vanda. Citim doar datele de Shopping din ultimele 365 de zile, nu modificam nimic in cont."
+title="Audit Devrika — analiza contului tau de Google Ads""
+`;
+
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:margin 1`] = `"title="Marja ta · Audit Google Ads Devrika""`;
+
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:privacy 1`] = `
+"description="Cum trateaza aplicatia Devrika datele contului tau Google Ads: ce citim, cat pastram, cu cine NU impartim si cum retragi accesul."
+title="Politica de confidentialitate — Audit Devrika""
+`;
+
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:report 1`] = `"title="Raportul tau · Audit Google Ads Devrika""`;
+
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:simulator 1`] = `"title="Ce ar insemna cu Devrika · Audit Google Ads Devrika""`;
+
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:terms 1`] = `
+"description="Conditiile in care poti folosi aplicatia Devrika de audit Google Ads."
+title="Termeni si conditii — Audit Devrika""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-anulat 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Ai oprit conectarea la Google. Nu s-a intamplat nimic — poti relua oricand."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conecteaza contul Google Ads"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Google iti va cere confirmarea. Iti aratam mai jos exact ce primim si ce nu."
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/ul[0]/li[3]
+root/div[0]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[3]/text "NU cerem acces la Gmail, Drive sau alte servicii"
+root/div[0]/div[0]/ul[0]/li[4]
+root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
+root/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/a[0]/text "Continua catre Google"
+root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-config 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Conectarea nu e activa inca pe acest server."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conecteaza contul Google Ads"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Google iti va cere confirmarea. Iti aratam mai jos exact ce primim si ce nu."
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/ul[0]/li[3]
+root/div[0]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[3]/text "NU cerem acces la Gmail, Drive sau alte servicii"
+root/div[0]/div[0]/ul[0]/li[4]
+root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
+root/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/a[0]/text "Continua catre Google"
+root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-expirat 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Accesul la contul tau de Google a expirat sau a fost retras intre timp. Reconecteaza-te si reluam auditul — dureaza zece secunde."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conecteaza contul Google Ads"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Google iti va cere confirmarea. Iti aratam mai jos exact ce primim si ce nu."
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/ul[0]/li[3]
+root/div[0]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[3]/text "NU cerem acces la Gmail, Drive sau alte servicii"
+root/div[0]/div[0]/ul[0]/li[4]
+root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
+root/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/a[0]/text "Continua catre Google"
+root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-fara-cod 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Raspunsul de la Google a venit incomplet. Mai incearca o data."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conecteaza contul Google Ads"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Google iti va cere confirmarea. Iti aratam mai jos exact ce primim si ce nu."
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/ul[0]/li[3]
+root/div[0]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[3]/text "NU cerem acces la Gmail, Drive sau alte servicii"
+root/div[0]/div[0]/ul[0]/li[4]
+root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
+root/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/a[0]/text "Continua catre Google"
+root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-google 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Google a refuzat conectarea. Mai incearca o data."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conecteaza contul Google Ads"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Google iti va cere confirmarea. Iti aratam mai jos exact ce primim si ce nu."
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/ul[0]/li[3]
+root/div[0]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[3]/text "NU cerem acces la Gmail, Drive sau alte servicii"
+root/div[0]/div[0]/ul[0]/li[4]
+root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
+root/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/a[0]/text "Continua catre Google"
+root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-schimb 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Google nu a putut confirma conectarea. Mai incearca o data."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conecteaza contul Google Ads"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Google iti va cere confirmarea. Iti aratam mai jos exact ce primim si ce nu."
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/ul[0]/li[3]
+root/div[0]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[3]/text "NU cerem acces la Gmail, Drive sau alte servicii"
+root/div[0]/div[0]/ul[0]/li[4]
+root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
+root/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/a[0]/text "Continua catre Google"
+root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-sesiune 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Sesiunea a expirat. Reconecteaza contul ca sa continuam."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conecteaza contul Google Ads"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Google iti va cere confirmarea. Iti aratam mai jos exact ce primim si ce nu."
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/ul[0]/li[3]
+root/div[0]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[3]/text "NU cerem acces la Gmail, Drive sau alte servicii"
+root/div[0]/div[0]/ul[0]/li[4]
+root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
+root/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/a[0]/text "Continua catre Google"
+root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-state 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Conectarea a expirat inainte sa fie finalizata. Mai incearca o data."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conecteaza contul Google Ads"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Google iti va cere confirmarea. Iti aratam mai jos exact ce primim si ce nu."
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/ul[0]/li[3]
+root/div[0]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[3]/text "NU cerem acces la Gmail, Drive sau alte servicii"
+root/div[0]/div[0]/ul[0]/li[4]
+root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
+root/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/a[0]/text "Continua catre Google"
+root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:normal 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:normal" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conecteaza contul Google Ads"
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Google iti va cere confirmarea. Iti aratam mai jos exact ce primim si ce nu."
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[0]/text "Citim datele de Shopping din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/ul[0]/li[3]
+root/div[0]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[3]/text "NU cerem acces la Gmail, Drive sau alte servicii"
+root/div[0]/div[0]/ul[0]/li[4]
+root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
+root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
+root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
+root/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/a[0]/text "Continua catre Google"
+root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:unconfigured 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="connect:normal" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/a[0] href="/google-ads"
+root/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/a[0]/span[0]
+root/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Conectarea se activeaza in curand"
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Auditul pe cont conectat e in ultima faza de pregatire. Pana atunci iti facem analiza manual, pe aceleasi cifre: scrie-ne si iti spunem ce produse iti consuma bugetul."
+root/div[0]/div[0]/a[0] href="mailto:hello@devrika.ro?subject=Audit%20Google%20Ads%20Shopping"
+root/div[0]/div[0]/a[0]/text "Scrie-ne pentru audit"
+root/div[0]/a[1] href="/google-ads"
+root/div[0]/a[1]/text "← Inapoi la pagina auditului""
+`;
+
+exports[`public Google Ads access boundary > renders the canonical contract on the hub surface > hub:normal 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="hub:normal" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/nav[0]
+root/div[0]/nav[0]/div[0]
+root/div[0]/nav[0]/div[0]/a[0] href="/"
+root/div[0]/nav[0]/div[0]/a[0]/img[0] alt="Audit Devrika"
+root/div[0]/nav[0]/div[0]/a[0]/span[0]
+root/div[0]/nav[0]/div[0]/a[0]/span[0]/text "Audit Devrika"
+root/div[0]/nav[0]/div[0]/a[1] href="https://devrika.ro"
+root/div[0]/nav[0]/div[0]/a[1]/text "devrika.ro →"
+root/div[0]/section[0]
+root/div[0]/section[0]/div[0] aria-hidden="true"
+root/div[0]/section[0]/h1[0]
+root/div[0]/section[0]/h1[0]/text "Audit"
+root/div[0]/section[0]/h1[0]/em[0]
+root/div[0]/section[0]/h1[0]/em[0]/text "Devrika"
+root/div[0]/section[0]/p[0]
+root/div[0]/section[0]/p[0]/text "O aplicatie web care analizeaza magazinul si conturile tale de publicitate si iti arata, pe cifre, unde pierzi bani."
+root/div[0]/section[0]/p[1]
+root/div[0]/section[0]/p[1]/text "Alegi ce vrei analizat, iar acolo unde e nevoie iti conectezi contul de publicitate.Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc. Nu modificam nimic in contul tau. Poti retrage accesul oricand."
+root/div[0]/section[0]/div[1]
+root/div[0]/section[0]/div[1]/span[0]
+root/div[0]/section[0]/div[1]/span[0]/text "Gratuit"
+root/div[0]/section[0]/div[1]/span[1]
+root/div[0]/section[0]/div[1]/span[1]/text "Fara card bancar"
+root/div[0]/section[0]/div[1]/span[2]
+root/div[0]/section[0]/div[1]/span[2]/text "Nu modificam nimic"
+root/div[0]/section[0]/div[1]/span[3]
+root/div[0]/section[0]/div[1]/span[3]/text "Rezultat pe loc"
+root/div[0]/section[1]
+root/div[0]/section[1]/h2[0]
+root/div[0]/section[1]/h2[0]/text "Ce poti analiza"
+root/div[0]/section[1]/p[0]
+root/div[0]/section[1]/p[0]/text "Fiecare audit spune de ce date are nevoie inainte sa il pornesti."
+root/div[0]/section[1]/div[0]
+root/div[0]/section[1]/div[0]/a[0] href="/google-ads"
+root/div[0]/section[1]/div[0]/a[0]/div[0]
+root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]
+root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]/svg[0]/circle[0]
+root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]/svg[0]/circle[1]
+root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]/svg[0]/circle[2]
+root/div[0]/section[1]/div[0]/a[0]/div[0]/h3[0]
+root/div[0]/section[1]/div[0]/a[0]/div[0]/h3[0]/text "Audit Google Ads"
+root/div[0]/section[1]/div[0]/a[0]/div[0]/span[0]
+root/div[0]/section[1]/div[0]/a[0]/div[0]/span[0]/text "Disponibil"
+root/div[0]/section[1]/div[0]/a[0]/p[0]
+root/div[0]/section[1]/div[0]/a[0]/p[0]/text "Iti conectezi contul de Google Ads si vezi pe cifrele tale reale din ultimele 365 de zile ce produse consuma buget fara sa vanda, cate produse nu au fost afisate niciodata si daca masurarea conversiilor e configurata corect."
+root/div[0]/section[1]/div[0]/a[0]/p[1]
+root/div[0]/section[1]/div[0]/a[0]/p[1]/text "Se conecteaza la contul tau de Google Ads."
+root/div[0]/section[1]/div[0]/a[0]/span[0]
+root/div[0]/section[1]/div[0]/a[0]/span[0]/text "Incepe auditul"
+root/div[0]/section[1]/div[0]/a[0]/span[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/a[0]/span[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/a[1] href="/audit-seo"
+root/div[0]/section[1]/div[0]/a[1]/div[0]
+root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]
+root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0]/path[1]
+root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0]/path[2]
+root/div[0]/section[1]/div[0]/a[1]/div[0]/h3[0]
+root/div[0]/section[1]/div[0]/a[1]/div[0]/h3[0]/text "Audit magazin online"
+root/div[0]/section[1]/div[0]/a[1]/div[0]/span[0]
+root/div[0]/section[1]/div[0]/a[1]/div[0]/span[0]/text "Disponibil"
+root/div[0]/section[1]/div[0]/a[1]/p[0]
+root/div[0]/section[1]/div[0]/a[1]/p[0]/text "Pornind doar de la adresa magazinului, iti aratam unde pierzi cumparatori: masurarea vanzarilor, vizibilitatea in Google, experienta de cumparare si felul in care arati in Google Shopping."
+root/div[0]/section[1]/div[0]/a[1]/p[1]
+root/div[0]/section[1]/div[0]/a[1]/p[1]/text "Nu cere acces la niciun cont — analizeaza doar ce e public pe site."
+root/div[0]/section[1]/div[0]/a[1]/span[0]
+root/div[0]/section[1]/div[0]/a[1]/span[0]/text "Incepe auditul"
+root/div[0]/section[1]/div[0]/a[1]/span[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/a[1]/span[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/div[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]/div[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]/h3[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]/h3[0]/text "Audit Meta Ads"
+root/div[0]/section[1]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]/span[0]/text "In pregatire"
+root/div[0]/section[1]/div[0]/div[0]/p[0]
+root/div[0]/section[1]/div[0]/div[0]/p[0]/text "Aceeasi analiza pentru campaniile de Facebook si Instagram: ce reclame consuma buget fara sa aduca vanzari si cat de credibile sunt cifrele raportate de platforma."
+root/div[0]/section[1]/div[0]/div[0]/p[1]
+root/div[0]/section[1]/div[0]/div[0]/p[1]/text "Se conecteaza la contul tau de reclame Meta."
+root/div[0]/section[2]
+root/div[0]/section[2]/div[0]
+root/div[0]/section[2]/div[0]/h2[0]
+root/div[0]/section[2]/div[0]/h2[0]/text "Ce facem cu datele tale"
+root/div[0]/section[2]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/p[0]/text "Cand un audit are nevoie de acces la un cont de publicitate, ti-l cerem prin mecanismul oficial al platformei."
+root/div[0]/section[2]/div[0]/div[0]
+root/div[0]/section[2]/div[0]/div[0]/div[0]
+root/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "Citim doar ce e necesar"
+root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]
+root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]/text "Pentru Google Ads: campaniile de Shopping si configurarea conversiilor. Nimic din Gmail, Drive sau alte servicii."
+root/div[0]/section[2]/div[0]/div[0]/div[1]
+root/div[0]/section[2]/div[0]/div[0]/div[1]/p[0]
+root/div[0]/section[2]/div[0]/div[0]/div[1]/p[0]/text "Nu modificam nimic"
+root/div[0]/section[2]/div[0]/div[0]/div[1]/p[1]
+root/div[0]/section[2]/div[0]/div[0]/div[1]/p[1]/text "Nu putem porni sau opri campanii si nu putem cheltui bani."
+root/div[0]/section[2]/div[0]/div[0]/div[2]
+root/div[0]/section[2]/div[0]/div[0]/div[2]/p[0]
+root/div[0]/section[2]/div[0]/div[0]/div[2]/p[0]/text "Nu pastram datele contului"
+root/div[0]/section[2]/div[0]/div[0]/div[2]/p[1]
+root/div[0]/section[2]/div[0]/div[0]/div[2]/p[1]/text "Analiza se face cat esti pe site. Dupa raport, datele contului nu raman la noi."
+root/div[0]/section[2]/div[0]/div[0]/div[3]
+root/div[0]/section[2]/div[0]/div[0]/div[3]/p[0]
+root/div[0]/section[2]/div[0]/div[0]/div[3]/p[0]/text "Retragi accesul cand vrei"
+root/div[0]/section[2]/div[0]/div[0]/div[3]/p[1]
+root/div[0]/section[2]/div[0]/div[0]/div[3]/p[1]/text "Dintr-un click, din setarile contului tau — fara sa ne intrebi pe noi."
+root/div[0]/section[2]/div[0]/p[1]
+root/div[0]/section[2]/div[0]/p[1]/text "Detaliile complete:"
+root/div[0]/section[2]/div[0]/p[1]/a[0] href="/confidentialitate"
+root/div[0]/section[2]/div[0]/p[1]/a[0]/text "politica de confidentialitate"
+root/div[0]/section[2]/div[0]/p[1]/text "·"
+root/div[0]/section[2]/div[0]/p[1]/a[1] href="/termeni"
+root/div[0]/section[2]/div[0]/p[1]/a[1]/text "termeni si conditii"
+root/div[0]/footer[0]
+root/div[0]/footer[0]/div[0]
+root/div[0]/footer[0]/div[0]/img[0] alt="Audit Devrika"
+root/div[0]/footer[0]/div[0]/span[0]
+root/div[0]/footer[0]/div[0]/span[0]/text "Audit Devrika"
+root/div[0]/footer[0]/p[0]
+root/div[0]/footer[0]/p[0]/a[0] href="/confidentialitate"
+root/div[0]/footer[0]/p[0]/a[0]/text "Politica de confidentialitate"
+root/div[0]/footer[0]/p[0]/text "·"
+root/div[0]/footer[0]/p[0]/a[1] href="/termeni"
+root/div[0]/footer[0]/p[0]/a[1]/text "Termeni si conditii"
+root/div[0]/footer[0]/p[1]
+root/div[0]/footer[0]/p[1]/text "© 2026 Devrika ·"
+root/div[0]/footer[0]/p[1]/a[0] href="https://devrika.ro"
+root/div[0]/footer[0]/p[1]/a[0]/text "devrika.ro""
+`;
+
+exports[`public Google Ads access boundary > renders the canonical contract on the landing surface > landing:normal 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="landing:normal" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/nav[0]
+root/div[0]/nav[0]/div[0]
+root/div[0]/nav[0]/div[0]/a[0] href="/"
+root/div[0]/nav[0]/div[0]/a[0]/img[0] alt="Audit Devrika"
+root/div[0]/nav[0]/div[0]/a[0]/span[0]
+root/div[0]/nav[0]/div[0]/a[0]/span[0]/text "Audit Devrika"
+root/div[0]/nav[0]/div[0]/a[1] href="/google-ads/connect"
+root/div[0]/nav[0]/div[0]/a[1]/text "Conecteaza contul →"
+root/div[0]/section[0]
+root/div[0]/section[0]/div[0] aria-hidden="true"
+root/div[0]/section[0]/div[1]
+root/div[0]/section[0]/div[1]/span[0] aria-hidden="true"
+root/div[0]/section[0]/div[1]/text "Audit Devrika · Aplicatie web · Gratuit"
+root/div[0]/section[0]/h1[0]
+root/div[0]/section[0]/h1[0]/text "Vezi ce produse iti ard"
+root/div[0]/section[0]/h1[0]/em[0]
+root/div[0]/section[0]/h1[0]/em[0]/text "bugetul"
+root/div[0]/section[0]/h1[0]/br[0]
+root/div[0]/section[0]/h1[0]/text "in Google Shopping"
+root/div[0]/section[0]/p[0]
+root/div[0]/section[0]/p[0]/text "Acesta e unul dintre auditurile din"
+root/div[0]/section[0]/p[0]/a[0] href="/"
+root/div[0]/section[0]/p[0]/a[0]/text "Audit Devrika"
+root/div[0]/section[0]/p[0]/text ", aplicatia web care analizeaza magazinul si conturile tale de publicitate. Auditul de fata se conecteaza la contul tau de Google Ads si iti arata pe ce produse pierzi bani in campaniile de Shopping."
+root/div[0]/section[0]/p[1]
+root/div[0]/section[0]/p[1]/text "Iti conectezi contul de Google Ads, aplicatia citeste datele campaniilor de Shopping din ultimele 365 de zile si iti spune care produse consuma buget fara sa vanda — produs cu produs, cu suma exacta. Nu modifica nimic in contul tau."
+root/div[0]/section[0]/a[0] href="/google-ads/connect"
+root/div[0]/section[0]/a[0]/text "Conecteaza contul Google Ads"
+root/div[0]/section[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/section[0]/a[0]/svg[0]/path[0]
+root/div[0]/section[0]/div[2]
+root/div[0]/section[0]/div[2]/svg[0] aria-hidden="true"
+root/div[0]/section[0]/div[2]/svg[0]/rect[0]
+root/div[0]/section[0]/div[2]/svg[0]/path[0]
+root/div[0]/section[0]/div[2]/text "Citim doar datele de Shopping. Nu modificam nimic in contul tau."
+root/div[0]/section[0]/div[3]
+root/div[0]/section[0]/div[3]/div[0]
+root/div[0]/section[0]/div[3]/div[0]/div[0]
+root/div[0]/section[0]/div[3]/div[0]/div[0]/div[0] aria-hidden="true"
+root/div[0]/section[0]/div[3]/div[0]/div[0]/div[1] aria-hidden="true"
+root/div[0]/section[0]/div[3]/div[0]/div[0]/div[2] aria-hidden="true"
+root/div[0]/section[0]/div[3]/div[0]/div[0]/div[3]
+root/div[0]/section[0]/div[3]/div[0]/div[0]/div[3]/text "audit.devrika.ro/google-ads/raport"
+root/div[0]/section[0]/div[3]/div[0]/div[1]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/div[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/div[0]/span[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/div[0]/span[0]/text "Produse sub ROAS 4,0× · 365 de zile"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/div[0]/span[1]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/div[0]/span[1]/text "10.565 lei"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/thead[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "ROAS"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/text "Rochie office bleumarin"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "4.820 lei"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "0,8×"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[1]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/text "Set 3 tricouri bumbac"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "3.140 lei"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "1,2×"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[2]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[2]/td[0]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/text "Geanta piele ecologica"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[2]/td[1]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "2.605 lei"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[2]/td[2]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/table[0]/tbody[0]/tr[2]/td[2]/text "0,0×"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/div[1]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/div[1]/span[0] aria-hidden="true"
+root/div[0]/section[0]/div[3]/div[0]/div[1]/div[1]/span[1]
+root/div[0]/section[0]/div[3]/div[0]/div[1]/div[1]/span[1]/text "128 produse din catalog nu au avut nicio afisare in 365 de zile."
+root/div[0]/section[0]/div[3]/p[0]
+root/div[0]/section[0]/div[3]/p[0]/text "Exemplu de raport. In varianta ta apar produsele si sumele din contul tau."
+root/div[0]/section[1]
+root/div[0]/section[1]/p[0]
+root/div[0]/section[1]/p[0]/b[0]
+root/div[0]/section[1]/p[0]/b[0]/text "Audit Devrika"
+root/div[0]/section[1]/p[0]/text "este aplicatia care face aceasta analiza. Cu acordul tau, se conecteaza la contul tau de Google Ads si citeste"
+root/div[0]/section[1]/p[0]/b[1]
+root/div[0]/section[1]/p[0]/b[1]/text "doar"
+root/div[0]/section[1]/p[0]/text "datele campaniilor de Shopping din 365 de zile — cheltuiala, afisarile si vanzarile pe fiecare produs. Pe baza lor iti arata unde se duc banii. Nu stocam datele contului tau si nu facem nicio modificare in el."
+root/div[0]/section[1]/div[0]
+root/div[0]/section[1]/div[0]/div[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]/svg[0]/circle[0]
+root/div[0]/section[1]/div[0]/div[0]/p[0]
+root/div[0]/section[1]/div[0]/div[0]/p[0]/text "Doar citim"
+root/div[0]/section[1]/div[0]/div[0]/p[1]
+root/div[0]/section[1]/div[0]/div[0]/p[1]/text "Nu modificam nimic in contul tau."
+root/div[0]/section[1]/div[0]/div[1]
+root/div[0]/section[1]/div[0]/div[1]/div[0]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/div[1]/div[0]/svg[0]/rect[0]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/div[1]/p[0]
+root/div[0]/section[1]/div[0]/div[1]/p[0]/text "Doar datele de Shopping"
+root/div[0]/section[1]/div[0]/div[1]/p[1]
+root/div[0]/section[1]/div[0]/div[1]/p[1]/text "Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive."
+root/div[0]/section[1]/div[0]/div[2]
+root/div[0]/section[1]/div[0]/div[2]/div[0]
+root/div[0]/section[1]/div[0]/div[2]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/div[2]/div[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/div[2]/div[0]/svg[0]/path[1]
+root/div[0]/section[1]/div[0]/div[2]/p[0]
+root/div[0]/section[1]/div[0]/div[2]/p[0]/text "Retragi accesul oricand"
+root/div[0]/section[1]/div[0]/div[2]/p[1]
+root/div[0]/section[1]/div[0]/div[2]/p[1]/text "Dintr-un click, din contul tau Google. Nu depinde de noi."
+root/div[0]/section[1]/div[0]/div[3]
+root/div[0]/section[1]/div[0]/div[3]/div[0]
+root/div[0]/section[1]/div[0]/div[3]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/div[3]/div[0]/svg[0]/rect[0]
+root/div[0]/section[1]/div[0]/div[3]/div[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/div[3]/p[0]
+root/div[0]/section[1]/div[0]/div[3]/p[0]/text "Fara card, fara abonament"
+root/div[0]/section[1]/div[0]/div[3]/p[1]
+root/div[0]/section[1]/div[0]/div[3]/p[1]/text "Raportul e gratuit. Discutam dupa, doar daca vrei tu."
+root/div[0]/section[2]
+root/div[0]/section[2]/div[0]
+root/div[0]/section[2]/div[0]/h2[0]
+root/div[0]/section[2]/div[0]/h2[0]/text "Contul merge pe plus, dar nu tot din el"
+root/div[0]/section[2]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/p[0]/text "Intr-o campanie de Shopping, media ascunde adevarul. Cateva produse duc tot rezultatul, iar restul consuma linistit acelasi buget:"
+root/div[0]/section[2]/div[0]/ul[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/section[2]/div[0]/ul[0]/li[0]/span[0]/svg[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[0]/text "Produse pe care cheltuiesti lunar si nu ating niciodata ROAS-ul tau"
+root/div[0]/section[2]/div[0]/ul[0]/li[1]
+root/div[0]/section[2]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/section[2]/div[0]/ul[0]/li[1]/span[0]/svg[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[1]/text "Produse care nu au vandut nimic, dar continua sa consume"
+root/div[0]/section[2]/div[0]/ul[0]/li[2]
+root/div[0]/section[2]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/section[2]/div[0]/ul[0]/li[2]/span[0]/svg[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[2]/text "Sute de produse din catalog pe care nu le-a vazut nimeni"
+root/div[0]/section[2]/div[0]/ul[0]/li[3]
+root/div[0]/section[2]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
+root/div[0]/section[2]/div[0]/ul[0]/li[3]/span[0]/svg[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
+root/div[0]/section[2]/div[0]/ul[0]/li[3]/text "Un cost pe click mai mare decat al concurentei, pe aceleasi produse"
+root/div[0]/section[2]/div[0]/p[1]
+root/div[0]/section[2]/div[0]/p[1]/text "Raportul le scoate la suprafata"
+root/div[0]/section[2]/div[0]/p[1]/b[0]
+root/div[0]/section[2]/div[0]/p[1]/b[0]/text "cu nume si cu suma"
+root/div[0]/section[2]/div[0]/p[1]/text "."
+root/div[0]/section[3]
+root/div[0]/section[3]/p[0]
+root/div[0]/section[3]/p[0]/text "Ce afli"
+root/div[0]/section[3]/h2[0]
+root/div[0]/section[3]/h2[0]/text "Trei raspunsuri, pe cifrele tale"
+root/div[0]/section[3]/p[1]
+root/div[0]/section[3]/p[1]/text "Marcam clar ce e masurat in contul tau si ce e reper de piata. Nu amestecam."
+root/div[0]/section[3]/div[0]
+root/div[0]/section[3]/div[0]/div[0]
+root/div[0]/section[3]/div[0]/div[0]/div[0]
+root/div[0]/section[3]/div[0]/div[0]/div[0]/div[0]
+root/div[0]/section[3]/div[0]/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[3]/div[0]/div[0]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/section[3]/div[0]/div[0]/div[0]/div[0]/svg[0]/path[1]
+root/div[0]/section[3]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/section[3]/div[0]/div[0]/div[0]/span[0]/text "Masurat"
+root/div[0]/section[3]/div[0]/div[0]/p[0]
+root/div[0]/section[3]/div[0]/div[0]/p[0]/text "Produsele care iti ard bugetul"
+root/div[0]/section[3]/div[0]/div[0]/p[1]
+root/div[0]/section[3]/div[0]/div[0]/p[1]/text "Fiecare produs din Shopping care a cheltuit bani si a stat sub ROAS-ul tau minim, cu suma exacta pe ultimele 365 de zile. Adunate, iti dau banii dusi pe produse care nu ating targetul."
+root/div[0]/section[3]/div[0]/div[1]
+root/div[0]/section[3]/div[0]/div[1]/div[0]
+root/div[0]/section[3]/div[0]/div[1]/div[0]/div[0]
+root/div[0]/section[3]/div[0]/div[1]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[3]/div[0]/div[1]/div[0]/div[0]/svg[0]/rect[0]
+root/div[0]/section[3]/div[0]/div[1]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/section[3]/div[0]/div[1]/div[0]/span[0]
+root/div[0]/section[3]/div[0]/div[1]/div[0]/span[0]/text "Masurat"
+root/div[0]/section[3]/div[0]/div[1]/p[0]
+root/div[0]/section[3]/div[0]/div[1]/p[0]/text "Catalogul mort"
+root/div[0]/section[3]/div[0]/div[1]/p[1]
+root/div[0]/section[3]/div[0]/div[1]/p[1]/text "Cate produse din catalog nu au avut nicio afisare. Nu iti inventam o suma pe ele — primesti faptul: cate sunt si ce parte din catalog inseamna."
+root/div[0]/section[3]/div[0]/div[2]
+root/div[0]/section[3]/div[0]/div[2]/div[0]
+root/div[0]/section[3]/div[0]/div[2]/div[0]/div[0]
+root/div[0]/section[3]/div[0]/div[2]/div[0]/div[0]/svg[0] aria-hidden="true"
+root/div[0]/section[3]/div[0]/div[2]/div[0]/div[0]/svg[0]/circle[0]
+root/div[0]/section[3]/div[0]/div[2]/div[0]/div[0]/svg[0]/path[0]
+root/div[0]/section[3]/div[0]/div[2]/div[0]/span[0]
+root/div[0]/section[3]/div[0]/div[2]/div[0]/span[0]/text "Estimare"
+root/div[0]/section[3]/div[0]/div[2]/p[0]
+root/div[0]/section[3]/div[0]/div[2]/p[0]/text "Cat platesti in plus pe click"
+root/div[0]/section[3]/div[0]/div[2]/p[1]
+root/div[0]/section[3]/div[0]/div[2]/p[1]/text "Daca rulezi Shopping direct prin Google, fara CSS, costul pe click poate fi cu pana la ~20% mai mare. Cheltuiala pe care o aplicam e reala, procentul e un reper de piata — asa il si marcam."
+root/div[0]/section[4]
+root/div[0]/section[4]/p[0]
+root/div[0]/section[4]/p[0]/text "Cum functioneaza"
+root/div[0]/section[4]/h2[0]
+root/div[0]/section[4]/h2[0]/text "Sub un minut pana la raport"
+root/div[0]/section[4]/p[1]
+root/div[0]/section[4]/p[1]/text "Nu ai nevoie de cunostinte tehnice si nu trebuie sa exporti nimic din cont."
+root/div[0]/section[4]/div[0]
+root/div[0]/section[4]/div[0]/div[0] aria-hidden="true"
+root/div[0]/section[4]/div[0]/div[1]
+root/div[0]/section[4]/div[0]/div[1]/div[0] aria-hidden="true"
+root/div[0]/section[4]/div[0]/div[1]/div[0]/text "1"
+root/div[0]/section[4]/div[0]/div[1]/p[0]
+root/div[0]/section[4]/div[0]/div[1]/p[0]/text "Conectezi contul"
+root/div[0]/section[4]/div[0]/div[1]/p[1]
+root/div[0]/section[4]/div[0]/div[1]/p[1]/text "Te autentifici direct la Google, ca la orice aplicatie. Parola ta nu trece prin noi."
+root/div[0]/section[4]/div[0]/div[2]
+root/div[0]/section[4]/div[0]/div[2]/div[0] aria-hidden="true"
+root/div[0]/section[4]/div[0]/div[2]/div[0]/text "2"
+root/div[0]/section[4]/div[0]/div[2]/p[0]
+root/div[0]/section[4]/div[0]/div[2]/p[0]/text "Spui cat iti ramane din 100 de lei"
+root/div[0]/section[4]/div[0]/div[2]/p[1]
+root/div[0]/section[4]/div[0]/div[2]/p[1]/text "Un singur camp: marja ta, aproximativ. Din ea calculam noi pragul sub care un produs nu-si merita bugetul — nu trebuie sa stii ce inseamna ROAS."
+root/div[0]/section[4]/div[0]/div[3]
+root/div[0]/section[4]/div[0]/div[3]/div[0] aria-hidden="true"
+root/div[0]/section[4]/div[0]/div[3]/div[0]/text "3"
+root/div[0]/section[4]/div[0]/div[3]/p[0]
+root/div[0]/section[4]/div[0]/div[3]/p[0]/text "Primesti raportul"
+root/div[0]/section[4]/div[0]/div[3]/p[1]
+root/div[0]/section[4]/div[0]/div[3]/p[1]/text "Pe loc, pe cifrele tale din ultimele 365 de zile. Fara asteptare si fara discutie de vanzare inainte."
+root/div[0]/section[5]
+root/div[0]/section[5]/p[0]
+root/div[0]/section[5]/p[0]/text "Dupa curatare"
+root/div[0]/section[5]/h2[0]
+root/div[0]/section[5]/h2[0]/text "Cat ar aduce acelasi buget, curatat"
+root/div[0]/section[5]/p[1]
+root/div[0]/section[5]/p[1]/text "Raportul ia banii ramasi dupa ce tai produsele slabe si ii pune la randamentul produselor care chiar vand la tine. Asa arata:"
+root/div[0]/section[5]/div[0]
+root/div[0]/section[5]/div[0]/div[0]
+root/div[0]/section[5]/div[0]/div[0]/div[0]
+root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]
+root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]/span[0]/text "Acum"
+root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]/span[1]
+root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]/span[1]/text "48.200 lei"
+root/div[0]/section[5]/div[0]/div[0]/div[0]/div[1]
+root/div[0]/section[5]/div[0]/div[0]/div[0]/div[1]/div[0]
+root/div[0]/section[5]/div[0]/div[0]/div[1]
+root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]
+root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]/span[0]
+root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]/span[0]/text "Buget curatat, acelasi randament"
+root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]/span[1]
+root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]/span[1]/text "96.400 lei"
+root/div[0]/section[5]/div[0]/div[0]/div[1]/div[1]
+root/div[0]/section[5]/div[0]/div[0]/div[1]/div[1]/div[0]
+root/div[0]/section[5]/div[0]/div[0]/div[2]
+root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]
+root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]/span[0]
+root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]/span[0]/text "Buget curatat, marit de 5 ori"
+root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]/span[1]
+root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]/span[1]/text "241.000 lei"
+root/div[0]/section[5]/div[0]/div[0]/div[2]/div[1]
+root/div[0]/section[5]/div[0]/div[0]/div[2]/div[1]/div[0]
+root/div[0]/section[5]/div[0]/p[0]
+root/div[0]/section[5]/div[0]/p[0]/text "Simulare, nu promisiune — un plafon optimist care presupune ca produsele bune tin acelasi randament la buget mai mare. E venit, nu profit: profitul depinde de marja ta, pe care ti-o cerem la pasul 2. Cifrele de mai sus sunt exemplu."
+root/div[0]/section[6]
+root/div[0]/section[6]/div[0] aria-hidden="true"
+root/div[0]/section[6]/div[1]
+root/div[0]/section[6]/div[1]/h2[0]
+root/div[0]/section[6]/div[1]/h2[0]/text "Vezi ce produse iti ard bugetul"
+root/div[0]/section[6]/div[1]/p[0]
+root/div[0]/section[6]/div[1]/p[0]/text "Gratuit, pe cifrele tale reale. Fara card si fara discutie de vanzare inainte."
+root/div[0]/section[6]/div[1]/a[0] href="/google-ads/connect"
+root/div[0]/section[6]/div[1]/a[0]/text "Conecteaza contul Google Ads"
+root/div[0]/section[6]/div[1]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/section[6]/div[1]/a[0]/svg[0]/path[0]
+root/div[0]/section[6]/div[1]/p[1]
+root/div[0]/section[6]/div[1]/p[1]/text "Nu ai inca reclame pe Shopping?"
+root/div[0]/section[6]/div[1]/p[1]/a[0] href="/audit-seo"
+root/div[0]/section[6]/div[1]/p[1]/a[0]/text "Incearca auditul magazinului"
+root/div[0]/footer[0]
+root/div[0]/footer[0]/div[0]
+root/div[0]/footer[0]/div[0]/img[0] alt="Devrika"
+root/div[0]/footer[0]/div[0]/span[0]
+root/div[0]/footer[0]/div[0]/span[0]/text "Devrika"
+root/div[0]/footer[0]/p[0]
+root/div[0]/footer[0]/p[0]/a[0] href="/confidentialitate"
+root/div[0]/footer[0]/p[0]/a[0]/text "Politica de confidentialitate"
+root/div[0]/footer[0]/p[0]/text "·"
+root/div[0]/footer[0]/p[0]/a[1] href="/termeni"
+root/div[0]/footer[0]/p[0]/a[1]/text "Termeni si conditii"
+root/div[0]/footer[0]/p[1]
+root/div[0]/footer[0]/p[1]/text "© 2026 Devrika ·"
+root/div[0]/footer[0]/p[1]/a[0] href="/audit-seo"
+root/div[0]/footer[0]/p[1]/a[0]/text "Audit magazine online"
+root/div[0]/footer[0]/p[1]/text "·"
+root/div[0]/footer[0]/p[1]/a[1] href="https://devrika.ro"
+root/div[0]/footer[0]/p[1]/a[1]/text "devrika.ro""
+`;
+
+exports[`public Google Ads access boundary > renders the canonical contract on the privacy surface > privacy:normal 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="privacy:normal" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Politica de confidentialitate"
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Aplicatia"
+root/div[0]/div[0]/p[0]/b[0]
+root/div[0]/div[0]/p[0]/b[0]/text "Audit Devrika"
+root/div[0]/div[0]/p[0]/text "— analiza contului de Google Ads. Ultima actualizare: august 2026."
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Aceasta politica descrie cum aplicatia Audit Devrika trateaza datele la care ii dai acces atunci cand iti conectezi contul de Google Ads. E scrisa in limbaj obisnuit, pentru ca ai dreptul sa intelegi ce se intampla cu datele afacerii tale."
+root/div[0]/div[0]/h2[0]
+root/div[0]/div[0]/h2[0]/text "Cine suntem"
+root/div[0]/div[0]/p[2]
+root/div[0]/div[0]/p[2]/text "Devrika este o agentie de marketing online din Romania. Aplicatia"
+root/div[0]/div[0]/p[2]/b[0]
+root/div[0]/div[0]/p[2]/b[0]/text "Audit Devrika"
+root/div[0]/div[0]/p[2]/text "descrisa aici ruleaza pe"
+root/div[0]/div[0]/p[2]/b[1]
+root/div[0]/div[0]/p[2]/b[1]/text "audit.devrika.ro"
+root/div[0]/div[0]/p[2]/text "si apartine aceleiasi firme. Ne poti scrie oricand la"
+root/div[0]/div[0]/p[2]/a[0] href="mailto:hello@devrika.ro"
+root/div[0]/div[0]/p[2]/a[0]/text "hello@devrika.ro"
+root/div[0]/div[0]/p[2]/text "."
+root/div[0]/div[0]/h2[1]
+root/div[0]/div[0]/h2[1]/text "Ce date citim din contul tau Google"
+root/div[0]/div[0]/p[3]
+root/div[0]/div[0]/p[3]/text "Cu acordul tau explicit, aplicatia cere o singura permisiune Google (adwords). Permisiunea OAuth Google Ads nu este exclusiv de citire.Aplicatia citeste urmatoarele date din contul tau de Google Ads:"
+root/div[0]/div[0]/ul[0]
+root/div[0]/div[0]/ul[0]/li[0]
+root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[0]/text "lista conturilor de Google Ads la care ai acces, ca sa poti alege pe care il analizam"
+root/div[0]/div[0]/ul[0]/li[1]
+root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[1]/text "produsele din campaniile de Shopping si datele lor pe ultimele 365 de zile: cheltuiala, afisari, conversii si valoarea vanzarilor"
+root/div[0]/div[0]/ul[0]/li[2]
+root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
+root/div[0]/div[0]/ul[0]/li[2]/text "modul in care sunt configurate conversiile din cont, ca sa iti putem spune daca masurarea e corecta"
+root/div[0]/div[0]/p[4]
+root/div[0]/div[0]/p[4]/b[0]
+root/div[0]/div[0]/p[4]/b[0]/text "Nu cerem si nu obtinem acces"
+root/div[0]/div[0]/p[4]/text "la Gmail, Google Drive, contacte, calendar sau orice alt serviciu Google. Nu putem face nicio modificare in contul tau de Google Ads: nu putem porni sau opri campanii, nu putem schimba bugete si nu putem cheltui bani."
+root/div[0]/div[0]/h2[2]
+root/div[0]/div[0]/h2[2]/text "Ce facem cu ele"
+root/div[0]/div[0]/p[5]
+root/div[0]/div[0]/p[5]/text "Le folosim intr-un singur scop: sa generam raportul pe care il vezi pe ecran — ce produse consuma buget fara sa vanda, ce produse nu au fost afisate niciodata si daca masurarea conversiilor e configurata corect. Analiza se face in momentul in care esti pe site."
+root/div[0]/div[0]/p[6]
+root/div[0]/div[0]/p[6]/b[0]
+root/div[0]/div[0]/p[6]/b[0]/text "Nu stocam datele contului tau de Google Ads"
+root/div[0]/div[0]/p[6]/text "pe serverele noastre dupa generarea raportului. Autorizarea ta e tinuta intr-un cookie securizat, valabil o ora, si expira singura. Daca ne lasi datele de contact, pastram doar atat: numele, emailul, telefonul si contul pentru care ai cerut analiza — ca sa te putem contacta cu raportul complet."
+root/div[0]/div[0]/h2[3]
+root/div[0]/div[0]/h2[3]/text "Conformarea cu politicile Google"
+root/div[0]/div[0]/p[7]
+root/div[0]/div[0]/p[7]/text "Folosirea si transferul catre orice alta aplicatie a informatiilor primite de la Google API-uri respecta"
+root/div[0]/div[0]/p[7]/a[0] href="https://developers.google.com/terms/api-services-user-data-policy"
+root/div[0]/div[0]/p[7]/a[0]/text "Google API Services User Data Policy"
+root/div[0]/div[0]/p[7]/text ", inclusiv cerintele privind"
+root/div[0]/div[0]/p[7]/i[0]
+root/div[0]/div[0]/p[7]/i[0]/text "Limited Use"
+root/div[0]/div[0]/p[7]/text ". Concret: nu folosim datele pentru publicitate, nu le vindem, nu le transferam si nu permitem oamenilor sa le citeasca, in afara cazurilor strict necesare pentru operarea aplicatiei sau impuse de lege."
+root/div[0]/div[0]/h2[4]
+root/div[0]/div[0]/h2[4]/text "Cu cine le impartim"
+root/div[0]/div[0]/p[8]
+root/div[0]/div[0]/p[8]/text "Cu nimeni. Nu vindem, nu inchiriem si nu dam mai departe datele contului tau. Nu folosim serviciile de publicitate ale unor terti pe baza acestor date."
+root/div[0]/div[0]/h2[5]
+root/div[0]/div[0]/h2[5]/text "Cum retragi accesul"
+root/div[0]/div[0]/p[9]
+root/div[0]/div[0]/p[9]/text "Oricand, dintr-un singur loc si fara sa ne intrebi pe noi: intra la"
+root/div[0]/div[0]/p[9]/a[0] href="https://myaccount.google.com/permissions"
+root/div[0]/div[0]/p[9]/a[0]/text "myaccount.google.com/permissions"
+root/div[0]/div[0]/p[9]/text ", gaseste"
+root/div[0]/div[0]/p[9]/b[0]
+root/div[0]/div[0]/p[9]/b[0]/text "Audit Devrika"
+root/div[0]/div[0]/p[9]/text "in lista si apasa «Remove access». Din acel moment aplicatia nu mai poate citi nimic din contul tau."
+root/div[0]/div[0]/h2[6]
+root/div[0]/div[0]/h2[6]/text "Drepturile tale"
+root/div[0]/div[0]/p[10]
+root/div[0]/div[0]/p[10]/text "Conform GDPR, ai dreptul sa ceri o copie a datelor pe care le detinem despre tine, rectificarea sau stergerea lor, si sa te opui prelucrarii. Scrie-ne la"
+root/div[0]/div[0]/p[10]/a[0] href="mailto:hello@devrika.ro"
+root/div[0]/div[0]/p[10]/a[0]/text "hello@devrika.ro"
+root/div[0]/div[0]/p[10]/text "si raspundem in cel mult 30 de zile."
+root/div[0]/div[0]/h2[7]
+root/div[0]/div[0]/h2[7]/text "Modificari"
+root/div[0]/div[0]/p[11]
+root/div[0]/div[0]/p[11]/text "Daca schimbam ceva important in modul in care tratam datele, actualizam aceasta pagina si data de la inceputul ei."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la aplicatie"
+root/div[0]/div[0]/div[0]/a[1] href="/termeni"
+root/div[0]/div[0]/div[0]/a[1]/text "Termeni si conditii""
+`;
+
+exports[`public Google Ads access boundary > renders the canonical contract on the terms surface > terms:normal 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="terms:normal" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Termeni si conditii"
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Aplicatia"
+root/div[0]/div[0]/p[0]/b[0]
+root/div[0]/div[0]/p[0]/b[0]/text "Audit Devrika"
+root/div[0]/div[0]/p[0]/text "— analiza contului de Google Ads. Ultima actualizare: august 2026."
+root/div[0]/div[0]/h2[0]
+root/div[0]/div[0]/h2[0]/text "Ce este acest serviciu"
+root/div[0]/div[0]/p[1]
+root/div[0]/div[0]/p[1]/text "Audit Devrika este o aplicatie care analizeaza contul tau de Google Ads si iti arata unde se duc banii din campaniile de Shopping: ce produse consuma buget fara sa vanda, ce produse nu au fost afisate niciodata si daca masurarea conversiilor e configurata corect. Serviciul e oferit gratuit, fara obligatia de a cumpara ceva."
+root/div[0]/div[0]/h2[1]
+root/div[0]/div[0]/h2[1]/text "Ce iti cerem"
+root/div[0]/div[0]/p[2]
+root/div[0]/div[0]/p[2]/text "Sa ne dai acces la contul tau de Google Ads, prin mecanismul oficial de autorizare Google, si sa ne spui aproximativ ce marja de profit ai — din ea calculam pragul sub care un produs pierde bani. Nu iti cerem parole, date de card sau documente."
+root/div[0]/div[0]/h2[2]
+root/div[0]/div[0]/h2[2]/text "Ce garantam si ce nu"
+root/div[0]/div[0]/p[3]
+root/div[0]/div[0]/p[3]/text "Cifrele din raport sunt citite direct din contul tau si le marcam ca atare. Acolo unde folosim un reper de piata in loc de o masuratoare — de exemplu diferenta tipica de cost pe click intre magazinele cu si fara CSS — scrie explicit"
+root/div[0]/div[0]/p[3]/b[0]
+root/div[0]/div[0]/p[3]/b[0]/text "ESTIMARE"
+root/div[0]/div[0]/p[3]/text ". Nu prezentam niciodata o estimare drept fapt masurat."
+root/div[0]/div[0]/p[4]
+root/div[0]/div[0]/p[4]/text "Raportul e o analiza, nu o garantie de rezultat. Deciziile pe care le iei in contul tau iti apartin, iar Devrika nu raspunde pentru efectele lor comerciale. Daca masurarea conversiilor din contul tau e configurata gresit, o spunem in raport — dar in acel caz cifrele de performanta nu pot fi judecate pana nu e reparata."
+root/div[0]/div[0]/h2[3]
+root/div[0]/div[0]/h2[3]/text "Ce nu facem niciodata"
+root/div[0]/div[0]/p[5]
+root/div[0]/div[0]/p[5]/text "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc. Nu modificam nimic in contul tau. Accesul pe care ni-l dai il poti retrage oricand din setarile contului tau Google."
+root/div[0]/div[0]/h2[4]
+root/div[0]/div[0]/h2[4]/text "Datele tale"
+root/div[0]/div[0]/p[6]
+root/div[0]/div[0]/p[6]/text "Modul in care tratam datele e descris pe larg in"
+root/div[0]/div[0]/p[6]/a[0] href="/confidentialitate"
+root/div[0]/div[0]/p[6]/a[0]/text "politica de confidentialitate"
+root/div[0]/div[0]/p[6]/text ". Pe scurt: citim doar ce e necesar pentru raport, nu stocam datele contului tau dupa generarea lui si nu le dam nimanui."
+root/div[0]/div[0]/h2[5]
+root/div[0]/div[0]/h2[5]/text "Disponibilitate"
+root/div[0]/div[0]/p[7]
+root/div[0]/div[0]/p[7]/text "Fiind un serviciu gratuit, il oferim «asa cum este» si putem sa il oprim sau sa il modificam oricand, fara notificare prealabila."
+root/div[0]/div[0]/h2[6]
+root/div[0]/div[0]/h2[6]/text "Contact"
+root/div[0]/div[0]/p[8]
+root/div[0]/div[0]/p[8]/text "Pentru orice intrebare legata de acesti termeni:"
+root/div[0]/div[0]/p[8]/a[0] href="mailto:hello@devrika.ro"
+root/div[0]/div[0]/p[8]/a[0]/text "hello@devrika.ro"
+root/div[0]/div[0]/p[8]/text "."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la aplicatie"
+root/div[0]/div[0]/div[0]/a[1] href="/confidentialitate"
+root/div[0]/div[0]/div[0]/a[1]/text "Politica de confidentialitate""
+`;

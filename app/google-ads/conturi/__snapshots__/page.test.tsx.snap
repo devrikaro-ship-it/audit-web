@@ -1,0 +1,174 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`account selection recovery > identifies selected-account data as unavailable after account selection > account-picker:account-error 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="account-picker:account-error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/p[0]
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/p[1]
+root/div[0]/div[0]/div[0]/p[1]/text "Nu am putut citi datele contului."
+root/div[0]/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/div[0]/a[0]/text "Reincearca conectarea"
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Citim doar datele de Shopping. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+`;
+
+exports[`account selection recovery > preserves the account-list explanation when listing accounts fails > account-picker:list-error 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="account-picker:list-error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/p[0]
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/p[1]
+root/div[0]/div[0]/div[0]/p[1]/text "Nu am putut citi lista de conturi. Se intampla cand contul nu are inca acces la Google Ads API sau cand conectarea a expirat."
+root/div[0]/div[0]/div[0]/p[2]
+root/div[0]/div[0]/div[0]/p[2]/text "list failed"
+root/div[0]/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/div[0]/a[0]/text "Reincearca conectarea"
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Citim doar datele de Shopping. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+`;
+
+exports[`account selection recovery > renders the successful picker state through the canonical contract > account-picker:success-zero 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="account-picker:success" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/p[0]
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/p[1]
+root/div[0]/div[0]/div[0]/p[1]/text "Contul cu care te-ai conectat nu are niciun cont de Google Ads pe care sa-l putem analiza. Daca administrezi magazinul din alt cont Google, conecteaza-te cu acela."
+root/div[0]/div[0]/div[0]/a[0] href="/api/google-ads/start"
+root/div[0]/div[0]/div[0]/a[0]/text "Incearca alt cont Google"
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Citim doar datele de Shopping. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+`;
+
+exports[`account selection recovery > seals the complete demo picker text > account-picker:demo 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="account-picker:success" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/p[0]
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/p[1]
+root/div[0]/div[0]/div[0]/p[1]/text "Am gasit un cont. Alege magazinul pe care vrei sa-l vezi analizat."
+root/div[0]/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/div[0]/form[0] action="javascript:throw new Error(&#x27;React form unexpectedly submitted.&#x27;)"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/input[0] type="hidden" name="customerId" value="<IDENTIFIER>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/input[1] type="hidden" name="name" value="<ACCOUNT>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/input[2] type="hidden" name="loginCustomerId" value="<IDENTIFIER>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[0]
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[0]/text "<ACCOUNT>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]/text "<IDENTIFIER> · RON"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Citim doar datele de Shopping. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+`;
+
+exports[`account selection recovery > seals the complete picker text for many account results > account-picker:success-many 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="account-picker:success" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/p[0]
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/p[1]
+root/div[0]/div[0]/div[0]/p[1]/text "Am gasit 2 conturi. Alege magazinul pe care vrei sa-l vezi analizat."
+root/div[0]/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/div[0]/form[0] action="javascript:throw new Error(&#x27;React form unexpectedly submitted.&#x27;)"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/input[0] type="hidden" name="customerId" value="<IDENTIFIER>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/input[1] type="hidden" name="name" value="<ACCOUNT>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/input[2] type="hidden" name="loginCustomerId" value="<IDENTIFIER>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[0]
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[0]/text "<ACCOUNT>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]/text "<IDENTIFIER> · RON"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
+root/div[0]/div[0]/div[0]/div[0]/form[1] action="javascript:throw new Error(&#x27;React form unexpectedly submitted.&#x27;)"
+root/div[0]/div[0]/div[0]/div[0]/form[1]/input[0] type="hidden" name="customerId" value="<IDENTIFIER>"
+root/div[0]/div[0]/div[0]/div[0]/form[1]/input[1] type="hidden" name="name" value="<ACCOUNT>"
+root/div[0]/div[0]/div[0]/div[0]/form[1]/input[2] type="hidden" name="loginCustomerId" value="<IDENTIFIER>"
+root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0] type="submit"
+root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/span[0]
+root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/span[0]/span[0]
+root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/span[0]/span[0]/text "<ACCOUNT>"
+root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/span[0]/span[1]
+root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/span[0]/span[1]/text "<IDENTIFIER> · EUR"
+root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/svg[0]/path[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Citim doar datele de Shopping. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+`;
+
+exports[`account selection recovery > seals the complete picker text for one account results > account-picker:success-one 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="account-picker:success" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0] href="/google-ads"
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/p[0]
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/p[1]
+root/div[0]/div[0]/div[0]/p[1]/text "Am gasit un cont. Alege magazinul pe care vrei sa-l vezi analizat."
+root/div[0]/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/div[0]/form[0] action="javascript:throw new Error(&#x27;React form unexpectedly submitted.&#x27;)"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/input[0] type="hidden" name="customerId" value="<IDENTIFIER>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/input[1] type="hidden" name="name" value="<ACCOUNT>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/input[2] type="hidden" name="loginCustomerId" value="<IDENTIFIER>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[0]
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[0]/text "<ACCOUNT>"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]/text "<IDENTIFIER> · RON"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Citim doar datele de Shopping. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+`;

@@ -27,7 +27,8 @@ import {
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
 import { SCOPE } from "@/lib/gads-oauth";
 import nextConfig from "@/next.config";
-import { publicOutputDigest, publicOutputGoldens } from "@/app/public-output-goldens";
+import { normalizePublicMetadata, normalizePublicOutput } from "@/app/public-output-goldens";
+import { publicOutputStateDefinitions } from "@/app/public-output-state-contract";
 
 function walkSource(directory: string): string[] {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -374,7 +375,14 @@ describe("public Google Ads access boundary", () => {
     expect(() => moduleSpecifiers(unresolved)).toThrow("Unresolved dynamic module specifier");
   });
 
-  it("matches every emitted metadata object and public API text body to an independent golden", () => {
+  it("refuses placeholder values that could erase unrelated output provenance", () => {
+    expect(() => normalizePublicOutput("<p>fixture</p>", [
+      { kind: "account", value: "fixture", occurrences: 1 },
+      { kind: "product", value: "fixture", occurrences: 1 },
+    ])).toThrow("Public-output placeholder collision");
+  });
+
+  it("matches every emitted metadata object to an independent structural snapshot", () => {
     const metadataOutputs = {
       landing: landingMetadata,
       connect: connectMetadata,
@@ -387,10 +395,8 @@ describe("public Google Ads access boundary", () => {
       terms: termsMetadata,
     };
     for (const [surface, metadata] of Object.entries(metadataOutputs)) {
-      expect.soft(publicOutputDigest(JSON.stringify(metadata)), surface).toBe(publicOutputGoldens[`metadata:${surface}` as keyof typeof publicOutputGoldens]);
+      expect(normalizePublicMetadata(metadata)).toMatchSnapshot(`metadata:${surface}`);
     }
-    expect(publicOutputDigest("")).toBe(publicOutputGoldens["api:start:text"]);
-    expect(publicOutputDigest("")).toBe(publicOutputGoldens["api:callback:text"]);
   });
   it("exposes the one closed executable OAuth contract", () => {
     expect(publicOAuthContract).toEqual({
@@ -403,17 +409,6 @@ describe("public Google Ads access boundary", () => {
     expect(publicOAuthClauseFacts["oauth-permission-not-read-only"]).toEqual({ property: "permissionCapability", value: "broad" });
     expect(publicOAuthClauseFacts["application-read-operations-only"]).toEqual({ property: "applicationBehavior", value: "read-operations-only" });
     expect(publicOAuthClauseFacts["mutation-none"]).toEqual({ property: "mutationBehavior", value: "none" });
-  });
-
-  it("has an approved golden for every registered public state and no pending value", () => {
-    expect(Object.values(publicOutputGoldens)).not.toContain("PENDING");
-    const goldenKeys = Object.keys(publicOutputGoldens);
-    for (const [surface, registration] of Object.entries(publicOAuthSurfaceRegistry)) {
-      for (const state of registration.states) {
-        const stateId = `${surface}:${state}`;
-        expect(goldenKeys.some((key) => key === stateId || key.startsWith(`${stateId}-`)), stateId).toBe(true);
-      }
-    }
   });
 
   it("renders each semantic fact through independently fixed localized grammar", () => {
@@ -431,6 +426,33 @@ describe("public Google Ads access boundary", () => {
     };
     visit(contractSource);
     expect(fullClauseMappings).toEqual([]);
+  });
+
+  it("maps every executable public-output state to exactly one reviewed snapshot", () => {
+    const snapshotCorpus = walkSource(path.join(process.cwd(), "app"))
+      .filter((source) => source.endsWith(".snap"))
+      .map((source) => fs.readFileSync(path.join(process.cwd(), source), "utf8"))
+      .join("\n");
+    const stateIds = Object.keys(publicOutputStateDefinitions);
+    for (const stateId of stateIds) {
+      const escaped = stateId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      expect(snapshotCorpus.match(new RegExp(`> ${escaped} \\d+\\\``, "g")) ?? [], stateId).toHaveLength(1);
+    }
+    const observed = [...snapshotCorpus.matchAll(/> ([a-z][a-z0-9:-]+) \d+`/g)].map((match) => match[1]).sort();
+    expect(observed).toEqual([...stateIds].sort());
+
+    const clauseStates = {
+      "hub:normal": ["application-read-operations-only", "mutation-none"],
+      "privacy:normal": ["provider-scope-adwords", "oauth-permission-not-read-only"],
+      "terms:normal": ["application-read-operations-only", "mutation-none"],
+      "connect:normal": ["oauth-permission-not-read-only", "mutation-none"],
+    } as const;
+    for (const [stateId, clauses] of Object.entries(clauseStates)) {
+      const start = snapshotCorpus.indexOf(`> ${stateId} 1`);
+      const end = snapshotCorpus.indexOf("exports[`", start + 1);
+      const output = snapshotCorpus.slice(start, end < 0 ? undefined : end);
+      for (const clause of clauses) expect(output).toContain(localizedClauseOracle[clause]);
+    }
   });
 
   it("accepts canonical truth and refuses free-form permission semantics", () => {
@@ -570,7 +592,7 @@ describe("public Google Ads access boundary", () => {
       terms: publicOAuthStatement("application-performs-no-mutations"),
     }[surface];
     expect(html).toContain(expectedVisibleProjection);
-    expect(publicOutputDigest(html)).toBe(publicOutputGoldens[`${surface}:normal` as keyof typeof publicOutputGoldens]);
+    expect(normalizePublicOutput(html)).toMatchSnapshot(`${surface}:normal`);
   });
 
   it("renders normal and recoverable connect states through the canonical contract", async () => {
@@ -585,15 +607,14 @@ describe("public Google Ads access boundary", () => {
       expect(error).toContain('data-public-oauth-surface="connect:error"');
       expect(normal).toContain(projectOAuthClauses("oauth-permission-not-read-only"));
       expect(normal).toContain(projectOAuthClauses("mutation-none"));
-      expect(publicOutputDigest(normal)).toBe(publicOutputGoldens["connect:normal"]);
-      expect(publicOutputDigest(error)).toBe(publicOutputGoldens["connect:error"]);
+      expect(normalizePublicOutput(normal)).toMatchSnapshot("connect:normal");
       for (const errorCode of ["anulat", "state", "sesiune", "expirat", "schimb", "fara_cod", "google", "config"] as const) {
         const errorState = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({ eroare: errorCode }) }));
-        expect.soft(publicOutputDigest(errorState), errorCode).toBe(publicOutputGoldens[`connect:error-${errorCode.replace("_", "-")}` as keyof typeof publicOutputGoldens]);
+        expect(normalizePublicOutput(errorState)).toMatchSnapshot(`connect:error-${errorCode.replace("_", "-")}`);
       }
       delete process.env.GADS_OAUTH_CLIENT_ID;
       const unconfigured = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({}) }));
-      expect(publicOutputDigest(unconfigured)).toBe(publicOutputGoldens["connect:unconfigured"]);
+      expect(normalizePublicOutput(unconfigured)).toMatchSnapshot("connect:unconfigured");
     } finally {
       process.env = prior;
     }

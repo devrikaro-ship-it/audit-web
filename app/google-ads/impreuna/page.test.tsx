@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, expect, it, vi } from "vitest";
-import { publicOutputDigest, publicOutputGoldens } from "@/app/public-output-goldens";
+import { normalizePublicOutput } from "@/app/public-output-goldens";
 
 let marginStatus: "invalid" | undefined;
 let marginPct: number | undefined;
@@ -41,8 +41,7 @@ it("matches the complete simulator page output to its reviewed golden", async ()
   marginPct = 28.5;
   const TogetherPage = (await import("./page")).default;
   const html = renderToStaticMarkup(await TogetherPage());
-  expect(publicOutputDigest(html, [
-    { kind: "account", value: "123" },
-    { kind: "amount", value: "100" },
-  ])).toBe(publicOutputGoldens["simulator:page-normal"]);
+  expect(normalizePublicOutput(html, [
+    { kind: "amount", value: "100", occurrences: 3 },
+  ])).toMatchSnapshot("simulator:page-normal");
 });

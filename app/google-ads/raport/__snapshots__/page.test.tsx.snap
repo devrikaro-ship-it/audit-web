@@ -1,0 +1,1698 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`pagina de raport, randata > renders honesty labels on every successful report > report:success 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="report:success" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/main[0]
+root/div[0]/main[0]/div[0]
+root/div[0]/main[0]/div[0]/a[0]
+root/div[0]/main[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/main[0]/div[0]/a[0]/span[0]
+root/div[0]/main[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/main[0]/div[1]
+root/div[0]/main[0]/div[1]/div[0]
+root/div[0]/main[0]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[1]/div[0]/p[0]/text "<ACCOUNT> · 365 de zile"
+root/div[0]/main[0]/div[1]/div[0]/p[1]
+root/div[0]/main[0]/div[1]/div[0]/p[1]/text "1.200 RON"
+root/div[0]/main[0]/div[1]/div[0]/p[2]
+root/div[0]/main[0]/div[1]/div[0]/p[2]/text "cheltuiti fara sa se acopere in ultimele 365 de zile"
+root/div[0]/main[0]/div[1]/div[1]
+root/div[0]/main[0]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[0]/text "5"
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[1]/text "Constatari care costa bani"
+root/div[0]/main[0]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[0]/text "2"
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[1]/text "Setari de reparat"
+root/div[0]/main[0]/div[1]/div[1]/div[2]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[0]/text "4"
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[1]/text "Produse analizate"
+root/div[0]/main[0]/div[1]/div[1]/div[3]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[0]/text "ROAS 4.00x"
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[1]/text "Pragul tau minim"
+root/div[0]/main[0]/div[2]
+root/div[0]/main[0]/div[2]/div[0]
+root/div[0]/main[0]/div[2]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[2]/div[0]/h2[0]
+root/div[0]/main[0]/div[2]/div[0]/h2[0]/text "Unde pierzi bani"
+root/div[0]/main[0]/div[2]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/h3[0]/text "2 produse consuma buget fara sa se acopere"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[0]/text "1.200 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[1]/text "La marja ta de 25%, un produs trebuie sa aduca cel putin 4.00 lei la fiecare leu cheltuit ca sa iasa pe zero. 2 produse stau sub pragul asta si au consumat impreuna 1.200 RON."
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "900 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "0.11x"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "300 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "0.00x"
+root/div[0]/main[0]/div[2]/div[1]/article[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[0]/text "2"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/h3[0]/text "Platesti mai mult decat trebuie pe fiecare click"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[0]/text "250 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[1]/text "Magazinele care ruleaza Shopping direct prin Google platesc pana la ~20% in plus pe click fata de cele care merg printr-un partener CSS. Aplicat pe cei 1.250 RON cheltuiti de tine, inseamna aproximativ 250 RON. Cheltuiala e reala, procentul e un reper de piata — de aceea il marcam ca estimare."
+root/div[0]/main[0]/div[2]/div[1]/article[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/h3[0]/text "1 cautari au consumat buget fara nicio vanzare"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[0]/text "120 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[1]/text "In ultimele 30 de zile, reclamele tale au aparut la cautari care au adus clicuri platite si zero comenzi — 120 RON in total. Sunt oameni care cautau altceva decat vinzi tu. Cifra e pe 30 de zile, nu pe 365 de zile ca restul raportului, si de asta nu am adunat-o in totalul de sus."
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Ce a cautat omul"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clicuri"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "canapea ieftina"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "40"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "120 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[3]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[0]/text "4"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/h3[0]/text "Un produs nu a fost vazut de niciun client"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/p[0]/text "Sunt 25% din catalogul tau — produse care nu au avut nicio afisare in 365 de zile. Nu au costat nimic, dar nici nu exista pentru cumparatori: stau in magazin fara sa ajunga vreodata in fata cuiva."
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "—"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "—"
+root/div[0]/main[0]/div[2]/div[1]/article[4]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[0]/text "5"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[1]/text "SIMULARE"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/h3[0]/text "Cat ar aduce acelasi buget, mutat pe produsele care vand"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[0]/text "+900 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[1]/text "Produsele care chiar vand la tine se intorc de 18.00 ori si aduc acum 900 RON. Daca opresti produsele slabe si muti acei 1.200 RON catre ele — fara sa adaugi niciun leu in plus — ar putea ajunge la 1.800 RON. Am oprit calculul la dublarea incasarilor actuale, desi inmultirea seaca ar da mai mult: produsele bune au un volum limitat de cautari si nu absorb oricat buget la acelasi randament. E un plafon optimist, nu o promisiune: la buget mai mare randamentul scade de obicei. Si sunt incasari, nu profit — profitul depinde de marja ta."
+root/div[0]/main[0]/div[3]
+root/div[0]/main[0]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[0]/span[0]/text "2"
+root/div[0]/main[0]/div[3]/div[0]/h2[0]
+root/div[0]/main[0]/div[3]/div[0]/h2[0]/text "Cum sta catalogul tau"
+root/div[0]/main[0]/div[3]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[3]/p[0]
+root/div[0]/main[0]/div[3]/p[0]/text "Aceleasi produse, privite in trei feluri: cate sunt, cat buget mananca si cat aduc inapoi. Cand o grupa ocupa mult mai mult din inelul din mijloc decat din cel din dreapta, acolo pleaca banii."
+root/div[0]/main[0]/div[3]/div[1] role="group" aria-label="Perioada analizata"
+root/div[0]/main[0]/div[3]/div[1]/button[0] type="button" aria-pressed="true"
+root/div[0]/main[0]/div[3]/div[1]/button[0]/text "30 de zile"
+root/div[0]/main[0]/div[3]/div[1]/button[1] type="button" aria-pressed="false"
+root/div[0]/main[0]/div[3]/div[1]/button[1]/text "3 luni"
+root/div[0]/main[0]/div[3]/div[1]/button[2] type="button" aria-pressed="false"
+root/div[0]/main[0]/div[3]/div[1]/button[2]/text "6 luni"
+root/div[0]/main[0]/div[3]/div[1]/button[3] type="button" aria-pressed="false"
+root/div[0]/main[0]/div[3]/div[1]/button[3]/text "365 de zile"
+root/div[0]/main[0]/div[3]/div[2]
+root/div[0]/main[0]/div[3]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/p[0]/text "Produse"
+root/div[0]/main[0]/div[3]/div[2]/div[0]/svg[0] role="img" aria-label="Heroes: 25%, Sidekicks: 0%, Villains: 50%, Zombies: 0%, 0 Zombies: 25%"
+root/div[0]/main[0]/div[3]/div[2]/div[0]/svg[0]/circle[0]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/svg[0]/circle[1]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/svg[0]/circle[2]
+root/div[0]/main[0]/div[3]/div[2]/div[1]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/p[0]/text "Cat mananca"
+root/div[0]/main[0]/div[3]/div[2]/div[1]/svg[0] role="img" aria-label="Heroes: 4%, Sidekicks: 0%, Villains: 96%, Zombies: 0%"
+root/div[0]/main[0]/div[3]/div[2]/div[1]/svg[0]/circle[0]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/svg[0]/circle[1]
+root/div[0]/main[0]/div[3]/div[2]/div[2]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/p[0]/text "Cat aduc"
+root/div[0]/main[0]/div[3]/div[2]/div[2]/svg[0] role="img" aria-label="Heroes: 90%, Sidekicks: 0%, Villains: 10%, Zombies: 0%"
+root/div[0]/main[0]/div[3]/div[2]/div[2]/svg[0]/circle[0]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/svg[0]/circle[1]
+root/div[0]/main[0]/div[3]/p[1]
+root/div[0]/main[0]/div[3]/p[1]/text "Produsele fara nicio afisare nu au cifre de cheltuiala sau de vanzari, deci apar doar in primul inel."
+root/div[0]/main[0]/div[3]/div[3]
+root/div[0]/main[0]/div[3]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[1]/text "Heroes"
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[2]/text "1 produs · 50 lei cheltuiti · 900 lei adusi"
+root/div[0]/main[0]/div[3]/div[3]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/p[0]/text "Au vandut destul cat sa nu mai fie discutie. Pe astea se sprijina contul, si tot aici merg banii in plus."
+root/div[0]/main[0]/div[3]/div[3]/div[1]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[1]/text "Sidekicks"
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[2]/text "0 produse"
+root/div[0]/main[0]/div[3]/div[3]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/p[0]/text "Au vandut, dar aproape nimeni nu le-a vazut. Cea mai ieftina crestere din cont: nu trebuie reparate, trebuie aratate."
+root/div[0]/main[0]/div[3]/div[3]/div[2]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[1]/text "Villains"
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[2]/text "2 produse · 1.200 lei cheltuiti · 100 lei adusi"
+root/div[0]/main[0]/div[3]/div[3]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/p[0]/text "Au avut trafic serios si tot nu se acopera. Aici se taie, iar banii pleaca spre primele doua grupe."
+root/div[0]/main[0]/div[3]/div[3]/div[3]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[1]/text "Zombies"
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[2]/text "0 produse"
+root/div[0]/main[0]/div[3]/div[3]/div[3]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/p[0]/text "N-au strans destul trafic cat sa se poata spune ceva despre ele. Nu sunt produse proaste, sunt produse netestate."
+root/div[0]/main[0]/div[3]/div[3]/div[4]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[1]/text "0 Zombies"
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[2]/text "1 produs"
+root/div[0]/main[0]/div[3]/div[3]/div[4]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/p[0]/text "Nu au fost aratate niciodata. Nu e o problema de performanta, ci de feed sau de structura a campaniilor."
+root/div[0]/main[0]/div[4]
+root/div[0]/main[0]/div[4]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[4]/div[0]/h2[0]
+root/div[0]/main[0]/div[4]/div[0]/h2[0]/text "Ce e setat gresit in cont"
+root/div[0]/main[0]/div[4]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[4]/p[0]
+root/div[0]/main[0]/div[4]/p[0]/text "Astea nu sunt bani deja pierduti, ci robinete deschise gresit. Sumele arata cat buget trece prin fiecare — nu cat s-a irosit."
+root/div[0]/main[0]/div[4]/div[1]
+root/div[0]/main[0]/div[4]/div[1]/article[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[0]/text "costa bani"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[1]/text "2.977 RON buget afectat"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/h3[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/h3[0]/text "O campanie liciteaza fara nicio tinta"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/p[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/p[0]/text "Detaliu."
+root/div[0]/main[0]/div[4]/div[1]/article[1]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/div[0]/span[0]/text "de reglat"
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/h3[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/h3[0]/text "Nu poti vedea pe ce cautari se duc banii"
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/p[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/p[0]/text "Contul nu are nicio campanie Shopping standard activa. Performance Max raporteaza categorii de cautari, dar nu si cat a costat fiecare — asa ca nu exista nicaieri raspunsul la &quot;pe ce cuvinte mi s-au dus banii&quot;. O campanie Shopping standard, chiar si mica, aduce inapoi datele astea si face vizibile scurgerile."
+root/div[0]/main[0]/div[5]
+root/div[0]/main[0]/div[5]/div[0]
+root/div[0]/main[0]/div[5]/div[0]/p[0]
+root/div[0]/main[0]/div[5]/div[0]/p[0]/text "Simulare · cu Devrika, la acelasi buget"
+root/div[0]/main[0]/div[5]/div[0]/p[1]
+root/div[0]/main[0]/div[5]/div[0]/p[1]/text "+6.000 RON"
+root/div[0]/main[0]/div[5]/div[0]/p[2]
+root/div[0]/main[0]/div[5]/div[0]/p[2]/text "Atat ar insemna in plus pe luna din reclame daca clicurile ajung cu 20% mai ieftine si conversia creste cu 20% — cele doua lucruri la care lucram efectiv. Nu e o promisiune: intra si misca tu ipoteza, pana la zero daca vrei."
+root/div[0]/main[0]/div[5]/div[0]/a[0]
+root/div[0]/main[0]/div[5]/div[0]/a[0]/text "Vezi calculul pe cifrele tale"
+root/div[0]/main[0]/div[5]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/main[0]/div[6]
+root/div[0]/main[0]/div[6]/h2[0]
+root/div[0]/main[0]/div[6]/h2[0]/text "Vrei sa iti aratam si cum se repara?"
+root/div[0]/main[0]/div[6]/p[0]
+root/div[0]/main[0]/div[6]/p[0]/text "Lasa-ne un contact si iti trimitem raportul complet, cu toate produsele pe nume si ordinea in care merita atacate. Fara obligatii."
+root/div[0]/main[0]/div[6]/form[0]
+root/div[0]/main[0]/div[7]
+root/div[0]/main[0]/div[7]/h2[0]
+root/div[0]/main[0]/div[7]/h2[0]/text "Ce nu am putut verifica"
+root/div[0]/main[0]/div[7]/ul[0]
+root/div[0]/main[0]/div[7]/ul[0]/li[0]
+root/div[0]/main[0]/div[7]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[7]/ul[0]/li[0]/text "Marja pe produs — folosim valoarea data de tine, deci vorbim despre incasari, nu despre profit."
+root/div[0]/main[0]/div[7]/ul[0]/li[1]
+root/div[0]/main[0]/div[7]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[7]/ul[0]/li[1]/text "Daca folosesti deja un partener CSS — de confirmat in cont."
+root/div[0]/main[0]/div[7]/p[0]
+root/div[0]/main[0]/div[7]/p[0]/b[0]
+root/div[0]/main[0]/div[7]/p[0]/b[0]/text "MASURAT"
+root/div[0]/main[0]/div[7]/p[0]/text "= citit direct din contul tau."
+root/div[0]/main[0]/div[7]/p[0]/b[1]
+root/div[0]/main[0]/div[7]/p[0]/b[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[7]/p[0]/text "= cifra reala inmultita cu un reper de piata, marcata ca atare."
+root/div[0]/main[0]/div[7]/p[0]/b[2]
+root/div[0]/main[0]/div[7]/p[0]/b[2]/text "SIMULARE"
+root/div[0]/main[0]/div[7]/p[0]/text "= o proiectie sub ipoteze scrise, plafon optimist si incasari, niciodata profit. Nu prezentam niciodata o estimare sau o simulare drept fapt.""
+`;
+
+exports[`pagina de raport, randata > renders the alternative recovery surface when the primary catalog read fails > report:catalog-unavailable 1`] = `
+"root/div[0] data-public-oauth-surface="report:catalog-unavailable" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/h1[0]/text "Nu am putut citi catalogul de Shopping"
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Se intampla cand contul nu are inca produse in Shopping, cand accesul prin API tocmai a fost retras sau cand Google raspunde greu. Nu s-a modificat nimic in contul tau."
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/a[0]
+root/div[0]/div[0]/div[0]/a[0]/text "Incearca din nou"
+root/div[0]/div[0]/div[0]/a[1] href="mailto:hello@devrika.ro?subject=Audit%20Google%20Ads%20-%20raportul%20nu%20s-a%20generat"
+root/div[0]/div[0]/div[0]/a[1]/text "Scrie-ne si il facem noi manual""
+`;
+
+exports[`pagina de raport, randata > renders the catalog map at one and many windows but not zero > report:catalog-map-many 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="report:success" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/main[0]
+root/div[0]/main[0]/div[0]
+root/div[0]/main[0]/div[0]/a[0]
+root/div[0]/main[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/main[0]/div[0]/a[0]/span[0]
+root/div[0]/main[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/main[0]/div[1]
+root/div[0]/main[0]/div[1]/div[0]
+root/div[0]/main[0]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[1]/div[0]/p[0]/text "<ACCOUNT> · 365 de zile"
+root/div[0]/main[0]/div[1]/div[0]/p[1]
+root/div[0]/main[0]/div[1]/div[0]/p[1]/text "1.200 RON"
+root/div[0]/main[0]/div[1]/div[0]/p[2]
+root/div[0]/main[0]/div[1]/div[0]/p[2]/text "cheltuiti fara sa se acopere in ultimele 365 de zile"
+root/div[0]/main[0]/div[1]/div[1]
+root/div[0]/main[0]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[0]/text "5"
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[1]/text "Constatari care costa bani"
+root/div[0]/main[0]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[0]/text "2"
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[1]/text "Setari de reparat"
+root/div[0]/main[0]/div[1]/div[1]/div[2]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[0]/text "4"
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[1]/text "Produse analizate"
+root/div[0]/main[0]/div[1]/div[1]/div[3]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[0]/text "ROAS 4.00x"
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[1]/text "Pragul tau minim"
+root/div[0]/main[0]/div[2]
+root/div[0]/main[0]/div[2]/div[0]
+root/div[0]/main[0]/div[2]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[2]/div[0]/h2[0]
+root/div[0]/main[0]/div[2]/div[0]/h2[0]/text "Unde pierzi bani"
+root/div[0]/main[0]/div[2]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/h3[0]/text "2 produse consuma buget fara sa se acopere"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[0]/text "1.200 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[1]/text "La marja ta de 25%, un produs trebuie sa aduca cel putin 4.00 lei la fiecare leu cheltuit ca sa iasa pe zero. 2 produse stau sub pragul asta si au consumat impreuna 1.200 RON."
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "900 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "0.11x"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "300 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "0.00x"
+root/div[0]/main[0]/div[2]/div[1]/article[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[0]/text "2"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/h3[0]/text "Platesti mai mult decat trebuie pe fiecare click"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[0]/text "250 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[1]/text "Magazinele care ruleaza Shopping direct prin Google platesc pana la ~20% in plus pe click fata de cele care merg printr-un partener CSS. Aplicat pe cei 1.250 RON cheltuiti de tine, inseamna aproximativ 250 RON. Cheltuiala e reala, procentul e un reper de piata — de aceea il marcam ca estimare."
+root/div[0]/main[0]/div[2]/div[1]/article[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/h3[0]/text "1 cautari au consumat buget fara nicio vanzare"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[0]/text "120 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[1]/text "In ultimele 30 de zile, reclamele tale au aparut la cautari care au adus clicuri platite si zero comenzi — 120 RON in total. Sunt oameni care cautau altceva decat vinzi tu. Cifra e pe 30 de zile, nu pe 365 de zile ca restul raportului, si de asta nu am adunat-o in totalul de sus."
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Ce a cautat omul"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clicuri"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "canapea ieftina"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "40"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "120 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[3]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[0]/text "4"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/h3[0]/text "Un produs nu a fost vazut de niciun client"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/p[0]/text "Sunt 25% din catalogul tau — produse care nu au avut nicio afisare in 365 de zile. Nu au costat nimic, dar nici nu exista pentru cumparatori: stau in magazin fara sa ajunga vreodata in fata cuiva."
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "—"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "—"
+root/div[0]/main[0]/div[2]/div[1]/article[4]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[0]/text "5"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[1]/text "SIMULARE"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/h3[0]/text "Cat ar aduce acelasi buget, mutat pe produsele care vand"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[0]/text "+900 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[1]/text "Produsele care chiar vand la tine se intorc de 18.00 ori si aduc acum 900 RON. Daca opresti produsele slabe si muti acei 1.200 RON catre ele — fara sa adaugi niciun leu in plus — ar putea ajunge la 1.800 RON. Am oprit calculul la dublarea incasarilor actuale, desi inmultirea seaca ar da mai mult: produsele bune au un volum limitat de cautari si nu absorb oricat buget la acelasi randament. E un plafon optimist, nu o promisiune: la buget mai mare randamentul scade de obicei. Si sunt incasari, nu profit — profitul depinde de marja ta."
+root/div[0]/main[0]/div[3]
+root/div[0]/main[0]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[0]/span[0]/text "2"
+root/div[0]/main[0]/div[3]/div[0]/h2[0]
+root/div[0]/main[0]/div[3]/div[0]/h2[0]/text "Cum sta catalogul tau"
+root/div[0]/main[0]/div[3]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[3]/p[0]
+root/div[0]/main[0]/div[3]/p[0]/text "Aceleasi produse, privite in trei feluri: cate sunt, cat buget mananca si cat aduc inapoi. Cand o grupa ocupa mult mai mult din inelul din mijloc decat din cel din dreapta, acolo pleaca banii."
+root/div[0]/main[0]/div[3]/div[1] role="group" aria-label="Perioada analizata"
+root/div[0]/main[0]/div[3]/div[1]/button[0] type="button" aria-pressed="true"
+root/div[0]/main[0]/div[3]/div[1]/button[0]/text "30 de zile"
+root/div[0]/main[0]/div[3]/div[1]/button[1] type="button" aria-pressed="false"
+root/div[0]/main[0]/div[3]/div[1]/button[1]/text "3 luni"
+root/div[0]/main[0]/div[3]/div[1]/button[2] type="button" aria-pressed="false"
+root/div[0]/main[0]/div[3]/div[1]/button[2]/text "6 luni"
+root/div[0]/main[0]/div[3]/div[1]/button[3] type="button" aria-pressed="false"
+root/div[0]/main[0]/div[3]/div[1]/button[3]/text "365 de zile"
+root/div[0]/main[0]/div[3]/div[2]
+root/div[0]/main[0]/div[3]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/p[0]/text "Produse"
+root/div[0]/main[0]/div[3]/div[2]/div[0]/svg[0] role="img" aria-label="Heroes: 25%, Sidekicks: 0%, Villains: 50%, Zombies: 0%, 0 Zombies: 25%"
+root/div[0]/main[0]/div[3]/div[2]/div[0]/svg[0]/circle[0]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/svg[0]/circle[1]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/svg[0]/circle[2]
+root/div[0]/main[0]/div[3]/div[2]/div[1]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/p[0]/text "Cat mananca"
+root/div[0]/main[0]/div[3]/div[2]/div[1]/svg[0] role="img" aria-label="Heroes: 4%, Sidekicks: 0%, Villains: 96%, Zombies: 0%"
+root/div[0]/main[0]/div[3]/div[2]/div[1]/svg[0]/circle[0]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/svg[0]/circle[1]
+root/div[0]/main[0]/div[3]/div[2]/div[2]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/p[0]/text "Cat aduc"
+root/div[0]/main[0]/div[3]/div[2]/div[2]/svg[0] role="img" aria-label="Heroes: 90%, Sidekicks: 0%, Villains: 10%, Zombies: 0%"
+root/div[0]/main[0]/div[3]/div[2]/div[2]/svg[0]/circle[0]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/svg[0]/circle[1]
+root/div[0]/main[0]/div[3]/p[1]
+root/div[0]/main[0]/div[3]/p[1]/text "Produsele fara nicio afisare nu au cifre de cheltuiala sau de vanzari, deci apar doar in primul inel."
+root/div[0]/main[0]/div[3]/div[3]
+root/div[0]/main[0]/div[3]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[1]/text "Heroes"
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/div[0]/span[2]/text "1 produs · 50 lei cheltuiti · 900 lei adusi"
+root/div[0]/main[0]/div[3]/div[3]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[0]/p[0]/text "Au vandut destul cat sa nu mai fie discutie. Pe astea se sprijina contul, si tot aici merg banii in plus."
+root/div[0]/main[0]/div[3]/div[3]/div[1]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[1]/text "Sidekicks"
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/div[0]/span[2]/text "0 produse"
+root/div[0]/main[0]/div[3]/div[3]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[1]/p[0]/text "Au vandut, dar aproape nimeni nu le-a vazut. Cea mai ieftina crestere din cont: nu trebuie reparate, trebuie aratate."
+root/div[0]/main[0]/div[3]/div[3]/div[2]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[1]/text "Villains"
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/div[0]/span[2]/text "2 produse · 1.200 lei cheltuiti · 100 lei adusi"
+root/div[0]/main[0]/div[3]/div[3]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[2]/p[0]/text "Au avut trafic serios si tot nu se acopera. Aici se taie, iar banii pleaca spre primele doua grupe."
+root/div[0]/main[0]/div[3]/div[3]/div[3]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[1]/text "Zombies"
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/div[0]/span[2]/text "0 produse"
+root/div[0]/main[0]/div[3]/div[3]/div[3]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[3]/p[0]/text "N-au strans destul trafic cat sa se poata spune ceva despre ele. Nu sunt produse proaste, sunt produse netestate."
+root/div[0]/main[0]/div[3]/div[3]/div[4]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[1]/text "0 Zombies"
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/div[0]/span[2]/text "1 produs"
+root/div[0]/main[0]/div[3]/div[3]/div[4]/p[0]
+root/div[0]/main[0]/div[3]/div[3]/div[4]/p[0]/text "Nu au fost aratate niciodata. Nu e o problema de performanta, ci de feed sau de structura a campaniilor."
+root/div[0]/main[0]/div[4]
+root/div[0]/main[0]/div[4]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[4]/div[0]/h2[0]
+root/div[0]/main[0]/div[4]/div[0]/h2[0]/text "Ce e setat gresit in cont"
+root/div[0]/main[0]/div[4]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[4]/p[0]
+root/div[0]/main[0]/div[4]/p[0]/text "Astea nu sunt bani deja pierduti, ci robinete deschise gresit. Sumele arata cat buget trece prin fiecare — nu cat s-a irosit."
+root/div[0]/main[0]/div[4]/div[1]
+root/div[0]/main[0]/div[4]/div[1]/article[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[0]/text "costa bani"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[1]/text "2.977 RON buget afectat"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/h3[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/h3[0]/text "O campanie liciteaza fara nicio tinta"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/p[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/p[0]/text "Detaliu."
+root/div[0]/main[0]/div[4]/div[1]/article[1]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/div[0]/span[0]/text "de reglat"
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/h3[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/h3[0]/text "Nu poti vedea pe ce cautari se duc banii"
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/p[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/p[0]/text "Contul nu are nicio campanie Shopping standard activa. Performance Max raporteaza categorii de cautari, dar nu si cat a costat fiecare — asa ca nu exista nicaieri raspunsul la &quot;pe ce cuvinte mi s-au dus banii&quot;. O campanie Shopping standard, chiar si mica, aduce inapoi datele astea si face vizibile scurgerile."
+root/div[0]/main[0]/div[5]
+root/div[0]/main[0]/div[5]/div[0]
+root/div[0]/main[0]/div[5]/div[0]/p[0]
+root/div[0]/main[0]/div[5]/div[0]/p[0]/text "Simulare · cu Devrika, la acelasi buget"
+root/div[0]/main[0]/div[5]/div[0]/p[1]
+root/div[0]/main[0]/div[5]/div[0]/p[1]/text "+6.000 RON"
+root/div[0]/main[0]/div[5]/div[0]/p[2]
+root/div[0]/main[0]/div[5]/div[0]/p[2]/text "Atat ar insemna in plus pe luna din reclame daca clicurile ajung cu 20% mai ieftine si conversia creste cu 20% — cele doua lucruri la care lucram efectiv. Nu e o promisiune: intra si misca tu ipoteza, pana la zero daca vrei."
+root/div[0]/main[0]/div[5]/div[0]/a[0]
+root/div[0]/main[0]/div[5]/div[0]/a[0]/text "Vezi calculul pe cifrele tale"
+root/div[0]/main[0]/div[5]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/main[0]/div[6]
+root/div[0]/main[0]/div[6]/h2[0]
+root/div[0]/main[0]/div[6]/h2[0]/text "Vrei sa iti aratam si cum se repara?"
+root/div[0]/main[0]/div[6]/p[0]
+root/div[0]/main[0]/div[6]/p[0]/text "Lasa-ne un contact si iti trimitem raportul complet, cu toate produsele pe nume si ordinea in care merita atacate. Fara obligatii."
+root/div[0]/main[0]/div[6]/form[0]
+root/div[0]/main[0]/div[7]
+root/div[0]/main[0]/div[7]/h2[0]
+root/div[0]/main[0]/div[7]/h2[0]/text "Ce nu am putut verifica"
+root/div[0]/main[0]/div[7]/ul[0]
+root/div[0]/main[0]/div[7]/ul[0]/li[0]
+root/div[0]/main[0]/div[7]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[7]/ul[0]/li[0]/text "Marja pe produs — folosim valoarea data de tine, deci vorbim despre incasari, nu despre profit."
+root/div[0]/main[0]/div[7]/ul[0]/li[1]
+root/div[0]/main[0]/div[7]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[7]/ul[0]/li[1]/text "Daca folosesti deja un partener CSS — de confirmat in cont."
+root/div[0]/main[0]/div[7]/p[0]
+root/div[0]/main[0]/div[7]/p[0]/b[0]
+root/div[0]/main[0]/div[7]/p[0]/b[0]/text "MASURAT"
+root/div[0]/main[0]/div[7]/p[0]/text "= citit direct din contul tau."
+root/div[0]/main[0]/div[7]/p[0]/b[1]
+root/div[0]/main[0]/div[7]/p[0]/b[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[7]/p[0]/text "= cifra reala inmultita cu un reper de piata, marcata ca atare."
+root/div[0]/main[0]/div[7]/p[0]/b[2]
+root/div[0]/main[0]/div[7]/p[0]/b[2]/text "SIMULARE"
+root/div[0]/main[0]/div[7]/p[0]/text "= o proiectie sub ipoteze scrise, plafon optimist si incasari, niciodata profit. Nu prezentam niciodata o estimare sau o simulare drept fapt.""
+`;
+
+exports[`pagina de raport, randata > renders the catalog map at one and many windows but not zero > report:catalog-map-one 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="report:success" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/main[0]
+root/div[0]/main[0]/div[0]
+root/div[0]/main[0]/div[0]/a[0]
+root/div[0]/main[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/main[0]/div[0]/a[0]/span[0]
+root/div[0]/main[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/main[0]/div[1]
+root/div[0]/main[0]/div[1]/div[0]
+root/div[0]/main[0]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[1]/div[0]/p[0]/text "<ACCOUNT> · 365 de zile"
+root/div[0]/main[0]/div[1]/div[0]/p[1]
+root/div[0]/main[0]/div[1]/div[0]/p[1]/text "1.200 RON"
+root/div[0]/main[0]/div[1]/div[0]/p[2]
+root/div[0]/main[0]/div[1]/div[0]/p[2]/text "cheltuiti fara sa se acopere in ultimele 365 de zile"
+root/div[0]/main[0]/div[1]/div[1]
+root/div[0]/main[0]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[0]/text "5"
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[1]/text "Constatari care costa bani"
+root/div[0]/main[0]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[0]/text "2"
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[1]/text "Setari de reparat"
+root/div[0]/main[0]/div[1]/div[1]/div[2]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[0]/text "4"
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[1]/text "Produse analizate"
+root/div[0]/main[0]/div[1]/div[1]/div[3]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[0]/text "ROAS 4.00x"
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[1]/text "Pragul tau minim"
+root/div[0]/main[0]/div[2]
+root/div[0]/main[0]/div[2]/div[0]
+root/div[0]/main[0]/div[2]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[2]/div[0]/h2[0]
+root/div[0]/main[0]/div[2]/div[0]/h2[0]/text "Unde pierzi bani"
+root/div[0]/main[0]/div[2]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/h3[0]/text "2 produse consuma buget fara sa se acopere"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[0]/text "1.200 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[1]/text "La marja ta de 25%, un produs trebuie sa aduca cel putin 4.00 lei la fiecare leu cheltuit ca sa iasa pe zero. 2 produse stau sub pragul asta si au consumat impreuna 1.200 RON."
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "900 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "0.11x"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "300 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "0.00x"
+root/div[0]/main[0]/div[2]/div[1]/article[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[0]/text "2"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/h3[0]/text "Platesti mai mult decat trebuie pe fiecare click"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[0]/text "250 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[1]/text "Magazinele care ruleaza Shopping direct prin Google platesc pana la ~20% in plus pe click fata de cele care merg printr-un partener CSS. Aplicat pe cei 1.250 RON cheltuiti de tine, inseamna aproximativ 250 RON. Cheltuiala e reala, procentul e un reper de piata — de aceea il marcam ca estimare."
+root/div[0]/main[0]/div[2]/div[1]/article[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/h3[0]/text "1 cautari au consumat buget fara nicio vanzare"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[0]/text "120 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[1]/text "In ultimele 30 de zile, reclamele tale au aparut la cautari care au adus clicuri platite si zero comenzi — 120 RON in total. Sunt oameni care cautau altceva decat vinzi tu. Cifra e pe 30 de zile, nu pe 365 de zile ca restul raportului, si de asta nu am adunat-o in totalul de sus."
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Ce a cautat omul"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clicuri"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "canapea ieftina"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "40"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "120 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[3]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[0]/text "4"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/h3[0]/text "Un produs nu a fost vazut de niciun client"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/p[0]/text "Sunt 25% din catalogul tau — produse care nu au avut nicio afisare in 365 de zile. Nu au costat nimic, dar nici nu exista pentru cumparatori: stau in magazin fara sa ajunga vreodata in fata cuiva."
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "—"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "—"
+root/div[0]/main[0]/div[2]/div[1]/article[4]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[0]/text "5"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[1]/text "SIMULARE"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/h3[0]/text "Cat ar aduce acelasi buget, mutat pe produsele care vand"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[0]/text "+900 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[1]/text "Produsele care chiar vand la tine se intorc de 18.00 ori si aduc acum 900 RON. Daca opresti produsele slabe si muti acei 1.200 RON catre ele — fara sa adaugi niciun leu in plus — ar putea ajunge la 1.800 RON. Am oprit calculul la dublarea incasarilor actuale, desi inmultirea seaca ar da mai mult: produsele bune au un volum limitat de cautari si nu absorb oricat buget la acelasi randament. E un plafon optimist, nu o promisiune: la buget mai mare randamentul scade de obicei. Si sunt incasari, nu profit — profitul depinde de marja ta."
+root/div[0]/main[0]/div[3]
+root/div[0]/main[0]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[0]/span[0]/text "2"
+root/div[0]/main[0]/div[3]/div[0]/h2[0]
+root/div[0]/main[0]/div[3]/div[0]/h2[0]/text "Cum sta catalogul tau"
+root/div[0]/main[0]/div[3]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[3]/p[0]
+root/div[0]/main[0]/div[3]/p[0]/text "Aceleasi produse, privite in trei feluri: cate sunt, cat buget mananca si cat aduc inapoi. Cand o grupa ocupa mult mai mult din inelul din mijloc decat din cel din dreapta, acolo pleaca banii."
+root/div[0]/main[0]/div[3]/div[1]
+root/div[0]/main[0]/div[3]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/div[0]/p[0]/text "Produse"
+root/div[0]/main[0]/div[3]/div[1]/div[0]/svg[0] role="img" aria-label="Heroes: 25%, Sidekicks: 0%, Villains: 50%, Zombies: 0%, 0 Zombies: 25%"
+root/div[0]/main[0]/div[3]/div[1]/div[0]/svg[0]/circle[0]
+root/div[0]/main[0]/div[3]/div[1]/div[0]/svg[0]/circle[1]
+root/div[0]/main[0]/div[3]/div[1]/div[0]/svg[0]/circle[2]
+root/div[0]/main[0]/div[3]/div[1]/div[1]
+root/div[0]/main[0]/div[3]/div[1]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/div[1]/p[0]/text "Cat mananca"
+root/div[0]/main[0]/div[3]/div[1]/div[1]/svg[0] role="img" aria-label="Heroes: 4%, Sidekicks: 0%, Villains: 96%, Zombies: 0%"
+root/div[0]/main[0]/div[3]/div[1]/div[1]/svg[0]/circle[0]
+root/div[0]/main[0]/div[3]/div[1]/div[1]/svg[0]/circle[1]
+root/div[0]/main[0]/div[3]/div[1]/div[2]
+root/div[0]/main[0]/div[3]/div[1]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/div[2]/p[0]/text "Cat aduc"
+root/div[0]/main[0]/div[3]/div[1]/div[2]/svg[0] role="img" aria-label="Heroes: 90%, Sidekicks: 0%, Villains: 10%, Zombies: 0%"
+root/div[0]/main[0]/div[3]/div[1]/div[2]/svg[0]/circle[0]
+root/div[0]/main[0]/div[3]/div[1]/div[2]/svg[0]/circle[1]
+root/div[0]/main[0]/div[3]/p[1]
+root/div[0]/main[0]/div[3]/p[1]/text "Produsele fara nicio afisare nu au cifre de cheltuiala sau de vanzari, deci apar doar in primul inel."
+root/div[0]/main[0]/div[3]/div[2]
+root/div[0]/main[0]/div[3]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[2]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/div[0]/span[1]/text "Heroes"
+root/div[0]/main[0]/div[3]/div[2]/div[0]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/div[0]/span[2]/text "1 produs · 50 lei cheltuiti · 900 lei adusi"
+root/div[0]/main[0]/div[3]/div[2]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[0]/p[0]/text "Au vandut destul cat sa nu mai fie discutie. Pe astea se sprijina contul, si tot aici merg banii in plus."
+root/div[0]/main[0]/div[3]/div[2]/div[1]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[2]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/div[0]/span[1]/text "Sidekicks"
+root/div[0]/main[0]/div[3]/div[2]/div[1]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/div[0]/span[2]/text "0 produse"
+root/div[0]/main[0]/div[3]/div[2]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[1]/p[0]/text "Au vandut, dar aproape nimeni nu le-a vazut. Cea mai ieftina crestere din cont: nu trebuie reparate, trebuie aratate."
+root/div[0]/main[0]/div[3]/div[2]/div[2]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[2]/div[2]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/div[0]/span[1]/text "Villains"
+root/div[0]/main[0]/div[3]/div[2]/div[2]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/div[0]/span[2]/text "2 produse · 1.200 lei cheltuiti · 100 lei adusi"
+root/div[0]/main[0]/div[3]/div[2]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[2]/p[0]/text "Au avut trafic serios si tot nu se acopera. Aici se taie, iar banii pleaca spre primele doua grupe."
+root/div[0]/main[0]/div[3]/div[2]/div[3]
+root/div[0]/main[0]/div[3]/div[2]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[2]/div[3]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[2]/div[3]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[2]/div[3]/div[0]/span[1]/text "Zombies"
+root/div[0]/main[0]/div[3]/div[2]/div[3]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[2]/div[3]/div[0]/span[2]/text "0 produse"
+root/div[0]/main[0]/div[3]/div[2]/div[3]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[3]/p[0]/text "N-au strans destul trafic cat sa se poata spune ceva despre ele. Nu sunt produse proaste, sunt produse netestate."
+root/div[0]/main[0]/div[3]/div[2]/div[4]
+root/div[0]/main[0]/div[3]/div[2]/div[4]/div[0]
+root/div[0]/main[0]/div[3]/div[2]/div[4]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[2]/div[4]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[2]/div[4]/div[0]/span[1]/text "0 Zombies"
+root/div[0]/main[0]/div[3]/div[2]/div[4]/div[0]/span[2]
+root/div[0]/main[0]/div[3]/div[2]/div[4]/div[0]/span[2]/text "1 produs"
+root/div[0]/main[0]/div[3]/div[2]/div[4]/p[0]
+root/div[0]/main[0]/div[3]/div[2]/div[4]/p[0]/text "Nu au fost aratate niciodata. Nu e o problema de performanta, ci de feed sau de structura a campaniilor."
+root/div[0]/main[0]/div[4]
+root/div[0]/main[0]/div[4]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[4]/div[0]/h2[0]
+root/div[0]/main[0]/div[4]/div[0]/h2[0]/text "Ce e setat gresit in cont"
+root/div[0]/main[0]/div[4]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[4]/p[0]
+root/div[0]/main[0]/div[4]/p[0]/text "Astea nu sunt bani deja pierduti, ci robinete deschise gresit. Sumele arata cat buget trece prin fiecare — nu cat s-a irosit."
+root/div[0]/main[0]/div[4]/div[1]
+root/div[0]/main[0]/div[4]/div[1]/article[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[0]/text "costa bani"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/div[0]/span[1]/text "2.977 RON buget afectat"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/h3[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/h3[0]/text "O campanie liciteaza fara nicio tinta"
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/p[0]
+root/div[0]/main[0]/div[4]/div[1]/article[0]/div[1]/p[0]/text "Detaliu."
+root/div[0]/main[0]/div[4]/div[1]/article[1]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/div[0]/span[0]/text "de reglat"
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/h3[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/h3[0]/text "Nu poti vedea pe ce cautari se duc banii"
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/p[0]
+root/div[0]/main[0]/div[4]/div[1]/article[1]/div[1]/p[0]/text "Contul nu are nicio campanie Shopping standard activa. Performance Max raporteaza categorii de cautari, dar nu si cat a costat fiecare — asa ca nu exista nicaieri raspunsul la &quot;pe ce cuvinte mi s-au dus banii&quot;. O campanie Shopping standard, chiar si mica, aduce inapoi datele astea si face vizibile scurgerile."
+root/div[0]/main[0]/div[5]
+root/div[0]/main[0]/div[5]/div[0]
+root/div[0]/main[0]/div[5]/div[0]/p[0]
+root/div[0]/main[0]/div[5]/div[0]/p[0]/text "Simulare · cu Devrika, la acelasi buget"
+root/div[0]/main[0]/div[5]/div[0]/p[1]
+root/div[0]/main[0]/div[5]/div[0]/p[1]/text "+6.000 RON"
+root/div[0]/main[0]/div[5]/div[0]/p[2]
+root/div[0]/main[0]/div[5]/div[0]/p[2]/text "Atat ar insemna in plus pe luna din reclame daca clicurile ajung cu 20% mai ieftine si conversia creste cu 20% — cele doua lucruri la care lucram efectiv. Nu e o promisiune: intra si misca tu ipoteza, pana la zero daca vrei."
+root/div[0]/main[0]/div[5]/div[0]/a[0]
+root/div[0]/main[0]/div[5]/div[0]/a[0]/text "Vezi calculul pe cifrele tale"
+root/div[0]/main[0]/div[5]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/main[0]/div[6]
+root/div[0]/main[0]/div[6]/h2[0]
+root/div[0]/main[0]/div[6]/h2[0]/text "Vrei sa iti aratam si cum se repara?"
+root/div[0]/main[0]/div[6]/p[0]
+root/div[0]/main[0]/div[6]/p[0]/text "Lasa-ne un contact si iti trimitem raportul complet, cu toate produsele pe nume si ordinea in care merita atacate. Fara obligatii."
+root/div[0]/main[0]/div[6]/form[0]
+root/div[0]/main[0]/div[7]
+root/div[0]/main[0]/div[7]/h2[0]
+root/div[0]/main[0]/div[7]/h2[0]/text "Ce nu am putut verifica"
+root/div[0]/main[0]/div[7]/ul[0]
+root/div[0]/main[0]/div[7]/ul[0]/li[0]
+root/div[0]/main[0]/div[7]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[7]/ul[0]/li[0]/text "Marja pe produs — folosim valoarea data de tine, deci vorbim despre incasari, nu despre profit."
+root/div[0]/main[0]/div[7]/ul[0]/li[1]
+root/div[0]/main[0]/div[7]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[7]/ul[0]/li[1]/text "Daca folosesti deja un partener CSS — de confirmat in cont."
+root/div[0]/main[0]/div[7]/p[0]
+root/div[0]/main[0]/div[7]/p[0]/b[0]
+root/div[0]/main[0]/div[7]/p[0]/b[0]/text "MASURAT"
+root/div[0]/main[0]/div[7]/p[0]/text "= citit direct din contul tau."
+root/div[0]/main[0]/div[7]/p[0]/b[1]
+root/div[0]/main[0]/div[7]/p[0]/b[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[7]/p[0]/text "= cifra reala inmultita cu un reper de piata, marcata ca atare."
+root/div[0]/main[0]/div[7]/p[0]/b[2]
+root/div[0]/main[0]/div[7]/p[0]/b[2]/text "SIMULARE"
+root/div[0]/main[0]/div[7]/p[0]/text "= o proiectie sub ipoteze scrise, plafon optimist si incasari, niciodata profit. Nu prezentam niciodata o estimare sau o simulare drept fapt.""
+`;
+
+exports[`pagina de raport, randata > renders the catalog map at one and many windows but not zero > report:catalog-map-zero 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="report:success" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/main[0]
+root/div[0]/main[0]/div[0]
+root/div[0]/main[0]/div[0]/a[0]
+root/div[0]/main[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/main[0]/div[0]/a[0]/span[0]
+root/div[0]/main[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/main[0]/div[1]
+root/div[0]/main[0]/div[1]/div[0]
+root/div[0]/main[0]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[1]/div[0]/p[0]/text "<ACCOUNT> · 365 de zile"
+root/div[0]/main[0]/div[1]/div[0]/p[1]
+root/div[0]/main[0]/div[1]/div[0]/p[1]/text "1.200 RON"
+root/div[0]/main[0]/div[1]/div[0]/p[2]
+root/div[0]/main[0]/div[1]/div[0]/p[2]/text "cheltuiti fara sa se acopere in ultimele 365 de zile"
+root/div[0]/main[0]/div[1]/div[1]
+root/div[0]/main[0]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[0]/text "5"
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[0]/p[1]/text "Constatari care costa bani"
+root/div[0]/main[0]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[0]/text "2"
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[1]/p[1]/text "Setari de reparat"
+root/div[0]/main[0]/div[1]/div[1]/div[2]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[0]/text "4"
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[2]/p[1]/text "Produse analizate"
+root/div[0]/main[0]/div[1]/div[1]/div[3]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[0]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[0]/text "ROAS 4.00x"
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[1]
+root/div[0]/main[0]/div[1]/div[1]/div[3]/p[1]/text "Pragul tau minim"
+root/div[0]/main[0]/div[2]
+root/div[0]/main[0]/div[2]/div[0]
+root/div[0]/main[0]/div[2]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[2]/div[0]/h2[0]
+root/div[0]/main[0]/div[2]/div[0]/h2[0]/text "Unde pierzi bani"
+root/div[0]/main[0]/div[2]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/h3[0]/text "2 produse consuma buget fara sa se acopere"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[0]/text "1.200 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[0]/p[1]/text "La marja ta de 25%, un produs trebuie sa aduca cel putin 4.00 lei la fiecare leu cheltuit ca sa iasa pe zero. 2 produse stau sub pragul asta si au consumat impreuna 1.200 RON."
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "900 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "0.11x"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "300 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "0.00x"
+root/div[0]/main[0]/div[2]/div[1]/article[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[0]/text "2"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/div[0]/span[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/h3[0]/text "Platesti mai mult decat trebuie pe fiecare click"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[0]/text "250 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[1]/div[0]/p[1]/text "Magazinele care ruleaza Shopping direct prin Google platesc pana la ~20% in plus pe click fata de cele care merg printr-un partener CSS. Aplicat pe cei 1.250 RON cheltuiti de tine, inseamna aproximativ 250 RON. Cheltuiala e reala, procentul e un reper de piata — de aceea il marcam ca estimare."
+root/div[0]/main[0]/div[2]/div[1]/article[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/h3[0]/text "1 cautari au consumat buget fara nicio vanzare"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[0]/text "120 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[0]/p[1]/text "In ultimele 30 de zile, reclamele tale au aparut la cautari care au adus clicuri platite si zero comenzi — 120 RON in total. Sunt oameni care cautau altceva decat vinzi tu. Cifra e pe 30 de zile, nu pe 365 de zile ca restul raportului, si de asta nu am adunat-o in totalul de sus."
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Ce a cautat omul"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clicuri"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "canapea ieftina"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "40"
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "120 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[3]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[0]/text "4"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/h3[0]/text "Un produs nu a fost vazut de niciun client"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[0]/p[0]/text "Sunt 25% din catalogul tau — produse care nu au avut nicio afisare in 365 de zile. Nu au costat nimic, dar nici nu exista pentru cumparatori: stau in magazin fara sa ajunga vreodata in fata cuiva."
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "<PRODUCT>"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "—"
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "—"
+root/div[0]/main[0]/div[2]/div[1]/article[4]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[0]/text "5"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/div[0]/span[1]/text "SIMULARE"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/h3[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/h3[0]/text "Cat ar aduce acelasi buget, mutat pe produsele care vand"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[0]/text "+900 RON"
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/article[4]/div[0]/p[1]/text "Produsele care chiar vand la tine se intorc de 18.00 ori si aduc acum 900 RON. Daca opresti produsele slabe si muti acei 1.200 RON catre ele — fara sa adaugi niciun leu in plus — ar putea ajunge la 1.800 RON. Am oprit calculul la dublarea incasarilor actuale, desi inmultirea seaca ar da mai mult: produsele bune au un volum limitat de cautari si nu absorb oricat buget la acelasi randament. E un plafon optimist, nu o promisiune: la buget mai mare randamentul scade de obicei. Si sunt incasari, nu profit — profitul depinde de marja ta."
+root/div[0]/main[0]/div[3]
+root/div[0]/main[0]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[3]/div[0]/h2[0]
+root/div[0]/main[0]/div[3]/div[0]/h2[0]/text "Ce e setat gresit in cont"
+root/div[0]/main[0]/div[3]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[3]/p[0]
+root/div[0]/main[0]/div[3]/p[0]/text "Astea nu sunt bani deja pierduti, ci robinete deschise gresit. Sumele arata cat buget trece prin fiecare — nu cat s-a irosit."
+root/div[0]/main[0]/div[3]/div[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/span[0]/text "costa bani"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/span[1]/text "2.977 RON buget afectat"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/h3[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/h3[0]/text "O campanie liciteaza fara nicio tinta"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/p[0]/text "Detaliu."
+root/div[0]/main[0]/div[3]/div[1]/article[1]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[1]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[1]/div[0]/span[0]/text "de reglat"
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[1]/h3[0]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[1]/h3[0]/text "Nu poti vedea pe ce cautari se duc banii"
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[1]/p[0]/text "Contul nu are nicio campanie Shopping standard activa. Performance Max raporteaza categorii de cautari, dar nu si cat a costat fiecare — asa ca nu exista nicaieri raspunsul la &quot;pe ce cuvinte mi s-au dus banii&quot;. O campanie Shopping standard, chiar si mica, aduce inapoi datele astea si face vizibile scurgerile."
+root/div[0]/main[0]/div[4]
+root/div[0]/main[0]/div[4]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/p[0]
+root/div[0]/main[0]/div[4]/div[0]/p[0]/text "Simulare · cu Devrika, la acelasi buget"
+root/div[0]/main[0]/div[4]/div[0]/p[1]
+root/div[0]/main[0]/div[4]/div[0]/p[1]/text "+6.000 RON"
+root/div[0]/main[0]/div[4]/div[0]/p[2]
+root/div[0]/main[0]/div[4]/div[0]/p[2]/text "Atat ar insemna in plus pe luna din reclame daca clicurile ajung cu 20% mai ieftine si conversia creste cu 20% — cele doua lucruri la care lucram efectiv. Nu e o promisiune: intra si misca tu ipoteza, pana la zero daca vrei."
+root/div[0]/main[0]/div[4]/div[0]/a[0]
+root/div[0]/main[0]/div[4]/div[0]/a[0]/text "Vezi calculul pe cifrele tale"
+root/div[0]/main[0]/div[4]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/main[0]/div[5]
+root/div[0]/main[0]/div[5]/h2[0]
+root/div[0]/main[0]/div[5]/h2[0]/text "Vrei sa iti aratam si cum se repara?"
+root/div[0]/main[0]/div[5]/p[0]
+root/div[0]/main[0]/div[5]/p[0]/text "Lasa-ne un contact si iti trimitem raportul complet, cu toate produsele pe nume si ordinea in care merita atacate. Fara obligatii."
+root/div[0]/main[0]/div[5]/form[0]
+root/div[0]/main[0]/div[6]
+root/div[0]/main[0]/div[6]/h2[0]
+root/div[0]/main[0]/div[6]/h2[0]/text "Ce nu am putut verifica"
+root/div[0]/main[0]/div[6]/ul[0]
+root/div[0]/main[0]/div[6]/ul[0]/li[0]
+root/div[0]/main[0]/div[6]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[6]/ul[0]/li[0]/text "Marja pe produs — folosim valoarea data de tine, deci vorbim despre incasari, nu despre profit."
+root/div[0]/main[0]/div[6]/ul[0]/li[1]
+root/div[0]/main[0]/div[6]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[6]/ul[0]/li[1]/text "Daca folosesti deja un partener CSS — de confirmat in cont."
+root/div[0]/main[0]/div[6]/p[0]
+root/div[0]/main[0]/div[6]/p[0]/b[0]
+root/div[0]/main[0]/div[6]/p[0]/b[0]/text "MASURAT"
+root/div[0]/main[0]/div[6]/p[0]/text "= citit direct din contul tau."
+root/div[0]/main[0]/div[6]/p[0]/b[1]
+root/div[0]/main[0]/div[6]/p[0]/b[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[6]/p[0]/text "= cifra reala inmultita cu un reper de piata, marcata ca atare."
+root/div[0]/main[0]/div[6]/p[0]/b[2]
+root/div[0]/main[0]/div[6]/p[0]/b[2]/text "SIMULARE"
+root/div[0]/main[0]/div[6]/p[0]/text "= o proiectie sub ipoteze scrise, plafon optimist si incasari, niciodata profit. Nu prezentam niciodata o estimare sau o simulare drept fapt.""
+`;
+
+exports[`pagina de raport, randata > renders the demo banner only in demo mode > report:demo 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="report:success" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/main[0]
+root/div[0]/main[0]/div[0]
+root/div[0]/main[0]/div[0]/a[0]
+root/div[0]/main[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/main[0]/div[0]/a[0]/span[0]
+root/div[0]/main[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/main[0]/div[1]
+root/div[0]/main[0]/div[1]/div[0]
+root/div[0]/main[0]/div[1]/div[0]/text "MOD DEMO — cifrele de mai jos sunt simulate, nu vin din niciun cont real"
+root/div[0]/main[0]/div[2]
+root/div[0]/main[0]/div[2]/div[0]
+root/div[0]/main[0]/div[2]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[0]/p[0]/text "DeHome · 365 de zile"
+root/div[0]/main[0]/div[2]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[0]/p[1]/text "14.850 RON"
+root/div[0]/main[0]/div[2]/div[0]/p[2]
+root/div[0]/main[0]/div[2]/div[0]/p[2]/text "cheltuiti fara sa se acopere in ultimele 365 de zile"
+root/div[0]/main[0]/div[2]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/div[0]
+root/div[0]/main[0]/div[2]/div[1]/div[0]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/div[0]/p[0]/text "5"
+root/div[0]/main[0]/div[2]/div[1]/div[0]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/div[0]/p[1]/text "Constatari care costa bani"
+root/div[0]/main[0]/div[2]/div[1]/div[1]
+root/div[0]/main[0]/div[2]/div[1]/div[1]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/div[1]/p[0]/text "7"
+root/div[0]/main[0]/div[2]/div[1]/div[1]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/div[1]/p[1]/text "Setari de reparat"
+root/div[0]/main[0]/div[2]/div[1]/div[2]
+root/div[0]/main[0]/div[2]/div[1]/div[2]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/div[2]/p[0]/text "15"
+root/div[0]/main[0]/div[2]/div[1]/div[2]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/div[2]/p[1]/text "Produse analizate"
+root/div[0]/main[0]/div[2]/div[1]/div[3]
+root/div[0]/main[0]/div[2]/div[1]/div[3]/p[0]
+root/div[0]/main[0]/div[2]/div[1]/div[3]/p[0]/text "ROAS 4.00x"
+root/div[0]/main[0]/div[2]/div[1]/div[3]/p[1]
+root/div[0]/main[0]/div[2]/div[1]/div[3]/p[1]/text "Pragul tau minim"
+root/div[0]/main[0]/div[3]
+root/div[0]/main[0]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[3]/div[0]/h2[0]
+root/div[0]/main[0]/div[3]/div[0]/h2[0]/text "Unde pierzi bani"
+root/div[0]/main[0]/div[3]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/div[0]/span[0]/text "1"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/h3[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/h3[0]/text "4 produse consuma buget fara sa se acopere"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/p[0]/text "14.850 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/p[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[0]/p[1]/text "La marja ta de 25%, un produs trebuie sa aduca cel putin 4.00 lei la fiecare leu cheltuit ca sa iasa pe zero. 4 produse stau sub pragul asta si au consumat impreuna 14.850 RON."
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "Set 4 scaune bucatarie"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "5.400 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "1.81x"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/text "Comoda 6 sertare alba"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "3.900 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "1.05x"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]/text "Birou reglabil pe inaltime"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]/text "3.100 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]/text "0.84x"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[3]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[0]/text "Covor shaggy 200x300"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[1]/text "2.450 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[2]/text "0.00x"
+root/div[0]/main[0]/div[3]/div[1]/article[1]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/div[0]/span[0]/text "2"
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/div[0]/span[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/h3[0]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/h3[0]/text "Platesti mai mult decat trebuie pe fiecare click"
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/p[0]/text "5.652 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/p[1]
+root/div[0]/main[0]/div[3]/div[1]/article[1]/div[0]/p[1]/text "Magazinele care ruleaza Shopping direct prin Google platesc pana la ~20% in plus pe click fata de cele care merg printr-un partener CSS. Aplicat pe cei 28.260 RON cheltuiti de tine, inseamna aproximativ 5.652 RON. Cheltuiala e reala, procentul e un reper de piata — de aceea il marcam ca estimare."
+root/div[0]/main[0]/div[3]/div[1]/article[2]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/h3[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/h3[0]/text "2 cautari au consumat buget fara nicio vanzare"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/p[0]/text "2.800 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/p[1]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[0]/p[1]/text "In ultimele 30 de zile, reclamele tale au aparut la cautari care au adus clicuri platite si zero comenzi — 2.800 RON in total. Sunt oameni care cautau altceva decat vinzi tu. Cifra e pe 30 de zile, nu pe 365 de zile ca restul raportului, si de asta nu am adunat-o in totalul de sus."
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Ce a cautat omul"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clicuri"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Cheltuit"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "canapea ieftina second hand"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "243"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "1.840 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[1]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/text "mobila reconditionata"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "118"
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[2]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "960 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[3]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]/div[0]/span[0]/text "4"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]/div[0]/span[1]/text "MASURAT"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]/h3[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]/h3[0]/text "4 produse nu au fost vazute de niciun client"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[0]/p[0]/text "Sunt 27% din catalogul tau — produse care nu au avut nicio afisare in 365 de zile. Nu au costat nimic, dar nici nu exista pentru cumparatori: stau in magazin fara sa ajunga vreodata in fata cuiva."
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Cheltuit"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Se intoarce"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text "Noptiera stejar natur"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "—"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "—"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[1]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/text "Etajera metalica industriala"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "—"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "—"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[2]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]/text "Suport TV rotativ"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]/text "—"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]/text "—"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[3]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[0]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[0]/text "Perna decorativa catifea"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[1]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[1]/text "—"
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[2]
+root/div[0]/main[0]/div[3]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[3]/td[2]/text "—"
+root/div[0]/main[0]/div[3]/div[1]/article[4]
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/div[0]/span[0]/text "5"
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/div[0]/span[1]/text "SIMULARE"
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/h3[0]
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/h3[0]/text "Cat ar aduce acelasi buget, mutat pe produsele care vand"
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/p[0]/text "+81.000 RON"
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/p[1]
+root/div[0]/main[0]/div[3]/div[1]/article[4]/div[0]/p[1]/text "Produsele care chiar vand la tine se intorc de 6.10 ori si aduc acum 81.000 RON. Daca opresti produsele slabe si muti acei 14.850 RON catre ele — fara sa adaugi niciun leu in plus — ar putea ajunge la 162.000 RON. Am oprit calculul la dublarea incasarilor actuale, desi inmultirea seaca ar da mai mult: produsele bune au un volum limitat de cautari si nu absorb oricat buget la acelasi randament. E un plafon optimist, nu o promisiune: la buget mai mare randamentul scade de obicei. Si sunt incasari, nu profit — profitul depinde de marja ta."
+root/div[0]/main[0]/div[4]
+root/div[0]/main[0]/div[4]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[0]/span[0]/text "2"
+root/div[0]/main[0]/div[4]/div[0]/h2[0]
+root/div[0]/main[0]/div[4]/div[0]/h2[0]/text "Cum sta catalogul tau"
+root/div[0]/main[0]/div[4]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[4]/p[0]
+root/div[0]/main[0]/div[4]/p[0]/text "Aceleasi produse, privite in trei feluri: cate sunt, cat buget mananca si cat aduc inapoi. Cand o grupa ocupa mult mai mult din inelul din mijloc decat din cel din dreapta, acolo pleaca banii."
+root/div[0]/main[0]/div[4]/div[1] role="group" aria-label="Perioada analizata"
+root/div[0]/main[0]/div[4]/div[1]/button[0] type="button" aria-pressed="true"
+root/div[0]/main[0]/div[4]/div[1]/button[0]/text "30 de zile"
+root/div[0]/main[0]/div[4]/div[1]/button[1] type="button" aria-pressed="false"
+root/div[0]/main[0]/div[4]/div[1]/button[1]/text "3 luni"
+root/div[0]/main[0]/div[4]/div[1]/button[2] type="button" aria-pressed="false"
+root/div[0]/main[0]/div[4]/div[1]/button[2]/text "6 luni"
+root/div[0]/main[0]/div[4]/div[1]/button[3] type="button" aria-pressed="false"
+root/div[0]/main[0]/div[4]/div[1]/button[3]/text "365 de zile"
+root/div[0]/main[0]/div[4]/div[2]
+root/div[0]/main[0]/div[4]/div[2]/div[0]
+root/div[0]/main[0]/div[4]/div[2]/div[0]/p[0]
+root/div[0]/main[0]/div[4]/div[2]/div[0]/p[0]/text "Produse"
+root/div[0]/main[0]/div[4]/div[2]/div[0]/svg[0] role="img" aria-label="Heroes: 20%, Sidekicks: 13%, Villains: 27%, Zombies: 13%, 0 Zombies: 27%"
+root/div[0]/main[0]/div[4]/div[2]/div[0]/svg[0]/circle[0]
+root/div[0]/main[0]/div[4]/div[2]/div[0]/svg[0]/circle[1]
+root/div[0]/main[0]/div[4]/div[2]/div[0]/svg[0]/circle[2]
+root/div[0]/main[0]/div[4]/div[2]/div[0]/svg[0]/circle[3]
+root/div[0]/main[0]/div[4]/div[2]/div[0]/svg[0]/circle[4]
+root/div[0]/main[0]/div[4]/div[2]/div[1]
+root/div[0]/main[0]/div[4]/div[2]/div[1]/p[0]
+root/div[0]/main[0]/div[4]/div[2]/div[1]/p[0]/text "Cat mananca"
+root/div[0]/main[0]/div[4]/div[2]/div[1]/svg[0] role="img" aria-label="Heroes: 46%, Sidekicks: 1%, Villains: 53%, Zombies: 0%"
+root/div[0]/main[0]/div[4]/div[2]/div[1]/svg[0]/circle[0]
+root/div[0]/main[0]/div[4]/div[2]/div[1]/svg[0]/circle[1]
+root/div[0]/main[0]/div[4]/div[2]/div[1]/svg[0]/circle[2]
+root/div[0]/main[0]/div[4]/div[2]/div[2]
+root/div[0]/main[0]/div[4]/div[2]/div[2]/p[0]
+root/div[0]/main[0]/div[4]/div[2]/div[2]/p[0]/text "Cat aduc"
+root/div[0]/main[0]/div[4]/div[2]/div[2]/svg[0] role="img" aria-label="Heroes: 81%, Sidekicks: 2%, Villains: 17%, Zombies: 0%"
+root/div[0]/main[0]/div[4]/div[2]/div[2]/svg[0]/circle[0]
+root/div[0]/main[0]/div[4]/div[2]/div[2]/svg[0]/circle[1]
+root/div[0]/main[0]/div[4]/div[2]/div[2]/svg[0]/circle[2]
+root/div[0]/main[0]/div[4]/p[1]
+root/div[0]/main[0]/div[4]/p[1]/text "Produsele fara nicio afisare nu au cifre de cheltuiala sau de vanzari, deci apar doar in primul inel."
+root/div[0]/main[0]/div[4]/div[3]
+root/div[0]/main[0]/div[4]/div[3]/div[0]
+root/div[0]/main[0]/div[4]/div[3]/div[0]/div[0]
+root/div[0]/main[0]/div[4]/div[3]/div[0]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[3]/div[0]/div[0]/span[1]
+root/div[0]/main[0]/div[4]/div[3]/div[0]/div[0]/span[1]/text "Heroes"
+root/div[0]/main[0]/div[4]/div[3]/div[0]/div[0]/span[2]
+root/div[0]/main[0]/div[4]/div[3]/div[0]/div[0]/span[2]/text "3 produse · 12.900 lei cheltuiti · 78.700 lei adusi"
+root/div[0]/main[0]/div[4]/div[3]/div[0]/p[0]
+root/div[0]/main[0]/div[4]/div[3]/div[0]/p[0]/text "Au vandut destul cat sa nu mai fie discutie. Pe astea se sprijina contul, si tot aici merg banii in plus."
+root/div[0]/main[0]/div[4]/div[3]/div[1]
+root/div[0]/main[0]/div[4]/div[3]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[3]/div[1]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[3]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[4]/div[3]/div[1]/div[0]/span[1]/text "Sidekicks"
+root/div[0]/main[0]/div[4]/div[3]/div[1]/div[0]/span[2]
+root/div[0]/main[0]/div[4]/div[3]/div[1]/div[0]/span[2]/text "2 produse · 375 lei cheltuiti · 2.300 lei adusi"
+root/div[0]/main[0]/div[4]/div[3]/div[1]/p[0]
+root/div[0]/main[0]/div[4]/div[3]/div[1]/p[0]/text "Au vandut, dar aproape nimeni nu le-a vazut. Cea mai ieftina crestere din cont: nu trebuie reparate, trebuie aratate."
+root/div[0]/main[0]/div[4]/div[3]/div[2]
+root/div[0]/main[0]/div[4]/div[3]/div[2]/div[0]
+root/div[0]/main[0]/div[4]/div[3]/div[2]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[3]/div[2]/div[0]/span[1]
+root/div[0]/main[0]/div[4]/div[3]/div[2]/div[0]/span[1]/text "Villains"
+root/div[0]/main[0]/div[4]/div[3]/div[2]/div[0]/span[2]
+root/div[0]/main[0]/div[4]/div[3]/div[2]/div[0]/span[2]/text "4 produse · 14.850 lei cheltuiti · 16.500 lei adusi"
+root/div[0]/main[0]/div[4]/div[3]/div[2]/p[0]
+root/div[0]/main[0]/div[4]/div[3]/div[2]/p[0]/text "Au avut trafic serios si tot nu se acopera. Aici se taie, iar banii pleaca spre primele doua grupe."
+root/div[0]/main[0]/div[4]/div[3]/div[3]
+root/div[0]/main[0]/div[4]/div[3]/div[3]/div[0]
+root/div[0]/main[0]/div[4]/div[3]/div[3]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[3]/div[3]/div[0]/span[1]
+root/div[0]/main[0]/div[4]/div[3]/div[3]/div[0]/span[1]/text "Zombies"
+root/div[0]/main[0]/div[4]/div[3]/div[3]/div[0]/span[2]
+root/div[0]/main[0]/div[4]/div[3]/div[3]/div[0]/span[2]/text "2 produse · 135 lei cheltuiti"
+root/div[0]/main[0]/div[4]/div[3]/div[3]/p[0]
+root/div[0]/main[0]/div[4]/div[3]/div[3]/p[0]/text "N-au strans destul trafic cat sa se poata spune ceva despre ele. Nu sunt produse proaste, sunt produse netestate."
+root/div[0]/main[0]/div[4]/div[3]/div[4]
+root/div[0]/main[0]/div[4]/div[3]/div[4]/div[0]
+root/div[0]/main[0]/div[4]/div[3]/div[4]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[4]/div[3]/div[4]/div[0]/span[1]
+root/div[0]/main[0]/div[4]/div[3]/div[4]/div[0]/span[1]/text "0 Zombies"
+root/div[0]/main[0]/div[4]/div[3]/div[4]/div[0]/span[2]
+root/div[0]/main[0]/div[4]/div[3]/div[4]/div[0]/span[2]/text "4 produse"
+root/div[0]/main[0]/div[4]/div[3]/div[4]/p[0]
+root/div[0]/main[0]/div[4]/div[3]/div[4]/p[0]/text "Nu au fost aratate niciodata. Nu e o problema de performanta, ci de feed sau de structura a campaniilor."
+root/div[0]/main[0]/div[5]
+root/div[0]/main[0]/div[5]/div[0]
+root/div[0]/main[0]/div[5]/div[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[0]/span[0]/text "3"
+root/div[0]/main[0]/div[5]/div[0]/h2[0]
+root/div[0]/main[0]/div[5]/div[0]/h2[0]/text "Ce e setat gresit in cont"
+root/div[0]/main[0]/div[5]/div[0]/span[1] aria-hidden="true"
+root/div[0]/main[0]/div[5]/p[0]
+root/div[0]/main[0]/div[5]/p[0]/text "Astea nu sunt bani deja pierduti, ci robinete deschise gresit. Sumele arata cat buget trece prin fiecare — nu cat s-a irosit."
+root/div[0]/main[0]/div[5]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[0]
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/div[0]
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/div[0]/span[0]/text "costa bani"
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/div[0]/span[1]/text "28.800 RON buget afectat"
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/h3[0]
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/h3[0]/text "O campanie liciteaza fara nicio tinta de randament"
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/p[0]
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/p[0]/text "PMax — Catalog complet maximizeaza valoarea fara tROAS setat. Google nu stie sub ce prag nu merita sa liciteze, deci imparte bugetul si catre produse care nu se intorc."
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[0]/div[1]/div[1]/span[0]/text "PMax — Catalog complet"
+root/div[0]/main[0]/div[5]/div[1]/article[1]
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/div[0]
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/div[0]/span[0]/text "costa bani"
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/div[0]/span[1]/text "28.800 RON buget afectat"
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/h3[0]
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/h3[0]/text "O campanie trimite clientii pe pagini alese de Google"
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/p[0]
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/p[0]/text "Cand extinderea automata a paginilor e pornita, Google nu se mai limiteaza la produsele din feed-ul tau: alege singur ce pagina de pe site arata, inclusiv pagini care nu vand nimic — articole, categorii goale, pagini de contact. Platesti clicuri catre ele exact ca pentru un produs. Prin campania in cauza au trecut 28.800 RON."
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[1]/div[1]/div[1]/span[0]/text "PMax — Catalog complet"
+root/div[0]/main[0]/div[5]/div[1]/article[2]
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/div[0]
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/div[0]/span[0]/text "costa bani"
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/div[0]/span[1]/text "28.800 RON buget afectat"
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/h3[0]
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/h3[0]/text "O campanie Performance Max cumpara traficul pe numele tau"
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/p[0]
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/p[0]/text "Oamenii care cauta direct numele magazinului tau te-ar gasi oricum, pe cel mai ieftin click din cont. Fara protectie de brand, Performance Max liciteaza si pe ei — cu bani care ar fi trebuit sa aduca clienti noi. In rapoarte pare ca merge excelent, pentru ca raporteaza vanzarile unor oameni care veneau oricum."
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[2]/div[1]/div[1]/span[0]/text "PMax — Catalog complet"
+root/div[0]/main[0]/div[5]/div[1]/article[3]
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/div[0]
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/div[0]/span[0]/text "costa bani"
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/h3[0]
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/h3[0]/text "Un cuvant blocat opreste produse pe care le vinzi"
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/p[0]
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/p[0]/text "Lista ta de cuvinte blocate contine termeni care apar in titlurile unor produse aflate la vanzare. Reclamele pentru ele nu au voie sa se afiseze — un produs e oprit asa, fara sa se vada nicaieri in rapoarte."
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[3]/div[1]/div[1]/span[0]/text "premium — 1 produs"
+root/div[0]/main[0]/div[5]/div[1]/article[4]
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/div[0]
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/div[0]/span[0]/text "de reglat"
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/div[0]/span[1]
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/div[0]/span[1]/text "9.600 RON buget afectat"
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/h3[0]
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/h3[0]/text "Campania de brand plateste clicuri care veneau oricum"
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/p[0]
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/p[0]/text "Search — Brand liciteaza pe numele magazinului, pe potrivire larga. O parte din clicurile platite sunt oameni care te cautau deja pe nume."
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[4]/div[1]/div[1]/span[0]/text "Search — Brand"
+root/div[0]/main[0]/div[5]/div[1]/article[5]
+root/div[0]/main[0]/div[5]/div[1]/article[5]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[1]/article[5]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[5]/div[1]/div[0]
+root/div[0]/main[0]/div[5]/div[1]/article[5]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[5]/div[1]/div[0]/span[0]/text "de reglat"
+root/div[0]/main[0]/div[5]/div[1]/article[5]/div[1]/h3[0]
+root/div[0]/main[0]/div[5]/div[1]/article[5]/div[1]/h3[0]/text "Nu poti vedea pe ce cautari se duc banii"
+root/div[0]/main[0]/div[5]/div[1]/article[5]/div[1]/p[0]
+root/div[0]/main[0]/div[5]/div[1]/article[5]/div[1]/p[0]/text "Contul nu are nicio campanie Shopping standard activa. Performance Max raporteaza categorii de cautari, dar nu si cat a costat fiecare — asa ca nu exista nicaieri raspunsul la &quot;pe ce cuvinte mi s-au dus banii&quot;. O campanie Shopping standard, chiar si mica, aduce inapoi datele astea si face vizibile scurgerile."
+root/div[0]/main[0]/div[5]/div[1]/article[6]
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[0] aria-hidden="true"
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/div[0]
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/div[0]/span[0]/text "de reglat"
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/h3[0]
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/h3[0]/text "O campanie urmeaza sa fie mutata automat de Google pe alt mod de functionare"
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/p[0]
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/p[0]/text "Google muta in cursul lui 2026 campaniile dinamice si pe cele pe potrivire larga catre noul mod AI Max, in care alege singur pentru ce cautari si pe ce pagini se afiseaza. Pe un cont nepregatit — fara o lista solida de cuvinte blocate — asta inseamna ca incepe sa cumpere trafic pe care azi nu il cumpara, fara ca cineva sa fi decis asta."
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/div[1]
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[5]/div[1]/article[6]/div[1]/div[1]/span[0]/text "Search — Brand"
+root/div[0]/main[0]/div[6]
+root/div[0]/main[0]/div[6]/div[0]
+root/div[0]/main[0]/div[6]/div[0]/p[0]
+root/div[0]/main[0]/div[6]/div[0]/p[0]/text "Simulare · cu Devrika, la acelasi buget"
+root/div[0]/main[0]/div[6]/div[0]/p[1]
+root/div[0]/main[0]/div[6]/div[0]/p[1]/text "+127.750 RON"
+root/div[0]/main[0]/div[6]/div[0]/p[2]
+root/div[0]/main[0]/div[6]/div[0]/p[2]/text "Atat ar insemna in plus pe luna din reclame daca clicurile ajung cu 20% mai ieftine si conversia creste cu 20% — cele doua lucruri la care lucram efectiv. Nu e o promisiune: intra si misca tu ipoteza, pana la zero daca vrei."
+root/div[0]/main[0]/div[6]/div[0]/a[0]
+root/div[0]/main[0]/div[6]/div[0]/a[0]/text "Vezi calculul pe cifrele tale"
+root/div[0]/main[0]/div[6]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/main[0]/div[6]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/main[0]/div[7]
+root/div[0]/main[0]/div[7]/h2[0]
+root/div[0]/main[0]/div[7]/h2[0]/text "Vrei sa iti aratam si cum se repara?"
+root/div[0]/main[0]/div[7]/p[0]
+root/div[0]/main[0]/div[7]/p[0]/text "Lasa-ne un contact si iti trimitem raportul complet, cu toate produsele pe nume si ordinea in care merita atacate. Fara obligatii."
+root/div[0]/main[0]/div[7]/form[0]
+root/div[0]/main[0]/div[8]
+root/div[0]/main[0]/div[8]/h2[0]
+root/div[0]/main[0]/div[8]/h2[0]/text "Ce nu am putut verifica"
+root/div[0]/main[0]/div[8]/ul[0]
+root/div[0]/main[0]/div[8]/ul[0]/li[0]
+root/div[0]/main[0]/div[8]/ul[0]/li[0]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[8]/ul[0]/li[0]/text "Marja pe produs — folosim valoarea data de tine, deci vorbim despre incasari, nu despre profit."
+root/div[0]/main[0]/div[8]/ul[0]/li[1]
+root/div[0]/main[0]/div[8]/ul[0]/li[1]/span[0] aria-hidden="true"
+root/div[0]/main[0]/div[8]/ul[0]/li[1]/text "Daca folosesti deja un partener CSS — de confirmat in cont."
+root/div[0]/main[0]/div[8]/p[0]
+root/div[0]/main[0]/div[8]/p[0]/b[0]
+root/div[0]/main[0]/div[8]/p[0]/b[0]/text "MASURAT"
+root/div[0]/main[0]/div[8]/p[0]/text "= citit direct din contul tau."
+root/div[0]/main[0]/div[8]/p[0]/b[1]
+root/div[0]/main[0]/div[8]/p[0]/b[1]/text "ESTIMARE"
+root/div[0]/main[0]/div[8]/p[0]/text "= cifra reala inmultita cu un reper de piata, marcata ca atare."
+root/div[0]/main[0]/div[8]/p[0]/b[2]
+root/div[0]/main[0]/div[8]/p[0]/b[2]/text "SIMULARE"
+root/div[0]/main[0]/div[8]/p[0]/text "= o proiectie sub ipoteze scrise, plafon optimist si incasari, niciodata profit. Nu prezentam niciodata o estimare sau o simulare drept fapt.""
+`;

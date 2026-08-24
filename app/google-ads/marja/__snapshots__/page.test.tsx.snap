@@ -1,0 +1,43 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renders the margin explanation and retry path after invalid submission > margin:error 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="margin:error" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0]
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/p[0]
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 2 din 3"
+root/div[0]/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/div[0]/h1[0]/text "Cat iti ramane din 100 de lei vanzare?"
+root/div[0]/div[0]/div[0]/p[1]
+root/div[0]/div[0]/div[0]/p[1]/text "Dupa ce platesti produsul catre furnizor, inainte de reclame si salarii. Din asta calculam cat trebuie sa aduca minim fiecare leu bagat in reclame."
+root/div[0]/div[0]/div[0]/p[2]
+root/div[0]/div[0]/div[0]/p[2]/text "marja trebuie sa fie intre 1 si 99 la suta"
+root/div[0]/div[0]/div[0]/form[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Nu iti cerem preturi, facturi sau acces la contabilitate. Un singur procent, aproximativ.""
+`;
+
+exports[`renders the normal margin state through the canonical contract > margin:normal 1`] = `
+"root/link[0] href="/logo-devrika.png"
+root/div[0] data-public-oauth-surface="margin:normal" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
+root/div[0]/div[0]
+root/div[0]/div[0]/a[0]
+root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/div[0]/a[0]/span[0]
+root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
+root/div[0]/div[0]/div[0]
+root/div[0]/div[0]/div[0]/p[0]
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 2 din 3"
+root/div[0]/div[0]/div[0]/h1[0]
+root/div[0]/div[0]/div[0]/h1[0]/text "Cat iti ramane din 100 de lei vanzare?"
+root/div[0]/div[0]/div[0]/p[1]
+root/div[0]/div[0]/div[0]/p[1]/text "Dupa ce platesti produsul catre furnizor, inainte de reclame si salarii. Din asta calculam cat trebuie sa aduca minim fiecare leu bagat in reclame."
+root/div[0]/div[0]/div[0]/form[0]
+root/div[0]/div[0]/p[0]
+root/div[0]/div[0]/p[0]/text "Nu iti cerem preturi, facturi sau acces la contabilitate. Un singur procent, aproximativ.""
+`;
