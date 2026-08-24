@@ -1,7 +1,7 @@
 export type PublicOutputPlaceholder = {
   kind: "account" | "product" | "amount" | "identifier";
   value: string;
-  occurrences: number;
+  locations: readonly string[];
 };
 
 const observableAttributes = new Set([
@@ -15,30 +15,28 @@ function normalizedSpace(value: string): string {
 }
 
 export function normalizePublicOutput(html: string, placeholders: PublicOutputPlaceholder[] = []): string {
-  const placeholderByValue = new Map<string, PublicOutputPlaceholder>();
-  const seen = new Map<PublicOutputPlaceholder, number>();
+  const locationOwners = new Map<string, PublicOutputPlaceholder>();
+  const seen = new Set<string>();
   for (const placeholder of placeholders) {
-    if (!placeholder.value || placeholder.occurrences < 1) throw new Error("A public-output placeholder requires a nonempty value and positive occurrence count");
-    if (placeholderByValue.has(placeholder.value)) throw new Error(`Public-output placeholder collision: ${placeholder.value}`);
-    placeholderByValue.set(placeholder.value, placeholder);
-    seen.set(placeholder, 0);
+    if (!placeholder.value || !placeholder.locations.length) throw new Error("A public-output placeholder requires a nonempty value and at least one structural location");
+    for (const location of placeholder.locations) {
+      if (locationOwners.has(location)) throw new Error(`Public-output placeholder collision at ${location}`);
+      locationOwners.set(location, placeholder);
+    }
   }
 
   const lines: string[] = [];
   const stack: Array<{ path: string; children: Map<string, number> }> = [{ path: "root", children: new Map() }];
   const ignored: string[] = [];
   const tokens = html.match(/<!--[\s\S]*?-->|<[^>]+>|[^<]+/g) ?? [];
-  const replaceExact = (raw: string) => {
+  const replaceAt = (raw: string, location: string) => {
     const value = normalizedSpace(raw);
-    let output = value;
-    for (const placeholder of [...placeholders].sort((left, right) => right.value.length - left.value.length)) {
-      const parts = output.split(placeholder.value);
-      const matches = parts.length - 1;
-      if (!matches) continue;
-      seen.set(placeholder, (seen.get(placeholder) ?? 0) + matches);
-      output = parts.join(`<${placeholder.kind.toUpperCase()}>`);
-    }
-    return output;
+    const placeholder = locationOwners.get(location);
+    if (!placeholder) return value;
+    const parts = value.split(placeholder.value);
+    if (parts.length !== 2) throw new Error(`Placeholder at ${location} must match its source exactly once`);
+    seen.add(location);
+    return parts.join(`<${placeholder.kind.toUpperCase()}>`);
   };
 
   for (const token of tokens) {
@@ -65,7 +63,7 @@ export function normalizePublicOutput(html: string, placeholders: PublicOutputPl
       while ((attributeMatch = attributePattern.exec(token))) {
         const name = attributeMatch[1].toLowerCase();
         if (!observableAttributes.has(name) && !name.startsWith("aria-")) continue;
-        const value = replaceExact(attributeMatch[2] ?? attributeMatch[3] ?? attributeMatch[4] ?? "");
+        const value = replaceAt(attributeMatch[2] ?? attributeMatch[3] ?? attributeMatch[4] ?? "", `${path}@${name}`);
         attributes.push(`${name}=${JSON.stringify(value)}`);
       }
       lines.push(`${path}${attributes.length ? ` ${attributes.join(" ")}` : ""}`);
@@ -73,14 +71,11 @@ export function normalizePublicOutput(html: string, placeholders: PublicOutputPl
       continue;
     }
     if (ignored.length) continue;
-    const text = replaceExact(token);
+    const text = replaceAt(token, `${stack.at(-1)!.path}/text`);
     if (text) lines.push(`${stack.at(-1)!.path}/text ${JSON.stringify(text)}`);
   }
 
-  for (const placeholder of placeholders) {
-    const actual = seen.get(placeholder) ?? 0;
-    if (actual !== placeholder.occurrences) throw new Error(`Placeholder <${placeholder.kind.toUpperCase()}> for ${JSON.stringify(placeholder.value)} expected ${placeholder.occurrences} occurrences but saw ${actual}`);
-  }
+  for (const location of locationOwners.keys()) if (!seen.has(location)) throw new Error(`Public-output placeholder location was not observed: ${location}`);
   return lines.join("\n");
 }
 

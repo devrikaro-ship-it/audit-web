@@ -58,11 +58,14 @@ describe("account selection recovery", () => {
     listAccountsMock.mockResolvedValue(accounts);
     const Page = (await import("./page")).default;
     const html = renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }));
-    expect(normalizePublicOutput(html, accounts.flatMap((account) => [
-      { kind: "account" as const, value: account.name, occurrences: 2 },
-      { kind: "identifier" as const, value: account.customerId, occurrences: 2 },
-      { kind: "identifier" as const, value: account.loginCustomerId, occurrences: 1 },
-    ]))).toMatchSnapshot(`account-picker:success-${count}`);
+    expect(normalizePublicOutput(html, accounts.flatMap((account, index) => {
+      const form = `root/div[0]/div[0]/div[0]/div[0]/form[${index}]`;
+      return [
+        { kind: "account" as const, value: account.name, locations: [`${form}/input[1]@value`, `${form}/button[0]/span[0]/span[0]/text`] },
+        { kind: "identifier" as const, value: account.customerId, locations: [`${form}/input[0]@value`, `${form}/button[0]/span[0]/span[1]/text`] },
+        { kind: "identifier" as const, value: account.loginCustomerId, locations: [`${form}/input[2]@value`] },
+      ];
+    }))).toMatchSnapshot(`account-picker:success-${count}`);
     expect(html.match(/name="customerId"/g)).toHaveLength(accounts.length);
   });
 
@@ -73,8 +76,15 @@ describe("account selection recovery", () => {
     const Page = (await import("./page")).default;
     const html = renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }));
     expect(normalizePublicOutput(html, [
-      { kind: "account", value: "Fixture Demo", occurrences: 2 },
-      { kind: "identifier", value: "333", occurrences: 3 },
+      { kind: "account", value: "Fixture Demo", locations: [
+        "root/div[0]/div[0]/div[0]/div[0]/form[0]/input[1]@value",
+        "root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[0]/text",
+      ] },
+      { kind: "identifier", value: "333", locations: [
+        "root/div[0]/div[0]/div[0]/div[0]/form[0]/input[0]@value",
+        "root/div[0]/div[0]/div[0]/div[0]/form[0]/input[2]@value",
+        "root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]/text",
+      ] },
     ])).toMatchSnapshot("account-picker:demo");
   });
 

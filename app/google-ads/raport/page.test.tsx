@@ -105,8 +105,10 @@ async function html(): Promise<string> {
 }
 
 const reportPlaceholders = () => [
-  { kind: "account" as const, value: "DeHome", occurrences: 1 },
-  ...["A", "B", "C"].map((value) => ({ kind: "product" as const, value: `Canapea extensibila model ${value}`, occurrences: 1 })),
+  { kind: "account" as const, value: "DeHome", locations: ["root/div[0]/main[0]/div[1]/div[0]/p[0]/text"] },
+  { kind: "product" as const, value: "Canapea extensibila model A", locations: ["root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text"] },
+  { kind: "product" as const, value: "Canapea extensibila model B", locations: ["root/div[0]/main[0]/div[2]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/text"] },
+  { kind: "product" as const, value: "Canapea extensibila model C", locations: ["root/div[0]/main[0]/div[2]/div[1]/article[3]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/text"] },
 ];
 
 describe("pagina de raport, randata", () => {
@@ -273,7 +275,9 @@ describe("pagina de raport, randata", () => {
     demoState.enabled = true;
     const demo = await html();
     expect(demo).toContain('data-report-surface="demo-banner"');
-    expect(normalizePublicOutput(demo)).toMatchSnapshot("report:demo");
+    const normalizedDemo = normalizePublicOutput(demo, [{ kind: "account", value: "DeHome", locations: ["root/div[0]/main[0]/div[2]/div[0]/p[0]/text"] }]);
+    expect(normalizedDemo).toMatchSnapshot("report:demo");
+    expect(normalizedDemo).not.toContain("DeHome");
   });
 
   it("keeps the gradient headline and white summary as sibling parts", async () => {

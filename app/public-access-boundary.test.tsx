@@ -39,13 +39,16 @@ function walkSource(directory: string): string[] {
 
 const sourceTree = walkSource(path.join(process.cwd(), "app"));
 
-const decodeOracle = (codes: number[]) => String.fromCharCode(...codes);
-const localizedClauseOracle = Object.freeze({
-  "provider-scope-adwords": decodeOracle([67, 117, 32, 97, 99, 111, 114, 100, 117, 108, 32, 116, 97, 117, 32, 101, 120, 112, 108, 105, 99, 105, 116, 44, 32, 97, 112, 108, 105, 99, 97, 116, 105, 97, 32, 99, 101, 114, 101, 32, 111, 32, 115, 105, 110, 103, 117, 114, 97, 32, 112, 101, 114, 109, 105, 115, 105, 117, 110, 101, 32, 71, 111, 111, 103, 108, 101, 32, 40, 97, 100, 119, 111, 114, 100, 115, 41, 46]),
-  "oauth-permission-not-read-only": decodeOracle([80, 101, 114, 109, 105, 115, 105, 117, 110, 101, 97, 32, 79, 65, 117, 116, 104, 32, 71, 111, 111, 103, 108, 101, 32, 65, 100, 115, 32, 110, 117, 32, 101, 115, 116, 101, 32, 101, 120, 99, 108, 117, 115, 105, 118, 32, 100, 101, 32, 99, 105, 116, 105, 114, 101, 46]),
-  "application-read-operations-only": decodeOracle([65, 112, 108, 105, 99, 97, 116, 105, 97, 32, 99, 105, 116, 101, 115, 116, 101, 32, 100, 97, 116, 101, 108, 101, 44, 32, 108, 101, 32, 99, 111, 109, 112, 97, 114, 97, 32, 99, 117, 32, 112, 114, 97, 103, 117, 114, 105, 108, 101, 32, 97, 102, 97, 99, 101, 114, 105, 105, 32, 116, 97, 108, 101, 32, 115, 105, 32, 105, 116, 105, 32, 97, 114, 97, 116, 97, 32, 114, 101, 122, 117, 108, 116, 97, 116, 117, 108, 32, 112, 101, 32, 108, 111, 99, 46]),
-  "mutation-none": decodeOracle([78, 117, 32, 109, 111, 100, 105, 102, 105, 99, 97, 109, 32, 110, 105, 109, 105, 99, 32, 105, 110, 32, 99, 111, 110, 116, 117, 108, 32, 116, 97, 117, 46]),
-});
+type PublicOAuthOracle = {
+  contract: typeof publicOAuthContract;
+  clauses: Record<keyof typeof publicOAuthClauseFacts, string>;
+  allowedDisclosureNodeTexts: string[];
+};
+const publicOAuthOracle = JSON.parse(fs.readFileSync(
+  path.resolve(process.cwd(), "../.claude/skills/audit-google-ads/references/public-oauth-oracle.json"),
+  "utf8",
+)) as PublicOAuthOracle;
+const localizedClauseOracle = publicOAuthOracle.clauses;
 function normalizeNextRoute(source: string): string {
   const route: string[] = [];
   const segments = source.replace(/^app\//, "").split("/");
@@ -358,6 +361,29 @@ function responseBodyEmitters(sourceFile: ts.SourceFile): ts.Node[] {
   return emitters;
 }
 
+function outputAffectingEnvironmentBranches(sourceFile: ts.SourceFile): ts.Node[] {
+  const found: ts.Node[] = [];
+  const containsOutput = (node: ts.Node) => {
+    let output = false;
+    const visit = (child: ts.Node) => {
+      if (ts.isJsxElement(child) || ts.isJsxSelfClosingElement(child) || ts.isJsxText(child) || ts.isStringLiteralLike(child)) output = true;
+      if (!output) ts.forEachChild(child, visit);
+    };
+    visit(node);
+    return output;
+  };
+  const usesEnvironment = (node: ts.Node) => /\bprocess\s*\.\s*env\b/.test(node.getText(sourceFile));
+  const visit = (node: ts.Node) => {
+    if (ts.isConditionalExpression(node) && usesEnvironment(node.condition) && (containsOutput(node.whenTrue) || containsOutput(node.whenFalse))) found.push(node);
+    if (ts.isIfStatement(node) && usesEnvironment(node.expression) && (containsOutput(node.thenStatement) || Boolean(node.elseStatement && containsOutput(node.elseStatement)))) found.push(node);
+    if (ts.isSwitchStatement(node) && usesEnvironment(node.expression) && containsOutput(node.caseBlock)) found.push(node);
+    if (ts.isBinaryExpression(node) && [ts.SyntaxKind.AmpersandAmpersandToken, ts.SyntaxKind.BarBarToken].includes(node.operatorToken.kind) && usesEnvironment(node.left) && containsOutput(node.right)) found.push(node);
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return found;
+}
+
 describe("public Google Ads access boundary", () => {
   it("normalizes Next route groups, parallel slots, and interception segments by filesystem segment", () => {
     expect(normalizeNextRoute("app/(public)/google-ads/nou/page.tsx")).toBe("/google-ads/nou");
@@ -377,9 +403,15 @@ describe("public Google Ads access boundary", () => {
 
   it("refuses placeholder values that could erase unrelated output provenance", () => {
     expect(() => normalizePublicOutput("<p>fixture</p>", [
-      { kind: "account", value: "fixture", occurrences: 1 },
-      { kind: "product", value: "fixture", occurrences: 1 },
+      { kind: "account", value: "fixture", locations: ["root/p[0]/text"] },
+      { kind: "product", value: "fixture", locations: ["root/p[0]/text"] },
     ])).toThrow("Public-output placeholder collision");
+    expect(normalizePublicOutput("<p>fixture</p><span>fixture</span>", [
+      { kind: "account", value: "fixture", locations: ["root/p[0]/text"] },
+    ])).toContain('root/span[0]/text "fixture"');
+    expect(() => normalizePublicOutput("<p>fixture</p>", [
+      { kind: "account", value: "fixture", locations: ["root/span[0]/text"] },
+    ])).toThrow("location was not observed");
   });
 
   it("matches every emitted metadata object to an independent structural snapshot", () => {
@@ -440,6 +472,14 @@ describe("public Google Ads access boundary", () => {
     }
     const observed = [...snapshotCorpus.matchAll(/> ([a-z][a-z0-9:-]+) \d+`/g)].map((match) => match[1]).sort();
     expect(observed).toEqual([...stateIds].sort());
+    expect(publicOAuthOracle.contract).toEqual(publicOAuthContract);
+
+    const textNodes = [...snapshotCorpus.matchAll(/\/text ("(?:\\.|[^"\\])*")$/gm)]
+      .map((match) => JSON.parse(match[1]) as string);
+    const disclosureNodes = [...new Set(textNodes.filter((text) =>
+      Object.values(localizedClauseOracle).some((clause) => text.includes(clause)),
+    ))].sort();
+    expect(disclosureNodes).toEqual([...publicOAuthOracle.allowedDisclosureNodeTexts].sort());
 
     const clauseStates = {
       "hub:normal": ["application-read-operations-only", "mutation-none"],
@@ -550,6 +590,17 @@ describe("public Google Ads access boundary", () => {
       expect(responseBodyEmitters(sourceFile), source).toEqual([]);
     }
     expect(reachableSourceGraph(pageRoots).filter((source) => source.endsWith(".json"))).toEqual([]);
+  });
+
+  it("fails closed on unresolved environment or feature branches that change public output", () => {
+    const publicPageSources = sourceTree.filter((source) => /(?:page|layout)\.tsx$/.test(source) && (
+      normalizeNextRoute(source.replace(/\/layout\.tsx$/, "/page.tsx")).startsWith("/google-ads") ||
+      ["/", "/hub", "/confidentialitate", "/termeni"].includes(normalizeNextRoute(source.replace(/\/layout\.tsx$/, "/page.tsx")))
+    ));
+    for (const source of publicPageSources) {
+      const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
+      if (sourceFile) expect(outputAffectingEnvironmentBranches(sourceFile), source).toEqual([]);
+    }
   });
 
   it("seals every registered state with the canonical capability attributes", () => {

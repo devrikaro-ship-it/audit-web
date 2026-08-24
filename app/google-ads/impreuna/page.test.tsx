@@ -42,6 +42,10 @@ it("matches the complete simulator page output to its reviewed golden", async ()
   const TogetherPage = (await import("./page")).default;
   const html = renderToStaticMarkup(await TogetherPage());
   expect(normalizePublicOutput(html, [
-    { kind: "amount", value: "100", occurrences: 3 },
+    { kind: "amount", value: "100", locations: [
+      "root/div[0]/div[0]/div[0]/div[1]/label[2]/input[0]@value",
+      "root/div[0]/div[0]/div[0]/div[3]/div[0]/dl[0]/div[0]/dd[0]/text",
+      "root/div[0]/div[0]/div[0]/div[3]/div[1]/dl[0]/div[0]/dd[0]/text",
+    ] },
   ])).toMatchSnapshot("simulator:page-normal");
 });
