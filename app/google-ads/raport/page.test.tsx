@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
-import { AUDIT_WINDOW_LABEL, FERESTRE } from "@/lib/gads-intake";
+import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 
 // Randam PAGINA REALA, nu o copie a ei. Verificarea la nivel de date spune ca cifrele sunt
 // corecte; asta spune ca ajung pe ecran — tabelul de produse chiar apare, sectiunile chiar
@@ -77,6 +77,10 @@ vi.mock("@/lib/gads-keywords", async (orig) => ({
     termeni: [{ termen: "canapea ieftina", cost: 120, conversii: 0, clicuri: 40 }],
   }),
 }));
+vi.mock("@/lib/gads-an", async (orig) => ({
+  ...(await orig<Record<string, unknown>>()),
+  citesteAn: async () => null,
+}));
 
 async function html(): Promise<string> {
   const Raport = (await import("./page")).default;
@@ -105,9 +109,9 @@ describe("pagina de raport, randata", () => {
 
   it("renders the shared localized 365-day label instead of the legacy window label", async () => {
     const h = await html();
-    const legacyLabel = FERESTRE[FERESTRE.length - 1].eticheta;
+    const visibleText = h.replace(/<[^>]*>/g, " ");
     expect(h).toContain(AUDIT_WINDOW_LABEL);
-    expect(h).not.toContain(legacyLabel);
+    expect(visibleText).not.toMatch(/\b12\s+\p{L}+/u);
   });
 
   it("are amandoua sectiunile, si banda de sumar deasupra lor", async () => {

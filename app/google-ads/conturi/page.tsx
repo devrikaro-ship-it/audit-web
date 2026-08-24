@@ -21,18 +21,20 @@ export default async function Conturi({
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
 
   let accounts: AccessibleAccount[] = [];
-  let error: string | null = eroare ? "" : null;
+  const requestedError = Boolean(eroare);
+  let errorDetails: string | null = null;
   if (demoOn()) {
     accounts = demoAccounts();
   } else {
     try {
       accounts = await listAccounts(await accessTokenFrom(session.refreshToken));
     } catch (e) {
-      error = e instanceof Error ? e.message : "necunoscuta";
+      errorDetails = e instanceof Error ? e.message : "necunoscuta";
     }
   }
 
   const usable = accounts.filter((a) => !a.manager);
+  const hasAccountReadError = requestedError || errorDetails !== null;
 
   return (
     <div className="min-h-dvh px-6 py-16" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
@@ -49,14 +51,14 @@ export default async function Conturi({
             Ce cont analizam?
           </h1>
 
-          {error ? (
+          {hasAccountReadError ? (
             <>
-              <p className="mb-6 text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
+              <p data-testid="account-read-error" className="mb-6 text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
                 Nu am putut citi lista de conturi. Se intampla cand contul nu are inca acces la
                 Google Ads API sau cand conectarea a expirat.
               </p>
-              {error && (
-                <p className="mb-6 rounded-lg px-4 py-3 text-[13px]" style={{ background: C.redBg, color: C.red }}>{error}</p>
+              {errorDetails && (
+                <p className="mb-6 rounded-lg px-4 py-3 text-[13px]" style={{ background: C.redBg, color: C.red }}>{errorDetails}</p>
               )}
               <Link href="/api/google-ads/start" className="inline-flex min-h-11 items-center rounded-xl px-6 text-[15px] font-bold text-white" style={{ background: brandGradient }}>
                 Reincearca conectarea

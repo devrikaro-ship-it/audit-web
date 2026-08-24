@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
-import { localizeAuditWindow } from "@/lib/gads-intake";
+import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 
 // Pagina-umbrela: "Audit Devrika" = locul din care pleaca TOATE auditurile.
 // Serveste la radacina audit.devrika.ro (vezi rewrite-ul din next.config.ts) si e pagina
@@ -19,11 +19,10 @@ const audituri = [
     href: "/google-ads",
     eticheta: "Disponibil",
     titlu: "Audit Google Ads",
-    text: localizeAuditWindow(
-      "Iti conectezi contul de Google Ads si vezi pe cifrele tale reale din ultimele 12 luni "
+    text:
+      `Iti conectezi contul de Google Ads si vezi pe cifrele tale reale din ultimele ${AUDIT_WINDOW_LABEL} `
       + "ce produse consuma buget fara sa vanda, cate produse nu au fost afisate niciodata si "
-      + "daca masurarea conversiilor e configurata corect."
-    ),
+      + "daca masurarea conversiilor e configurata corect.",
     date: "Se conecteaza la contul tau de Google Ads, doar cu drept de citire.",
     activ: true,
     icon: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" /><circle cx="12" cy="12" r="1" /></>,

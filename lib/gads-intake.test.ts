@@ -6,7 +6,7 @@ import {
   FERESTRE,
   buildProducts,
   dateRange,
-  localizeAuditWindow,
+  formatAuditWindowLabel,
   perfQuery,
   catalogQuery,
   type PerfRow,
@@ -65,17 +65,20 @@ describe("join catalog <-> performanta", () => {
 });
 
 describe("interogari", () => {
-  it("derives the Romanian 365-day label from the existing localized day unit", () => {
-    const legacyLabel = FERESTRE[FERESTRE.length - 1].eticheta;
-    expect(AUDIT_WINDOW_LABEL).toBe(
-      FERESTRE[0].eticheta.replace(String(FERESTRE[0].zile), "365")
+  it("formats the 365-day label independently of neighboring window order and copy", () => {
+    const adversarialNeighbors = [...FERESTRE]
+      .reverse()
+      .map((window, index) => ({ ...window, eticheta: `neighbor-${index}` }));
+    expect(adversarialNeighbors[0].eticheta).not.toBe(FERESTRE[0].eticheta);
+    expect(formatAuditWindowLabel(365)).toBe(AUDIT_WINDOW_LABEL);
+    expect(formatAuditWindowLabel.toString()).not.toContain("FERESTRE");
+    const moduleSource = readFileSync("lib/gads-intake.ts", "utf8");
+    expect(moduleSource).toMatch(
+      /export const AUDIT_WINDOW_LABEL = formatAuditWindowLabel\(WINDOW_DAYS\)/
     );
-    expect(localizeAuditWindow(legacyLabel)).toBe(AUDIT_WINDOW_LABEL);
-    expect(AUDIT_WINDOW_LABEL).not.toBe(legacyLabel);
   });
 
-  it("keeps client-facing window copy localized and tied to the shared label", () => {
-    const legacyLabel = FERESTRE[FERESTRE.length - 1].eticheta;
+  it("rejects standalone legacy period promises on every client-facing surface", () => {
     const surfaces = [
       "app/confidentialitate/page.tsx",
       "app/google-ads/connect/page.tsx",
@@ -89,11 +92,10 @@ describe("interogari", () => {
       const source = readFileSync(path, "utf8");
       const executableSource = source
         .replace(/\/\*[\s\S]*?\*\//g, "")
-        .replace(/^\s*\/\/.*$/gm, "");
+        .replace(/^\s*\/\/.*$/gm, "")
+        .replace(/className="[^"]*"/g, "");
       expect(executableSource).not.toMatch(/\b(?:latest )?365 days\b/i);
-      if (source.includes(legacyLabel)) {
-        expect(source).toMatch(/localizeAuditWindow|AUDIT_WINDOW_LABEL/);
-      }
+      expect(executableSource).not.toMatch(/\b12\s+\p{L}+/u);
     }
   });
 

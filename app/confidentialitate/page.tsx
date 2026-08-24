@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
-import { localizeAuditWindow } from "@/lib/gads-intake";
+import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 
 // Politica de confidentialitate a APLICATIEI (nu a agentiei). Google o cere pe acelasi host
 // cu home page-ul declarat in consent screen si linkata DIN home page — cele doua tipare
@@ -63,7 +63,7 @@ export default function Confidentialitate() {
         <ul className="mb-3 flex flex-col gap-2">
           {[
             "lista conturilor de Google Ads la care ai acces, ca sa poti alege pe care il analizam",
-            localizeAuditWindow("produsele din campaniile de Shopping si datele lor pe ultimele 12 luni: cheltuiala, afisari, conversii si valoarea vanzarilor"),
+            `produsele din campaniile de Shopping si datele lor pe ultimele ${AUDIT_WINDOW_LABEL}: cheltuiala, afisari, conversii si valoarea vanzarilor`,
             "modul in care sunt configurate conversiile din cont, ca sa iti putem spune daca masurarea e corecta",
           ].map((t) => (
             <li key={t} className="flex items-start gap-2.5 text-[15px]" style={{ color: C.gray600 }}>

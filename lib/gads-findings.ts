@@ -17,7 +17,7 @@ import type { PmaxAudit } from "./gads-pmax";
 import type { ShoppingAudit } from "./gads-shopping";
 import type { SearchAudit } from "./gads-search";
 import type { TotaluriAn } from "./gads-an";
-import { localizeAuditWindow } from "./gads-intake";
+import { AUDIT_WINDOW_LABEL } from "./gads-intake";
 
 /** Cele trei niveluri de onestitate. Nu se amesteca niciodata. */
 export type Tier = "MASURAT" | "ESTIMARE" | "SIMULARE";
@@ -170,7 +170,7 @@ export function buildReport(
       ron: costCont,
       tier: "MASURAT",
       body:
-        `In ultimele 12 luni au trecut ${ron(costCont)} prin cont, iar Google nu a stiut ` +
+        `In ultimele ${AUDIT_WINDOW_LABEL} au trecut ${ron(costCont)} prin cont, iar Google nu a stiut ` +
         `care dintre ei au adus vanzari. ` +
         (areSearchPeLangaShopping
           ? `Din ei, ${ron(t.totalCost)} s-au dus pe produsele din Shopping — despre acelea ` +
@@ -251,7 +251,7 @@ export function buildReport(
       tier: "MASURAT",
       body:
         `Sunt ${pct(result.zeroZombies.pctOfCatalog)} din catalogul tau — produse care nu au avut ` +
-        `nicio afisare in 12 luni. Nu au costat nimic, dar nici nu exista pentru cumparatori: ` +
+        `nicio afisare in ${AUDIT_WINDOW_LABEL}. Nu au costat nimic, dar nici nu exista pentru cumparatori: ` +
         `stau in magazin fara sa ajunga vreodata in fata cuiva.`,
       produse: result.zeroZombies.list.slice(0, MAX_PRODUSE).map((p) => ({
         titlu: p.title,
@@ -294,7 +294,7 @@ export function buildReport(
         `In ultimele 30 de zile, reclamele tale au aparut la cautari care au adus clicuri ` +
         `platite si zero comenzi — ${ron(cuv.risipaTotal)} in total. ` +
         `Sunt oameni care cautau altceva decat vinzi tu. ` +
-        `Cifra e pe 30 de zile, nu pe 12 luni ca restul raportului, si de asta nu am adunat-o ` +
+        `Cifra e pe 30 de zile, nu pe ${AUDIT_WINDOW_LABEL} ca restul raportului, si de asta nu am adunat-o ` +
         `in totalul de sus.`,
       termeni: cuv.risipa.slice(0, MAX_PRODUSE),
       termeniRestanti: Math.max(0, cuv.risipa.length - MAX_PRODUSE),
@@ -432,21 +432,14 @@ export function buildReport(
     .filter((f) => f.tier === "MASURAT" && !f.quarantined && !f.exclusDinTotal)
     .reduce((s, f) => s + f.ron, 0);
 
-  for (const finding of findings) {
-    finding.title = localizeAuditWindow(finding.title);
-    finding.body = localizeAuditWindow(finding.body);
-  }
-
   return {
     // Rotunjit la sursa: altfel fiecare consumator (pagina, PDF, email) trebuie sa-si aduca
     // aminte s-o faca, iar unul va uita si va livra "1.236,687 RON" catre client.
     headline: {
       ron: Math.round(headlineRon),
-      label: localizeAuditWindow(
-        tracking.ok
-          ? "cheltuiti fara sa se acopere in ultimele 12 luni"
-          : "cheltuiti fara sa stii ce au adus, in ultimele 12 luni"
-      ),
+      label: tracking.ok
+        ? `cheltuiti fara sa se acopere in ultimele ${AUDIT_WINDOW_LABEL}`
+        : `cheltuiti fara sa stii ce au adus, in ultimele ${AUDIT_WINDOW_LABEL}`,
     },
     trackingBroken: !tracking.ok,
     findings,

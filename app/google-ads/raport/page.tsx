@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
-import { AUDIT_WINDOW_LABEL, fetchShoppingProducts, FERESTRE, localizeAuditWindow } from "@/lib/gads-intake";
+import { AUDIT_WINDOW_LABEL, fetchShoppingProducts, FERESTRE } from "@/lib/gads-intake";
 import { fetchTracking } from "@/lib/gads-tracking";
 import { audit, breakEvenRoas } from "@/lib/gads-audit";
 import { buildReport, segmenteaza, type Tier, type Segmentare } from "@/lib/gads-findings";
@@ -109,7 +109,7 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
     Promise.all(
       FERESTRE.map((w) =>
         fetchShoppingProducts(customerId, auth, customerTimeZone, new Date(), w.zile)
-          .then((r) => ({ zile: w.zile, eticheta: localizeAuditWindow(w.eticheta), products: r.products }))
+          .then((r) => ({ zile: w.zile, eticheta: w.eticheta, products: r.products }))
           .catch(() => null)
       )
     ),

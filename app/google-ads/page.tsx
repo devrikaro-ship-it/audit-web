@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
-import { AUDIT_WINDOW_LABEL, localizeAuditWindow } from "@/lib/gads-intake";
+import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 
 // Landing pentru auditul PE CONT CONECTAT (Google Shopping).
 // Sora vizuala a /audit-seo, dar alt produs: acolo scanam site-ul din exterior,
@@ -17,10 +17,9 @@ const CONNECT_HREF = "/google-ads/connect";
 // verificarea pica pe "app name does not match the app name on your home page".
 export const metadata = {
   title: "Audit Devrika — analiza contului tau de Google Ads",
-  description: localizeAuditWindow(
+  description:
     "Audit Devrika analizeaza contul tau de Google Ads si iti arata ce produse consuma buget fara sa "
-    + "vanda. Citim doar datele de Shopping din ultimele 12 luni, nu modificam nimic in cont."
-  ),
+    + `vanda. Citim doar datele de Shopping din ultimele ${AUDIT_WINDOW_LABEL}, nu modificam nimic in cont.`,
 };
 
 // Randurile din mockup-ul de raport. Cifre exemplu, marcate ca atare sub tabel.
@@ -37,9 +36,9 @@ const findings = [
     tierBg: C.greenBg,
     tierFg: C.green,
     title: "Produsele care iti ard bugetul",
-    body: localizeAuditWindow(
-      "Fiecare produs din Shopping care a cheltuit bani si a stat sub ROAS-ul tau minim, cu suma exacta pe ultimele 12 luni. Adunate, iti dau banii dusi pe produse care nu ating targetul."
-    ),
+    body:
+      `Fiecare produs din Shopping care a cheltuit bani si a stat sub ROAS-ul tau minim, cu suma exacta pe ultimele ${AUDIT_WINDOW_LABEL}. `
+      + "Adunate, iti dau banii dusi pe produse care nu ating targetul.",
     icon: (
       <>
         <path d="M3 3v18h18" />
@@ -91,7 +90,7 @@ const steps = [
   {
     n: "3",
     t: "Primesti raportul",
-    d: localizeAuditWindow("Pe loc, pe cifrele tale din ultimele 12 luni. Fara asteptare si fara discutie de vanzare inainte."),
+    d: `Pe loc, pe cifrele tale din ultimele ${AUDIT_WINDOW_LABEL}. Fara asteptare si fara discutie de vanzare inainte.`,
   },
 ];
 
@@ -172,9 +171,9 @@ export default function GoogleAdsLanding() {
           campaniile de Shopping.
         </p>
         <p className="mx-auto mb-10 max-w-[640px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
-          {localizeAuditWindow(
-            "Iti conectezi contul de Google Ads, aplicatia citeste datele campaniilor de Shopping din ultimele 12 luni si iti spune care produse consuma buget fara sa vanda — produs cu produs, cu suma exacta. Nu modifica nimic in contul tau."
-          )}
+          Iti conectezi contul de Google Ads, aplicatia citeste datele campaniilor de Shopping din
+          ultimele {AUDIT_WINDOW_LABEL} si iti spune care produse consuma buget fara sa vanda —
+          produs cu produs, cu suma exacta. Nu modifica nimic in contul tau.
         </p>
 
         <Link href={CONNECT_HREF}
@@ -231,7 +230,7 @@ export default function GoogleAdsLanding() {
               </table>
               <div className="mt-4 flex items-center gap-2 rounded-lg px-3 py-2 text-[12.5px]" style={{ background: "#fff", color: C.gray600 }}>
                 <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: C.orange }} />
-                <span>{localizeAuditWindow("128 produse din catalog nu au avut nicio afisare in 12 luni.")}</span>
+                <span>128 produse din catalog nu au avut nicio afisare in {AUDIT_WINDOW_LABEL}.</span>
               </div>
             </div>
           </div>

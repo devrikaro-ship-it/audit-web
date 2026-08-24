@@ -20,6 +20,16 @@ import type { Product } from "./gads-audit";
 /** The primary evidence window contains the latest 365 account-calendar dates. */
 export const WINDOW_DAYS = 365;
 
+export function formatAuditWindowLabel(days: number): string {
+  return new Intl.NumberFormat("ro-RO", {
+    style: "unit",
+    unit: "day",
+    unitDisplay: "long",
+  }).format(days);
+}
+
+export const AUDIT_WINDOW_LABEL = formatAuditWindowLabel(WINDOW_DAYS);
+
 /**
  * Ferestrele pe care se poate citi harta catalogului. Implicit prima: pe 30 de zile, "produsul
  * Short windows answer whether a product sold recently; the 365-day window serves the audit.
@@ -29,18 +39,8 @@ export const FERESTRE = [
   { zile: 30, eticheta: "30 de zile" },
   { zile: 90, eticheta: "3 luni" },
   { zile: 180, eticheta: "6 luni" },
-  { zile: 365, eticheta: "12 luni" },
+  { zile: WINDOW_DAYS, eticheta: AUDIT_WINDOW_LABEL },
 ] as const;
-
-const LEGACY_AUDIT_WINDOW_LABEL = FERESTRE[FERESTRE.length - 1].eticheta;
-export const AUDIT_WINDOW_LABEL = FERESTRE[0].eticheta.replace(
-  String(FERESTRE[0].zile),
-  String(WINDOW_DAYS)
-);
-
-export function localizeAuditWindow(copy: string): string {
-  return copy.replaceAll(LEGACY_AUDIT_WINDOW_LABEL, AUDIT_WINDOW_LABEL);
-}
 
 export type PerfRow = {
   itemId: string;
