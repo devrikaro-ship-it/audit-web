@@ -1003,13 +1003,10 @@ root/div[0]/div[0]/p[3]/text "Cu acordul tau explicit, aplicatia cere o singura 
 root/div[0]/div[0]/ul[0]
 root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
-root/div[0]/div[0]/ul[0]/li[0]/text "conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile"
+root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
-root/div[0]/div[0]/ul[0]/li[1]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
-root/div[0]/div[0]/ul[0]/li[2]
-root/div[0]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
-root/div[0]/div[0]/ul[0]/li[2]/text "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc."
+root/div[0]/div[0]/ul[0]/li[1]/text "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc."
 root/div[0]/div[0]/p[4]
 root/div[0]/div[0]/p[4]/b[0]
 root/div[0]/div[0]/p[4]/b[0]/text "Nu cerem si nu obtinem acces"

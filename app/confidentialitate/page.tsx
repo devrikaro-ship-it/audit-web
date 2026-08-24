@@ -60,7 +60,6 @@ export default function Confidentialitate() {
         </P>
         <ul className="mb-3 flex flex-col gap-2">
           {[
-            publicOAuthProjection.auditDataCategories,
             publicOAuthProjection.auditDataReadDisclosure,
             publicOAuthProjection.applicationReadsData,
           ].map((t) => (
