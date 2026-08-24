@@ -80,7 +80,7 @@ export default function Simulator({
           Ce facem concret la reclame
         </h2>
         <p className="mb-5 text-[13.5px] leading-relaxed" style={{ color: C.gray500 }}>
-          Nu iti spunem „creste ROAS-ul". Iti spunem ce doua lucruri lucram — clicuri mai ieftine si
+          Nu iti spunem „creste ROAS-ul{"\""}. Iti spunem ce doua lucruri lucram — clicuri mai ieftine si
           mai multe comenzi din acelasi trafic — iar ROAS-ul iese din ele. Trage cursoarele la cat
           crezi tu, inclusiv la zero.
         </p>
