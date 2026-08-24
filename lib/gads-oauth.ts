@@ -1,4 +1,6 @@
-// Fluxul OAuth prin care prospectul ne da acces DOAR de citire la contul lui de Google Ads.
+// LANG: pending full translation to EN
+// Google exposes only the broad `adwords` OAuth scope. This application enforces non-mutating
+// behavior by implementing read operations only; the scope itself is not read-only.
 //
 // Un singur scope: `adwords`. Nu cerem Gmail, nu cerem Drive, nu cerem profil — cu cat lista
 // de permisiuni e mai scurta, cu atat mai putini oameni abandoneaza ecranul de consimtamant.
