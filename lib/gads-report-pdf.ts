@@ -7,9 +7,13 @@ import path from "node:path";
 
 const execFileAsync = promisify(execFile);
 
-function chromePath(): string | null {
+export function resolveChromePath(): string | null {
+  const pathCandidates = (process.env.PATH || "")
+    .split(path.delimiter)
+    .flatMap((directory) => ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser"].map((name) => path.join(directory, name)));
   const candidates = [
     process.env.CHROME_PATH,
+    ...pathCandidates,
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/Applications/Chromium.app/Contents/MacOS/Chromium",
     "/usr/bin/google-chrome",
@@ -25,7 +29,7 @@ function reportsDirectory(): string {
 
 export async function generateStoredReportPdf(reportId: string, html: string): Promise<{ path: string; buffer: Buffer }> {
   if (!/^[a-zA-Z0-9-]+$/.test(reportId)) throw new Error("Invalid report id");
-  const chrome = chromePath();
+  const chrome = resolveChromePath();
   if (!chrome) throw new Error("Chrome is not available");
   const directory = reportsDirectory();
   await mkdir(directory, { recursive: true });
