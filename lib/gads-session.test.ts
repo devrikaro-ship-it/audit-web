@@ -22,12 +22,25 @@ describe("sesiunea prospectului", () => {
       refreshToken: "rt-123",
       customerId: "999",
       customerTimeZone: "Europe/Bucharest",
-      marginPct: 28,
+      marginPct: 50,
+      averageOrderValue: 500,
+      goodsCost: 250,
+      breakEvenCpa: 150,
+      breakEvenRoas: 500 / 150,
     }));
     expect(s?.refreshToken).toBe("rt-123");
     expect(s?.customerId).toBe("999");
     expect(s?.customerTimeZone).toBe("Europe/Bucharest");
-    expect(s?.marginPct).toBe(28);
+    expect(s?.marginPct).toBe(50);
+    expect(s?.averageOrderValue).toBe(500);
+    expect(s?.goodsCost).toBe(250);
+    expect(s?.breakEvenCpa).toBe(150);
+    expect(s?.breakEvenRoas).toBe(500 / 150);
+  });
+
+  it("refuses invalid stored financial inputs before signing", () => {
+    expect(() => seal({ refreshToken: "rt-123", averageOrderValue: 0, goodsCost: 0 })).toThrow(RangeError);
+    expect(() => seal({ refreshToken: "rt-123", averageOrderValue: 500, goodsCost: 501 })).toThrow(RangeError);
   });
 
   it("preserves valid decimal margins and refuses invalid margins before signing", () => {

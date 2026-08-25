@@ -19,9 +19,10 @@ vi.mock("@/lib/gads-session", async (original) => ({
 
 import { salveazaMarja } from "./actions";
 
-const submission = (...values: unknown[]) => {
+const submission = (averageOrderValues: unknown[], goodsCosts: unknown[]) => {
   const data = new FormData();
-  for (const value of values) data.append("marginPct", String(value));
+  for (const value of averageOrderValues) data.append("averageOrderValue", String(value));
+  for (const value of goodsCosts) data.append("goodsCost", String(value));
   return salveazaMarja(data);
 };
 
@@ -33,23 +34,36 @@ describe("gross margin server boundary", () => {
 
   it("redirects an absent session before reading margin input", async () => {
     sessionState.value = null;
-    await expect(submission(28)).rejects.toThrow("REDIRECT /google-ads/connect?eroare=sesiune");
+    await expect(submission([500], [250])).rejects.toThrow("REDIRECT /google-ads/connect?eroare=sesiune");
   });
 
-  it.each([undefined, "", "margin", "12 percent", "0x10", "1e1", 0, 0.5, 99.5, 100, "Infinity"])("refuses invalid input %s without sealing it", async (value) => {
-    await expect(submission(value)).rejects.toThrow("REDIRECT /google-ads/marja?eroare=marja");
+  it.each([undefined, "", "money", "12 RON", "0x10", "1e2", 0, "Infinity"])("refuses invalid AOV %s without sealing it", async (value) => {
+    await expect(submission([value], [20])).rejects.toThrow("REDIRECT /google-ads/marja?eroare=financiar");
     expect(seal).not.toHaveBeenCalled();
     expect(cookieSet).not.toHaveBeenCalled();
   });
 
-  it.each([1, 28.5, 99])("preserves valid input %s in the sealed session", async (value) => {
-    await expect(submission(value)).rejects.toThrow("REDIRECT /google-ads/raport");
-    expect(seal).toHaveBeenCalledWith(expect.objectContaining({ marginPct: value }));
+  it("persists validated break-even economics in the sealed session", async () => {
+    await expect(submission([500], [250])).rejects.toThrow("REDIRECT /google-ads/raport");
+    expect(seal).toHaveBeenCalledWith(expect.objectContaining({
+      averageOrderValue: 500,
+      goodsCost: 250,
+      marginPct: 50,
+      breakEvenCpa: 150,
+      breakEvenRoas: 500 / 150,
+    }));
     expect(cookieSet).toHaveBeenCalledOnce();
   });
 
-  it.each([[28, 35], ["margin", 28], [28, "margin"]])("refuses duplicate fields %s and %s independently of order", async (first, second) => {
-    await expect(submission(first, second)).rejects.toThrow("REDIRECT /google-ads/marja?eroare=marja");
+  it("refuses duplicate financial fields independently of order", async () => {
+    await expect(submission([500, 600], [250])).rejects.toThrow("REDIRECT /google-ads/marja?eroare=financiar");
+    await expect(submission([500], [250, 300])).rejects.toThrow("REDIRECT /google-ads/marja?eroare=financiar");
+    expect(seal).not.toHaveBeenCalled();
+    expect(cookieSet).not.toHaveBeenCalled();
+  });
+
+  it("refuses a goods cost that leaves no contribution for advertising", async () => {
+    await expect(submission([500], [400])).rejects.toThrow("REDIRECT /google-ads/marja?eroare=financiar");
     expect(seal).not.toHaveBeenCalled();
     expect(cookieSet).not.toHaveBeenCalled();
   });

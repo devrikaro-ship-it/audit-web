@@ -11,6 +11,7 @@ import { demoOn, demoData } from "@/lib/gads-demo";
 import { salveazaMarja } from "./actions";
 import MarginForm from "./MarginForm";
 import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
+import { aggregatePurchaseBaseline, readPurchaseBaseline, type PurchaseBaseline } from "@/lib/gads-an";
 
 // Singura intrebare de business din tot fluxul. NU intrebam ROAS-ul minim — oamenii nu si-l
 // pot calcula si ii pierzi in formular. Intrebam marja, pe care orice comerciant o stie, si
@@ -36,19 +37,29 @@ export default async function Marja({
   const cfg = oauthConfig();
   let sugestie = { label: "magazin online", marginPct: 35, detected: false };
   let nrProduse = 0;
+  let baseline: PurchaseBaseline | null = null;
   if (demoOn()) {
-    const { products } = demoData();
+    const { products, structura } = demoData();
     nrProduse = products.length;
     sugestie = suggestMargin(products);
+    baseline = aggregatePurchaseBaseline(
+      structura?.cheltuialaTotala ?? 0,
+      products.map((product) => ({ metrics: { conversions: product.conversions, conversionsValue: product.conversionValue } }))
+    );
   } else try {
     const token = await accessTokenFrom(session.refreshToken);
-    const { products } = await runGoogleAdsRead("fetchShoppingProducts", () => fetchShoppingProducts(customerId, {
+    const auth = {
       accessToken: token,
       developerToken: cfg.developerToken,
       loginCustomerId: session.loginCustomerId,
-    }, customerTimeZone));
+    };
+    const [{ products }, measuredBaseline] = await Promise.all([
+      runGoogleAdsRead("fetchShoppingProducts", () => fetchShoppingProducts(customerId, auth, customerTimeZone)),
+      runGoogleAdsRead("readPurchaseBaseline", () => readPurchaseBaseline(customerId, auth, customerTimeZone)),
+    ]);
     nrProduse = products.length;
     sugestie = suggestMargin(products);
+    baseline = measuredBaseline;
   } catch {
     // Daca citirea catalogului pica, intrebarea ramane valabila cu valoarea implicita.
   }
@@ -63,13 +74,13 @@ export default async function Marja({
         </Link>
 
         <div className="rounded-2xl border bg-white p-7 md:p-9" style={{ borderColor: "#e6ebf4", boxShadow: "0 8px 32px rgba(11,31,58,0.06)" }}>
-          <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Pasul 2 din 3</p>
+          <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Step 2 of 3</p>
           <h1 className="mb-3 font-extrabold leading-[1.2] tracking-[-0.5px]" style={{ fontFamily: sora, fontSize: "clamp(22px,3.5vw,30px)", color: "#0f172a" }}>
-            Cat iti ramane din 100 de lei vanzare?
+            Set the point where advertising stops making money
           </h1>
           <p className="mb-1 text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
-            Dupa ce platesti produsul catre furnizor, inainte de reclame si salarii. Din asta
-            calculam cat trebuie sa aduca minim fiecare leu bagat in reclame.
+            Confirm the average order value and tell us how much the goods in that order cost.
+            We calculate the maximum CPA and minimum ROAS for you.
           </p>
           {nrProduse > 0 && (
             <p className="mb-6 text-[13.5px]" style={{ color: C.gray400 }}>
@@ -79,18 +90,23 @@ export default async function Marja({
             </p>
           )}
 
-          {eroare === "marja" && (
+          {(eroare === "marja" || eroare === "financiar") && (
             <p className="mb-6 rounded-xl px-4 py-3 text-[13.5px] leading-relaxed"
               style={{ background: C.yellowBg, color: C.yellow }}>
               {GROSS_MARGIN_ERROR}
             </p>
           )}
 
-          <MarginForm initial={sugestie.marginPct} action={salveazaMarja} />
+          <MarginForm
+            initialAverageOrderValue={Math.round(baseline?.averageOrderValue ?? 300)}
+            initialGoodsCost={Math.round((baseline?.averageOrderValue ?? 300) * (1 - sugestie.marginPct / 100))}
+            measured={baseline?.averageOrderValue !== null && baseline?.averageOrderValue !== undefined}
+            action={salveazaMarja}
+          />
         </div>
 
         <p className="mt-6 text-center text-[12.5px]" style={{ color: C.gray400 }}>
-          Nu iti cerem preturi, facturi sau acces la contabilitate. Un singur procent, aproximativ.
+          No invoices or accounting access. You can adjust both values before the audit is generated.
         </p>
       </div>
     </div>

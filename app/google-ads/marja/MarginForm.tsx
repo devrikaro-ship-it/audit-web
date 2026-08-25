@@ -2,76 +2,93 @@
 
 import { useState } from "react";
 import { C, sora, brandGradient } from "@/lib/theme";
-import { GROSS_MARGIN_MAX, GROSS_MARGIN_MIN, GROSS_MARGIN_STEP } from "@/lib/gads-margin";
+import { calculateBreakEven, OPERATING_COST_PCT } from "@/lib/gads-financials";
 
-// Sliderul care raspunde in timp real cu ROAS-ul minim. Momentul "aha" al fluxului: omul
-// misca marja si vede cum se schimba pragul sub care fiecare vanzare il costa bani.
-// Calculul e acelasi ca in motor (100 / marja) — tinut aici ca sa fie instantaneu, fara tur
-// la server la fiecare pixel.
-
-export default function MarginForm({
-  initial,
-  action,
-}: {
-  initial: number;
+type Props = {
+  initialAverageOrderValue: number;
+  initialGoodsCost: number;
+  measured: boolean;
   action: (formData: FormData) => void;
-}) {
-  const [pct, setPct] = useState(initial);
-  const roas = 100 / pct;
+};
+
+const money = (value: number) => `${value.toFixed(2)} RON`;
+
+export default function MarginForm({ initialAverageOrderValue, initialGoodsCost, measured, action }: Props) {
+  const [averageOrderValue, setAverageOrderValue] = useState(initialAverageOrderValue);
+  const [goodsCost, setGoodsCost] = useState(Math.min(initialGoodsCost, initialAverageOrderValue));
+  const maximumAov = Math.max(10_000, Math.ceil(initialAverageOrderValue * 4 / 100) * 100);
+  const financials = (() => {
+    try {
+      return calculateBreakEven({ averageOrderValue, goodsCost });
+    } catch {
+      return null;
+    }
+  })();
+
+  const updateAov = (next: number) => {
+    const safe = Math.max(1, Math.min(maximumAov, next));
+    setAverageOrderValue(safe);
+    setGoodsCost((current) => Math.min(current, safe));
+  };
 
   return (
-    <form action={action}>
-      <input type="hidden" name="marginPct" value={pct} />
+    <form action={action} className="space-y-7">
+      <section>
+        <div className="mb-2 flex items-center justify-between gap-4">
+          <label htmlFor="averageOrderValue" className="text-[14px] font-semibold" style={{ color: "#334155" }}>
+            Average order value
+          </label>
+          <input id="averageOrderValue" name="averageOrderValue" type="number" min="1" max={maximumAov} step="1"
+            value={averageOrderValue} onChange={(event) => updateAov(Number(event.target.value))}
+            className="w-36 rounded-lg border px-3 py-2 text-right font-bold tabular-nums" style={{ borderColor: C.border }} />
+        </div>
+        <input type="range" aria-label="Average order value slider" min="1" max={maximumAov} step="1"
+          value={averageOrderValue} onChange={(event) => updateAov(Number(event.target.value))}
+          className="w-full cursor-pointer" style={{ accentColor: C.indigo, minHeight: 44 }} />
+        <p className="text-[12.5px]" style={{ color: C.gray500 }}>
+          {measured ? "Measured from Purchase conversions in Google Ads" : "Confirm or adjust this estimate"}
+        </p>
+      </section>
 
-      <div className="mb-2 flex items-baseline justify-between">
-        <label htmlFor="marja" className="text-[14px] font-semibold" style={{ color: "#334155" }}>
-          Marja ta bruta
-        </label>
-        <output htmlFor="marja" className="text-[26px] font-black tabular-nums" style={{ fontFamily: sora, color: C.indigo }}>
-          {pct}%
-        </output>
+      <section>
+        <div className="mb-2 flex items-center justify-between gap-4">
+          <label htmlFor="goodsCost" className="text-[14px] font-semibold" style={{ color: "#334155" }}>
+            Cost of goods in one average order
+          </label>
+          <input id="goodsCost" name="goodsCost" type="number" min="0" max={averageOrderValue} step="1"
+            value={goodsCost} onChange={(event) => setGoodsCost(Math.max(0, Math.min(averageOrderValue, Number(event.target.value))))}
+            className="w-36 rounded-lg border px-3 py-2 text-right font-bold tabular-nums" style={{ borderColor: C.border }} />
+        </div>
+        <input type="range" aria-label="Goods cost slider" min="0" max={averageOrderValue} step="1"
+          value={goodsCost} onChange={(event) => setGoodsCost(Number(event.target.value))}
+          className="w-full cursor-pointer" style={{ accentColor: C.indigo, minHeight: 44 }} />
+        <p className="text-[12.5px]" style={{ color: C.gray500 }}>
+          Gross margin: {financials ? financials.grossMarginPct.toFixed(1) : "0.0"}%
+        </p>
+      </section>
+
+      <div aria-live="polite" className="rounded-xl px-5 py-4 text-center" style={{ background: financials ? "#f0f4ff" : C.redBg }}>
+        {financials ? (
+          <>
+            <p className="text-[13px]" style={{ color: C.gray600 }}>Break-even CPA</p>
+            <p className="text-[28px] font-black tabular-nums" style={{ fontFamily: sora, color: C.indigo }}>{money(financials.breakEvenCpa)}</p>
+            <p className="mt-2 text-[13px]" style={{ color: C.gray600 }}>Break-even ROAS</p>
+            <p className="text-[28px] font-black tabular-nums" style={{ fontFamily: sora, color: C.indigo }}>{financials.breakEvenRoas.toFixed(2)}×</p>
+            <p className="mt-3 text-[12.5px]" style={{ color: C.gray500 }}>
+              Includes a fixed {OPERATING_COST_PCT}% operating-cost estimate.
+            </p>
+          </>
+        ) : (
+          <p className="text-[13.5px] font-semibold" style={{ color: C.red }}>
+            Product and operating costs leave no amount available for advertising.
+          </p>
+        )}
       </div>
 
-      <input
-        id="marja"
-        name="marjaSlider"
-        type="range"
-        min={GROSS_MARGIN_MIN}
-        max={GROSS_MARGIN_MAX}
-        step={GROSS_MARGIN_STEP}
-        value={pct}
-        onChange={(e) => setPct(Number(e.target.value))}
-        className="mb-1 w-full cursor-pointer"
-        style={{ accentColor: C.indigo, minHeight: 44 }}
-        aria-describedby="prag"
-      />
-      <div className="mb-6 flex justify-between text-[12px]" style={{ color: C.gray400 }}>
-        <span>{GROSS_MARGIN_MIN}%</span>
-        <span>{GROSS_MARGIN_MAX}%</span>
-      </div>
-
-      <div id="prag" aria-live="polite" className="mb-7 rounded-xl px-5 py-4 text-center" style={{ background: "#f0f4ff" }}>
-        <p className="mb-1 text-[13px]" style={{ color: C.gray600 }}>
-          Cu marja asta, ROAS-ul tau minim este
-        </p>
-        <p className="mb-1.5 text-[34px] font-black leading-none tabular-nums" style={{ fontFamily: sora, color: C.indigo }}>
-          {roas.toFixed(2)}×
-        </p>
-        <p className="text-[13px] leading-relaxed" style={{ color: C.gray600 }}>
-          Adica fiecare leu cheltuit pe reclame trebuie sa aduca inapoi cel putin{" "}
-          <b style={{ color: "#0f172a" }}>{roas.toFixed(2)} lei</b> in vanzari. Sub atat, vinzi in pierdere.
-        </p>
-      </div>
-
-      <button
-        type="submit"
-        className="flex min-h-11 w-full cursor-pointer items-center justify-center gap-2.5 rounded-[14px] px-8 py-[15px] text-[16px] font-bold text-white transition-all hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-        style={{ background: brandGradient, boxShadow: "0 8px 24px rgba(71,73,158,0.28)", outlineColor: C.indigo }}
-      >
-        Vezi ce pierzi acum
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-          <path d="M5 12h14M12 5l7 7-7 7" />
-        </svg>
+      <button type="submit" disabled={!financials}
+        className="flex min-h-11 w-full items-center justify-center rounded-[14px] px-8 py-[15px] text-[16px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
+        style={{ background: brandGradient }}>
+        Build my profitability audit
       </button>
     </form>
   );

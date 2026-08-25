@@ -7,6 +7,7 @@ let sessionVariant: "valid" | "missing" | "account" | "timezone" = "valid";
 let demoEnabled = false;
 let productCount = 0;
 let productCategory: string | undefined;
+let measuredAov: number | null = 500;
 
 vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => ({ value: "session" }) }) }));
 vi.mock("next/navigation", () => ({ redirect: (url: string) => { throw new Error(`REDIRECT ${url}`); } }));
@@ -18,8 +19,16 @@ vi.mock("@/lib/gads-session", async (original) => ({
 }));
 vi.mock("@/lib/gads-oauth", () => ({ accessTokenFrom: async () => "access", oauthConfig: () => ({ developerToken: "dev" }) }));
 vi.mock("@/lib/gads-intake", () => ({ fetchShoppingProducts: async () => ({ products: Array.from({ length: productCount }, () => ({ title: "Product", category: productCategory })) }) }));
+vi.mock("@/lib/gads-an", () => ({
+  aggregatePurchaseBaseline: () => ({ averageOrderValue: measuredAov }),
+  readPurchaseBaseline: async () => ({ averageOrderValue: measuredAov }),
+}));
 vi.mock("@/lib/gads-demo", () => ({ demoOn: () => demoEnabled, demoData: () => ({ products: Array.from({ length: productCount }, () => ({ title: "Product", category: productCategory })) }) }));
-vi.mock("./MarginForm", () => ({ default: () => <form data-test="margin-retry" /> }));
+vi.mock("./MarginForm", () => ({
+  default: ({ initialAverageOrderValue, measured }: { initialAverageOrderValue: number; measured: boolean }) => (
+    <form data-test="margin-retry" data-aov={initialAverageOrderValue} data-measured={String(measured)} />
+  ),
+}));
 
 it("renders the margin explanation and retry path after invalid submission", async () => {
   const MarginPage = (await import("./page")).default;
@@ -34,7 +43,18 @@ it("renders the normal margin state through the canonical contract", async () =>
   const MarginPage = (await import("./page")).default;
   const html = renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({}) }));
   expect(html).toContain('data-public-oauth-surface="margin:normal"');
+  expect(html).toContain('data-aov="500"');
+  expect(html).toContain('data-measured="true"');
   expect(normalizePublicOutput(html)).toMatchSnapshot("margin:normal");
+});
+
+it("falls back to a manual AOV when Purchase data is unavailable", async () => {
+  measuredAov = null;
+  const MarginPage = (await import("./page")).default;
+  const html = renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({}) }));
+  expect(html).toContain('data-aov="300"');
+  expect(html).toContain('data-measured="false"');
+  measuredAov = 500;
 });
 
 it.each([

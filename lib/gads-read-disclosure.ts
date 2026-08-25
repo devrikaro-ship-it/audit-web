@@ -40,6 +40,7 @@ export const googleAdsReadRegistry = {
   fetchShoppingData: { module: "@/lib/gads-shopping", operation: "fetchShoppingData", readCategories: ["shopping-campaigns"] },
   fetchSearchData: { module: "@/lib/gads-search", operation: "fetchSearchData", readCategories: ["search-campaigns"] },
   citesteAn: { module: "@/lib/gads-an", operation: "citesteAn", readCategories: ["annual-account-totals"] },
+  readPurchaseBaseline: { module: "@/lib/gads-an", operation: "readPurchaseBaseline", readCategories: ["annual-account-totals"] },
 } as const satisfies Record<string, { module: string; operation: string; readCategories: readonly GoogleAdsReadCategory[] }>;
 
 export type GoogleAdsReadId = keyof typeof googleAdsReadRegistry;

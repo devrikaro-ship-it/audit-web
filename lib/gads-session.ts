@@ -11,6 +11,7 @@
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { parseGrossMargin, requireGrossMargin } from "./gads-margin";
+import { calculateBreakEven, parseMoney } from "./gads-financials";
 
 export { GROSS_MARGIN_ERROR, parseGrossMargin, requireGrossMargin } from "./gads-margin";
 
@@ -31,6 +32,10 @@ export type GadsSession = {
   /** Marja confirmata de om (procent). Lipsa = inca n-a raspuns. */
   marginPct?: number;
   marginStatus?: "invalid";
+  averageOrderValue?: number;
+  goodsCost?: number;
+  breakEvenCpa?: number;
+  breakEvenRoas?: number;
   exp: number;
 };
 
@@ -61,6 +66,14 @@ export function seal(session: GadsSessionInput): string {
   } else {
     delete normalized.marginPct;
     if (session.marginStatus !== "invalid") delete normalized.marginStatus;
+  }
+  const carriesFinancials = session.averageOrderValue !== undefined || session.goodsCost !== undefined;
+  if (carriesFinancials) {
+    const averageOrderValue = parseMoney(session.averageOrderValue);
+    const goodsCost = parseMoney(session.goodsCost);
+    if (averageOrderValue === null || goodsCost === null) throw new RangeError("Invalid financial inputs");
+    Object.assign(normalized, calculateBreakEven({ averageOrderValue, goodsCost }));
+    normalized.marginPct = ((averageOrderValue - goodsCost) / averageOrderValue) * 100;
   }
   const withExp = { ...normalized, exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE } as GadsSession;
   const payload = Buffer.from(JSON.stringify(withExp)).toString("base64url");
@@ -95,6 +108,18 @@ export function unseal(raw: string | undefined): GadsSession | null {
       }
     } else if (carriedInvalid) {
       s.marginStatus = "invalid";
+    }
+    if (s.averageOrderValue !== undefined || s.goodsCost !== undefined) {
+      const averageOrderValue = parseMoney(s.averageOrderValue);
+      const goodsCost = parseMoney(s.goodsCost);
+      if (averageOrderValue === null || goodsCost === null) {
+        delete s.averageOrderValue;
+        delete s.goodsCost;
+        delete s.breakEvenCpa;
+        delete s.breakEvenRoas;
+      } else {
+        Object.assign(s, calculateBreakEven({ averageOrderValue, goodsCost }));
+      }
     }
     return s;
   } catch {

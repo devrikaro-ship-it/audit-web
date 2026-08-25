@@ -15,6 +15,15 @@ export type BreakEvenFinancials = {
   breakEvenRoas: number;
 };
 
+export function parseMoney(value: unknown): number | null {
+  if (typeof value === "number") return Number.isFinite(value) ? value : null;
+  if (typeof value !== "string") return null;
+  const normalized = value.trim().replace(",", ".");
+  if (!/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/.test(normalized)) return null;
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 export function calculateBreakEven(input: BreakEvenInput): BreakEvenFinancials {
   const { averageOrderValue, goodsCost } = input;
   if (!Number.isFinite(averageOrderValue) || averageOrderValue <= 0) {
