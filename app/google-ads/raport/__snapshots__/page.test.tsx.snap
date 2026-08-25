@@ -243,9 +243,9 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by money at risk. Showing 2 of the top 20."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by cost. Showing the top 2 products."
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0] aria-label="Products consuming your budget"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -326,9 +326,9 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Only products with enough evidence are included."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Ranked by estimated sales opportunity. Showing the top 0 products."
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0] aria-label="Profitable products receiving too little traffic"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -431,7 +431,7 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/span[0]/t
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]/text "0 RON"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0] aria-label="Optimized product promotion"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]/th[0]
@@ -1015,9 +1015,9 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by money at risk. Showing 2 of the top 20."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by cost. Showing the top 2 products."
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0] aria-label="Products consuming your budget"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -1098,9 +1098,9 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Only products with enough evidence are included."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Ranked by estimated sales opportunity. Showing the top 0 products."
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0] aria-label="Profitable products receiving too little traffic"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -1203,7 +1203,7 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/span[0]/t
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]/text "0 RON"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0] aria-label="Optimized product promotion"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]/th[0]
@@ -1773,9 +1773,9 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by money at risk. Showing 2 of the top 20."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by cost. Showing the top 2 products."
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0] aria-label="Products consuming your budget"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -1856,9 +1856,9 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Only products with enough evidence are included."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Ranked by estimated sales opportunity. Showing the top 0 products."
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0] aria-label="Profitable products receiving too little traffic"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -1961,7 +1961,7 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/span[0]/t
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]/text "0 RON"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0] aria-label="Optimized product promotion"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]/th[0]
@@ -2522,9 +2522,9 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by money at risk. Showing 2 of the top 20."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by cost. Showing the top 2 products."
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0] aria-label="Products consuming your budget"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -2605,9 +2605,9 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Only products with enough evidence are included."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Ranked by estimated sales opportunity. Showing the top 0 products."
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0] aria-label="Profitable products receiving too little traffic"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -2710,7 +2710,7 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/span[0]/t
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]/text "0 RON"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0] aria-label="Optimized product promotion"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]/th[0]
@@ -3239,9 +3239,9 @@ root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by money at risk. Showing 6 of the top 20."
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[0]/div[1]/text "Ranked by cost. Showing the top 6 products."
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[1]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0] aria-label="Products consuming your budget"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -3422,9 +3422,9 @@ root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/span[0]/text "Measured from Google Ads"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/br[0]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Only products with enough evidence are included."
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[0]/div[1]/text "Ranked by estimated sales opportunity. Showing the top 3 products."
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[1]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0] aria-label="Profitable products receiving too little traffic"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]
@@ -3602,7 +3602,7 @@ root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[2]/div[6]/span[0]/t
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[2]/div[6]/strong[0]/text "14.752 RON"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[2]/div[7]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0] aria-label="Optimized product promotion"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[2]/div[7]/table[0]/thead[0]/tr[0]/th[0]

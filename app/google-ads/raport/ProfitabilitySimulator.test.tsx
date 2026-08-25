@@ -97,4 +97,28 @@ describe("profitability report simulator", () => {
     const { container } = render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
     expect(container.firstElementChild?.getAttribute("data-profitability-layout")).toBe("wide-v1");
   });
+
+  it("limits every visible product table to ten compact rows without changing the analyzed population", () => {
+    const losses = Array.from({ length: 12 }, (_, index) => ({
+      ...analysis.losses[0],
+      productId: `loss-${index}`,
+      title: `Loss product ${index}`,
+      monthlyCost: 1200 - index,
+    }));
+    const opportunities = Array.from({ length: 12 }, (_, index) => ({
+      ...analysis.opportunities[0],
+      productId: `winner-${index}`,
+      title: `Profitable product ${index}`,
+      estimatedSalesOpportunity: 2400 - index,
+    }));
+    const expandedAnalysis = { ...analysis, losses, opportunities };
+
+    render(<ProfitabilitySimulator analysis={expandedAnalysis} averageOrderValue={300} snapshot={snapshot} />);
+
+    expect(screen.getByRole("table", { name: "Products consuming your budget" }).querySelectorAll("tbody tr")).toHaveLength(10);
+    expect(screen.getByRole("table", { name: "Profitable products receiving too little traffic" }).querySelectorAll("tbody tr")).toHaveLength(10);
+    expect(screen.getByRole("table", { name: "Optimized product promotion" }).querySelectorAll("tbody tr")).toHaveLength(10);
+    expect(expandedAnalysis.losses).toHaveLength(12);
+    expect(expandedAnalysis.opportunities).toHaveLength(12);
+  });
 });
