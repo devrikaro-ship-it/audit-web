@@ -137,103 +137,115 @@ export default function GoogleAdsLanding() {
         </div>
       </nav>
 
-      {/* 1 · HERO */}
-      <section className="relative overflow-hidden px-8 pb-24 pt-36 text-center"
-        style={{ background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
-        <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[-200px] h-[800px] w-[800px] -translate-x-1/2 rounded-full"
-          style={{ background: "radial-gradient(circle,rgba(71,73,158,0.08) 0%,transparent 70%)" }} />
-
-        <div className="mb-6 inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold"
-          style={{ background: "#f0f4ff", borderColor: "rgba(71,73,158,0.15)", color: C.indigo }}>
-          <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: C.cyan }} />
-          Audit Devrika · Aplicatie web · Gratuit
-        </div>
-
-        <h1 className="mx-auto mb-6 max-w-[860px] font-black leading-[1.05] tracking-[-2px]"
-          style={{ fontFamily: sora, fontSize: "clamp(36px,6vw,68px)", color: "#0f172a" }}>
-          Vezi ce produse iti ard{" "}
-          <em className="not-italic" style={{
-            background: brandGradient,
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
-          }}>bugetul</em><br />
-          in Google Shopping
-        </h1>
-
-        {/* Prima explicatie a aplicatiei sta AICI, sub titlu, nu la mijlocul paginii:
-            verificarea de branding Google se uita la ce e vizibil sus si respinge cu
-            "your home page does not explain the purpose of your app" daca nu gaseste
-            numele aplicatiei alaturi de ce face ea. */}
-        <p className="mx-auto mb-4 max-w-[640px] text-lg leading-relaxed" style={{ color: C.gray500 }}>
-          Acesta e unul dintre auditurile din <Link href="/" style={{ color: C.indigo, fontWeight: 700 }}>Audit Devrika</Link>,
-          aplicatia web care analizeaza magazinul si conturile tale de publicitate. Auditul de fata
-          se conecteaza la contul tau de Google Ads si iti arata pe ce produse pierzi bani in
-          campaniile de Shopping.
-        </p>
-        <p className="mx-auto mb-10 max-w-[640px] text-[16.5px] leading-relaxed" style={{ color: C.gray500 }}>
-          {publicOAuthProjection.auditDataReadAndNoMutation}
-        </p>
-
-        <Link href={CONNECT_HREF}
-          className="inline-flex items-center gap-2.5 rounded-[14px] px-9 py-[18px] text-[17px] font-bold text-white transition-all hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-          style={{ background: brandGradient, boxShadow: "0 8px 32px rgba(71,73,158,0.3)", outlineColor: C.indigo }}>
-          Conecteaza contul Google Ads
-          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </Link>
-
-        <div className="mt-4 flex items-center justify-center gap-1.5 text-[13px]" style={{ color: C.gray500 }}>
-          <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-          </svg>
-          {publicOAuthProjection.auditDataReadAndNoMutation}
-        </div>
-
-        {/* Preview raport */}
-        <div className="mt-16 inline-block w-full max-w-[700px]">
-          <div className="rounded-2xl p-3" style={{ background: "#1e293b", boxShadow: "0 32px 80px rgba(0,0,0,0.2),0 0 0 1px rgba(255,255,255,0.05)" }}>
-            <div className="mb-3 flex items-center gap-1.5">
-              <div aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: "#ef4444" }} />
-              <div aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: "#f59e0b" }} />
-              <div aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: "#10b981" }} />
-              <div className="ml-2 flex-1 rounded-md px-3 py-1.5 text-xs" style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}>
-                audit.devrika.ro/google-ads/raport
-              </div>
+      <section className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-8 sm:pb-24 sm:pt-36"
+        style={{ background: "linear-gradient(145deg,#f7f7fd 0%,#ffffff 58%,#f1fbfc 100%)" }}>
+        <div aria-hidden="true" className="pointer-events-none absolute -right-44 -top-52 h-[680px] w-[680px] rounded-full"
+          style={{ background: "radial-gradient(circle,rgba(10,190,207,0.11) 0%,transparent 68%)" }} />
+        <div className="relative mx-auto grid max-w-[1160px] items-center gap-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-20">
+          <div className="text-left">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-white px-3.5 py-2 text-xs font-bold uppercase tracking-[0.12em]"
+              style={{ borderColor: "rgba(71,73,158,0.15)", color: C.indigo, boxShadow: "0 8px 24px rgba(35,38,95,0.05)" }}>
+              <span aria-hidden="true" className="h-2 w-2 rounded-full" style={{ background: C.green }} />
+              Audit Google Ads · Gratuit
             </div>
-            <div className="rounded-xl p-5 text-left md:p-6" style={{ background: "linear-gradient(135deg,#f8f7ff,#f0fafa)" }}>
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                <span className="text-sm font-bold" style={{ color: "#1e293b" }}>Produse sub ROAS 4,0× · {AUDIT_WINDOW_LABEL}</span>
-                <span className="rounded-full px-3 py-1 text-[13px] font-extrabold text-white" style={{ background: C.red }}>
-                  10.565 lei
-                </span>
-              </div>
-              <table className="w-full text-left text-[13px]" style={{ borderCollapse: "collapse", fontVariantNumeric: "tabular-nums" }}>
-                <thead>
-                  <tr>
-                    <th className="pb-2 text-[11px] font-bold uppercase tracking-wide" style={{ color: C.gray400 }}>Produs</th>
-                    <th className="pb-2 text-right text-[11px] font-bold uppercase tracking-wide" style={{ color: C.gray400 }}>Cheltuit</th>
-                    <th className="pb-2 text-right text-[11px] font-bold uppercase tracking-wide" style={{ color: C.gray400 }}>ROAS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {mockVillains.map((r) => (
-                    <tr key={r.p} style={{ borderTop: "1px solid #e6ebf4" }}>
-                      <td className="py-2 pr-2" style={{ color: C.gray800 }}>{r.p}</td>
-                      <td className="py-2 text-right font-semibold" style={{ color: C.gray800 }}>{r.cost}</td>
-                      <td className="py-2 text-right font-bold" style={{ color: C.red }}>{r.roas}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="mt-4 flex items-center gap-2 rounded-lg px-3 py-2 text-[12.5px]" style={{ background: "#fff", color: C.gray600 }}>
-                <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: C.orange }} />
-                <span>128 produse din catalog nu au avut nicio afisare in {AUDIT_WINDOW_LABEL}.</span>
-              </div>
+
+            <h1 className="mb-7 max-w-[650px] font-black leading-[1.02] tracking-[-2.5px]"
+              style={{ fontFamily: sora, fontSize: "clamp(42px,6vw,72px)", color: C.navy }}>
+              Vezi cati bani pierzi in Google Shopping
+            </h1>
+
+            <p className="mb-5 max-w-[600px] text-xl leading-[1.55]" style={{ color: C.gray600 }}>
+              Contul poate arata profitabil in total, in timp ce unele produse consuma buget fara sa atinga pragul tau de rentabilitate.
+            </p>
+            <p className="mb-9 max-w-[590px] text-base leading-relaxed" style={{ color: C.gray500 }}>
+              Audit Devrika analizeaza performanta produselor din ultimele {AUDIT_WINDOW_LABEL}, identifica pierderile cu cea mai mare valoare si arata unde exista potential de crestere.
+            </p>
+
+            <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              <Link href={CONNECT_HREF}
+                className="inline-flex min-h-14 items-center gap-2.5 rounded-xl px-7 text-base font-bold text-white transition-all hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                style={{ background: C.navy, boxShadow: "0 12px 30px rgba(19,22,58,0.2)", outlineColor: C.indigo }}>
+                Vezi pierderile din contul tau
+                <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <span className="flex items-center gap-2 text-sm" style={{ color: C.gray500 }}>
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                {publicOAuthProjection.noAccountChanges}
+              </span>
+            </div>
+
+            <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3 border-t pt-6 text-sm" style={{ borderColor: C.border, color: C.gray600 }}>
+              <span><b style={{ color: C.navy }}>{AUDIT_WINDOW_LABEL}</b> de date</span>
+              <span><b style={{ color: C.navy }}>Top 10</b> pierderi</span>
+              <span><b style={{ color: C.navy }}>PDF</b> salvat</span>
             </div>
           </div>
-          <p className="mt-3 text-[12px]" style={{ color: C.gray400 }}>
-            Exemplu de raport. In varianta ta apar produsele si sumele din contul tau.
-          </p>
+
+          <div className="relative">
+            <div aria-hidden="true" className="absolute -inset-5 rounded-[32px] opacity-60 blur-2xl"
+              style={{ background: "linear-gradient(135deg,rgba(71,73,158,0.12),rgba(10,190,207,0.12))" }} />
+            <div className="relative overflow-hidden rounded-[24px] border bg-white"
+              style={{ borderColor: "rgba(71,73,158,0.12)", boxShadow: "0 32px 80px rgba(19,22,58,0.14)" }}>
+              <div className="flex items-center justify-between border-b px-5 py-4" style={{ borderColor: C.border }}>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em]" style={{ color: C.indigo }}>Exemplu din raport</p>
+                  <p className="mt-1 text-sm font-semibold" style={{ color: C.navy }}>Produse sub pragul de rentabilitate</p>
+                </div>
+                <span className="rounded-full px-3 py-1.5 text-xs font-bold" style={{ background: C.greenBg, color: C.green }}>
+                  Masurat din Google Ads
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 border-b" style={{ borderColor: C.border }}>
+                <div className="border-r p-5" style={{ borderColor: C.border }}>
+                  <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: C.gray400 }}>Cost sub ROAS minim</p>
+                  <p className="mt-2 text-3xl font-extrabold tabular-nums" style={{ fontFamily: sora, color: C.red }}>10.565 lei</p>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: C.gray400 }}>Produse afectate</p>
+                  <p className="mt-2 text-3xl font-extrabold tabular-nums" style={{ fontFamily: sora, color: C.navy }}>37</p>
+                </div>
+              </div>
+
+              <div className="px-5 py-2">
+                {mockVillains.map((row, index) => (
+                  <div key={row.p} className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 border-b py-4 last:border-b-0"
+                    style={{ borderColor: C.border }}>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-bold" style={{ color: C.gray800 }}>{row.p}</p>
+                      <p className="mt-1 text-xs" style={{ color: C.gray400 }}>Prioritatea {index + 1}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[11px] uppercase tracking-wide" style={{ color: C.gray400 }}>Cost</p>
+                      <p className="mt-1 text-sm font-semibold tabular-nums" style={{ color: C.gray800 }}>{row.cost}</p>
+                    </div>
+                    <span className="min-w-[58px] rounded-lg px-2.5 py-2 text-center text-sm font-extrabold tabular-nums"
+                      style={{ background: C.redBg, color: C.red }}>
+                      {row.roas}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mx-5 mb-5 flex items-start gap-3 rounded-xl p-4" style={{ background: "#f5f7ff" }}>
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: "#e8eaff" }}>
+                  <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={C.indigo} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 3v18h18" /><path d="m7 15 4-4 4 4 5-6" />
+                  </svg>
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: C.gray600 }}>
+                  Raportul arata si produsele profitabile care primesc prea putin trafic, ordonate dupa potentialul pierdut.
+                </p>
+              </div>
+            </div>
+            <p className="mt-4 text-center text-xs" style={{ color: C.gray400 }}>
+              Cifre demonstrative. Raportul tau foloseste exclusiv datele contului conectat.
+            </p>
+          </div>
         </div>
       </section>
 
