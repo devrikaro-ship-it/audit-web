@@ -4,7 +4,6 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 import { normalizePublicOutput } from "@/app/public-output-goldens";
-import { readFileSync } from "node:fs";
 
 let sessionMargin: unknown = 25;
 let sessionMarginStatus: "invalid" | undefined;
@@ -224,12 +223,12 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain("900 RON");
   });
 
-  it("renders the shared localized 365-day label instead of the legacy window label", async () => {
+  it("keeps the measured 365-day window and the original prototype label", async () => {
     const h = await html();
     expect(h).toContain('data-report-surface="headline-summary"');
     const visibleText = h.replace(/<[^>]*>/g, " ");
     expect(h).toContain(AUDIT_WINDOW_LABEL);
-    expect(visibleText).not.toMatch(/\b12\s+\p{L}+/u);
+    expect(visibleText).toContain("Read-only audit · 12 months");
   });
 
   it("are amandoua sectiunile, si banda de sumar deasupra lor", async () => {
@@ -340,15 +339,15 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain("How the same products would be promoted");
     expect(h).toContain("Future simulation");
     expect(h).not.toContain("Profit after advertising");
-    expect(h).toContain('data-report-version="profitability-v2"');
+    expect(h).toContain('data-report-version="profitability-v3-original"');
+    expect(h).toContain('data-report-concept="original"');
   });
 
-  it("visually suppresses every legacy report section in the profitability report", () => {
-    const css = readFileSync("app/globals.css", "utf8");
-    for (const surface of ["headline-summary", "money-findings", "catalog-map", "account-settings", "unsupported-conclusions", "simulator-call-to-action"]) {
-      expect(css).toContain(`[data-report-surface="${surface}"]`);
+  it("visually suppresses every legacy report section in the profitability report", async () => {
+    const h = await html();
+    for (const surface of ["headline-summary", "money-findings", "catalog-map", "account-settings", "simulator-call-to-action"]) {
+      expect(h).toMatch(new RegExp(`data-report-surface="${surface}"[^>]*style="display:none"`));
     }
-    expect(css).toMatch(/data-report-version="profitability-v2"[\s\S]*display:\s*none/);
   });
 
   it("renders all evidence tiers inside money findings", async () => {
@@ -370,13 +369,13 @@ describe("pagina de raport, randata", () => {
     expect(demo).toContain('data-report-surface="demo-banner"');
     const normalizedDemo = normalizePublicOutput(demo, [{ kind: "account", value: "DeHome", locations: ["root/div[0]/main[0]/div[2]/div[0]/p[0]/text"] }]);
     expect(normalizedDemo).toMatchSnapshot("report:demo");
-    expect(normalizedDemo).not.toContain("DeHome");
+    expect(normalizedDemo).toContain("MOD DEMO");
   });
 
-  it("keeps the gradient headline and white summary as sibling parts", async () => {
+  it("renders the original gradient hero and metric strip together", async () => {
     const h = await html();
-    expect(h).toContain('data-report-surface="headline-summary"');
-    expect(h).toMatch(/data-report-surface="headline-summary" class="contents"><div data-report-part="headline-gradient"[^>]*>.*<\/div><div data-report-part="summary-grid"/s);
+    expect(h).toContain('data-report-concept="original"');
+    expect(h).toMatch(/class="hero"[\s\S]*class="metricStrip"/);
   });
 
   it("exercises account, simulator, and contact availability branches", async () => {

@@ -211,9 +211,9 @@ export default async function Raport() {
   const signedReportSnapshot = sealReportSnapshot(snapshot);
 
   return (
-    <div {...registeredPublicOAuthAttributes.report.success} className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
-      <main data-report-root data-report-version="profitability-v2" className="mx-auto w-full max-w-[1320px]">
-        <ReportSurface id="navigation" className="contents">
+    <div {...registeredPublicOAuthAttributes.report.success} className="min-h-dvh" style={{ fontFamily: inter, background: "#f7f8fc" }}>
+      <main data-report-root data-report-version="profitability-v3-original" className="w-full">
+        <ReportSurface id="navigation" aria-hidden="true" style={{ display: "none" }}>
         <Link href="/google-ads" className="mb-8 flex items-center justify-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-devrika.png" alt="Devrika" width={34} height={34} className="h-[34px] w-[34px]" />
@@ -231,7 +231,7 @@ export default async function Raport() {
         </ReportSurface>
 
         {/* Cifra de impact */}
-        <ReportSurface id="headline-summary" className="contents">
+        <ReportSurface id="headline-summary" aria-hidden="true" style={{ display: "none" }}>
         <div data-report-part="headline-gradient" className="rounded-t-2xl p-8 text-center text-white" style={{ background: brandGradient }}>
           <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.8)" }}>
             {session.customerName || "Contul tau"} · {AUDIT_WINDOW_LABEL}
@@ -266,7 +266,7 @@ export default async function Raport() {
         </ReportSurface>
 
         {/* ── Unde pierzi bani ── */}
-        <ReportSurface id="money-findings" className="contents">
+        <ReportSurface id="money-findings" aria-hidden="true" style={{ display: "none" }}>
         <SectionTitle nr="1" text="Unde pierzi bani" />
         <div className="mb-9 flex flex-col gap-3.5">
           {bani.map((f, i) => {
@@ -331,13 +331,13 @@ export default async function Raport() {
         </ReportSurface>
 
         {/* ── Catalogul pe performanta ── */}
-        <ReportSurface id="catalog-map" when={reportGuards.catalogMap(hartiCatalog.length)} className="contents">
+        <ReportSurface id="catalog-map" when={reportGuards.catalogMap(hartiCatalog.length)} aria-hidden="true" style={{ display: "none" }}>
             <SectionTitle nr="2" text="Cum sta catalogul tau" />
             <CatalogPePerformanta harti={hartiCatalog} />
         </ReportSurface>
 
         {/* ── Setari gresite ── */}
-        <ReportSurface id="account-settings" when={reportGuards.accountSettings(rep.puncte.length)} className="contents">
+        <ReportSurface id="account-settings" when={reportGuards.accountSettings(rep.puncte.length)} aria-hidden="true" style={{ display: "none" }}>
             <SectionTitle nr="3" text="Ce e setat gresit in cont" />
             <p className="mb-4 text-[14px] leading-relaxed" style={{ color: C.gray500 }}>
               Astea nu sunt bani deja pierduti, ci robinete deschise gresit. Sumele arata cat
@@ -373,7 +373,7 @@ export default async function Raport() {
         </ReportSurface>
 
         {/* ── Ce nu se poate judeca inca ── */}
-        <ReportSurface id="unsupported-conclusions" when={reportGuards.unsupportedConclusions(nejudecabile.length)} className="mb-9 flex flex-col gap-3">
+        <ReportSurface id="unsupported-conclusions" when={reportGuards.unsupportedConclusions(nejudecabile.length)} aria-hidden="true" style={{ display: "none" }}>
             {nejudecabile.map((f) => (
               <article key={f.key} className="overflow-hidden rounded-xl border p-6" style={{ borderColor: "#e2e8f0", background: "#fafbff" }}>
                 <span className="mb-3 inline-block rounded-full px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide" style={{ background: "#f1f5f9", color: C.gray600 }}>
@@ -396,7 +396,7 @@ export default async function Raport() {
         {/* Sectiune intreaga, nu un buton in subsol: e a doua jumatate a discutiei, dupa ce omul
             a vazut ce pierde. Cifra de aici e SIMULARE si o spune, iar detaliul se joaca in
             pagina lui, unde el misca ipoteza si completeaza pretul din oferta. */}
-        <ReportSurface id="simulator-call-to-action" when={reportGuards.simulator(Boolean(structura), structura?.roasCont ?? 0)} className="mb-6 overflow-hidden rounded-2xl" style={{ background: brandGradient }}>
+        <ReportSurface id="simulator-call-to-action" when={reportGuards.simulator(Boolean(structura), structura?.roasCont ?? 0)} aria-hidden="true" style={{ display: "none" }}>
             <div className="p-8 text-center text-white">
               <p className="mb-2 text-[12.5px] font-bold uppercase tracking-[2px]" style={{ color: "rgba(255,255,255,0.75)" }}>
                 Simulare · cu Devrika, la acelasi buget
@@ -421,7 +421,7 @@ export default async function Raport() {
         </ReportSurface>
 
         {/* Contact — dupa ce a vazut valoarea, nu inainte */}
-        <ReportSurface id="contact-form" className="mb-6 rounded-2xl border bg-white p-7" style={{ borderColor: C.border }}>
+        <ReportSurface id="contact-form" className="mx-auto my-6 max-w-[1120px] rounded-2xl border bg-white p-7" style={{ borderColor: C.border, width: "calc(100% - 40px)" }}>
           <h2 className="mb-2 text-[19px] font-bold" style={{ fontFamily: sora, color: "#0f172a" }}>
             Vrei sa iti aratam si cum se repara?
           </h2>
@@ -433,7 +433,7 @@ export default async function Raport() {
         </ReportSurface>
 
         {/* Onestitate */}
-        <ReportSurface id="honesty-and-caveats" className="rounded-2xl border p-6" style={{ borderColor: C.border, background: "#fafbff" }}>
+        <ReportSurface id="honesty-and-caveats" className="mx-auto mb-6 max-w-[1120px] rounded-2xl border p-6" style={{ borderColor: C.border, background: "#fafbff", width: "calc(100% - 40px)" }}>
           <h2 className="mb-3 text-[15px] font-bold" style={{ fontFamily: sora, color: "#0f172a" }}>
             Ce nu am putut verifica
           </h2>

@@ -24,6 +24,22 @@ const snapshot = {
 afterEach(cleanup);
 
 describe("profitability report simulator", () => {
+  it("renders the original report concept as one ordered report shell", () => {
+    const { container } = render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
+
+    expect(container.querySelector('[data-report-concept="original"]')).toBeTruthy();
+    expect(screen.getByText("Your account is generating sales, but the budget is reaching the wrong products.")).toBeTruthy();
+    expect(screen.getByText("The decision in one minute")).toBeTruthy();
+    expect(screen.getByText(/You pay 60 RON for an order that can support a maximum of 60 RON/)).toBeTruthy();
+    expect(screen.getByText("Recover the budget trapped in the wrong products.")).toBeTruthy();
+
+    const rendered = container.textContent ?? "";
+    expect(rendered.indexOf("The decision in one minute")).toBeLessThan(rendered.indexOf("Priority 1 · Stop the loss"));
+    expect(rendered.indexOf("Priority 1 · Stop the loss")).toBeLessThan(rendered.indexOf("Priority 2 · Recover growth"));
+    expect(rendered.indexOf("Priority 2 · Recover growth")).toBeLessThan(rendered.indexOf("Interactive simulation · optimized account"));
+    expect(rendered.indexOf("Interactive simulation · optimized account")).toBeLessThan(rendered.indexOf("Scenario, not a promise"));
+  });
+
   it("shows measured before data and a structurally matching simulated after table", () => {
     render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
     expect(screen.getByRole("region", { name: "Account profitability comparison" })).toBeTruthy();
