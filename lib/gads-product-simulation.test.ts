@@ -17,6 +17,20 @@ describe("product profitability analysis", () => {
     expect(analysis.losses[0].monthlyMoneyAtRisk).toBe(80);
   });
 
+  it("prioritizes zero-sale and lower-ROAS products when measured spend is tied", () => {
+    const tiedSpend = [
+      { productId: "higher-roas", title: "Higher ROAS", cost: 1200, conversionValue: 1200, conversions: 2, clicks: 50, impressions: 500 },
+      { productId: "zero-sales", title: "Zero sales", cost: 1200, conversionValue: 0, conversions: 0, clicks: 50, impressions: 500 },
+      { productId: "lower-roas", title: "Lower ROAS", cost: 1200, conversionValue: 600, conversions: 1, clicks: 50, impressions: 500 },
+    ];
+
+    expect(analyzeProducts(tiedSpend, { breakEvenRoas: 5, months: 12 }).losses.map((row) => row.productId)).toEqual([
+      "zero-sales",
+      "lower-roas",
+      "higher-roas",
+    ]);
+  });
+
   it("orders qualified underpromoted products by estimated profitable sales opportunity", () => {
     const analysis = analyzeProducts(products, { breakEvenRoas: 5, months: 12 });
     expect(analysis.opportunities.map((row) => row.productId)).toEqual(["opportunity-large", "opportunity-small"]);

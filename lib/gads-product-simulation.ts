@@ -177,7 +177,15 @@ export function analyzeProducts(
   const rows = products.map((product) => rowFor(product, options.months, options.breakEvenRoas));
   const losses = rows
     .filter((row) => row.monthlyCost > 0 && row.roas < options.breakEvenRoas)
-    .sort((left, right) => right.monthlyCost - left.monthlyCost)
+    .sort((left, right) => {
+      const spendDifference = right.monthlyCost - left.monthlyCost;
+      if (spendDifference !== 0) return spendDifference;
+      const salesDifference = Number(left.conversionValue > 0) - Number(right.conversionValue > 0);
+      if (salesDifference !== 0) return salesDifference;
+      const roasDifference = left.roas - right.roas;
+      if (roasDifference !== 0) return roasDifference;
+      return left.productId.localeCompare(right.productId);
+    })
     .slice(0, MAX_ROWS);
   const opportunities = rows
     .filter((row) => row.conversions >= MIN_QUALIFIED_PURCHASES && row.roas > options.breakEvenRoas)
