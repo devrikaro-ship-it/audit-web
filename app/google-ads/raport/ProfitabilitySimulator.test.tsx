@@ -8,12 +8,24 @@ const analysis = analyzeProducts([
   { productId: "loss", title: "Loss product", cost: 1200, conversionValue: 600, conversions: 2, clicks: 500, impressions: 5000 },
   { productId: "winner", title: "Profitable product", cost: 240, conversionValue: 2400, conversions: 8, clicks: 120, impressions: 1200 },
 ], { breakEvenRoas: 5, months: 12 });
+const snapshot = {
+  website: "https://example.com",
+  accountName: "Example",
+  averageOrderValue: 300,
+  goodsCost: 180,
+  breakEvenCpa: 60,
+  breakEvenRoas: 5,
+  current: { spend: 120, revenue: 600, orders: 2, cpa: 60, roas: 5 },
+  optimized: { spend: 120, revenue: 900, orders: 3, cpa: 40, roas: 7.5 },
+  losses: [],
+  opportunities: [],
+};
 
 afterEach(cleanup);
 
 describe("profitability report simulator", () => {
   it("shows measured before data and a structurally matching simulated after table", () => {
-    render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} />);
+    render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
     expect(screen.getAllByText("Measured from Google Ads")).toHaveLength(2);
     expect(screen.getByText("Future simulation")).toBeTruthy();
     expect(screen.getAllByText("Product").length).toBeGreaterThanOrEqual(3);
@@ -24,7 +36,7 @@ describe("profitability report simulator", () => {
   });
 
   it("starts at measured monthly spend and updates the after table to zero", () => {
-    render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} />);
+    render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
     const slider = screen.getByRole("slider", { name: "Simulated monthly budget" }) as HTMLInputElement;
     expect(Number(slider.value)).toBe(Math.round(analysis.currentMonthlySpend));
     expect(slider.min).toBe("0");
@@ -37,7 +49,7 @@ describe("profitability report simulator", () => {
   });
 
   it("explains the exact three-step strategy and the CSS assumption", () => {
-    render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} />);
+    render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
     expect(screen.getByText("1. Stop the loss")).toBeTruthy();
     expect(screen.getByText("2. Move the budget")).toBeTruthy();
     expect(screen.getByText("3. Grow under control")).toBeTruthy();

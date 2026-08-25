@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 import { normalizePublicOutput } from "@/app/public-output-goldens";
+import { readFileSync } from "node:fs";
 
 let sessionMargin: unknown = 25;
 let sessionMarginStatus: "invalid" | undefined;
@@ -334,10 +335,20 @@ describe("pagina de raport, randata", () => {
   it("renders measured before tables and the interactive simulated after table", async () => {
     const h = await html();
     expect(h).toContain('data-report-surface="profitability-simulator"');
+    expect(h).toContain("Current account vs optimized + CSS");
     expect(h).toContain("Products consuming your budget");
     expect(h).toContain("How the same products would be promoted");
     expect(h).toContain("Future simulation");
     expect(h).not.toContain("Profit after advertising");
+    expect(h).toContain('data-report-version="profitability-v2"');
+  });
+
+  it("visually suppresses every legacy report section in the profitability report", () => {
+    const css = readFileSync("app/globals.css", "utf8");
+    for (const surface of ["headline-summary", "money-findings", "catalog-map", "account-settings", "unsupported-conclusions", "simulator-call-to-action"]) {
+      expect(css).toContain(`[data-report-surface="${surface}"]`);
+    }
+    expect(css).toMatch(/data-report-version="profitability-v2"[\s\S]*display:\s*none/);
   });
 
   it("renders all evidence tiers inside money findings", async () => {

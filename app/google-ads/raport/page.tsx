@@ -212,7 +212,7 @@ export default async function Raport() {
 
   return (
     <div {...registeredPublicOAuthAttributes.report.success} className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
-      <main data-report-root className="mx-auto w-full max-w-[780px]">
+      <main data-report-root data-report-version="profitability-v2" className="mx-auto w-full max-w-[780px]">
         <ReportSurface id="navigation" className="contents">
         <Link href="/google-ads" className="mb-8 flex items-center justify-center gap-2.5 no-underline">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -327,7 +327,7 @@ export default async function Raport() {
         </ReportSurface>
 
         <ReportSurface id="profitability-simulator" when={reportGuards.catalogMap(products.length)} className="contents">
-          <ProfitabilitySimulator analysis={profitability} averageOrderValue={session.averageOrderValue ?? 0} />
+          <ProfitabilitySimulator analysis={profitability} averageOrderValue={session.averageOrderValue ?? 0} snapshot={snapshot} />
         </ReportSurface>
 
         {/* ── Catalogul pe performanta ── */}

@@ -24,3 +24,12 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+[data-report-version="profitability-v2"] > [data-report-surface="headline-summary"],
+[data-report-version="profitability-v2"] > [data-report-surface="money-findings"],
+[data-report-version="profitability-v2"] > [data-report-surface="catalog-map"],
+[data-report-version="profitability-v2"] > [data-report-surface="account-settings"],
+[data-report-version="profitability-v2"] > [data-report-surface="unsupported-conclusions"],
+[data-report-version="profitability-v2"] > [data-report-surface="simulator-call-to-action"] {
+  display: none;
+}

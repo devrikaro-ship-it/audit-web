@@ -3,12 +3,13 @@
 import { useMemo, useState } from "react";
 import { C, sora } from "@/lib/theme";
 import { simulateOptimizedBudget, type ProductAnalysis, type ProductAnalysisRow, type SimulatedProductRow } from "@/lib/gads-product-simulation";
+import type { GadsReportSnapshot } from "@/lib/gads-report-delivery";
 
 const wholeMoney = (value: number) => `${Math.round(value).toLocaleString("ro-RO")} RON`;
 const decimalMoney = (value: number | null) => value === null ? "—" : `${value.toFixed(2)} RON`;
 const decimalRoas = (value: number | null) => value === null ? "—" : `${value.toFixed(2)}×`;
 
-export default function ProfitabilitySimulator({ analysis, averageOrderValue }: { analysis: ProductAnalysis; averageOrderValue: number }) {
+export default function ProfitabilitySimulator({ analysis, averageOrderValue, snapshot }: { analysis: ProductAnalysis; averageOrderValue: number; snapshot: GadsReportSnapshot }) {
   const initialBudget = Math.min(Math.round(analysis.currentMonthlySpend), analysis.economicBudgetLimit);
   const [budget, setBudget] = useState(initialBudget);
   const simulation = useMemo(() => simulateOptimizedBudget(analysis, budget), [analysis, budget]);
@@ -18,6 +19,7 @@ export default function ProfitabilitySimulator({ analysis, averageOrderValue }: 
 
   return (
     <section className="mt-10 space-y-10">
+      <ScenarioComparison snapshot={snapshot} />
       <MeasuredTable title="Products consuming your budget" rows={analysis.losses} tone="loss" />
       <MeasuredTable title="Profitable products receiving too little traffic" rows={analysis.opportunities} tone="gain" />
 
@@ -75,6 +77,32 @@ export default function ProfitabilitySimulator({ analysis, averageOrderValue }: 
       </div>
     </section>
   );
+}
+
+function ScenarioComparison({ snapshot }: { snapshot: GadsReportSnapshot }) {
+  const rows = [
+    ["Advertising cost", wholeMoney(snapshot.current.spend), wholeMoney(snapshot.optimized.spend)],
+    ["Orders", snapshot.current.orders.toFixed(1), snapshot.optimized.orders.toFixed(1)],
+    ["CPA", decimalMoney(snapshot.current.cpa), decimalMoney(snapshot.optimized.cpa)],
+    ["Sales", wholeMoney(snapshot.current.revenue), wholeMoney(snapshot.optimized.revenue)],
+    ["ROAS", decimalRoas(snapshot.current.roas), decimalRoas(snapshot.optimized.roas)],
+  ];
+
+  return <div className="rounded-2xl border p-6 sm:p-8" style={{ borderColor: C.border, background: "#f4f5ff" }}>
+    <p className="mb-2 text-[12px] font-extrabold uppercase tracking-[1.8px]" style={{ color: C.indigo }}>Scenario, not a promise</p>
+    <h1 className="text-[28px] font-black" style={{ fontFamily: sora, color: C.navy }}>Current account vs optimized + CSS</h1>
+    <p className="mt-2 text-[13px]" style={{ color: C.gray500 }}>Current values are measured from Google Ads. Optimized values are a future simulation with the estimated CSS click-cost advantage included.</p>
+    <div className="mt-6 overflow-x-auto rounded-xl border bg-white" style={{ borderColor: C.border }}>
+      <table className="min-w-[620px] w-full text-[13px]">
+        <thead><tr className="text-left text-[10px] uppercase tracking-wide" style={{ color: C.gray400, background: "#f8f9fc" }}><th className="p-4">Metric</th><th className="p-4 text-right">Current · measured</th><th className="p-4 text-right">Optimized + CSS · simulation</th></tr></thead>
+        <tbody>{rows.map(([label, current, optimized]) => <tr key={label} className="border-t" style={{ borderColor: C.border }}><td className="p-4 font-semibold">{label}</td><td className="p-4 text-right tabular-nums">{current}</td><td className="p-4 text-right font-bold tabular-nums" style={{ color: C.indigo }}>{optimized}</td></tr>)}</tbody>
+      </table>
+    </div>
+    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <Metric testId="break-even-cpa" label="Break-even CPA" value={decimalMoney(snapshot.breakEvenCpa)} />
+      <Metric testId="break-even-roas" label="Break-even ROAS" value={decimalRoas(snapshot.breakEvenRoas)} />
+    </div>
+  </div>;
 }
 
 function Metric({ testId, label, value }: { testId: string; label: string; value: string }) {
