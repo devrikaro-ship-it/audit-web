@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { analyzeProducts, simulateOptimizedBudget } from "./gads-product-simulation";
+import { DIMINISHING_RETURN_RATE, analyzeProducts, simulateOptimizedBudget } from "./gads-product-simulation";
 
 const products = [
   { productId: "loss-high", title: "High-cost loss", cost: 1200, conversionValue: 1200, conversions: 2, clicks: 500, impressions: 5000 },
@@ -38,6 +38,23 @@ describe("product profitability analysis", () => {
 });
 
 describe("controlled optimized budget simulation", () => {
+  it("uses a five-percent diminishing-return rate for each additional product-spend multiple", () => {
+    const singleProduct = [{
+      productId: "scalable",
+      title: "Scalable product",
+      cost: 1200,
+      conversionValue: 12000,
+      conversions: 24,
+      clicks: 600,
+      impressions: 6000,
+    }];
+    const analysis = analyzeProducts(singleProduct, { breakEvenRoas: 5, months: 12 });
+    const result = simulateOptimizedBudget(analysis, 200);
+
+    expect(DIMINISHING_RETURN_RATE).toBe(0.05);
+    expect(result.products[0].simulatedRoas).toBeCloseTo(12.5 / 1.05, 6);
+  });
+
   it("returns zero sales and orders when the slider reaches zero", () => {
     const analysis = analyzeProducts(products, { breakEvenRoas: 5, months: 12 });
     const result = simulateOptimizedBudget(analysis, 0);

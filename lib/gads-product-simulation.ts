@@ -1,4 +1,5 @@
 export const CSS_CPC_REDUCTION_PCT = 20;
+export const DIMINISHING_RETURN_RATE = 0.05;
 const MIN_QUALIFIED_PURCHASES = 2;
 const MAX_ROWS = 20;
 
@@ -91,7 +92,7 @@ function simulateRaw(analysis: Omit<ProductAnalysis, "economicBudgetLimit">, req
     const baselineCost = Math.max(row.monthlyCost, 1);
     const scaleRatio = simulatedCost / baselineCost;
     const cssAdjustedRoas = row.roas / (1 - CSS_CPC_REDUCTION_PCT / 100);
-    const diminishingRoas = cssAdjustedRoas / (1 + 0.15 * Math.max(0, scaleRatio - 1));
+    const diminishingRoas = cssAdjustedRoas / (1 + DIMINISHING_RETURN_RATE * Math.max(0, scaleRatio - 1));
     const simulatedRevenue = simulatedCost * diminishingRoas;
     const orderValue = row.monthlyOrders > 0 ? row.monthlyRevenue / row.monthlyOrders : 0;
     const simulatedOrders = orderValue > 0 ? simulatedRevenue / orderValue : 0;
