@@ -281,6 +281,12 @@ describe("pagina de raport, randata", () => {
     expect(h.indexOf("Unde pierzi bani")).toBeLessThan(h.indexOf('data-test="contact"'));
   });
 
+  it("gives every report CTA a real contact-form anchor target", async () => {
+    const h = await html();
+    expect(h).toContain('href="#contact-form"');
+    expect(h).toContain('id="contact-form"');
+  });
+
   it("renders the alternative recovery surface when the primary catalog read fails", async () => {
     sourceState.primaryCatalogFails = true;
     const h = await html();

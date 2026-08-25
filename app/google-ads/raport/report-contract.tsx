@@ -79,5 +79,5 @@ export function ReportSurface({ id, when = true, children, ...props }: {
 } & ComponentPropsWithoutRef<"div">) {
   void reportContract.surfaces[id];
   if (!when) return null;
-  return <div data-report-surface={id} {...props}>{children}</div>;
+  return <div id={id} data-report-surface={id} {...props}>{children}</div>;
 }
