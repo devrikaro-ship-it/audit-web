@@ -30,6 +30,8 @@ import type { SearchData } from "@/lib/gads-search";
 import type { TermenBrut } from "@/lib/gads-keywords";
 import { ReportSurface, reportGuards, runReportStep } from "./report-contract";
 import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
+import { analyzeProducts } from "@/lib/gads-product-simulation";
+import ProfitabilitySimulator from "./ProfitabilitySimulator";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Raportul tau · Audit Google Ads Devrika" };
@@ -147,7 +149,7 @@ export default async function Raport() {
   const shopping = s.brutShop ? runReportStep("analizeazaShopping", () => analizeazaShopping(s.brutShop!, tracking.ok)) : undefined;
   const cautari = s.brutCautari ? runReportStep("analizeazaSearch", () => analizeazaSearch(s.brutCautari!)) : undefined;
 
-  const minRoas = runReportStep("breakEvenRoas", () => breakEvenRoas(marginPct));
+  const minRoas = session.breakEvenRoas ?? runReportStep("breakEvenRoas", () => breakEvenRoas(marginPct));
   const rep = runReportStep("buildReport", () => buildReport(
     runReportStep("audit", () => audit(products, minRoas)),
     tracking,
@@ -177,6 +179,7 @@ export default async function Raport() {
   // diferite, iar un om care le vede amestecate nu stie ce sa faca luni dimineata.
   const bani = rep.findings.filter((f) => !f.quarantined);
   const nejudecabile = rep.findings.filter((f) => f.quarantined);
+  const profitability = runReportStep("analyzeProducts", () => analyzeProducts(products, { breakEvenRoas: minRoas, months: 12 }));
 
   return (
     <div {...registeredPublicOAuthAttributes.report.success} className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
@@ -292,6 +295,10 @@ export default async function Raport() {
             );
           })}
         </div>
+        </ReportSurface>
+
+        <ReportSurface id="profitability-simulator" when={reportGuards.catalogMap(products.length)} className="contents">
+          <ProfitabilitySimulator analysis={profitability} averageOrderValue={session.averageOrderValue ?? 0} />
         </ReportSurface>
 
         {/* ── Catalogul pe performanta ── */}

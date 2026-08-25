@@ -37,7 +37,8 @@ vi.mock("@/lib/gads-session", async (original) => ({
   SESSION_COOKIE: "gads_session",
   unseal: () => sessionVariant === "missing" ? null : ({
     refreshToken: "r", customerId: sessionVariant === "account" ? undefined : "123", customerName: sessionCustomerName,
-    customerTimeZone: sessionVariant === "timezone" ? undefined : "Europe/Bucharest", loginCustomerId: "999", marginPct: sessionMargin, marginStatus: sessionMarginStatus, exp: 9e12,
+    customerTimeZone: sessionVariant === "timezone" ? undefined : "Europe/Bucharest", loginCustomerId: "999", marginPct: sessionMargin, marginStatus: sessionMarginStatus,
+    averageOrderValue: 500, goodsCost: 250, breakEvenCpa: 150, breakEvenRoas: 500 / 150, exp: 9e12,
   }),
 }));
 vi.mock("@/lib/gads-oauth", () => ({
@@ -328,6 +329,15 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain('data-report-surface="money-findings"');
     expect(h).toContain('data-report-surface="contact-form"');
     expect(h).toContain('data-report-surface="honesty-and-caveats"');
+  });
+
+  it("renders measured before tables and the interactive simulated after table", async () => {
+    const h = await html();
+    expect(h).toContain('data-report-surface="profitability-simulator"');
+    expect(h).toContain("Products consuming your budget");
+    expect(h).toContain("How the same products would be promoted");
+    expect(h).toContain("Future simulation");
+    expect(h).not.toContain("Profit after advertising");
   });
 
   it("renders all evidence tiers inside money findings", async () => {
