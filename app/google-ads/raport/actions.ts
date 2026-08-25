@@ -4,7 +4,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
 import { unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { saveLead, updateLead } from "@/lib/gads-leads";
-import { openReportSnapshot, renderReportHtml } from "@/lib/gads-report-delivery";
+import { openReportSnapshot } from "@/lib/gads-report-delivery";
 import { generateStoredReportPdf } from "@/lib/gads-report-pdf";
 import { sendReportEmail } from "@/lib/gads-report-email";
 
@@ -55,7 +55,7 @@ export async function saveContact(formData: FormData): Promise<ContactResult> {
 
   let pdf: { path: string; buffer: Buffer };
   try {
-    pdf = await generateStoredReportPdf(reportId, renderReportHtml(snapshot));
+    pdf = await generateStoredReportPdf(reportId, snapshot);
     await updateLead(lead.id, { deliveryStatus: "PDF_READY", pdfPath: pdf.path });
   } catch {
     await updateLead(lead.id, { deliveryStatus: "PDF_FAILED" });

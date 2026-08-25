@@ -41,7 +41,7 @@ it("refuses incomplete contact data before creating a lead", async () => {
 it("stores the lead, saves the PDF, sends it, and records the final status", async () => {
   await expect(saveContact(validForm())).resolves.toMatchObject({ ok: true, deliveryStatus: "EMAIL_SENT" });
   expect(saveLead).toHaveBeenCalledWith(expect.objectContaining({ nume: "Ion Popescu", email: "ion@fitn4ss.ro", telefon: "0722000111", website: "https://fitn4ss.ro/", deliveryStatus: "NEW_LEAD" }));
-  expect(generateStoredReportPdf).toHaveBeenCalledWith("report-1", "<html>report</html>");
+  expect(generateStoredReportPdf).toHaveBeenCalledWith("report-1", expect.objectContaining({ website: "https://fitn4ss.ro/", accountName: "Fitn4ss" }));
   expect(sendReportEmail).toHaveBeenCalledWith(expect.objectContaining({ to: "ion@fitn4ss.ro", pdf: Buffer.from("pdf") }));
   expect(updateLead).toHaveBeenLastCalledWith("lead-1", expect.objectContaining({ deliveryStatus: "EMAIL_SENT", emailMessageId: "email-1" }));
 });
