@@ -3,6 +3,7 @@ import { timingSafeEqual } from "node:crypto";
 import { exchangeCode } from "@/lib/gads-oauth";
 import { seal, SESSION_COOKIE, cookieOptions } from "@/lib/gads-session";
 import { publicUrl } from "@/lib/public-url";
+import { decodeOAuthState } from "@/lib/gads-website";
 
 // Intoarcerea de la Google. Verifica state-ul, schimba codul pe refresh token, il pune in
 // cookie-ul semnat si trimite omul mai departe la alegerea contului.
@@ -30,12 +31,14 @@ export async function GET(req: NextRequest) {
   if (!expected || a.length !== b.length || !timingSafeEqual(a, b)) {
     return back(req, { eroare: "state" });
   }
+  const intake = decodeOAuthState(state);
+  if (!intake) return back(req, { eroare: "state" });
   if (!code) return back(req, { eroare: "fara_cod" });
 
   try {
     const { refreshToken } = await exchangeCode(code);
     const res = NextResponse.redirect(publicUrl(req, "/google-ads/conturi"));
-    res.cookies.set(SESSION_COOKIE, seal({ refreshToken }), cookieOptions());
+    res.cookies.set(SESSION_COOKIE, seal({ refreshToken, website: intake.website }), cookieOptions());
     res.cookies.delete("gads_state");
     return res;
   } catch {

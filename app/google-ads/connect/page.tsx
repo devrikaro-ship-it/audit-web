@@ -18,6 +18,7 @@ const ERORI: Record<string, string> = {
   fara_cod: "Raspunsul de la Google a venit incomplet. Mai incearca o data.",
   google: "Google a refuzat conectarea. Mai incearca o data.",
   config: "Conectarea nu e activa inca pe acest server.",
+  website: "Enter your store website before connecting Google Ads.",
 };
 
 export default async function Connect({
@@ -98,14 +99,25 @@ export default async function Connect({
               ))}
             </ul>
 
-            <a href="/api/google-ads/start"
+            <form action="/api/google-ads/start" method="get" className="space-y-4">
+              <label htmlFor="website" className="block text-left text-sm font-bold" style={{ color: "#334155" }}>
+                Store website
+              </label>
+              <input id="website" name="website" type="url" required placeholder="https://yourstore.ro"
+                className="min-h-12 w-full rounded-xl border px-4 text-base outline-none focus:ring-2"
+                style={{ borderColor: "#dbe2ee", color: "#0f172a" }} />
+              <p className="text-left text-xs leading-relaxed" style={{ color: C.gray500 }}>
+                We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads.
+              </p>
+              <button type="submit"
               className="inline-flex min-h-11 items-center gap-2.5 rounded-[14px] px-8 py-[15px] text-[16px] font-bold text-white transition-all hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               style={{ background: brandGradient, boxShadow: "0 8px 24px rgba(71,73,158,0.28)", outlineColor: C.indigo }}>
               Continua catre Google
               <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
-            </a>
+              </button>
+            </form>
           </>
         )}
       </div>

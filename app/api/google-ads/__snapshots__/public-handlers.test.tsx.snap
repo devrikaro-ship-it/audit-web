@@ -53,7 +53,13 @@ body="""
 
 exports[`public Google Ads OAuth handlers > executes every closed OAuth start branch > api-start:success 1`] = `
 "status=307
-location=https://accounts.google.test/authorize?state=Zml4ZWQtc3RhdGUtdmFsdWU
+location=https://accounts.google.test/authorize?state=eyJub25jZSI6IlptbDRaV1F0YzNSaGRHVXRkbUZzZFdVIiwid2Vic2l0ZSI6Imh0dHBzOi8vc2hvcC5leGFtcGxlLyJ9
 set-cookie=gads_state=<STATE>; Path=/; Expires=<EXPIRY>; Max-Age=600; HttpOnly; SameSite=lax
+body="""
+`;
+
+exports[`public Google Ads OAuth handlers > executes every closed OAuth start branch > api-start:website-error 1`] = `
+"status=307
+location=https://audit.example/google-ads/connect?eroare=website
 body="""
 `;

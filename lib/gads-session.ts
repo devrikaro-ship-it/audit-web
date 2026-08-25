@@ -21,6 +21,7 @@ export const SESSION_MAX_AGE = 60 * 60;
 
 export type GadsSession = {
   refreshToken: string;
+  website?: string;
   /** Contul ales de prospect, cand a ajuns la pasul ala. */
   customerId?: string;
   /** Numele contului, doar ca sa-l putem afisa fara inca un apel. */

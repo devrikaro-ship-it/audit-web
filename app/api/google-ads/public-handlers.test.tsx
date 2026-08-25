@@ -6,7 +6,9 @@ const state = vi.hoisted(() => ({
   demo: false,
   missing: [] as string[],
   exchangeFails: false,
+  sealedSessions: [] as Array<Record<string, unknown>>,
 }));
+const oauthState = Buffer.from(JSON.stringify({ nonce: "fixed-state-value", website: "https://shop.example/" })).toString("base64url");
 
 vi.mock("node:crypto", async (original) => ({
   ...(await original<Record<string, unknown>>()),
@@ -23,7 +25,10 @@ vi.mock("@/lib/gads-oauth", () => ({
 }));
 vi.mock("@/lib/gads-session", () => ({
   SESSION_COOKIE: "gads_session",
-  seal: () => "signed-session",
+  seal: (session: Record<string, unknown>) => {
+    state.sealedSessions.push(session);
+    return "signed-session";
+  },
   cookieOptions: () => ({ httpOnly: true, sameSite: "lax" as const, secure: true, path: "/" }),
 }));
 
@@ -36,19 +41,22 @@ describe("public Google Ads OAuth handlers", () => {
     state.demo = false;
     state.missing = [];
     state.exchangeFails = false;
+    state.sealedSessions = [];
   });
 
   it("executes every closed OAuth start branch", async () => {
     const { GET } = await import("./start/route");
+    expect(await normalizePublicResponse(await GET(request("/api/google-ads/start")))).toMatchSnapshot("api-start:website-error");
     state.demo = true;
-    expect(await normalizePublicResponse(await GET(request("/api/google-ads/start")))).toMatchSnapshot("api-start:demo");
+    expect(await normalizePublicResponse(await GET(request("/api/google-ads/start?website=shop.example")))).toMatchSnapshot("api-start:demo");
+    expect(state.sealedSessions.at(-1)).toMatchObject({ website: "https://shop.example/" });
 
     state.demo = false;
     state.missing = ["clientId", "developerToken"];
-    expect(await normalizePublicResponse(await GET(request("/api/google-ads/start")))).toMatchSnapshot("api-start:config-error");
+    expect(await normalizePublicResponse(await GET(request("/api/google-ads/start?website=shop.example")))).toMatchSnapshot("api-start:config-error");
 
     state.missing = [];
-    expect(await normalizePublicResponse(await GET(request("/api/google-ads/start")))).toMatchSnapshot("api-start:success");
+    expect(await normalizePublicResponse(await GET(request("/api/google-ads/start?website=shop.example")))).toMatchSnapshot("api-start:success");
   });
 
   it("executes every closed OAuth callback branch", async () => {
@@ -57,16 +65,17 @@ describe("public Google Ads OAuth handlers", () => {
       ["access-denied", "/api/google-ads/callback?error=access_denied", undefined],
       ["provider-error", "/api/google-ads/callback?error=server_error", undefined],
       ["state-error", "/api/google-ads/callback?code=code&state=wrong", "gads_state=expected"],
-      ["missing-code", "/api/google-ads/callback?state=expected", "gads_state=expected"],
+      ["missing-code", `/api/google-ads/callback?state=${oauthState}`, `gads_state=${oauthState}`],
     ] as const;
     for (const [id, path, cookie] of cases) {
       expect(await normalizePublicResponse(await GET(request(path, cookie)))).toMatchSnapshot(`api-callback:${id}`);
     }
 
     state.exchangeFails = true;
-    expect(await normalizePublicResponse(await GET(request("/api/google-ads/callback?code=code&state=expected", "gads_state=expected")))).toMatchSnapshot("api-callback:exchange-error");
+    expect(await normalizePublicResponse(await GET(request(`/api/google-ads/callback?code=code&state=${oauthState}`, `gads_state=${oauthState}`)))).toMatchSnapshot("api-callback:exchange-error");
 
     state.exchangeFails = false;
-    expect(await normalizePublicResponse(await GET(request("/api/google-ads/callback?code=code&state=expected", "gads_state=expected")))).toMatchSnapshot("api-callback:success");
+    expect(await normalizePublicResponse(await GET(request(`/api/google-ads/callback?code=code&state=${oauthState}`, `gads_state=${oauthState}`)))).toMatchSnapshot("api-callback:success");
+    expect(state.sealedSessions.at(-1)).toMatchObject({ refreshToken: "refresh-token", website: "https://shop.example/" });
   });
 });
