@@ -74,10 +74,16 @@ root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
 root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
-root/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/a[0]/text "Continua catre Google"
-root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/div[0]/form[0] action="/api/google-ads/start"
+root/div[0]/div[0]/form[0]/label[0]
+root/div[0]/div[0]/form[0]/label[0]/text "Store website"
+root/div[0]/div[0]/form[0]/input[0] type="url" name="website"
+root/div[0]/div[0]/form[0]/p[0]
+root/div[0]/div[0]/form[0]/p[0]/text "We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads."
+root/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/form[0]/button[0]/text "Continua catre Google"
+root/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/a[1] href="/google-ads"
 root/div[0]/a[1]/text "← Inapoi la pagina auditului""
 `;
@@ -126,10 +132,16 @@ root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
 root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
-root/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/a[0]/text "Continua catre Google"
-root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/div[0]/form[0] action="/api/google-ads/start"
+root/div[0]/div[0]/form[0]/label[0]
+root/div[0]/div[0]/form[0]/label[0]/text "Store website"
+root/div[0]/div[0]/form[0]/input[0] type="url" name="website"
+root/div[0]/div[0]/form[0]/p[0]
+root/div[0]/div[0]/form[0]/p[0]/text "We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads."
+root/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/form[0]/button[0]/text "Continua catre Google"
+root/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/a[1] href="/google-ads"
 root/div[0]/a[1]/text "← Inapoi la pagina auditului""
 `;
@@ -178,10 +190,16 @@ root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
 root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
-root/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/a[0]/text "Continua catre Google"
-root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/div[0]/form[0] action="/api/google-ads/start"
+root/div[0]/div[0]/form[0]/label[0]
+root/div[0]/div[0]/form[0]/label[0]/text "Store website"
+root/div[0]/div[0]/form[0]/input[0] type="url" name="website"
+root/div[0]/div[0]/form[0]/p[0]
+root/div[0]/div[0]/form[0]/p[0]/text "We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads."
+root/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/form[0]/button[0]/text "Continua catre Google"
+root/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/a[1] href="/google-ads"
 root/div[0]/a[1]/text "← Inapoi la pagina auditului""
 `;
@@ -230,10 +248,16 @@ root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
 root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
-root/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/a[0]/text "Continua catre Google"
-root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/div[0]/form[0] action="/api/google-ads/start"
+root/div[0]/div[0]/form[0]/label[0]
+root/div[0]/div[0]/form[0]/label[0]/text "Store website"
+root/div[0]/div[0]/form[0]/input[0] type="url" name="website"
+root/div[0]/div[0]/form[0]/p[0]
+root/div[0]/div[0]/form[0]/p[0]/text "We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads."
+root/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/form[0]/button[0]/text "Continua catre Google"
+root/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/a[1] href="/google-ads"
 root/div[0]/a[1]/text "← Inapoi la pagina auditului""
 `;
@@ -282,10 +306,16 @@ root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
 root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
-root/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/a[0]/text "Continua catre Google"
-root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/div[0]/form[0] action="/api/google-ads/start"
+root/div[0]/div[0]/form[0]/label[0]
+root/div[0]/div[0]/form[0]/label[0]/text "Store website"
+root/div[0]/div[0]/form[0]/input[0] type="url" name="website"
+root/div[0]/div[0]/form[0]/p[0]
+root/div[0]/div[0]/form[0]/p[0]/text "We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads."
+root/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/form[0]/button[0]/text "Continua catre Google"
+root/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/a[1] href="/google-ads"
 root/div[0]/a[1]/text "← Inapoi la pagina auditului""
 `;
@@ -334,10 +364,16 @@ root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
 root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
-root/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/a[0]/text "Continua catre Google"
-root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/div[0]/form[0] action="/api/google-ads/start"
+root/div[0]/div[0]/form[0]/label[0]
+root/div[0]/div[0]/form[0]/label[0]/text "Store website"
+root/div[0]/div[0]/form[0]/input[0] type="url" name="website"
+root/div[0]/div[0]/form[0]/p[0]
+root/div[0]/div[0]/form[0]/p[0]/text "We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads."
+root/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/form[0]/button[0]/text "Continua catre Google"
+root/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/a[1] href="/google-ads"
 root/div[0]/a[1]/text "← Inapoi la pagina auditului""
 `;
@@ -386,10 +422,16 @@ root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
 root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
-root/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/a[0]/text "Continua catre Google"
-root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/div[0]/form[0] action="/api/google-ads/start"
+root/div[0]/div[0]/form[0]/label[0]
+root/div[0]/div[0]/form[0]/label[0]/text "Store website"
+root/div[0]/div[0]/form[0]/input[0] type="url" name="website"
+root/div[0]/div[0]/form[0]/p[0]
+root/div[0]/div[0]/form[0]/p[0]/text "We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads."
+root/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/form[0]/button[0]/text "Continua catre Google"
+root/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/a[1] href="/google-ads"
 root/div[0]/a[1]/text "← Inapoi la pagina auditului""
 `;
@@ -438,10 +480,16 @@ root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
 root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
-root/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/a[0]/text "Continua catre Google"
-root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/div[0]/form[0] action="/api/google-ads/start"
+root/div[0]/div[0]/form[0]/label[0]
+root/div[0]/div[0]/form[0]/label[0]/text "Store website"
+root/div[0]/div[0]/form[0]/input[0] type="url" name="website"
+root/div[0]/div[0]/form[0]/p[0]
+root/div[0]/div[0]/form[0]/p[0]/text "We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads."
+root/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/form[0]/button[0]/text "Continua catre Google"
+root/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/a[1] href="/google-ads"
 root/div[0]/a[1]/text "← Inapoi la pagina auditului""
 `;
@@ -488,10 +536,16 @@ root/div[0]/div[0]/ul[0]/li[4]/span[0] aria-hidden="true"
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]
 root/div[0]/div[0]/ul[0]/li[4]/span[0]/svg[0]/path[0]
 root/div[0]/div[0]/ul[0]/li[4]/text "Poti retrage accesul oricand, dintr-un click, din contul tau Google"
-root/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/a[0]/text "Continua catre Google"
-root/div[0]/div[0]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/div[0]/a[0]/svg[0]/path[0]
+root/div[0]/div[0]/form[0] action="/api/google-ads/start"
+root/div[0]/div[0]/form[0]/label[0]
+root/div[0]/div[0]/form[0]/label[0]/text "Store website"
+root/div[0]/div[0]/form[0]/input[0] type="url" name="website"
+root/div[0]/div[0]/form[0]/p[0]
+root/div[0]/div[0]/form[0]/p[0]/text "We use it to identify the store in your audit. Your real average order value comes from Purchase data in Google Ads."
+root/div[0]/div[0]/form[0]/button[0] type="submit"
+root/div[0]/div[0]/form[0]/button[0]/text "Continua catre Google"
+root/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
+root/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/a[1] href="/google-ads"
 root/div[0]/a[1]/text "← Inapoi la pagina auditului""
 `;
@@ -1016,9 +1070,7 @@ root/div[0]/div[0]/h2[2]/text "Ce facem cu ele"
 root/div[0]/div[0]/p[5]
 root/div[0]/div[0]/p[5]/text "Le folosim intr-un singur scop: sa generam raportul pe care il vezi pe ecran, folosind categoriile de date enumerate mai sus. Analiza se face in momentul in care esti pe site."
 root/div[0]/div[0]/p[6]
-root/div[0]/div[0]/p[6]/b[0]
-root/div[0]/div[0]/p[6]/b[0]/text "Nu stocam datele contului tau de Google Ads"
-root/div[0]/div[0]/p[6]/text "pe serverele noastre dupa generarea raportului. Autorizarea ta e tinuta intr-un cookie securizat, valabil o ora, si expira singura. Daca ne lasi datele de contact, pastram doar atat: numele, emailul, telefonul si contul pentru care ai cerut analiza — ca sa te putem contacta cu raportul complet."
+root/div[0]/div[0]/p[6]/text "Your Google authorization remains in a secure cookie for one hour and is not stored with the lead. If you request the PDF, we store your name, email, phone number, store website, selected account identity, confirmed financial inputs, calculated break-even values, the report PDF, and its delivery status. We use this record only to generate, deliver, and support the requested audit. You may request its deletion at any time."
 root/div[0]/div[0]/h2[3]
 root/div[0]/div[0]/h2[3]/text "Conformarea cu politicile Google"
 root/div[0]/div[0]/p[7]
@@ -1032,7 +1084,7 @@ root/div[0]/div[0]/p[7]/text ". Concret: nu folosim datele pentru publicitate, n
 root/div[0]/div[0]/h2[4]
 root/div[0]/div[0]/h2[4]/text "Cu cine le impartim"
 root/div[0]/div[0]/p[8]
-root/div[0]/div[0]/p[8]/text "Cu nimeni. Nu vindem, nu inchiriem si nu dam mai departe datele contului tau. Nu folosim serviciile de publicitate ale unor terti pe baza acestor date."
+root/div[0]/div[0]/p[8]/text "We do not sell, rent, or use this data for third-party advertising. When email delivery is configured, Resend processes the recipient address, message, and attached PDF solely to deliver the report. Infrastructure providers may process data only as required to operate the application."
 root/div[0]/div[0]/h2[5]
 root/div[0]/div[0]/h2[5]/text "Cum retragi accesul"
 root/div[0]/div[0]/p[9]
@@ -1103,7 +1155,7 @@ root/div[0]/div[0]/p[6]
 root/div[0]/div[0]/p[6]/text "Modul in care tratam datele e descris pe larg in"
 root/div[0]/div[0]/p[6]/a[0] href="/confidentialitate"
 root/div[0]/div[0]/p[6]/a[0]/text "politica de confidentialitate"
-root/div[0]/div[0]/p[6]/text ". Pe scurt: citim doar ce e necesar pentru raport, nu stocam datele contului tau dupa generarea lui si nu le dam nimanui."
+root/div[0]/div[0]/p[6]/text ". In short: we read only what is needed for the audit. If you request the PDF, we store the report, your contact details, the store and selected-account context, the confirmed financial inputs, and delivery status so the report can be delivered and supported."
 root/div[0]/div[0]/h2[5]
 root/div[0]/div[0]/h2[5]/text "Disponibilitate"
 root/div[0]/div[0]/p[7]

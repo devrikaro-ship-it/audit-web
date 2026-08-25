@@ -30,6 +30,7 @@ export const publicOAuthInfrastructureRegistry = {
   rootLayout: { source: "app/layout.tsx", kind: "layout" },
   oauthStart: { source: "app/api/google-ads/start/route.ts", kind: "redirect-emitter" },
   oauthCallback: { source: "app/api/google-ads/callback/route.ts", kind: "redirect-emitter" },
+  reportDownload: { source: "app/api/google-ads/reports/[id]/route.ts", kind: "response-emitter" },
   rootRewrite: { source: "next.config.ts", kind: "rewrite", destination: "/hub" },
   sharedLocalizedCopy: { source: "lib/gads-localized-copy.ts", kind: "localized-emitter" },
 } as const;

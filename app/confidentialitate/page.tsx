@@ -2,6 +2,8 @@ import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
 import { publicOAuthAttributes, publicOAuthProjection, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
+// LANG: pending full translation to EN
+
 // Politica de confidentialitate a APLICATIEI (nu a agentiei). Google o cere pe acelasi host
 // cu home page-ul declarat in consent screen si linkata DIN home page — cele doua tipare
 // clasice de respingere la brand verification.
@@ -81,10 +83,11 @@ export default function Confidentialitate() {
           categoriile de date enumerate mai sus. Analiza se face in momentul in care esti pe site.
         </P>
         <P>
-          <b>Nu stocam datele contului tau de Google Ads</b> pe serverele noastre dupa generarea
-          raportului. Autorizarea ta e tinuta intr-un cookie securizat, valabil o ora, si expira
-          singura. Daca ne lasi datele de contact, pastram doar atat: numele, emailul, telefonul si
-          contul pentru care ai cerut analiza — ca sa te putem contacta cu raportul complet.
+          Your Google authorization remains in a secure cookie for one hour and is not stored with
+          the lead. If you request the PDF, we store your name, email, phone number, store website,
+          selected account identity, confirmed financial inputs, calculated break-even values, the
+          report PDF, and its delivery status. We use this record only to generate, deliver, and
+          support the requested audit. You may request its deletion at any time.
         </P>
 
         <H2>Conformarea cu politicile Google</H2>
@@ -101,8 +104,10 @@ export default function Confidentialitate() {
 
         <H2>Cu cine le impartim</H2>
         <P>
-          Cu nimeni. Nu vindem, nu inchiriem si nu dam mai departe datele contului tau. Nu folosim
-          serviciile de publicitate ale unor terti pe baza acestor date.
+          We do not sell, rent, or use this data for third-party advertising. When email delivery is
+          configured, Resend processes the recipient address, message, and attached PDF solely to
+          deliver the report. Infrastructure providers may process data only as required to operate
+          the application.
         </P>
 
         <H2>Cum retragi accesul</H2>

@@ -41,6 +41,7 @@ export const publicOutputStateDefinitions = {
   "api-start:demo": { kind: "handler", witness: "demo-enabled" },
   "api-start:config-error": { kind: "handler", witness: "missing-config" },
   "api-start:success": { kind: "handler", witness: "configured" },
+  "api-start:website-error": { kind: "handler", witness: "missing-or-invalid-website" },
   "api-callback:access-denied": { kind: "handler", witness: "provider-access-denied" },
   "api-callback:provider-error": { kind: "handler", witness: "provider-error" },
   "api-callback:state-error": { kind: "handler", witness: "state-mismatch" },

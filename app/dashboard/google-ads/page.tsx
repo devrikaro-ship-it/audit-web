@@ -83,6 +83,7 @@ export default async function DashboardGoogleAds() {
                     <th style={th}>Cont Google Ads</th>
                     <th style={th}>Marja</th>
                     <th style={th}>Prag ROAS</th>
+                    <th style={th}>Livrare</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -105,7 +106,11 @@ export default async function DashboardGoogleAds() {
                       </td>
                       <td style={{ ...td, fontVariantNumeric: "tabular-nums" }}>{l.marginPct ? `${l.marginPct}%` : "—"}</td>
                       <td style={{ ...td, fontVariantNumeric: "tabular-nums", fontWeight: 700, color: C.indigo }}>
-                        {l.marginPct ? `${(100 / l.marginPct).toFixed(2)}×` : "—"}
+                        {l.breakEvenRoas ? `${l.breakEvenRoas.toFixed(2)}×` : "—"}
+                      </td>
+                      <td style={td}>
+                        <div style={{ fontWeight: 700, color: l.deliveryStatus === "EMAIL_SENT" ? C.green : C.gray500 }}>{l.deliveryStatus || "—"}</div>
+                        {l.reportId && l.reportToken && l.pdfPath && <div style={{ marginTop: 4 }}><a href={`/api/google-ads/reports/${l.reportId}?token=${encodeURIComponent(l.reportToken)}`} target="_blank" rel="noreferrer" style={{ color: C.indigo }}>Open PDF</a></div>}
                       </td>
                     </tr>
                   ))}
@@ -116,9 +121,8 @@ export default async function DashboardGoogleAds() {
         )}
 
         <p style={{ marginTop: 20, fontSize: 13, color: C.gray500, lineHeight: 1.6 }}>
-          Marja e cea declarata de prospect in formular, iar pragul ROAS e derivat din ea
-          (100 / marja). Nu pastram datele contului sau de Google Ads dupa generarea raportului —
-          doar contactul si contextul de mai sus.
+          The break-even ROAS and CPA are derived from the confirmed average order value, goods cost,
+          and the fixed 20% operating-cost assumption. Google Ads refresh tokens are not stored with leads.
         </p>
       </main>
     </div>

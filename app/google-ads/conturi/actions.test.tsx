@@ -40,10 +40,11 @@ it.each(["oauth-refresh", DEMO_REFRESH_TOKEN])("keeps the %s pre-margin account 
   expect(unseal(state.cookie)?.marginPct).toBeUndefined();
 
   const { salveazaMarja } = await import("../marja/actions");
-  const margin = new FormData();
-  margin.set("marginPct", "28,5");
-  await expect(salveazaMarja(margin)).rejects.toThrow("REDIRECT /google-ads/raport");
-  expect(unseal(state.cookie)?.marginPct).toBe(28.5);
+  const financials = new FormData();
+  financials.set("averageOrderValue", "500");
+  financials.set("goodsCost", "300");
+  await expect(salveazaMarja(financials)).rejects.toThrow("REDIRECT /google-ads/raport");
+  expect(unseal(state.cookie)).toMatchObject({ averageOrderValue: 500, goodsCost: 300, breakEvenCpa: 100, breakEvenRoas: 5, marginPct: 40 });
   expect(unseal(state.cookie)?.marginStatus).toBeUndefined();
 });
 

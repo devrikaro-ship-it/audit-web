@@ -2,6 +2,8 @@ import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
 import { publicOAuthAttributes, publicOAuthProjection, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
+// LANG: pending full translation to EN
+
 // Termenii APLICATIEI, pe acelasi host cu home page-ul declarat in consent screen.
 // Vezi nota din app/confidentialitate/page.tsx pentru motivul tehnic.
 
@@ -74,8 +76,9 @@ export default function Termeni() {
         <P>
           Modul in care tratam datele e descris pe larg in{" "}
           <Link href="/confidentialitate" style={{ color: C.indigo }}>politica de confidentialitate</Link>.
-          Pe scurt: citim doar ce e necesar pentru raport, nu stocam datele contului tau dupa
-          generarea lui si nu le dam nimanui.
+          In short: we read only what is needed for the audit. If you request the PDF, we store the
+          report, your contact details, the store and selected-account context, the confirmed
+          financial inputs, and delivery status so the report can be delivered and supported.
         </P>
 
         <H2>Disponibilitate</H2>

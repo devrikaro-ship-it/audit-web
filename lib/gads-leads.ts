@@ -18,6 +18,17 @@ export type GadsLead = {
   customerId?: string;
   customerName?: string;
   marginPct?: number;
+  website?: string;
+  averageOrderValue?: number;
+  goodsCost?: number;
+  breakEvenCpa?: number;
+  breakEvenRoas?: number;
+  reportId?: string;
+  reportToken?: string;
+  pdfPath?: string;
+  emailMessageId?: string;
+  deliveryStatus?: "NEW_LEAD" | "PDF_READY" | "PDF_FAILED" | "EMAIL_SENT" | "EMAIL_FAILED";
+  consentAt?: number;
 };
 
 const FILE = process.env.GADS_LEADS_FILE
@@ -77,4 +88,18 @@ export async function saveLeadSafe(rec: Omit<GadsLead, "id" | "createdAt">): Pro
 
 export async function listLeads(): Promise<GadsLead[]> {
   return [...(await load())].sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export async function updateLead(id: string, patch: Partial<GadsLead>): Promise<GadsLead | null> {
+  const list = await load();
+  const index = list.findIndex((lead) => lead.id === id);
+  if (index < 0) return null;
+  list[index] = { ...list[index], ...patch, id: list[index].id, createdAt: list[index].createdAt };
+  global.__gadsLeadsWrite = (global.__gadsLeadsWrite ?? Promise.resolve()).then(persist, persist);
+  await global.__gadsLeadsWrite;
+  return list[index];
+}
+
+export async function getLead(id: string): Promise<GadsLead | null> {
+  return (await load()).find((lead) => lead.id === id) ?? null;
 }

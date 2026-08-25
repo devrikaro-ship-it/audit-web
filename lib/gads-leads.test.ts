@@ -20,10 +20,12 @@ describe("salvarea lead-ului din auditul de Google Ads", () => {
   });
 
   it("scrie lead-ul si confirma reusita", async () => {
-    const { saveLeadSafe, listLeads } = await import("./gads-leads");
+    const { saveLeadSafe, listLeads, updateLead } = await import("./gads-leads");
     expect(await saveLeadSafe(rec)).toEqual({ ok: true });
     const lista = await listLeads();
     expect(lista[0].email).toBe("ion@magazin.ro");
+    await updateLead(lista[0].id, { deliveryStatus: "PDF_READY", reportId: "report-1" });
+    expect((await listLeads())[0]).toMatchObject({ deliveryStatus: "PDF_READY", reportId: "report-1" });
   });
 
   it("cand scrierea pica, raporteaza esecul si lasa lead-ul in log", async () => {

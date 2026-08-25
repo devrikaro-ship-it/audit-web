@@ -30,8 +30,9 @@ import type { SearchData } from "@/lib/gads-search";
 import type { TermenBrut } from "@/lib/gads-keywords";
 import { ReportSurface, reportGuards, runReportStep } from "./report-contract";
 import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
-import { analyzeProducts } from "@/lib/gads-product-simulation";
+import { analyzeProducts, simulateOptimizedBudget } from "@/lib/gads-product-simulation";
 import ProfitabilitySimulator from "./ProfitabilitySimulator";
+import { sealReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Raportul tau · Audit Google Ads Devrika" };
@@ -180,6 +181,34 @@ export default async function Raport() {
   const bani = rep.findings.filter((f) => !f.quarantined);
   const nejudecabile = rep.findings.filter((f) => f.quarantined);
   const profitability = runReportStep("analyzeProducts", () => analyzeProducts(products, { breakEvenRoas: minRoas, months: 12 }));
+  const optimized = simulateOptimizedBudget(profitability, profitability.currentMonthlySpend);
+  const currentRevenue = products.reduce((sum, product) => sum + product.conversionValue / 12, 0);
+  const currentOrders = products.reduce((sum, product) => sum + product.conversions / 12, 0);
+  const snapshot: GadsReportSnapshot = {
+    website: session.website ?? "",
+    accountName: session.customerName || "Your account",
+    averageOrderValue: session.averageOrderValue ?? 0,
+    goodsCost: session.goodsCost ?? 0,
+    breakEvenCpa: session.breakEvenCpa ?? 0,
+    breakEvenRoas: minRoas,
+    current: {
+      spend: profitability.currentMonthlySpend,
+      revenue: currentRevenue,
+      orders: currentOrders,
+      cpa: currentOrders > 0 ? profitability.currentMonthlySpend / currentOrders : null,
+      roas: profitability.currentMonthlySpend > 0 ? currentRevenue / profitability.currentMonthlySpend : 0,
+    },
+    optimized: {
+      spend: optimized.budget,
+      revenue: optimized.expectedRevenue,
+      orders: optimized.expectedOrders,
+      cpa: optimized.expectedOrders > 0 ? optimized.budget / optimized.expectedOrders : null,
+      roas: optimized.expectedRoas ?? 0,
+    },
+    losses: profitability.losses.map((row) => ({ productId: row.productId, title: row.title, cost: row.monthlyCost, revenue: row.monthlyRevenue, orders: row.monthlyOrders, cpa: row.cpa, roas: row.roas, amount: row.monthlyMoneyAtRisk })),
+    opportunities: profitability.opportunities.map((row) => ({ productId: row.productId, title: row.title, cost: row.monthlyCost, revenue: row.monthlyRevenue, orders: row.monthlyOrders, cpa: row.cpa, roas: row.roas, amount: row.estimatedSalesOpportunity })),
+  };
+  const signedReportSnapshot = sealReportSnapshot(snapshot);
 
   return (
     <div {...registeredPublicOAuthAttributes.report.success} className="min-h-dvh px-5 py-12 sm:px-6 sm:py-14" style={{ fontFamily: inter, background: "linear-gradient(180deg,#f8f7ff 0%,#fff 100%)" }}>
@@ -400,7 +429,7 @@ export default async function Raport() {
             Lasa-ne un contact si iti trimitem raportul complet, cu toate produsele pe nume si
             ordinea in care merita atacate. Fara obligatii.
           </p>
-          <ContactForm action={salveazaContact} />
+          <ContactForm action={salveazaContact} reportSnapshot={signedReportSnapshot} />
         </ReportSurface>
 
         {/* Onestitate */}

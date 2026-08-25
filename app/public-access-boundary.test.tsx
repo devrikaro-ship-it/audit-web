@@ -464,8 +464,8 @@ describe("public Google Ads access boundary", () => {
       "connect:normal", "hub:normal", "landing:normal", "privacy:normal", "terms:normal",
     ]);
     expect(publicOAuthOracle.version).toBe(publicOAuthOracle.transition.to);
-    expect(publicOAuthOracle.transition.operatorSource.quote).toBe("hai sa terminam");
-    expect(publicOAuthOracle.transition.operatorSource.scope).toContain("not approval or review");
+    expect(publicOAuthOracle.transition.operatorSource.quote).toBe("go la implementare");
+    expect(publicOAuthOracle.transition.operatorSource.scope).toContain("implementation");
 
     const clauseStates = {
       "hub:normal": ["application-read-operations-only", "mutation-none"],
@@ -523,8 +523,9 @@ describe("public Google Ads access boundary", () => {
       .filter((source) => source.endsWith("/route.ts") && normalizeNextRoute(source).startsWith("/api/google-ads/"))
       .sort();
     const registeredApiSources = Object.values(publicOAuthInfrastructureRegistry)
-      .filter(({ kind }) => kind === "redirect-emitter")
+      .filter(({ kind }) => kind.endsWith("-emitter"))
       .map(({ source }) => source)
+      .filter((source) => source.startsWith("app/api/google-ads/"))
       .sort();
     expect(registeredApiSources).toEqual(apiSources);
 
