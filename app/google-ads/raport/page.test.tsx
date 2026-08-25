@@ -335,7 +335,7 @@ describe("pagina de raport, randata", () => {
   it("renders measured before tables and the interactive simulated after table", async () => {
     const h = await html();
     expect(h).toContain('data-report-surface="profitability-simulator"');
-    expect(h).toContain("Current account vs optimized + CSS");
+    expect(h).toContain("How the account could look after optimization");
     expect(h).toContain("Products consuming your budget");
     expect(h).toContain("How the same products would be promoted");
     expect(h).toContain("Future simulation");
