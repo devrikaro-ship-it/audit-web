@@ -72,6 +72,19 @@ describe("profitability report simulator", () => {
     expect(screen.getByTestId("expected-roas").textContent).toContain("—");
   });
 
+  it("switches the scenario summary between measured and optimized values", () => {
+    render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
+
+    expect(screen.getByTestId("scenario-outcome").textContent).toContain("7.5× ROAS");
+    fireEvent.click(screen.getByRole("tab", { name: "Current account" }));
+    expect(screen.getByTestId("scenario-outcome").textContent).toContain("5.0× ROAS");
+    expect(screen.getByRole("tab", { name: "Current account" }).getAttribute("aria-selected")).toBe("true");
+
+    fireEvent.click(screen.getByRole("tab", { name: "Optimized + CSS" }));
+    expect(screen.getByTestId("scenario-outcome").textContent).toContain("7.5× ROAS");
+    expect(screen.getByRole("tab", { name: "Optimized + CSS" }).getAttribute("aria-selected")).toBe("true");
+  });
+
   it("explains the exact three-step strategy and the CSS assumption", () => {
     render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
     expect(screen.getByText("1 · Stop the loss")).toBeTruthy();

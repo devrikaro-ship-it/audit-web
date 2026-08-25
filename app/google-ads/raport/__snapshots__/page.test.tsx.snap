@@ -508,11 +508,11 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[0]/text "Scenario, not a promise"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/h3[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/h3[0]/text "How the account could look after optimization"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]/text "Current account"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]/text "Optimized + CSS"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1] role="tablist" aria-label="Account scenario"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0] type="button" role="tab" aria-selected="false"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0]/text "Current account"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1] type="button" role="tab" aria-selected="true"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1]/text "Optimized + CSS"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]/div[0]
@@ -1280,11 +1280,11 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[0]/text "Scenario, not a promise"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/h3[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/h3[0]/text "How the account could look after optimization"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]/text "Current account"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]/text "Optimized + CSS"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1] role="tablist" aria-label="Account scenario"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0] type="button" role="tab" aria-selected="false"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0]/text "Current account"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1] type="button" role="tab" aria-selected="true"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1]/text "Optimized + CSS"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]/div[0]
@@ -2038,11 +2038,11 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[0]/text "Scenario, not a promise"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/h3[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/h3[0]/text "How the account could look after optimization"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]/text "Current account"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]/text "Optimized + CSS"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1] role="tablist" aria-label="Account scenario"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0] type="button" role="tab" aria-selected="false"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0]/text "Current account"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1] type="button" role="tab" aria-selected="true"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1]/text "Optimized + CSS"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]/div[0]
@@ -2787,11 +2787,11 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[0]/text "Scenario, not a promise"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/h3[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/h3[0]/text "How the account could look after optimization"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]/text "Current account"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]/text "Optimized + CSS"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1] role="tablist" aria-label="Account scenario"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0] type="button" role="tab" aria-selected="false"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0]/text "Current account"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1] type="button" role="tab" aria-selected="true"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1]/text "Optimized + CSS"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]/div[0]
@@ -3854,11 +3854,11 @@ root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[0]/text "Scenario, not a promise"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/h3[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/h3[0]/text "How the account could look after optimization"
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1]/span[0]/text "Current account"
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1]/strong[0]/text "Optimized + CSS"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1] role="tablist" aria-label="Account scenario"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0] type="button" role="tab" aria-selected="false"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1]/button[0]/text "Current account"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1] type="button" role="tab" aria-selected="true"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[1]/button[1]/text "Optimized + CSS"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[2]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[2]/div[0]/div[0]
