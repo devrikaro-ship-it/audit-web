@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import { C, sora, brandGradient } from "@/lib/theme";
 import { calculateBreakEven, OPERATING_COST_PCT } from "@/lib/gads-financials";
 
@@ -8,10 +9,29 @@ type Props = {
   initialAverageOrderValue: number;
   initialGoodsCost: number;
   measured: boolean;
-  action: (formData: FormData) => void;
+  action: (formData: FormData) => void | Promise<void>;
 };
 
 const money = (value: number) => `${value.toFixed(2)} RON`;
+
+function SubmitButton({ disabled }: { disabled: boolean }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <div>
+      <button type="submit" disabled={disabled || pending} aria-busy={pending}
+        className="flex min-h-11 w-full items-center justify-center rounded-[14px] px-8 py-[15px] text-[16px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
+        style={{ background: brandGradient }}>
+        {pending ? "Building your report…" : "Build my profitability audit"}
+      </button>
+      {pending ? (
+        <p role="status" className="mt-3 text-center text-[12.5px]" style={{ color: C.gray500 }}>
+          We are reading the product data from your Google Ads account. This can take up to one minute.
+        </p>
+      ) : null}
+    </div>
+  );
+}
 
 export default function MarginForm({ initialAverageOrderValue, initialGoodsCost, measured, action }: Props) {
   const [averageOrderValue, setAverageOrderValue] = useState(initialAverageOrderValue);
@@ -85,11 +105,7 @@ export default function MarginForm({ initialAverageOrderValue, initialGoodsCost,
         )}
       </div>
 
-      <button type="submit" disabled={!financials}
-        className="flex min-h-11 w-full items-center justify-center rounded-[14px] px-8 py-[15px] text-[16px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
-        style={{ background: brandGradient }}>
-        Build my profitability audit
-      </button>
+      <SubmitButton disabled={!financials} />
     </form>
   );
 }
