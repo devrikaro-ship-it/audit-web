@@ -1,6 +1,6 @@
 // LANG: pending full translation to EN
 import { describe, it, expect } from "vitest";
-import { anQuery, agregaAn, bugetLunarDin } from "./gads-an";
+import { anQuery, agregaAn, bugetLunarDin, purchaseQuery, aggregatePurchaseBaseline } from "./gads-an";
 
 describe("account totals over the latest 365 days", () => {
   it("intreaba pe fereastra de un an, nu pe 30 de zile", () => {
@@ -46,6 +46,41 @@ describe("account totals over the latest 365 days", () => {
 });
 
 describe("forma interogarii", () => {
+  it("reads only Purchase conversions for the financial baseline", () => {
+    const query = purchaseQuery("2025-08-20", "2026-08-20");
+    expect(query).toContain("segments.conversion_action_category = 'PURCHASE'");
+    expect(query).toContain("metrics.conversions");
+    expect(query).toContain("metrics.conversions_value");
+    expect(query).not.toContain("metrics.cost_micros");
+  });
+
+  it("derives AOV, CPA, and ROAS from the same Purchase population", () => {
+    expect(aggregatePurchaseBaseline(150, [
+      { metrics: { conversions: "4", conversionsValue: "2000" } },
+      { metrics: { conversions: "1", conversionsValue: "500" } },
+    ])).toEqual({
+      spend: 150,
+      purchaseCount: 5,
+      purchaseValue: 2500,
+      averageOrderValue: 500,
+      cpa: 30,
+      roas: 2500 / 150,
+    });
+  });
+
+  it("does not invent AOV or CPA without Purchase conversions", () => {
+    expect(aggregatePurchaseBaseline(120, [
+      { metrics: { conversions: "0", conversionsValue: "0" } },
+    ])).toEqual({
+      spend: 120,
+      purchaseCount: 0,
+      purchaseValue: 0,
+      averageOrderValue: null,
+      cpa: null,
+      roas: 0,
+    });
+  });
+
   it("cere si un camp de resursa, nu doar metrici", () => {
     // Google Ads respinge un SELECT format numai din metrici. Interogarea asta a picat exact
     // asa, in tacere, si raportul a aratat cifra gresita pana cand a comparat-o cineva cu

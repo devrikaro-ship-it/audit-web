@@ -12,7 +12,20 @@ import { dateRange, WINDOW_DAYS } from "./gads-intake";
 
 export type TotaluriAn = { cost: number; valoare: number; roas: number | null };
 
+export type PurchaseBaseline = {
+  spend: number;
+  purchaseCount: number;
+  purchaseValue: number;
+  averageOrderValue: number | null;
+  cpa: number | null;
+  roas: number | null;
+};
+
 export type RandAn = { metrics?: { costMicros?: string | number; conversionsValue?: string | number } };
+
+export type PurchaseRow = {
+  metrics?: { conversions?: string | number; conversionsValue?: string | number };
+};
 
 /**
  * Fara filtru de status: interfata arata "Toate campaniile", deci si noi.
@@ -29,6 +42,48 @@ export type RandAn = { metrics?: { costMicros?: string | number; conversionsValu
 export function anQuery(from: string, to: string): string {
   return `SELECT campaign.id, metrics.cost_micros, metrics.conversions_value
           FROM campaign WHERE segments.date BETWEEN '${from}' AND '${to}'`;
+}
+
+export function purchaseQuery(from: string, to: string): string {
+  return `SELECT campaign.id, metrics.conversions, metrics.conversions_value
+          FROM campaign
+          WHERE segments.date BETWEEN '${from}' AND '${to}'
+          AND segments.conversion_action_category = 'PURCHASE'`;
+}
+
+export function aggregatePurchaseBaseline(spend: number, rows: PurchaseRow[]): PurchaseBaseline {
+  let purchaseCount = 0;
+  let purchaseValue = 0;
+  for (const row of rows) {
+    purchaseCount += Number(row.metrics?.conversions ?? 0);
+    purchaseValue += Number(row.metrics?.conversionsValue ?? 0);
+  }
+  return {
+    spend,
+    purchaseCount,
+    purchaseValue,
+    averageOrderValue: purchaseCount > 0 ? purchaseValue / purchaseCount : null,
+    cpa: purchaseCount > 0 ? spend / purchaseCount : null,
+    roas: spend > 0 ? purchaseValue / spend : null,
+  };
+}
+
+export async function readPurchaseBaseline(
+  customerId: string,
+  auth: GoogleAdsAuth,
+  customerTimeZone: string
+): Promise<PurchaseBaseline | null> {
+  try {
+    const { from, to } = dateRange(new Date(), WINDOW_DAYS, customerTimeZone);
+    const [spendRows, purchaseRows] = await Promise.all([
+      googleAdsSearch(customerId, anQuery(from, to), auth) as Promise<RandAn[]>,
+      googleAdsSearch(customerId, purchaseQuery(from, to), auth) as Promise<PurchaseRow[]>,
+    ]);
+    return aggregatePurchaseBaseline(agregaAn(spendRows).cost, purchaseRows);
+  } catch (error) {
+    console.error("[gads-an] failed to read the Purchase financial baseline:", error);
+    return null;
+  }
 }
 
 export function agregaAn(randuri: RandAn[]): TotaluriAn {
