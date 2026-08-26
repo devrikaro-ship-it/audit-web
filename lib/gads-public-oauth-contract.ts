@@ -14,6 +14,7 @@ export const publicOAuthSurfaceRegistry = {
   "account-picker": { route: "/google-ads/conturi", states: ["success", "list-error", "account-error"] },
   margin: { route: "/google-ads/marja", states: ["normal", "error"] },
   report: { route: "/google-ads/raport", states: ["success", "catalog-unavailable"] },
+  "client-portal": { route: "/google-ads/portal/[token]", states: ["normal"] },
   simulator: { route: "/google-ads/impreuna", states: ["normal"] },
   hub: { route: "/hub", states: ["normal"] },
   privacy: { route: "/confidentialitate", states: ["normal"] },

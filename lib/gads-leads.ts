@@ -25,7 +25,9 @@ export type GadsLead = {
   breakEvenRoas?: number;
   reportId?: string;
   reportToken?: string;
+  portalToken?: string;
   pdfPath?: string;
+  snapshotPath?: string;
   emailMessageId?: string;
   deliveryStatus?: "NEW_LEAD" | "PDF_READY" | "PDF_FAILED" | "EMAIL_SENT" | "EMAIL_FAILED";
   consentAt?: number;
@@ -102,4 +104,19 @@ export async function updateLead(id: string, patch: Partial<GadsLead>): Promise<
 
 export async function getLead(id: string): Promise<GadsLead | null> {
   return (await load()).find((lead) => lead.id === id) ?? null;
+}
+
+export async function findPortalToken(email: string, customerId?: string): Promise<string | null> {
+  const normalizedEmail = email.trim().toLowerCase();
+  const match = (await load()).find((lead) =>
+    lead.email.trim().toLowerCase() === normalizedEmail &&
+    lead.customerId === customerId &&
+    typeof lead.portalToken === "string"
+  );
+  return match?.portalToken ?? null;
+}
+
+export async function listPortalReports(portalToken: string): Promise<GadsLead[]> {
+  if (!portalToken) return [];
+  return (await listLeads()).filter((lead) => lead.portalToken === portalToken && lead.reportId);
 }

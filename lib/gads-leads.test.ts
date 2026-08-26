@@ -20,12 +20,34 @@ describe("salvarea lead-ului din auditul de Google Ads", () => {
   });
 
   it("scrie lead-ul si confirma reusita", async () => {
-    const { saveLeadSafe, listLeads, updateLead } = await import("./gads-leads");
+    const { saveLeadSafe, listLeads, updateLead, findPortalToken } = await import("./gads-leads");
     expect(await saveLeadSafe(rec)).toEqual({ ok: true });
     const lista = await listLeads();
     expect(lista[0].email).toBe("ion@magazin.ro");
     await updateLead(lista[0].id, { deliveryStatus: "PDF_READY", reportId: "report-1" });
     expect((await listLeads())[0]).toMatchObject({ deliveryStatus: "PDF_READY", reportId: "report-1" });
+    expect(await findPortalToken("ion@magazin.ro", undefined)).toBeNull();
+  });
+
+  it("reuses the portal token only for the same email and Google Ads account", async () => {
+    const { saveLead, findPortalToken } = await import("./gads-leads");
+    await saveLead({ ...rec, customerId: "111", portalToken: "portal-one" });
+    await saveLead({ ...rec, email: "other@magazin.ro", customerId: "111", portalToken: "portal-two" });
+
+    await expect(findPortalToken("ION@MAGAZIN.RO", "111")).resolves.toBe("portal-one");
+    await expect(findPortalToken("ion@magazin.ro", "222")).resolves.toBeNull();
+  });
+
+  it("lists only reports owned by the requested portal token", async () => {
+    const { saveLead, listPortalReports } = await import("./gads-leads");
+    await saveLead({ ...rec, portalToken: "portal-one", reportId: "report-one" });
+    await saveLead({ ...rec, email: "other@magazin.ro", portalToken: "portal-two", reportId: "report-two" });
+    await saveLead({ ...rec, portalToken: "portal-one" });
+
+    const reports = await listPortalReports("portal-one");
+    expect(reports).toHaveLength(1);
+    expect(reports[0].reportId).toBe("report-one");
+    await expect(listPortalReports("unknown-portal")).resolves.toEqual([]);
   });
 
   it("cand scrierea pica, raporteaza esecul si lasa lead-ul in log", async () => {

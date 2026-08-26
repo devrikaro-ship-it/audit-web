@@ -6,18 +6,23 @@ import type { ContactResult } from "./actions";
 
 export default function ContactForm({ action, reportSnapshot }: { action: (formData: FormData) => Promise<ContactResult>; reportSnapshot: string }) {
   const [status, setStatus] = useState<"READY" | "SENDING" | "SENT" | "SAVED" | "FAILED">("READY");
+  const [portalPath, setPortalPath] = useState("");
 
   if (status === "SENT" || status === "SAVED") {
-    return <p className="rounded-xl px-5 py-4 text-[14.5px]" style={{ background: C.greenBg, color: C.green }}>
-      {status === "SENT" ? "Raportul PDF a fost generat, salvat și trimis pe email." : "Raportul PDF a fost generat și salvat. Trimiterea pe email este întârziată, dar raportul rămâne disponibil echipei noastre."}
-    </p>;
+    return <div className="rounded-xl px-5 py-4 text-[14.5px]" style={{ background: C.greenBg, color: C.green }}>
+      <p>{status === "SENT" ? "Raportul PDF a fost generat, salvat și trimis pe email." : "Raportul PDF a fost generat și salvat. Trimiterea pe email este întârziată, dar raportul rămâne disponibil echipei noastre."}</p>
+      {portalPath && <a href={portalPath} className="mt-3 inline-flex font-bold underline">Open my dashboard</a>}
+    </div>;
   }
 
   return <form action={async (formData) => {
     setStatus("SENDING");
     const result = await action(formData);
     if (!result.ok) setStatus("FAILED");
-    else setStatus(result.deliveryStatus === "EMAIL_SENT" ? "SENT" : "SAVED");
+    else {
+      setPortalPath(result.portalPath);
+      setStatus(result.deliveryStatus === "EMAIL_SENT" ? "SENT" : "SAVED");
+    }
   }} className="flex flex-col gap-3">
     <input type="hidden" name="reportSnapshot" value={reportSnapshot} />
     {status === "FAILED" && <p className="rounded-xl px-5 py-4 text-[14px]" style={{ background: C.redBg, color: C.red }}>Nu am putut genera raportul PDF. Verifică datele și încearcă din nou.</p>}
