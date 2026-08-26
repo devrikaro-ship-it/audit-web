@@ -686,6 +686,26 @@ describe("public Google Ads access boundary", () => {
     expect(occurrences).toBe(1);
   });
 
+  it("keeps the Google connection decision compact and outcome-led", async () => {
+    const prior = { ...process.env };
+    try {
+      process.env.GADS_OAUTH_CLIENT_ID = "client";
+      process.env.GADS_OAUTH_CLIENT_SECRET = "secret";
+      process.env.GADS_DEVELOPER_TOKEN = "developer";
+      const html = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({}) }));
+
+      expect(html).toContain("Conecteaza contul si vezi performanta fiecarui produs");
+      expect(html).toContain("Site-ul magazinului");
+      expect(html).toContain("Folosim adresa doar ca sa identificam magazinul in raport");
+      expect(html).toContain("Continua in siguranta cu Google");
+      expect(html).toContain('<details data-oauth-disclosure="progressive"');
+      expect(html.match(/data-connect-assurance=/g) ?? []).toHaveLength(3);
+      expect(html).not.toContain("Store website");
+    } finally {
+      process.env = prior;
+    }
+  });
+
   it("renders normal and recoverable connect states through the canonical contract", async () => {
     const prior = { ...process.env };
     try {
