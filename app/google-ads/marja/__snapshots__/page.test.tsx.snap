@@ -12,9 +12,9 @@ root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
 root/div[0]/div[0]/div[0]/p[0]/text "Pasul 2 din 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Stabilește pragul de la care reclamele tale încep să piardă bani"
+root/div[0]/div[0]/div[0]/h1[0]/text "Hai să stabilim pragul de la care campaniile tale Google Ads fac sau pierd bani"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Confirmă valoarea medie a unei comenzi și spune-ne ce procent reprezintă costul de achiziție al produselor. Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani."
+root/div[0]/div[0]/div[0]/p[1]/text "Confirmă valoarea medie a unei comenzi și spune-ne cât te costă marfa din acea comandă. Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani."
 root/div[0]/div[0]/div[0]/p[2]
 root/div[0]/div[0]/div[0]/p[2]/text "marja trebuie sa fie intre 1 si 99 la suta"
 root/div[0]/div[0]/div[0]/form[0]
@@ -34,9 +34,9 @@ root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
 root/div[0]/div[0]/div[0]/p[0]/text "Pasul 2 din 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Stabilește pragul de la care reclamele tale încep să piardă bani"
+root/div[0]/div[0]/div[0]/h1[0]/text "Hai să stabilim pragul de la care campaniile tale Google Ads fac sau pierd bani"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Confirmă valoarea medie a unei comenzi și spune-ne ce procent reprezintă costul de achiziție al produselor. Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani."
+root/div[0]/div[0]/div[0]/p[1]/text "Confirmă valoarea medie a unei comenzi și spune-ne cât te costă marfa din acea comandă. Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani."
 root/div[0]/div[0]/div[0]/form[0]
 root/div[0]/div[0]/p[0]
 root/div[0]/div[0]/p[0]/text "Nu cerem facturi și nu avem acces la contabilitate. Poți ajusta valorile înainte de generarea auditului.""

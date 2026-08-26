@@ -76,10 +76,10 @@ export default async function Marja({
         <div className="rounded-2xl border bg-white p-7 md:p-9" style={{ borderColor: "#e6ebf4", boxShadow: "0 8px 32px rgba(11,31,58,0.06)" }}>
           <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Pasul 2 din 3</p>
           <h1 className="mb-3 font-extrabold leading-[1.2] tracking-[-0.5px]" style={{ fontFamily: sora, fontSize: "clamp(22px,3.5vw,30px)", color: "#0f172a" }}>
-            Stabilește pragul de la care reclamele tale încep să piardă bani
+            Hai să stabilim pragul de la care campaniile tale Google Ads fac sau pierd bani
           </h1>
           <p className="mb-1 text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
-            Confirmă valoarea medie a unei comenzi și spune-ne ce procent reprezintă costul de achiziție al produselor.
+            Confirmă valoarea medie a unei comenzi și spune-ne cât te costă marfa din acea comandă.
             Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani.
           </p>
           {nrProduse > 0 && (

@@ -14,6 +14,9 @@ type Props = {
 
 const money = (value: number) => `${value.toLocaleString("ro-RO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} RON`;
 const compactMoney = (value: number) => `${value.toLocaleString("ro-RO", { maximumFractionDigits: 2 })} RON`;
+const AOV_STEP = 50;
+const ACQUISITION_COST_STEP = 5;
+const snapToStep = (value: number, step: number) => Math.round(value / step) * step;
 
 function SubmitButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
@@ -35,13 +38,14 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
 }
 
 export default function MarginForm({ initialAverageOrderValue, initialGoodsCost, measured, action }: Props) {
-  const [averageOrderInput, setAverageOrderInput] = useState(String(initialAverageOrderValue));
+  const initialAov = Math.max(AOV_STEP, snapToStep(initialAverageOrderValue, AOV_STEP));
+  const [averageOrderInput, setAverageOrderInput] = useState(String(initialAov));
   const initialAcquisitionCostPct = Math.round((Math.min(initialGoodsCost, initialAverageOrderValue) / initialAverageOrderValue) * 100);
-  const [acquisitionCostPct, setAcquisitionCostPct] = useState(Math.min(79, Math.max(0, initialAcquisitionCostPct)));
+  const [acquisitionCostPct, setAcquisitionCostPct] = useState(Math.min(75, Math.max(0, snapToStep(initialAcquisitionCostPct, ACQUISITION_COST_STEP))));
   const averageOrderValue = Number(averageOrderInput);
   const validAverageOrderValue = Number.isFinite(averageOrderValue) && averageOrderValue > 0;
   const goodsCost = validAverageOrderValue ? Math.round(averageOrderValue * acquisitionCostPct) / 100 : 0;
-  const maximumAov = Math.max(10_000, Math.ceil(initialAverageOrderValue * 4 / 100) * 100);
+  const maximumAov = Math.max(10_000, Math.ceil(initialAverageOrderValue * 4 / AOV_STEP) * AOV_STEP);
   const financials = (() => {
     try {
       return calculateBreakEven({ averageOrderValue, goodsCost });
@@ -67,13 +71,14 @@ export default function MarginForm({ initialAverageOrderValue, initialGoodsCost,
           <label htmlFor="averageOrderValue" className="text-[14px] font-semibold" style={{ color: "#334155" }}>
             Valoarea medie a unei comenzi
           </label>
-          <input id="averageOrderValue" name="averageOrderValue" type="number" min="1" max={maximumAov} step="1"
+          <input id="averageOrderValue" name="averageOrderValue" type="number" min={AOV_STEP} max={maximumAov} step={AOV_STEP}
             value={averageOrderInput} onChange={(event) => updateAov(event.target.value)}
+            onBlur={() => validAverageOrderValue && setAverageOrderInput(String(Math.max(AOV_STEP, snapToStep(averageOrderValue, AOV_STEP))))}
             aria-label="Valoarea medie a comenzii"
             className="w-36 rounded-lg border px-3 py-2 text-right font-bold tabular-nums" style={{ borderColor: C.border }} />
         </div>
-        <input type="range" aria-label="Bara pentru valoarea medie a comenzii" min="1" max={maximumAov} step="1"
-          value={validAverageOrderValue ? averageOrderValue : 1} onChange={(event) => updateAov(event.target.value)}
+        <input type="range" aria-label="Bara pentru valoarea medie a comenzii" min={AOV_STEP} max={maximumAov} step={AOV_STEP}
+          value={validAverageOrderValue ? averageOrderValue : AOV_STEP} onChange={(event) => updateAov(event.target.value)}
           className="w-full cursor-pointer" style={{ accentColor: C.indigo, minHeight: 44 }} />
         <p className="text-[12.5px]" style={{ color: C.gray500 }}>
           {measured ? "Măsurată din conversiile Purchase din Google Ads" : "Confirmă sau ajustează această valoare"}
@@ -83,19 +88,19 @@ export default function MarginForm({ initialAverageOrderValue, initialGoodsCost,
       <section>
         <div className="mb-2 flex items-center justify-between gap-4">
           <label htmlFor="acquisitionCostPct" className="max-w-[360px] text-[14px] font-semibold" style={{ color: "#334155" }}>
-            Cât reprezintă costul de achiziție al produselor
+            Cât te costă marfa dintr-o comandă
           </label>
           <output htmlFor="acquisitionCostPct" className="min-w-20 text-right text-[24px] font-black tabular-nums" style={{ fontFamily: sora, color: C.indigo }}>
             {acquisitionCostPct}%
           </output>
         </div>
-        <input id="acquisitionCostPct" type="range" aria-label="Procentul costului de achiziție" min="0" max="79" step="1"
+        <input id="acquisitionCostPct" type="range" aria-label="Procentul costului de achiziție" min="0" max="75" step={ACQUISITION_COST_STEP}
           value={acquisitionCostPct} onChange={(event) => setAcquisitionCostPct(Number(event.target.value))}
           className="w-full cursor-pointer" style={{ accentColor: C.indigo, minHeight: 44 }} />
         <input type="hidden" name="goodsCost" value={goodsCost} />
         <p className="text-[13px] leading-relaxed" style={{ color: C.gray500 }}>
           {validAverageOrderValue
-            ? `Dintr-o comandă de ${compactMoney(averageOrderValue)}, produsele te costă ${compactMoney(goodsCost)} la achiziție.`
+            ? `La o comandă de ${compactMoney(averageOrderValue)}, tu plătești ${compactMoney(goodsCost)} pe marfă.`
             : "Introdu valoarea medie a unei comenzi pentru a calcula suma."}
         </p>
         <p className="mt-1 text-[12.5px]" style={{ color: C.gray400 }}>
