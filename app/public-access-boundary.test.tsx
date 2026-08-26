@@ -658,13 +658,13 @@ describe("public Google Ads access boundary", () => {
     expect(html).toContain("Vezi un exemplu de raport");
     expect(html.match(/data-problem-example=/g) ?? []).toHaveLength(3);
     expect(html.match(/data-evidence-example=/g) ?? []).toHaveLength(2);
-    expect(html).toContain("De la Google");
-    expect(html).toContain("De la CSS partener");
-    expect(html).toContain("Vanzari 5.000 lei");
-    expect(html).toContain("ROAS 5×");
-    expect(html).toContain("Vanzari 6.250 lei");
-    expect(html).toContain("ROAS 6,25×");
-    expect(html).toContain("+1.250 lei in vanzari estimate");
+    expect(html).toContain("Direct Google");
+    expect(html).toContain("CSS partener");
+    expect(html).toContain("5.000 RON");
+    expect(html).toContain("5,00×");
+    expect(html).toContain("6.250 RON");
+    expect(html).toContain("6,25×");
+    expect(html).toContain("+1.250 RON");
     expect(html).toContain('<details data-oauth-disclosure="progressive"');
     expect(html.match(/data-process-step=/g) ?? []).toHaveLength(3);
   });
@@ -679,12 +679,40 @@ describe("public Google Ads access boundary", () => {
 
   it("keeps report-preview product names readable on narrow screens", () => {
     const html = renderToStaticMarkup(<LandingPage />);
-    const productNames = [...html.matchAll(/<p data-report-product-name="visible" class="([^"]+)"/g)];
+    const productNames = [...html.matchAll(/<span data-report-product-name="visible" class="([^"]+)"/g)];
 
     expect(productNames).toHaveLength(3);
     for (const [, classes] of productNames) {
       expect(classes).not.toMatch(/\btruncate\b|\bwhitespace-nowrap\b|\bline-clamp-/);
     }
+  });
+
+  it("shows report-style product economics in every landing example", () => {
+    const html = renderToStaticMarkup(<LandingPage />);
+
+    expect(html.match(/data-product-economics-table=/g) ?? []).toHaveLength(6);
+    for (const header of ["Produs", "Clickuri", "Buget", "Comenzi", "CPA", "Vânzări", "ROAS"]) {
+      expect(html).toContain(`>${header}<`);
+    }
+    expect(html).toContain(">Pierdere<");
+    expect(html).toContain(">Potențial<");
+    expect(html).toContain("Pierdere = buget − vânzări ÷ ROAS minim");
+    expect(html).toContain("Potențial = vânzări × (ROAS ÷ ROAS minim − 1)");
+    expect(html).toContain("ROAS minim 5×");
+    expect(html).toContain("CPA maxim 60 RON");
+  });
+
+  it("derives internally consistent ROAS, CPA, loss and potential values", () => {
+    const html = renderToStaticMarkup(<LandingPage />);
+
+    expect(html).toContain("4.820 RON");
+    expect(html).toContain("2.110 RON");
+    expect(html).toContain("689 RON");
+    expect(html).toContain("0×");
+    expect(html).toContain("−4.398 RON");
+    expect(html).toContain("30 RON");
+    expect(html).toContain("13×");
+    expect(html).toContain("+8.736 RON");
   });
 
   it("states the complete Google Ads data list once in the compact disclosure", () => {

@@ -1199,41 +1199,88 @@ root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/div[0]/p[1]/text "Produse car
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/span[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/span[0]/text "Model de raport"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[0]/p[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[0]/p[0]/text "Buget consumat"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[0]/p[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[0]/p[1]/text "10.565 lei"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[1]/p[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[1]/p[0]/text "Pierdere estimata"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[1]/p[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/div[1]/p[1]/text "-6.705 lei"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[4]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[6]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Pierdere"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Rochie office bleumarin"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "3.840"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "4.820 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[3]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[3]/text "7"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[4]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[4]/text "689 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "2.110 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[6]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[6]/text "0×"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4.398 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set 3 tricouri bumbac"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "2.460"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "3.140 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[3]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[3]/text "12"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[4]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[4]/text "262 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "2.760 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[6]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[6]/text "1×"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2.588 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Geantă din piele ecologică"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[1]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "1.930"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[2]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[2]/text "2.605 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[3]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[3]/text "0"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[4]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[4]/text "—"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[5]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[5]/text "0 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[6]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[6]/text "0×"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2.605 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[0]/div[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[0]/div[0]/p[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[0]/div[0]/p[0]/text "Rochie office bleumarin"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[0]/div[0]/p[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[0]/div[0]/p[1]/text "Cost 4.820 lei · Vanzari 2.110 lei · ROAS 0,8×"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[0]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[0]/span[0]/text "-2.710 lei"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[1]/div[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[1]/div[0]/p[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[1]/div[0]/p[0]/text "Set 3 tricouri bumbac"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[1]/div[0]/p[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[1]/div[0]/p[1]/text "Cost 3.140 lei · Vanzari 2.760 lei · ROAS 1,2×"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[1]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[1]/span[0]/text "-1.390 lei"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[2]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[2]/div[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[2]/div[0]/p[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[2]/div[0]/p[0]/text "Geanta piele ecologica"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[2]/div[0]/p[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[2]/div[0]/p[1]/text "Cost 2.605 lei · Vanzari 0 lei · ROAS 0,0×"
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[2]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/div[2]/span[0]/text "-2.605 lei"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/b[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/b[0]/text "Pierdere = buget − vânzări ÷ ROAS minim"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/span[0]
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
 root/div[0]/section[0]/div[1]/div[1]/p[0]
 root/div[0]/section[0]/div[1]/div[1]/p[0]/text "Exemplu demonstrativ. Raportul tau foloseste datele reale din contul conectat."
 root/div[0]/section[1]
@@ -1255,34 +1302,51 @@ root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/h3[0]/text "Toate produse
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/p[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/p[0]/text "Google distribuie bugetul dupa sansele de vanzare, nu dupa profitul real pe care ti-l lasa fiecare produs."
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/p[0]/text "Unde s-a dus bugetul"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]/span[0]/text "Produs foarte cautat"
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]/b[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]/b[0]/text "72%"
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/div[1]/div[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[4]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[6]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]/text "Pierdere"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Rochie office bleumarin"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "3.840"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "4.820 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[3]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[3]/text "7"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[4]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[4]/text "689 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]/text "2.110 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[6]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[6]/text "0×"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4.398 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]/span[0]/text "Produs profitabil"
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]/b[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]/b[0]/text "18%"
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/div[1]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[2]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]/span[0]/text "Restul catalogului"
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]/b[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]/b[0]/text "10%"
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[2]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[2]/div[1]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/p[1]/text "Exemplu demonstrativ"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/b[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/b[0]/text "Pierdere = buget − vânzări ÷ ROAS minim"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/span[0]
@@ -1293,26 +1357,50 @@ root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/p[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/p[0]/text "Un produs poate primi foarte multe clickuri si poate consuma cea mai mare parte din buget, dar sa fie extrem de neprofitabil."
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]/p[0]/text "Produs cu trafic mare"
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]/p[1]/text "3.840 clickuri"
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/span[0]/text "ROAS 1,1×"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[4]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[6]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]/text "Pierdere"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Rochie office bleumarin"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "3.840"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "4.820 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[3]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[3]/text "7"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[4]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[4]/text "689 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]/text "2.110 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[6]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[6]/text "0×"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4.398 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]/p[0]/text "Cost reclame"
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]/p[1]/text "6.200 lei"
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[1]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[1]/p[0]/text "Pierdere estimata"
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[1]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/div[1]/p[1]/text "-3.450 lei"
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/p[0]/text "Exemplu demonstrativ"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/b[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/b[0]/text "Pierdere = buget − vânzări ÷ ROAS minim"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/span[0]
@@ -1322,29 +1410,62 @@ root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/h3[0]/text "Fara un CSS p
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/p[0]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/p[0]/text "Un cost per click mai mic inseamna mai mult trafic, mai multe vanzari si un ROAS mai mare din acelasi buget."
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[0]/p[0]/text "De la Google"
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[0]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[0]/p[1]/text "1 leu / click"
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[0]/p[2]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[0]/p[2]/text "Vanzari 5.000 lei"
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[0]/p[3]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[0]/p[3]/text "ROAS 5×"
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[1]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[1]/p[0]/text "De la CSS partener"
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[1]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[1]/p[1]/text "0,80 lei / click"
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[1]/p[2]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[1]/p[2]/text "Vanzari 6.250 lei"
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[1]/p[3]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/div[0]/div[1]/p[3]/text "ROAS 6,25×"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Scenariu"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[3]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[4]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[5]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[6]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[7]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Diferență"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/text "Direct Google"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "1.000"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "1.000 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[3]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[3]/text "20"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[4]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[4]/text "50 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[5]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "5.000 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[6]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[6]/text "5,00×"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[7]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/text "—"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/text "CSS partener"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "1.250"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "1.000 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[3]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[3]/text "25"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[4]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[4]/text "40 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[5]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "6.250 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[6]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[6]/text "6,25×"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[7]
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/text "+1.250 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[0]/text "+1.250 lei in vanzari estimate"
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[1]/text "Simulare la acelasi buget, aceeasi rata de conversie si aceeasi comanda medie."
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[0]/text "Același buget și aceeași rată de conversie: CPC 1 RON → 0,80 RON, deci 250 clickuri și 5 comenzi în plus."
 root/div[0]/section[1]/div[0]/p[0]
 root/div[0]/section[1]/div[0]/p[0]/text "Media contului ascunde problema. Auditul iti arata fiecare produs in parte."
 root/div[0]/section[2]
@@ -1360,69 +1481,185 @@ root/div[0]/section[2]/div[0]/div[1]
 root/div[0]/section[2]/div[0]/div[1]/article[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[0]/text "Opresti risipa"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[0]/text "Oprești risipa"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/h3[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/h3[0]/text "Produse care iti consuma bugetul"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/h3[0]/text "Produse care îți consumă bugetul"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[1]/text "Au primit trafic si au cheltuit bani, dar nu au generat suficiente vanzari. Cea mai mare pierdere apare prima."
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[1]/text "Au primit trafic și au cheltuit bani, dar nu au generat suficiente vânzări. Cea mai mare pierdere apare prima."
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]/p[0]/text "Rochie office bleumarin"
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[0]/div[0]/p[1]/text "Cost 4.820 lei · ROAS 0,8×"
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[0]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[0]/span[0]/text "-2.710 lei"
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]/p[0]/text "Set 3 tricouri bumbac"
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[1]/div[0]/p[1]/text "Cost 3.140 lei · ROAS 1,2×"
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[1]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[1]/span[0]/text "-1.390 lei"
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[2]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]/p[0]/text "Geanta piele ecologica"
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[2]/div[0]/p[1]/text "Cost 2.605 lei · ROAS 0,0×"
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[2]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/div[2]/span[0]/text "-2.605 lei"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[3]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[4]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[5]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[6]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[7]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Pierdere"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Rochie office bleumarin"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "3.840"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "4.820 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[3]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[3]/text "7"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[4]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[4]/text "689 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[5]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "2.110 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[6]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[6]/text "0×"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[7]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4.398 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set 3 tricouri bumbac"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "2.460"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "3.140 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[3]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[3]/text "12"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[4]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[4]/text "262 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[5]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "2.760 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[6]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[6]/text "1×"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[7]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2.588 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Geantă din piele ecologică"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[1]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "1.930"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[2]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[2]/text "2.605 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[3]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[3]/text "0"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[4]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[4]/text "—"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[5]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[5]/text "0 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[6]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[6]/text "0×"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[7]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2.605 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/b[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/b[0]/text "Pierdere = buget − vânzări ÷ ROAS minim"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[0]/text "Recuperezi cresterea"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[0]/text "Recuperezi creșterea"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/h3[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/h3[0]/text "Produse care merita promovate mai mult"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/h3[0]/text "Produse care merită promovate mai mult"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[1]/text "Au demonstrat ca pot genera vanzari profitabile, dar primesc prea putin trafic. Cea mai mare oportunitate apare prima."
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[1]/text "Au demonstrat că pot genera vânzări profitabile, dar primesc prea puțin trafic. Cea mai mare oportunitate apare prima."
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]/p[0]/text "Pantofi sport barbati"
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[0]/div[0]/p[1]/text "Vanzari 5.460 lei · ROAS 13,0×"
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[0]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[0]/span[0]/text "+8.190 lei"
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[1]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]/p[0]/text "Geaca dama impermeabila"
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[1]/div[0]/p[1]/text "Vanzari 3.720 lei · ROAS 12,0×"
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[1]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[1]/span[0]/text "+5.580 lei"
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[2]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[2]/div[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[2]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[2]/div[0]/p[0]/text "Rucsac urban premium"
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[2]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[2]/div[0]/p[1]/text "Vanzari 2.090 lei · ROAS 11,0×"
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[2]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/div[2]/span[0]/text "+3.135 lei"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[4]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[6]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Potențial"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Pantofi sport bărbați"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "420"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[2]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "420 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[3]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[3]/text "14"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[4]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[4]/text "30 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "5.460 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[6]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[6]/text "13×"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "+8.736 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Geacă damă impermeabilă"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "310"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[2]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "310 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[3]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[3]/text "10"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[4]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[4]/text "31 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "3.720 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[6]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[6]/text "12×"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "+5.208 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Rucsac urban premium"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[1]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "190"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[2]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[2]/text "190 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[3]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[3]/text "6"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[4]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[4]/text "32 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[5]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[5]/text "2.090 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[6]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[6]/text "11×"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "+2.508 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/b[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/b[0]/text "Potențial = vânzări × (ROAS ÷ ROAS minim − 1)"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
 root/div[0]/section[2]/div[0]/p[0]
 root/div[0]/section[2]/div[0]/p[0]/text "Exemple demonstrative. In raport, valorile istorice sunt masurate din Google Ads, iar estimarile sunt etichetate separat."
 root/div[0]/section[3]
