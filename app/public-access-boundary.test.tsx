@@ -646,14 +646,26 @@ describe("public Google Ads access boundary", () => {
     expect(output).toMatchSnapshot(`${surface}:normal`);
   });
 
-  it("keeps the landing journey compact after the hero", () => {
+  it("explains the product-level audit before asking for the connection", () => {
     const html = renderToStaticMarkup(<LandingPage />);
     const sectionOrder = [...html.matchAll(/data-landing-section="([^"]+)"/g)].map((match) => match[1]);
 
-    expect(sectionOrder).toEqual(["hero", "trust", "proof", "steps", "cta"]);
+    expect(sectionOrder).toEqual(["hero", "problems", "evidence", "steps", "cta"]);
     expect(html.match(/<section/g) ?? []).toHaveLength(5);
+    expect(html).toContain("Stii ce produse din Google Shopping iti aduc bani si care iti consuma bugetul?");
+    expect(html).toContain("Vezi ce produse iti consuma bugetul fara sa aduca suficiente vanzari");
+    expect(html).toContain('href="#report-preview"');
+    expect(html).toContain("Vezi un exemplu de raport");
+    expect(html.match(/data-problem-example=/g) ?? []).toHaveLength(3);
+    expect(html.match(/data-evidence-example=/g) ?? []).toHaveLength(2);
+    expect(html).toContain("De la Google");
+    expect(html).toContain("De la CSS partener");
+    expect(html).toContain("Vanzari 5.000 lei");
+    expect(html).toContain("ROAS 5×");
+    expect(html).toContain("Vanzari 6.250 lei");
+    expect(html).toContain("ROAS 6,25×");
+    expect(html).toContain("+1.250 lei in vanzari estimate");
     expect(html).toContain('<details data-oauth-disclosure="progressive"');
-    expect(html.match(/data-proof-row=/g) ?? []).toHaveLength(3);
     expect(html.match(/data-process-step=/g) ?? []).toHaveLength(3);
   });
 
