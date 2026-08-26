@@ -28,53 +28,6 @@ const mockVillains = [
   { p: "Geanta piele ecologica", cost: "2.605 lei", roas: "0,0×" },
 ];
 
-// Cele 3 lucruri pe care le arata raportul. `tier` = nivelul de onestitate.
-const findings = [
-  {
-    tier: "Masurat",
-    tierBg: C.greenBg,
-    tierFg: C.green,
-    title: "Produsele care iti ard bugetul",
-    body:
-      `Fiecare produs din Shopping care a cheltuit bani si a stat sub ROAS-ul tau minim, cu suma exacta pe ultimele ${AUDIT_WINDOW_LABEL}. `
-      + "Adunate, iti dau banii dusi pe produse care nu ating targetul.",
-    icon: (
-      <>
-        <path d="M3 3v18h18" />
-        <path d="m19 15-4-4-3 3-4-4" />
-      </>
-    ),
-  },
-  {
-    tier: "Masurat",
-    tierBg: C.greenBg,
-    tierFg: C.green,
-    title: "Catalogul mort",
-    body:
-      "Cate produse din catalog nu au avut nicio afisare. Nu iti inventam o suma pe ele — primesti faptul: cate sunt si ce parte din catalog inseamna.",
-    icon: (
-      <>
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <path d="M9 9h6v6H9z" />
-      </>
-    ),
-  },
-  {
-    tier: "Estimare",
-    tierBg: C.yellowBg,
-    tierFg: C.yellow,
-    title: "Cat platesti in plus pe click",
-    body:
-      "Daca rulezi Shopping direct prin Google, fara CSS, costul pe click poate fi cu pana la ~20% mai mare. Cheltuiala pe care o aplicam e reala, procentul e un reper de piata — asa il si marcam.",
-    icon: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 7v5l3 2" />
-      </>
-    ),
-  },
-];
-
 const steps = [
   {
     n: "1",
@@ -83,36 +36,13 @@ const steps = [
   },
   {
     n: "2",
-    t: "Spui cat iti ramane din 100 de lei",
-    d: "Un singur camp: marja ta, aproximativ. Din ea calculam noi pragul sub care un produs nu-si merita bugetul — nu trebuie sa stii ce inseamna ROAS.",
+    t: "Confirmi doua valori simple",
+    d: "Valoarea medie a unei comenzi si cat te costa marfa din ea. Noi calculam pragul de rentabilitate.",
   },
   {
     n: "3",
     t: "Primesti raportul",
     d: `Pe loc, pe cifrele tale din ultimele ${AUDIT_WINDOW_LABEL}. Fara asteptare si fara discutie de vanzare inainte.`,
-  },
-];
-
-const safety = [
-  {
-    t: publicOAuthProjection.readsOnlyLabel,
-    d: publicOAuthProjection.noAccountChanges,
-    icon: <><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></>,
-  },
-  {
-    t: "Datele necesare auditului",
-    d: `${publicOAuthProjection.auditDataReadDisclosure} ${publicOAuthProjection.googleAdsPermission}`,
-    icon: <><rect x="3" y="8" width="18" height="13" rx="2" /><path d="M8 8V6a4 4 0 0 1 8 0v2" /></>,
-  },
-  {
-    t: "Retragi accesul oricand",
-    d: "Dintr-un click, din contul tau Google. Nu depinde de noi.",
-    icon: <><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></>,
-  },
-  {
-    t: "Fara card, fara abonament",
-    d: "Raportul e gratuit. Discutam dupa, doar daca vrei tu.",
-    icon: <><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M2 10h20" /></>,
   },
 ];
 
@@ -137,7 +67,7 @@ export default function GoogleAdsLanding() {
         </div>
       </nav>
 
-      <section className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-8 sm:pb-24 sm:pt-36"
+      <section data-landing-section="hero" className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-8 sm:pb-24 sm:pt-36"
         style={{ background: "linear-gradient(145deg,#f7f7fd 0%,#ffffff 58%,#f1fbfc 100%)" }}>
         <div aria-hidden="true" className="pointer-events-none absolute -right-44 -top-52 h-[680px] w-[680px] rounded-full"
           style={{ background: "radial-gradient(circle,rgba(10,190,207,0.11) 0%,transparent 68%)" }} />
@@ -249,180 +179,117 @@ export default function GoogleAdsLanding() {
         </div>
       </section>
 
-      {/* 2 · SIGURANTA — sus, pentru ca aici e bariera reala */}
-      <section className="bg-white px-8 py-16">
-        {/* Paragraful asta are si un rol tehnic: reviewerul Google verifica daca pagina
-            declarata ca home page explica ce face aplicatia si cu ce date lucreaza. */}
-        <p className="mx-auto mb-10 max-w-[760px] text-center text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
-          <b style={{ color: "#0f172a" }}>Audit Devrika</b> este aplicatia care face aceasta analiza. Cu
-          acordul tau, se conecteaza la contul tau de Google Ads si citeste <b>doar</b>
-          {` ${publicOAuthProjection.auditDataCategories}. Nu stocam datele contului tau si nu facem nicio modificare in el.`}
-        </p>
-        <div className="mx-auto grid max-w-[960px] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {safety.map((s) => (
-            <div key={s.t} className="flex flex-col gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: "#eef0ff" }}>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.indigo} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  {s.icon}
-                </svg>
-              </div>
-              <p className="text-[15px] font-bold" style={{ fontFamily: sora, color: "#1e293b" }}>{s.t}</p>
-              <p className="text-[13.5px] leading-relaxed" style={{ color: C.gray500 }}>{s.d}</p>
+      <section data-landing-section="trust" className="bg-white px-5 py-14 sm:px-8 sm:py-16">
+        <div className="mx-auto max-w-[1100px] border-y py-8" style={{ borderColor: C.border }}>
+          <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+            <div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.14em]" style={{ color: C.indigo }}>Controlul ramane la tine</p>
+              <h2 className="max-w-[430px] text-2xl font-extrabold leading-tight tracking-[-0.6px] sm:text-3xl" style={{ fontFamily: sora, color: C.navy }}>
+                Iti citim cifrele. Nu atingem campaniile.
+              </h2>
             </div>
-          ))}
+            <div>
+              <div className="grid gap-5 sm:grid-cols-3">
+                {[
+                  [publicOAuthProjection.readsOnlyLabel, publicOAuthProjection.noAccountChanges],
+                  ["Acces revocabil", "Il retragi oricand, direct din contul tau Google."],
+                  ["Fara card", "Raportul este gratuit si nu porneste niciun abonament."],
+                ].map(([title, body]) => (
+                  <div key={title} className="border-t pt-4" style={{ borderColor: C.border }}>
+                    <p className="text-sm font-bold" style={{ color: C.navy }}>{title}</p>
+                    <p className="mt-1.5 text-sm leading-relaxed" style={{ color: C.gray500 }}>{body}</p>
+                  </div>
+                ))}
+              </div>
+              <details data-oauth-disclosure="progressive" className="group mt-7 border-t pt-5" style={{ borderColor: C.border }}>
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-bold" style={{ color: C.indigo }}>
+                  Exact ce date citim
+                  <span aria-hidden="true" className="text-lg transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="mt-4 max-w-[760px] text-sm leading-relaxed" style={{ color: C.gray500 }}>
+                  <b style={{ color: C.navy }}>Audit Devrika</b> se conecteaza cu acordul tau si citeste doar {publicOAuthProjection.auditDataCategories}.
+                  {` ${publicOAuthProjection.auditDataReadDisclosure} ${publicOAuthProjection.googleAdsPermission}`}
+                  {` Nu stocam datele contului tau si nu facem nicio modificare in el.`}
+                </p>
+              </details>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* 3 · PROBLEMA */}
-      <section className="px-8 py-20" style={{ background: "linear-gradient(180deg,#fff 0%,#f8f7ff 100%)" }}>
-        <div className="mx-auto max-w-[720px] text-center">
-          <h2 className="mb-5 font-extrabold leading-[1.15] tracking-[-1px]"
-            style={{ fontFamily: sora, fontSize: "clamp(26px,4vw,38px)", color: "#0f172a" }}>
-            Contul merge pe plus, dar nu tot din el
-          </h2>
-          <p className="mx-auto mb-8 max-w-[580px] text-lg leading-relaxed" style={{ color: C.gray500 }}>
-            Intr-o campanie de Shopping, media ascunde adevarul. Cateva produse duc tot rezultatul, iar restul consuma linistit acelasi buget:
-          </p>
-          <ul className="mx-auto flex max-w-[540px] flex-col gap-3.5 text-left">
+      <section data-landing-section="proof" className="px-5 py-20 sm:px-8 sm:py-24" style={{ background: "#f6f7fc" }}>
+        <div className="mx-auto grid max-w-[1100px] gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-20">
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em]" style={{ color: C.indigo }}>Ce primesti in raport</p>
+            <h2 className="max-w-[480px] font-black leading-[1.08] tracking-[-1.4px]" style={{ fontFamily: sora, fontSize: "clamp(32px,4.5vw,52px)", color: C.navy }}>
+              Nu o medie. Produsele, pe nume si in ordinea banilor.
+            </h2>
+            <p className="mt-6 max-w-[500px] text-lg leading-relaxed" style={{ color: C.gray500 }}>
+              Raportul separa ce consuma sub prag de ce merita mai mult trafic. Fiecare cifra spune clar daca este masurata sau estimata.
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-[22px] border bg-white" style={{ borderColor: "rgba(71,73,158,0.13)", boxShadow: "0 24px 60px rgba(19,22,58,0.09)" }}>
+            <div className="flex items-center justify-between border-b px-6 py-5" style={{ borderColor: C.border }}>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.12em]" style={{ color: C.indigo }}>Prioritatea raportului</p>
+                <p className="mt-1 text-sm font-semibold" style={{ color: C.navy }}>Banii cu cel mai mare impact, primii</p>
+              </div>
+              <span className="rounded-full px-3 py-1.5 text-xs font-bold" style={{ background: C.greenBg, color: C.green }}>Masurat</span>
+            </div>
             {[
-              "Produse pe care cheltuiesti lunar si nu ating niciodata ROAS-ul tau",
-              "Produse care nu au vandut nimic, dar continua sa consume",
-              "Sute de produse din catalog pe care nu le-a vazut nimeni",
-              "Un cost pe click mai mare decat al concurentei, pe aceleasi produse",
-            ].map((t) => (
-              <li key={t} className="flex items-center gap-3 rounded-xl border bg-white px-4 py-3 text-[15px]"
-                style={{ borderColor: "#e8eaf5", color: "#334155" }}>
-                <span aria-hidden="true" className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white"
-                  style={{ background: brandGradient }}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-                </span>
-                {t}
-              </li>
-            ))}
-          </ul>
-          <p className="mx-auto mt-8 max-w-[540px] text-lg leading-relaxed" style={{ color: C.gray500 }}>
-            Raportul le scoate la suprafata <b style={{ color: "#0f172a" }}>cu nume si cu suma</b>.
-          </p>
-        </div>
-      </section>
-
-      {/* 4 · CE AFLI */}
-      <section className="bg-white px-8 py-24">
-        <p className="mb-3 text-center text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Ce afli</p>
-        <h2 className="mb-4 text-center font-extrabold leading-[1.15] tracking-[-1px]"
-          style={{ fontFamily: sora, fontSize: "clamp(28px,4vw,42px)", color: "#0f172a" }}>
-          Trei raspunsuri, pe cifrele tale
-        </h2>
-        <p className="mx-auto mb-14 max-w-[560px] text-center text-base leading-relaxed" style={{ color: C.gray500 }}>
-          Marcam clar ce e masurat in contul tau si ce e reper de piata. Nu amestecam.
-        </p>
-        <div className="mx-auto grid max-w-[1000px] grid-cols-1 items-stretch gap-5 md:grid-cols-3">
-          {findings.map((f) => (
-            <div key={f.title} className="flex flex-col rounded-2xl border p-6" style={{ borderColor: "#e2e8f0", background: "#fff" }}>
-              <div className="mb-4 flex items-center justify-between gap-2">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "#eef0ff" }}>
-                  <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.indigo} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    {f.icon}
-                  </svg>
+              ["01", "Opresti pierderea cea mai mare", "Produsele sub prag, ordonate dupa cost", "10.565 lei"],
+              ["02", "Recuperezi cresterea ratata", "Produsele profitabile cu prea putin trafic", "Top 10"],
+              ["03", "Vezi contul dupa optimizare", "Aceeasi bani mutati spre produsele dovedite", "Simulare"],
+            ].map(([number, title, body, value]) => (
+              <div key={number} data-proof-row={number} className="grid grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-4 border-b px-6 py-5 last:border-b-0" style={{ borderColor: C.border }}>
+                <span className="text-sm font-extrabold tabular-nums" style={{ color: C.indigo }}>{number}</span>
+                <div>
+                  <p className="text-sm font-bold" style={{ color: C.navy }}>{title}</p>
+                  <p className="mt-1 text-sm leading-relaxed" style={{ color: C.gray500 }}>{body}</p>
                 </div>
-                <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide"
-                  style={{ background: f.tierBg, color: f.tierFg }}>
-                  {f.tier}
-                </span>
-              </div>
-              <p className="mb-2 text-[16px] font-bold" style={{ fontFamily: sora, color: "#1e293b" }}>{f.title}</p>
-              <p className="text-[14px] leading-relaxed" style={{ color: C.gray500 }}>{f.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 5 · CUM FUNCTIONEAZA */}
-      <section className="px-8 py-24" style={{ background: "linear-gradient(180deg,#fff 0%,#f8f7ff 100%)" }}>
-        <p className="mb-3 text-center text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Cum functioneaza</p>
-        <h2 className="mb-4 text-center font-extrabold leading-[1.15] tracking-[-1px]"
-          style={{ fontFamily: sora, fontSize: "clamp(28px,4vw,42px)", color: "#0f172a" }}>
-          Sub un minut pana la raport
-        </h2>
-        <p className="mx-auto mb-16 max-w-[520px] text-center text-base leading-relaxed" style={{ color: C.gray500 }}>
-          Nu ai nevoie de cunostinte tehnice si nu trebuie sa exporti nimic din cont.
-        </p>
-        <div className="relative mx-auto grid max-w-[800px] grid-cols-1 gap-8 md:grid-cols-3">
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-[15%] top-7 hidden h-px md:block"
-            style={{ background: "linear-gradient(90deg,transparent,#e2e8f0 20%,#e2e8f0 80%,transparent)" }} />
-          {steps.map((s) => (
-            <div key={s.n} className="relative z-10 text-center">
-              <div aria-hidden="true" className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full text-xl font-extrabold text-white"
-                style={{ fontFamily: sora, background: brandGradient }}>
-                {s.n}
-              </div>
-              <p className="mb-1.5 text-[15px] font-bold" style={{ fontFamily: sora, color: "#1e293b" }}>{s.t}</p>
-              <p className="text-[13px] leading-relaxed" style={{ color: C.gray500 }}>{s.d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 6 · SIMULARE */}
-      <section className="bg-white px-8 py-24">
-        <p className="mb-3 text-center text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Dupa curatare</p>
-        <h2 className="mb-4 text-center font-extrabold leading-[1.15] tracking-[-1px]"
-          style={{ fontFamily: sora, fontSize: "clamp(28px,4vw,42px)", color: "#0f172a" }}>
-          Cat ar aduce acelasi buget, curatat
-        </h2>
-        <p className="mx-auto mb-12 max-w-[600px] text-center text-base leading-relaxed" style={{ color: C.gray500 }}>
-          Raportul ia banii ramasi dupa ce tai produsele slabe si ii pune la randamentul produselor care chiar vand la tine. Asa arata:
-        </p>
-        <div className="mx-auto max-w-[640px] rounded-2xl border p-6 md:p-8" style={{ background: "#fafbff", borderColor: "#e2e8f0" }}>
-          <div className="flex flex-col gap-4">
-            {[
-              { k: "Acum", v: "48.200 lei", pct: 33, color: C.gray400 },
-              { k: "Buget curatat, acelasi randament", v: "96.400 lei", pct: 66, color: C.indigo },
-              { k: "Buget curatat, marit de 5 ori", v: "241.000 lei", pct: 100, color: C.cyan },
-            ].map((r) => (
-              <div key={r.k}>
-                <div className="mb-1.5 flex items-baseline justify-between gap-3">
-                  <span className="text-[13.5px]" style={{ color: C.gray600 }}>{r.k}</span>
-                  <span className="text-[15px] font-bold" style={{ color: "#1e293b", fontVariantNumeric: "tabular-nums" }}>{r.v}</span>
-                </div>
-                <div className="overflow-hidden rounded-sm" style={{ height: 8, background: "#e9eef7" }}>
-                  <div style={{ width: `${r.pct}%`, height: "100%", background: r.color, borderRadius: 4 }} />
-                </div>
+                <span className="text-right text-sm font-extrabold" style={{ color: number === "01" ? C.red : C.navy }}>{value}</span>
               </div>
             ))}
           </div>
-          <p className="mt-5 text-[12px] leading-relaxed" style={{ color: C.gray400 }}>
-            Simulare, nu promisiune — un plafon optimist care presupune ca produsele bune tin acelasi randament la buget mai mare. E venit, nu profit: profitul depinde de marja ta, pe care ti-o cerem la pasul 2. Cifrele de mai sus sunt exemplu.
-          </p>
         </div>
       </section>
 
-      {/* 7 · CTA FINAL */}
-      <section className="relative overflow-hidden px-8 py-24 text-center" style={{ background: brandGradient }}>
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-15"
-          style={{ backgroundImage: "radial-gradient(circle at 2px 2px,white 1px,transparent 0)", backgroundSize: "28px 28px" }} />
-        <div className="relative z-10">
-          <h2 className="mx-auto mb-4 max-w-[660px] font-black text-white leading-[1.1] tracking-[-1.5px]"
-            style={{ fontFamily: sora, fontSize: "clamp(28px,5vw,52px)" }}>
-            Vezi ce produse iti ard bugetul
-          </h2>
-          <p className="mb-10 text-lg" style={{ color: "rgba(255,255,255,0.85)" }}>
-            Gratuit, pe cifrele tale reale. Fara card si fara discutie de vanzare inainte.
-          </p>
-          <Link href={CONNECT_HREF}
-            className="inline-flex items-center gap-2.5 rounded-[14px] bg-white px-10 py-[18px] text-[17px] font-extrabold transition-all hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-            style={{ fontFamily: sora, color: C.indigo, boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
-            Conecteaza contul Google Ads
-            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+      <section data-landing-section="steps" className="bg-white px-5 py-20 sm:px-8 sm:py-24">
+        <div className="mx-auto grid max-w-[1100px] gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24">
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em]" style={{ color: C.indigo }}>Trei pasi</p>
+            <h2 className="font-black leading-[1.08] tracking-[-1.2px]" style={{ fontFamily: sora, fontSize: "clamp(30px,4vw,46px)", color: C.navy }}>
+              Sub un minut pana incepe analiza.
+            </h2>
+            <p className="mt-5 max-w-[420px] text-base leading-relaxed" style={{ color: C.gray500 }}>
+              Nu exporti fisiere si nu trebuie sa cunosti termenii Google Ads.
+            </p>
+          </div>
+          <div className="border-t" style={{ borderColor: C.border }}>
+            {steps.map((step) => (
+              <div key={step.n} data-process-step={step.n} className="grid grid-cols-[48px_minmax(0,1fr)] gap-5 border-b py-6 sm:grid-cols-[48px_190px_minmax(0,1fr)]" style={{ borderColor: C.border }}>
+                <span className="text-base font-extrabold tabular-nums" style={{ fontFamily: sora, color: C.indigo }}>0{step.n}</span>
+                <p className="text-base font-bold" style={{ color: C.navy }}>{step.t}</p>
+                <p className="col-start-2 text-sm leading-relaxed sm:col-start-3" style={{ color: C.gray500 }}>{step.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section data-landing-section="cta" className="px-5 pb-8 sm:px-8 sm:pb-10">
+        <div className="mx-auto grid max-w-[1160px] gap-9 overflow-hidden rounded-[28px] px-7 py-12 sm:px-12 lg:grid-cols-[1fr_auto] lg:items-center lg:px-16 lg:py-14" style={{ background: C.navy }}>
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em]" style={{ color: C.cyan }}>Audit gratuit</p>
+            <h2 className="max-w-[700px] font-black leading-[1.08] tracking-[-1.2px] text-white" style={{ fontFamily: sora, fontSize: "clamp(30px,4.5vw,48px)" }}>
+              Vezi unde se opreste profitul din contul tau.
+            </h2>
+            <p className="mt-4 text-base" style={{ color: "rgba(255,255,255,0.72)" }}>Pe datele tale reale. Fara card. Fara modificari in Google Ads.</p>
+          </div>
+          <Link href={CONNECT_HREF} className="inline-flex min-h-14 items-center justify-center gap-2.5 rounded-xl bg-white px-7 text-base font-extrabold transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none motion-reduce:hover:translate-y-0" style={{ color: C.navy }}>
+            Conecteaza contul
+            <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
           </Link>
-          <p className="mt-5 text-[13px]" style={{ color: "rgba(255,255,255,0.75)" }}>
-            Nu ai inca reclame pe Shopping?{" "}
-            <Link href="/audit-seo" className="font-bold text-white underline underline-offset-2">
-              Incearca auditul magazinului
-            </Link>
-          </p>
         </div>
       </section>
 

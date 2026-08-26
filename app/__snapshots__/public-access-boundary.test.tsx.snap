@@ -828,206 +828,131 @@ root/div[0]/section[0]/div[1]/div[1]/div[1]/div[3]/p[0]/text "Raportul arata si 
 root/div[0]/section[0]/div[1]/div[1]/p[0]
 root/div[0]/section[0]/div[1]/div[1]/p[0]/text "Cifre demonstrative. Raportul tau foloseste exclusiv datele contului conectat."
 root/div[0]/section[1]
-root/div[0]/section[1]/p[0]
-root/div[0]/section[1]/p[0]/b[0]
-root/div[0]/section[1]/p[0]/b[0]/text "Audit Devrika"
-root/div[0]/section[1]/p[0]/text "este aplicatia care face aceasta analiza. Cu acordul tau, se conecteaza la contul tau de Google Ads si citeste"
-root/div[0]/section[1]/p[0]/b[1]
-root/div[0]/section[1]/p[0]/b[1]/text "doar"
-root/div[0]/section[1]/p[0]/text "conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu stocam datele contului tau si nu facem nicio modificare in el."
 root/div[0]/section[1]/div[0]
 root/div[0]/section[1]/div[0]/div[0]
 root/div[0]/section[1]/div[0]/div[0]/div[0]
-root/div[0]/section[1]/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[1]/div[0]/div[0]/div[0]/svg[0]/path[0]
-root/div[0]/section[1]/div[0]/div[0]/div[0]/svg[0]/circle[0]
-root/div[0]/section[1]/div[0]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[0]/p[0]/text "Doar citim"
-root/div[0]/section[1]/div[0]/div[0]/p[1]
-root/div[0]/section[1]/div[0]/div[0]/p[1]/text "Nu modificam nimic in contul tau."
-root/div[0]/section[1]/div[0]/div[1]
-root/div[0]/section[1]/div[0]/div[1]/div[0]
-root/div[0]/section[1]/div[0]/div[1]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[1]/div[0]/div[1]/div[0]/svg[0]/rect[0]
-root/div[0]/section[1]/div[0]/div[1]/div[0]/svg[0]/path[0]
-root/div[0]/section[1]/div[0]/div[1]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/p[0]/text "Datele necesare auditului"
-root/div[0]/section[1]/div[0]/div[1]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/p[1]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive."
-root/div[0]/section[1]/div[0]/div[2]
-root/div[0]/section[1]/div[0]/div[2]/div[0]
-root/div[0]/section[1]/div[0]/div[2]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[1]/div[0]/div[2]/div[0]/svg[0]/path[0]
-root/div[0]/section[1]/div[0]/div[2]/div[0]/svg[0]/path[1]
-root/div[0]/section[1]/div[0]/div[2]/p[0]
-root/div[0]/section[1]/div[0]/div[2]/p[0]/text "Retragi accesul oricand"
-root/div[0]/section[1]/div[0]/div[2]/p[1]
-root/div[0]/section[1]/div[0]/div[2]/p[1]/text "Dintr-un click, din contul tau Google. Nu depinde de noi."
-root/div[0]/section[1]/div[0]/div[3]
-root/div[0]/section[1]/div[0]/div[3]/div[0]
-root/div[0]/section[1]/div[0]/div[3]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[1]/div[0]/div[3]/div[0]/svg[0]/rect[0]
-root/div[0]/section[1]/div[0]/div[3]/div[0]/svg[0]/path[0]
-root/div[0]/section[1]/div[0]/div[3]/p[0]
-root/div[0]/section[1]/div[0]/div[3]/p[0]/text "Fara card, fara abonament"
-root/div[0]/section[1]/div[0]/div[3]/p[1]
-root/div[0]/section[1]/div[0]/div[3]/p[1]/text "Raportul e gratuit. Discutam dupa, doar daca vrei tu."
+root/div[0]/section[1]/div[0]/div[0]/div[0]/p[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]/p[0]/text "Controlul ramane la tine"
+root/div[0]/section[1]/div[0]/div[0]/div[0]/h2[0]
+root/div[0]/section[1]/div[0]/div[0]/div[0]/h2[0]/text "Iti citim cifrele. Nu atingem campaniile."
+root/div[0]/section[1]/div[0]/div[0]/div[1]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[0]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[0]/p[0]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[0]/p[0]/text "Doar citim"
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[0]/p[1]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[0]/p[1]/text "Nu modificam nimic in contul tau."
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[1]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[1]/p[0]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[1]/p[0]/text "Acces revocabil"
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[1]/p[1]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[1]/p[1]/text "Il retragi oricand, direct din contul tau Google."
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[2]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[2]/p[0]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[2]/p[0]/text "Fara card"
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[2]/p[1]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/div[0]/div[2]/p[1]/text "Raportul este gratuit si nu porneste niciun abonament."
+root/div[0]/section[1]/div[0]/div[0]/div[1]/details[0]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/details[0]/summary[0]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/details[0]/summary[0]/text "Exact ce date citim"
+root/div[0]/section[1]/div[0]/div[0]/div[1]/details[0]/summary[0]/span[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/div[0]/div[1]/details[0]/summary[0]/span[0]/text "+"
+root/div[0]/section[1]/div[0]/div[0]/div[1]/details[0]/p[0]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/details[0]/p[0]/b[0]
+root/div[0]/section[1]/div[0]/div[0]/div[1]/details[0]/p[0]/b[0]/text "Audit Devrika"
+root/div[0]/section[1]/div[0]/div[0]/div[1]/details[0]/p[0]/text "se conecteaza cu acordul tau si citeste doar conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive. Nu stocam datele contului tau si nu facem nicio modificare in el."
 root/div[0]/section[2]
 root/div[0]/section[2]/div[0]
-root/div[0]/section[2]/div[0]/h2[0]
-root/div[0]/section[2]/div[0]/h2[0]/text "Contul merge pe plus, dar nu tot din el"
-root/div[0]/section[2]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/p[0]/text "Intr-o campanie de Shopping, media ascunde adevarul. Cateva produse duc tot rezultatul, iar restul consuma linistit acelasi buget:"
-root/div[0]/section[2]/div[0]/ul[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
-root/div[0]/section[2]/div[0]/ul[0]/li[0]/span[0]/svg[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[0]/span[0]/svg[0]/path[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[0]/text "Produse pe care cheltuiesti lunar si nu ating niciodata ROAS-ul tau"
-root/div[0]/section[2]/div[0]/ul[0]/li[1]
-root/div[0]/section[2]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
-root/div[0]/section[2]/div[0]/ul[0]/li[1]/span[0]/svg[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[1]/span[0]/svg[0]/path[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[1]/text "Produse care nu au vandut nimic, dar continua sa consume"
-root/div[0]/section[2]/div[0]/ul[0]/li[2]
-root/div[0]/section[2]/div[0]/ul[0]/li[2]/span[0] aria-hidden="true"
-root/div[0]/section[2]/div[0]/ul[0]/li[2]/span[0]/svg[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[2]/span[0]/svg[0]/path[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[2]/text "Sute de produse din catalog pe care nu le-a vazut nimeni"
-root/div[0]/section[2]/div[0]/ul[0]/li[3]
-root/div[0]/section[2]/div[0]/ul[0]/li[3]/span[0] aria-hidden="true"
-root/div[0]/section[2]/div[0]/ul[0]/li[3]/span[0]/svg[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[3]/span[0]/svg[0]/path[0]
-root/div[0]/section[2]/div[0]/ul[0]/li[3]/text "Un cost pe click mai mare decat al concurentei, pe aceleasi produse"
-root/div[0]/section[2]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/p[1]/text "Raportul le scoate la suprafata"
-root/div[0]/section[2]/div[0]/p[1]/b[0]
-root/div[0]/section[2]/div[0]/p[1]/b[0]/text "cu nume si cu suma"
-root/div[0]/section[2]/div[0]/p[1]/text "."
+root/div[0]/section[2]/div[0]/div[0]
+root/div[0]/section[2]/div[0]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/div[0]/p[0]/text "Ce primesti in raport"
+root/div[0]/section[2]/div[0]/div[0]/h2[0]
+root/div[0]/section[2]/div[0]/div[0]/h2[0]/text "Nu o medie. Produsele, pe nume si in ordinea banilor."
+root/div[0]/section[2]/div[0]/div[0]/p[1]
+root/div[0]/section[2]/div[0]/div[0]/p[1]/text "Raportul separa ce consuma sub prag de ce merita mai mult trafic. Fiecare cifra spune clar daca este masurata sau estimata."
+root/div[0]/section[2]/div[0]/div[1]
+root/div[0]/section[2]/div[0]/div[1]/div[0]
+root/div[0]/section[2]/div[0]/div[1]/div[0]/div[0]
+root/div[0]/section[2]/div[0]/div[1]/div[0]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/div[1]/div[0]/div[0]/p[0]/text "Prioritatea raportului"
+root/div[0]/section[2]/div[0]/div[1]/div[0]/div[0]/p[1]
+root/div[0]/section[2]/div[0]/div[1]/div[0]/div[0]/p[1]/text "Banii cu cel mai mare impact, primii"
+root/div[0]/section[2]/div[0]/div[1]/div[0]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/div[0]/span[0]/text "Masurat"
+root/div[0]/section[2]/div[0]/div[1]/div[1]
+root/div[0]/section[2]/div[0]/div[1]/div[1]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/div[1]/span[0]/text "01"
+root/div[0]/section[2]/div[0]/div[1]/div[1]/div[0]
+root/div[0]/section[2]/div[0]/div[1]/div[1]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/div[1]/div[1]/div[0]/p[0]/text "Opresti pierderea cea mai mare"
+root/div[0]/section[2]/div[0]/div[1]/div[1]/div[0]/p[1]
+root/div[0]/section[2]/div[0]/div[1]/div[1]/div[0]/p[1]/text "Produsele sub prag, ordonate dupa cost"
+root/div[0]/section[2]/div[0]/div[1]/div[1]/span[1]
+root/div[0]/section[2]/div[0]/div[1]/div[1]/span[1]/text "10.565 lei"
+root/div[0]/section[2]/div[0]/div[1]/div[2]
+root/div[0]/section[2]/div[0]/div[1]/div[2]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/div[2]/span[0]/text "02"
+root/div[0]/section[2]/div[0]/div[1]/div[2]/div[0]
+root/div[0]/section[2]/div[0]/div[1]/div[2]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/div[1]/div[2]/div[0]/p[0]/text "Recuperezi cresterea ratata"
+root/div[0]/section[2]/div[0]/div[1]/div[2]/div[0]/p[1]
+root/div[0]/section[2]/div[0]/div[1]/div[2]/div[0]/p[1]/text "Produsele profitabile cu prea putin trafic"
+root/div[0]/section[2]/div[0]/div[1]/div[2]/span[1]
+root/div[0]/section[2]/div[0]/div[1]/div[2]/span[1]/text "Top 10"
+root/div[0]/section[2]/div[0]/div[1]/div[3]
+root/div[0]/section[2]/div[0]/div[1]/div[3]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/div[3]/span[0]/text "03"
+root/div[0]/section[2]/div[0]/div[1]/div[3]/div[0]
+root/div[0]/section[2]/div[0]/div[1]/div[3]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/div[1]/div[3]/div[0]/p[0]/text "Vezi contul dupa optimizare"
+root/div[0]/section[2]/div[0]/div[1]/div[3]/div[0]/p[1]
+root/div[0]/section[2]/div[0]/div[1]/div[3]/div[0]/p[1]/text "Aceeasi bani mutati spre produsele dovedite"
+root/div[0]/section[2]/div[0]/div[1]/div[3]/span[1]
+root/div[0]/section[2]/div[0]/div[1]/div[3]/span[1]/text "Simulare"
 root/div[0]/section[3]
-root/div[0]/section[3]/p[0]
-root/div[0]/section[3]/p[0]/text "Ce afli"
-root/div[0]/section[3]/h2[0]
-root/div[0]/section[3]/h2[0]/text "Trei raspunsuri, pe cifrele tale"
-root/div[0]/section[3]/p[1]
-root/div[0]/section[3]/p[1]/text "Marcam clar ce e masurat in contul tau si ce e reper de piata. Nu amestecam."
 root/div[0]/section[3]/div[0]
 root/div[0]/section[3]/div[0]/div[0]
-root/div[0]/section[3]/div[0]/div[0]/div[0]
-root/div[0]/section[3]/div[0]/div[0]/div[0]/div[0]
-root/div[0]/section[3]/div[0]/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[3]/div[0]/div[0]/div[0]/div[0]/svg[0]/path[0]
-root/div[0]/section[3]/div[0]/div[0]/div[0]/div[0]/svg[0]/path[1]
-root/div[0]/section[3]/div[0]/div[0]/div[0]/span[0]
-root/div[0]/section[3]/div[0]/div[0]/div[0]/span[0]/text "Masurat"
 root/div[0]/section[3]/div[0]/div[0]/p[0]
-root/div[0]/section[3]/div[0]/div[0]/p[0]/text "Produsele care iti ard bugetul"
+root/div[0]/section[3]/div[0]/div[0]/p[0]/text "Trei pasi"
+root/div[0]/section[3]/div[0]/div[0]/h2[0]
+root/div[0]/section[3]/div[0]/div[0]/h2[0]/text "Sub un minut pana incepe analiza."
 root/div[0]/section[3]/div[0]/div[0]/p[1]
-root/div[0]/section[3]/div[0]/div[0]/p[1]/text "Fiecare produs din Shopping care a cheltuit bani si a stat sub ROAS-ul tau minim, cu suma exacta pe ultimele 365 de zile. Adunate, iti dau banii dusi pe produse care nu ating targetul."
+root/div[0]/section[3]/div[0]/div[0]/p[1]/text "Nu exporti fisiere si nu trebuie sa cunosti termenii Google Ads."
 root/div[0]/section[3]/div[0]/div[1]
 root/div[0]/section[3]/div[0]/div[1]/div[0]
-root/div[0]/section[3]/div[0]/div[1]/div[0]/div[0]
-root/div[0]/section[3]/div[0]/div[1]/div[0]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[3]/div[0]/div[1]/div[0]/div[0]/svg[0]/rect[0]
-root/div[0]/section[3]/div[0]/div[1]/div[0]/div[0]/svg[0]/path[0]
 root/div[0]/section[3]/div[0]/div[1]/div[0]/span[0]
-root/div[0]/section[3]/div[0]/div[1]/div[0]/span[0]/text "Masurat"
-root/div[0]/section[3]/div[0]/div[1]/p[0]
-root/div[0]/section[3]/div[0]/div[1]/p[0]/text "Catalogul mort"
-root/div[0]/section[3]/div[0]/div[1]/p[1]
-root/div[0]/section[3]/div[0]/div[1]/p[1]/text "Cate produse din catalog nu au avut nicio afisare. Nu iti inventam o suma pe ele — primesti faptul: cate sunt si ce parte din catalog inseamna."
-root/div[0]/section[3]/div[0]/div[2]
-root/div[0]/section[3]/div[0]/div[2]/div[0]
-root/div[0]/section[3]/div[0]/div[2]/div[0]/div[0]
-root/div[0]/section[3]/div[0]/div[2]/div[0]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[3]/div[0]/div[2]/div[0]/div[0]/svg[0]/circle[0]
-root/div[0]/section[3]/div[0]/div[2]/div[0]/div[0]/svg[0]/path[0]
-root/div[0]/section[3]/div[0]/div[2]/div[0]/span[0]
-root/div[0]/section[3]/div[0]/div[2]/div[0]/span[0]/text "Estimare"
-root/div[0]/section[3]/div[0]/div[2]/p[0]
-root/div[0]/section[3]/div[0]/div[2]/p[0]/text "Cat platesti in plus pe click"
-root/div[0]/section[3]/div[0]/div[2]/p[1]
-root/div[0]/section[3]/div[0]/div[2]/p[1]/text "Daca rulezi Shopping direct prin Google, fara CSS, costul pe click poate fi cu pana la ~20% mai mare. Cheltuiala pe care o aplicam e reala, procentul e un reper de piata — asa il si marcam."
+root/div[0]/section[3]/div[0]/div[1]/div[0]/span[0]/text "01"
+root/div[0]/section[3]/div[0]/div[1]/div[0]/p[0]
+root/div[0]/section[3]/div[0]/div[1]/div[0]/p[0]/text "Conectezi contul"
+root/div[0]/section[3]/div[0]/div[1]/div[0]/p[1]
+root/div[0]/section[3]/div[0]/div[1]/div[0]/p[1]/text "Te autentifici direct la Google, ca la orice aplicatie. Parola ta nu trece prin noi."
+root/div[0]/section[3]/div[0]/div[1]/div[1]
+root/div[0]/section[3]/div[0]/div[1]/div[1]/span[0]
+root/div[0]/section[3]/div[0]/div[1]/div[1]/span[0]/text "02"
+root/div[0]/section[3]/div[0]/div[1]/div[1]/p[0]
+root/div[0]/section[3]/div[0]/div[1]/div[1]/p[0]/text "Confirmi doua valori simple"
+root/div[0]/section[3]/div[0]/div[1]/div[1]/p[1]
+root/div[0]/section[3]/div[0]/div[1]/div[1]/p[1]/text "Valoarea medie a unei comenzi si cat te costa marfa din ea. Noi calculam pragul de rentabilitate."
+root/div[0]/section[3]/div[0]/div[1]/div[2]
+root/div[0]/section[3]/div[0]/div[1]/div[2]/span[0]
+root/div[0]/section[3]/div[0]/div[1]/div[2]/span[0]/text "03"
+root/div[0]/section[3]/div[0]/div[1]/div[2]/p[0]
+root/div[0]/section[3]/div[0]/div[1]/div[2]/p[0]/text "Primesti raportul"
+root/div[0]/section[3]/div[0]/div[1]/div[2]/p[1]
+root/div[0]/section[3]/div[0]/div[1]/div[2]/p[1]/text "Pe loc, pe cifrele tale din ultimele 365 de zile. Fara asteptare si fara discutie de vanzare inainte."
 root/div[0]/section[4]
-root/div[0]/section[4]/p[0]
-root/div[0]/section[4]/p[0]/text "Cum functioneaza"
-root/div[0]/section[4]/h2[0]
-root/div[0]/section[4]/h2[0]/text "Sub un minut pana la raport"
-root/div[0]/section[4]/p[1]
-root/div[0]/section[4]/p[1]/text "Nu ai nevoie de cunostinte tehnice si nu trebuie sa exporti nimic din cont."
 root/div[0]/section[4]/div[0]
-root/div[0]/section[4]/div[0]/div[0] aria-hidden="true"
-root/div[0]/section[4]/div[0]/div[1]
-root/div[0]/section[4]/div[0]/div[1]/div[0] aria-hidden="true"
-root/div[0]/section[4]/div[0]/div[1]/div[0]/text "1"
-root/div[0]/section[4]/div[0]/div[1]/p[0]
-root/div[0]/section[4]/div[0]/div[1]/p[0]/text "Conectezi contul"
-root/div[0]/section[4]/div[0]/div[1]/p[1]
-root/div[0]/section[4]/div[0]/div[1]/p[1]/text "Te autentifici direct la Google, ca la orice aplicatie. Parola ta nu trece prin noi."
-root/div[0]/section[4]/div[0]/div[2]
-root/div[0]/section[4]/div[0]/div[2]/div[0] aria-hidden="true"
-root/div[0]/section[4]/div[0]/div[2]/div[0]/text "2"
-root/div[0]/section[4]/div[0]/div[2]/p[0]
-root/div[0]/section[4]/div[0]/div[2]/p[0]/text "Spui cat iti ramane din 100 de lei"
-root/div[0]/section[4]/div[0]/div[2]/p[1]
-root/div[0]/section[4]/div[0]/div[2]/p[1]/text "Un singur camp: marja ta, aproximativ. Din ea calculam noi pragul sub care un produs nu-si merita bugetul — nu trebuie sa stii ce inseamna ROAS."
-root/div[0]/section[4]/div[0]/div[3]
-root/div[0]/section[4]/div[0]/div[3]/div[0] aria-hidden="true"
-root/div[0]/section[4]/div[0]/div[3]/div[0]/text "3"
-root/div[0]/section[4]/div[0]/div[3]/p[0]
-root/div[0]/section[4]/div[0]/div[3]/p[0]/text "Primesti raportul"
-root/div[0]/section[4]/div[0]/div[3]/p[1]
-root/div[0]/section[4]/div[0]/div[3]/p[1]/text "Pe loc, pe cifrele tale din ultimele 365 de zile. Fara asteptare si fara discutie de vanzare inainte."
-root/div[0]/section[5]
-root/div[0]/section[5]/p[0]
-root/div[0]/section[5]/p[0]/text "Dupa curatare"
-root/div[0]/section[5]/h2[0]
-root/div[0]/section[5]/h2[0]/text "Cat ar aduce acelasi buget, curatat"
-root/div[0]/section[5]/p[1]
-root/div[0]/section[5]/p[1]/text "Raportul ia banii ramasi dupa ce tai produsele slabe si ii pune la randamentul produselor care chiar vand la tine. Asa arata:"
-root/div[0]/section[5]/div[0]
-root/div[0]/section[5]/div[0]/div[0]
-root/div[0]/section[5]/div[0]/div[0]/div[0]
-root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]
-root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]/span[0]
-root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]/span[0]/text "Acum"
-root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]/span[1]
-root/div[0]/section[5]/div[0]/div[0]/div[0]/div[0]/span[1]/text "48.200 lei"
-root/div[0]/section[5]/div[0]/div[0]/div[0]/div[1]
-root/div[0]/section[5]/div[0]/div[0]/div[0]/div[1]/div[0]
-root/div[0]/section[5]/div[0]/div[0]/div[1]
-root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]
-root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]/span[0]
-root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]/span[0]/text "Buget curatat, acelasi randament"
-root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]/span[1]
-root/div[0]/section[5]/div[0]/div[0]/div[1]/div[0]/span[1]/text "96.400 lei"
-root/div[0]/section[5]/div[0]/div[0]/div[1]/div[1]
-root/div[0]/section[5]/div[0]/div[0]/div[1]/div[1]/div[0]
-root/div[0]/section[5]/div[0]/div[0]/div[2]
-root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]
-root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]/span[0]
-root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]/span[0]/text "Buget curatat, marit de 5 ori"
-root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]/span[1]
-root/div[0]/section[5]/div[0]/div[0]/div[2]/div[0]/span[1]/text "241.000 lei"
-root/div[0]/section[5]/div[0]/div[0]/div[2]/div[1]
-root/div[0]/section[5]/div[0]/div[0]/div[2]/div[1]/div[0]
-root/div[0]/section[5]/div[0]/p[0]
-root/div[0]/section[5]/div[0]/p[0]/text "Simulare, nu promisiune — un plafon optimist care presupune ca produsele bune tin acelasi randament la buget mai mare. E venit, nu profit: profitul depinde de marja ta, pe care ti-o cerem la pasul 2. Cifrele de mai sus sunt exemplu."
-root/div[0]/section[6]
-root/div[0]/section[6]/div[0] aria-hidden="true"
-root/div[0]/section[6]/div[1]
-root/div[0]/section[6]/div[1]/h2[0]
-root/div[0]/section[6]/div[1]/h2[0]/text "Vezi ce produse iti ard bugetul"
-root/div[0]/section[6]/div[1]/p[0]
-root/div[0]/section[6]/div[1]/p[0]/text "Gratuit, pe cifrele tale reale. Fara card si fara discutie de vanzare inainte."
-root/div[0]/section[6]/div[1]/a[0] href="/google-ads/connect"
-root/div[0]/section[6]/div[1]/a[0]/text "Conecteaza contul Google Ads"
-root/div[0]/section[6]/div[1]/a[0]/svg[0] aria-hidden="true"
-root/div[0]/section[6]/div[1]/a[0]/svg[0]/path[0]
-root/div[0]/section[6]/div[1]/p[1]
-root/div[0]/section[6]/div[1]/p[1]/text "Nu ai inca reclame pe Shopping?"
-root/div[0]/section[6]/div[1]/p[1]/a[0] href="/audit-seo"
-root/div[0]/section[6]/div[1]/p[1]/a[0]/text "Incearca auditul magazinului"
+root/div[0]/section[4]/div[0]/div[0]
+root/div[0]/section[4]/div[0]/div[0]/p[0]
+root/div[0]/section[4]/div[0]/div[0]/p[0]/text "Audit gratuit"
+root/div[0]/section[4]/div[0]/div[0]/h2[0]
+root/div[0]/section[4]/div[0]/div[0]/h2[0]/text "Vezi unde se opreste profitul din contul tau."
+root/div[0]/section[4]/div[0]/div[0]/p[1]
+root/div[0]/section[4]/div[0]/div[0]/p[1]/text "Pe datele tale reale. Fara card. Fara modificari in Google Ads."
+root/div[0]/section[4]/div[0]/a[0] href="/google-ads/connect"
+root/div[0]/section[4]/div[0]/a[0]/text "Conecteaza contul"
+root/div[0]/section[4]/div[0]/a[0]/svg[0] aria-hidden="true"
+root/div[0]/section[4]/div[0]/a[0]/svg[0]/path[0]
 root/div[0]/footer[0]
 root/div[0]/footer[0]/div[0]
 root/div[0]/footer[0]/div[0]/img[0] alt="Devrika"

@@ -646,6 +646,17 @@ describe("public Google Ads access boundary", () => {
     expect(output).toMatchSnapshot(`${surface}:normal`);
   });
 
+  it("keeps the landing journey compact after the hero", () => {
+    const html = renderToStaticMarkup(<LandingPage />);
+    const sectionOrder = [...html.matchAll(/data-landing-section="([^"]+)"/g)].map((match) => match[1]);
+
+    expect(sectionOrder).toEqual(["hero", "trust", "proof", "steps", "cta"]);
+    expect(html.match(/<section/g) ?? []).toHaveLength(5);
+    expect(html).toContain('<details data-oauth-disclosure="progressive"');
+    expect(html.match(/data-proof-row=/g) ?? []).toHaveLength(3);
+    expect(html.match(/data-process-step=/g) ?? []).toHaveLength(3);
+  });
+
   it("renders normal and recoverable connect states through the canonical contract", async () => {
     const prior = { ...process.env };
     try {
