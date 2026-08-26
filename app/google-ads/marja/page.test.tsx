@@ -45,6 +45,9 @@ it("renders the normal margin state through the canonical contract", async () =>
   expect(html).toContain('data-public-oauth-surface="margin:normal"');
   expect(html).toContain('data-aov="500"');
   expect(html).toContain('data-measured="true"');
+  expect(html).toContain("Stabilește pragul de la care reclamele tale încep să piardă bani");
+  expect(html).toContain("costul de achiziție al produselor");
+  expect(html).toContain("Nu cerem facturi și nu avem acces la contabilitate");
   expect(normalizePublicOutput(html)).toMatchSnapshot("margin:normal");
 });
 

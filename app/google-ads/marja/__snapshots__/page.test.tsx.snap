@@ -10,16 +10,16 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Step 2 of 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 2 din 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Set the point where advertising stops making money"
+root/div[0]/div[0]/div[0]/h1[0]/text "Stabilește pragul de la care reclamele tale încep să piardă bani"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Confirm the average order value and tell us how much the goods in that order cost. We calculate the maximum CPA and minimum ROAS for you."
+root/div[0]/div[0]/div[0]/p[1]/text "Confirmă valoarea medie a unei comenzi și spune-ne ce procent reprezintă costul de achiziție al produselor. Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani."
 root/div[0]/div[0]/div[0]/p[2]
 root/div[0]/div[0]/div[0]/p[2]/text "marja trebuie sa fie intre 1 si 99 la suta"
 root/div[0]/div[0]/div[0]/form[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "No invoices or accounting access. You can adjust both values before the audit is generated.""
+root/div[0]/div[0]/p[0]/text "Nu cerem facturi și nu avem acces la contabilitate. Poți ajusta valorile înainte de generarea auditului.""
 `;
 
 exports[`renders the normal margin state through the canonical contract > margin:normal 1`] = `
@@ -32,12 +32,12 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Step 2 of 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Pasul 2 din 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Set the point where advertising stops making money"
+root/div[0]/div[0]/div[0]/h1[0]/text "Stabilește pragul de la care reclamele tale încep să piardă bani"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Confirm the average order value and tell us how much the goods in that order cost. We calculate the maximum CPA and minimum ROAS for you."
+root/div[0]/div[0]/div[0]/p[1]/text "Confirmă valoarea medie a unei comenzi și spune-ne ce procent reprezintă costul de achiziție al produselor. Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani."
 root/div[0]/div[0]/div[0]/form[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "No invoices or accounting access. You can adjust both values before the audit is generated.""
+root/div[0]/div[0]/p[0]/text "Nu cerem facturi și nu avem acces la contabilitate. Poți ajusta valorile înainte de generarea auditului.""
 `;
