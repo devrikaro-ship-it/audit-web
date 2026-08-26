@@ -228,7 +228,7 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain('data-report-surface="headline-summary"');
     const visibleText = h.replace(/<[^>]*>/g, " ");
     expect(h).toContain(AUDIT_WINDOW_LABEL);
-    expect(visibleText).toContain("Read-only audit · 12 months");
+    expect(visibleText).toContain("Audit doar în citire · 12 luni");
   });
 
   it("are amandoua sectiunile, si banda de sumar deasupra lor", async () => {
@@ -340,10 +340,10 @@ describe("pagina de raport, randata", () => {
   it("renders measured before tables and the interactive simulated after table", async () => {
     const h = await html();
     expect(h).toContain('data-report-surface="profitability-simulator"');
-    expect(h).toContain("How the account could look after optimization");
-    expect(h).toContain("Products consuming your budget");
-    expect(h).toContain("How the same products would be promoted");
-    expect(h).toContain("Future simulation");
+    expect(h).toContain("Cum ar putea arăta contul după optimizare");
+    expect(h).toContain("Produse care îți consumă bugetul");
+    expect(h).toContain("Cum ar fi promovate aceleași produse");
+    expect(h).toContain("Simulare viitoare");
     expect(h).not.toContain("Profit after advertising");
     expect(h).toContain('data-report-version="profitability-v3-original"');
     expect(h).toContain('data-report-concept="original"');

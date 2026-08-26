@@ -28,11 +28,14 @@ describe("stored Google Ads report delivery", () => {
 
   it("renders measured and simulated values with their status labels", () => {
     const html = renderReportHtml(snapshot);
-    expect(html).toContain("Measured from Google Ads");
-    expect(html).toContain("Future simulation, not a promise");
+    expect(html).toContain("Măsurat din Google Ads");
+    expect(html).toContain("Simulare viitoare, nu promisiune");
     expect(html).toContain("Loss product");
     expect(html).toContain("Winning product");
-    expect(html).toContain("20% estimated CSS CPC reduction");
+    expect(html).toContain("reducere estimată de 20% a CPC-ului prin CSS");
+    expect(html).toContain("Audit de profitabilitate Google Ads");
+    expect(html).toContain("Produse care îți consumă bugetul");
+    expect(html).toContain("Produse profitabile care primesc prea puțin trafic");
     expect(html).not.toContain("Profit after advertising");
   });
 });

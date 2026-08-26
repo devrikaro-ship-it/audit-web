@@ -9,7 +9,7 @@ export default function ContactForm({ action, reportSnapshot }: { action: (formD
 
   if (status === "SENT" || status === "SAVED") {
     return <p className="rounded-xl px-5 py-4 text-[14.5px]" style={{ background: C.greenBg, color: C.green }}>
-      {status === "SENT" ? "Your PDF report was generated, saved, and sent by email." : "Your PDF report was generated and saved. Email delivery is delayed; your report remains available to our team."}
+      {status === "SENT" ? "Raportul PDF a fost generat, salvat și trimis pe email." : "Raportul PDF a fost generat și salvat. Trimiterea pe email este întârziată, dar raportul rămâne disponibil echipei noastre."}
     </p>;
   }
 
@@ -20,18 +20,18 @@ export default function ContactForm({ action, reportSnapshot }: { action: (formD
     else setStatus(result.deliveryStatus === "EMAIL_SENT" ? "SENT" : "SAVED");
   }} className="flex flex-col gap-3">
     <input type="hidden" name="reportSnapshot" value={reportSnapshot} />
-    {status === "FAILED" && <p className="rounded-xl px-5 py-4 text-[14px]" style={{ background: C.redBg, color: C.red }}>We could not generate the PDF. Please check the fields and try again.</p>}
+    {status === "FAILED" && <p className="rounded-xl px-5 py-4 text-[14px]" style={{ background: C.redBg, color: C.red }}>Nu am putut genera raportul PDF. Verifică datele și încearcă din nou.</p>}
     <div className="flex flex-col gap-3 sm:flex-row">
-      <Field label="Name" name="name" autoComplete="name" />
+      <Field label="Nume" name="name" autoComplete="name" />
       <Field label="Email" name="email" type="email" autoComplete="email" />
     </div>
-    <Field label="Phone" name="phone" type="tel" autoComplete="tel" />
+    <Field label="Telefon" name="phone" type="tel" autoComplete="tel" />
     <label className="flex items-start gap-2 text-left text-xs leading-relaxed" style={{ color: C.gray500 }}>
       <input name="reportConsent" value="yes" type="checkbox" required className="mt-0.5 h-4 w-4" />
-      I agree that Devrika may use these details to generate, store, and email this audit report. This does not subscribe me to marketing messages.
+      Sunt de acord ca Devrika să folosească aceste date pentru a genera, salva și trimite pe email raportul de audit. Acest acord nu mă abonează la mesaje de marketing.
     </label>
     <button type="submit" disabled={status === "SENDING"} className="mt-1 flex min-h-11 cursor-pointer items-center justify-center rounded-[14px] px-8 py-[14px] text-[15.5px] font-bold text-white disabled:cursor-wait disabled:opacity-70" style={{ background: brandGradient, fontFamily: sora }}>
-      {status === "SENDING" ? "Generating your PDF…" : "Email my PDF report"}
+      {status === "SENDING" ? "Generăm raportul PDF…" : "Trimite-mi raportul PDF pe email"}
     </button>
   </form>;
 }
