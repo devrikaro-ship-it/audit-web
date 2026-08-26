@@ -667,6 +667,13 @@ describe("public Google Ads access boundary", () => {
     }
   });
 
+  it("states the complete Google Ads data list once in the compact disclosure", () => {
+    const html = renderToStaticMarkup(<LandingPage />);
+    const occurrences = html.split(publicOAuthProjection.auditDataCategories).length - 1;
+
+    expect(occurrences).toBe(1);
+  });
+
   it("renders normal and recoverable connect states through the canonical contract", async () => {
     const prior = { ...process.env };
     try {

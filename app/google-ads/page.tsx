@@ -207,7 +207,7 @@ export default function GoogleAdsLanding() {
                   <span aria-hidden="true" className="text-lg transition-transform group-open:rotate-45">+</span>
                 </summary>
                 <p className="mt-4 max-w-[760px] text-sm leading-relaxed" style={{ color: C.gray500 }}>
-                  <b style={{ color: C.navy }}>Audit Devrika</b> se conecteaza cu acordul tau si citeste doar {publicOAuthProjection.auditDataCategories}.
+                  <b style={{ color: C.navy }}>Audit Devrika</b> se conecteaza numai cu acordul tau.
                   {` ${publicOAuthProjection.auditDataReadDisclosure} ${publicOAuthProjection.googleAdsPermission}`}
                   {` Nu stocam datele contului tau si nu facem nicio modificare in el.`}
                 </p>
