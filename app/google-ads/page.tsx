@@ -86,7 +86,7 @@ export default function GoogleAdsLanding() {
             </p>
             <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <PrimaryButton />
-              <Link href="#report-preview" className="inline-flex min-h-14 items-center text-sm font-extrabold underline decoration-2 underline-offset-4" style={{ color: C.indigo }}>Vezi un exemplu de raport</Link>
+              <a href="#report-preview" className="inline-flex min-h-14 items-center text-sm font-extrabold underline decoration-2 underline-offset-4" style={{ color: C.indigo }}>Vezi un exemplu de raport</a>
               <span className="flex items-center gap-2 text-sm" style={{ color: C.gray500 }}><span aria-hidden="true" style={{ color: C.green }}>✓</span>{publicOAuthProjection.noAccountChanges}</span>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3 border-t pt-6 text-sm" style={{ borderColor: C.border, color: C.gray600 }}>

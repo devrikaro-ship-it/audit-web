@@ -669,6 +669,14 @@ describe("public Google Ads access boundary", () => {
     expect(html.match(/data-process-step=/g) ?? []).toHaveLength(3);
   });
 
+  it("uses native same-page navigation for the report example", () => {
+    const source = fs.readFileSync(path.join(process.cwd(), "app/google-ads/page.tsx"), "utf8");
+
+    expect(source).toContain('<a href="#report-preview"');
+    expect(source).not.toContain('<Link href="#report-preview"');
+    expect(renderToStaticMarkup(<LandingPage />)).toContain('id="report-preview"');
+  });
+
   it("keeps report-preview product names readable on narrow screens", () => {
     const html = renderToStaticMarkup(<LandingPage />);
     const productNames = [...html.matchAll(/<p data-report-product-name="visible" class="([^"]+)"/g)];
