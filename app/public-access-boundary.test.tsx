@@ -657,6 +657,16 @@ describe("public Google Ads access boundary", () => {
     expect(html.match(/data-process-step=/g) ?? []).toHaveLength(3);
   });
 
+  it("keeps report-preview product names readable on narrow screens", () => {
+    const html = renderToStaticMarkup(<LandingPage />);
+    const productNames = [...html.matchAll(/<p data-report-product-name="visible" class="([^"]+)"/g)];
+
+    expect(productNames).toHaveLength(3);
+    for (const [, classes] of productNames) {
+      expect(classes).not.toMatch(/\btruncate\b|\bwhitespace-nowrap\b|\bline-clamp-/);
+    }
+  });
+
   it("renders normal and recoverable connect states through the canonical contract", async () => {
     const prior = { ...process.env };
     try {

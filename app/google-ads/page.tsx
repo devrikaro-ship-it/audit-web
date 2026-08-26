@@ -146,7 +146,7 @@ export default function GoogleAdsLanding() {
                   <div key={row.p} className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 border-b py-4 last:border-b-0"
                     style={{ borderColor: C.border }}>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-bold" style={{ color: C.gray800 }}>{row.p}</p>
+                      <p data-report-product-name="visible" className="break-words text-sm font-bold leading-snug" style={{ color: C.gray800 }}>{row.p}</p>
                       <p className="mt-1 text-xs" style={{ color: C.gray400 }}>Prioritatea {index + 1}</p>
                     </div>
                     <div className="text-right">
