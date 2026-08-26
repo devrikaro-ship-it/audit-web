@@ -5,6 +5,30 @@ and `docs/ads-research/`) — this is what broke in the code, how it was caught,
 this file is user-facing Romanian by design; where quoted below it is TRANSLATED, with the exact source location
 given so the literal string can be read directly in the file.
 
+## 2026-08-26 — A deploy was incorrectly treated as a browser task even though Coolify API access already existed
+
+**Symptom.** After the application changes were tested and pushed, delivery was reported as blocked because
+Computer Use no longer had session approval for Google Chrome. The operator was asked to restore a browser
+permission even though the project already had a configured Coolify API endpoint and token.
+
+**Cause.** The deployment path was selected from the most recently used interface instead of being derived from
+the available control surfaces in priority order. A transient browser-control failure was mistaken for a
+deployment blocker before checking the existing official API credential.
+
+**How to recognise it.** A deployment is described as blocked by Chrome, Computer Use, a dashboard login, or a
+browser session before the project-local Coolify API configuration has been checked. A second signal is asking
+the operator to repair browser access for an operation that the provider exposes through an authenticated API.
+
+**Fix.** For Coolify deployments, check the configured official API first, resolve the exact application UUID,
+queue the deployment through the API, poll its deployment UUID to a terminal state, and verify the deployed
+revision plus live behavior. Use the browser only when the API cannot perform the required operation or when a
+human-only login, MFA, CAPTCHA, consent, or legal acknowledgement is required.
+
+**Class.** A failed interface is not a failed operation. Before escalating any interface failure, enumerate the
+available control surfaces in this order: connected provider tool, official API or CLI with an existing
+credential, authenticated persistent browser, then human intervention. The operation is blocked only when all
+safe in-scope paths are exhausted.
+
 ## 2026-08-21 — A Romanian singular/plural fix landed on some report strings and not their siblings, and two titles were fixed while their bodies stayed plural
 
 **Symptom.** A commit (`f8d0c00`) repaired Romanian grammar agreement in several report strings and its own
