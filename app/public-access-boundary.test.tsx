@@ -709,6 +709,8 @@ describe("public Google Ads access boundary", () => {
     expect(source).not.toContain("overflow-x-auto");
     expect(source).not.toContain("min-w-[720px]");
     expect(source).not.toContain("min-w-[820px]");
+    expect(source).toContain("break-all");
+    expect(source).not.toContain("inline-block whitespace-nowrap rounded-lg");
     expect(source).toContain('className="grid gap-6"');
     expect(source).toContain('className="grid gap-7"');
     expect(source.match(/rows=\{losingProducts\}/g) ?? []).toHaveLength(4);

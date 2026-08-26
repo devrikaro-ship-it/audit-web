@@ -71,10 +71,10 @@ function ProductEconomicsTable({ rows, kind, compact = false, markNames = false 
 }) {
   const amountLabel = kind === "loss" ? "Pierdere" : "Potențial";
   return (
-    <div data-product-economics-table={kind}>
-      <table className={`${compact ? "text-[10px]" : "text-[11px]"} w-full table-fixed border-collapse`}>
+    <div data-product-economics-table={kind} className="min-w-0 max-w-full">
+      <table className={`${compact ? "text-[8px] sm:text-[10px]" : "text-[9px] sm:text-[11px]"} w-full max-w-full table-fixed border-collapse`}>
         <thead><tr className="border-b text-left uppercase tracking-wide" style={{ borderColor: C.border, color: C.gray400 }}>
-          {['Produs', 'Clickuri', 'Buget', 'Comenzi', 'CPA', 'Vânzări', 'ROAS', amountLabel].map((header, index) => <th key={header} className={`${index === 0 ? "w-[25%]" : ""} px-2 py-3 font-bold first:pl-5 last:pr-5`}>{header}</th>)}
+          {['Produs', 'Clickuri', 'Buget', 'Comenzi', 'CPA', 'Vânzări', 'ROAS', amountLabel].map((header, index) => <th key={header} className={`${index === 0 ? "w-[25%]" : ""} break-all px-1 py-3 font-bold sm:px-2 first:pl-2 sm:first:pl-5 last:pr-2 sm:last:pr-5`}>{header}</th>)}
         </tr></thead>
         <tbody>{rows.map((row) => {
           const cpa = cpaFor(row);
@@ -82,14 +82,14 @@ function ProductEconomicsTable({ rows, kind, compact = false, markNames = false 
           const accent = kind === "loss" ? C.red : C.green;
           const background = kind === "loss" ? C.redBg : C.greenBg;
           return <tr key={row.product} className="border-b last:border-b-0" style={{ borderColor: C.border }}>
-            <td className="px-2 py-3 pl-5 font-bold leading-snug" style={{ color: C.navy }}><span data-report-product-name={markNames ? "visible" : undefined} className="break-words">{row.product}</span></td>
-            <td className="px-2 py-3 tabular-nums">{number(row.clicks)}</td>
-            <td className="px-2 py-3 tabular-nums">{money(row.cost)}</td>
-            <td className="px-2 py-3 tabular-nums">{number(row.orders)}</td>
-            <td className="px-2 py-3 font-bold tabular-nums" style={{ color: cpa && cpa > DEMO_BREAK_EVEN_CPA ? C.red : C.green }}>{cpa === null ? "—" : money(cpa)}</td>
-            <td className="px-2 py-3 tabular-nums">{money(row.sales)}</td>
-            <td className="px-2 py-3 font-bold tabular-nums" style={{ color: roasFor(row) < DEMO_BREAK_EVEN_ROAS ? C.red : C.green }}>{number(roasFor(row))}×</td>
-            <td className="px-2 py-3 pr-5"><span className="inline-block whitespace-nowrap rounded-lg px-2 py-1.5 font-extrabold tabular-nums" style={{ background, color: accent }}>{kind === "loss" ? "−" : "+"}{money(amount)}</span></td>
+            <td className="break-all px-1 py-3 pl-2 font-bold leading-snug sm:px-2 sm:pl-5" style={{ color: C.navy }}><span data-report-product-name={markNames ? "visible" : undefined} className="break-words">{row.product}</span></td>
+            <td className="break-all px-1 py-3 tabular-nums sm:px-2">{number(row.clicks)}</td>
+            <td className="break-all px-1 py-3 tabular-nums sm:px-2">{money(row.cost)}</td>
+            <td className="break-all px-1 py-3 tabular-nums sm:px-2">{number(row.orders)}</td>
+            <td className="break-all px-1 py-3 font-bold tabular-nums sm:px-2" style={{ color: cpa && cpa > DEMO_BREAK_EVEN_CPA ? C.red : C.green }}>{cpa === null ? "—" : money(cpa)}</td>
+            <td className="break-all px-1 py-3 tabular-nums sm:px-2">{money(row.sales)}</td>
+            <td className="break-all px-1 py-3 font-bold tabular-nums sm:px-2" style={{ color: roasFor(row) < DEMO_BREAK_EVEN_ROAS ? C.red : C.green }}>{number(roasFor(row))}×</td>
+            <td className="break-all px-1 py-3 pr-2 sm:px-2 sm:pr-5"><span className="inline-block max-w-full break-all rounded-lg px-1 py-1.5 font-extrabold tabular-nums sm:px-2" style={{ background, color: accent }}>{kind === "loss" ? "−" : "+"}{money(amount)}</span></td>
           </tr>;
         })}</tbody>
       </table>
@@ -178,7 +178,7 @@ export default function GoogleAdsLanding() {
 
             <article data-problem-example="css-cost" className="overflow-hidden rounded-[22px] border bg-white" style={{ borderColor: C.border }}>
               <div className="p-6"><span className="text-xs font-extrabold" style={{ color: C.indigo }}>03</span><h3 className="mt-3 text-xl font-extrabold leading-tight" style={{ fontFamily: sora, color: C.navy }}>Fara un CSS partener, platesti cu aproximativ 20% mai mult per click</h3><p className="mt-3 text-sm leading-relaxed" style={{ color: C.gray500 }}>Un cost per click mai mic inseamna mai mult trafic, mai multe vanzari si un ROAS mai mare din acelasi buget.</p></div>
-              <div className="border-t" data-product-economics-table="css" style={{ borderColor: C.border, background: "#f6fbfb" }}><p className="px-5 pt-4 text-[11px] font-bold" style={{ color: C.navy }}>Direct Google → CSS partener, la același buget</p><table className="w-full table-fixed border-collapse text-[10px]"><thead><tr className="border-b text-left uppercase tracking-wide" style={{ borderColor: C.border, color: C.gray400 }}>{["Produs", "Clickuri", "Buget", "Comenzi", "CPA", "Vânzări", "ROAS", "Câștig CSS"].map((header, index) => <th key={header} className={`${index === 0 ? "w-[25%]" : ""} px-2 py-3 font-bold first:pl-5 last:pr-5`}>{header}</th>)}</tr></thead><tbody>{[["Rochie office bleumarin", "1.000 → 1.250", 1000, "20 → 25", "50 → 40 RON", "5.000 → 6.250 RON", "5,00 → 6,25×", "+1.250 RON"], ["Set 3 tricouri bumbac", "800 → 1.000", 800, "16 → 20", "50 → 40 RON", "4.000 → 5.000 RON", "5,00 → 6,25×", "+1.000 RON"], ["Geantă din piele ecologică", "600 → 750", 600, "12 → 15", "50 → 40 RON", "3.000 → 3.750 RON", "5,00 → 6,25×", "+750 RON"]].map(([label, clicks, cost, orders, cpa, sales, productRoas, difference]) => <tr key={String(label)} className="border-b last:border-b-0" style={{ borderColor: C.border }}><td className="px-2 py-3 pl-5 font-bold" style={{ color: C.navy }}>{label}</td><td className="px-2 py-3">{clicks}</td><td className="px-2 py-3">{money(Number(cost))}</td><td className="px-2 py-3">{orders}</td><td className="px-2 py-3">{cpa}</td><td className="px-2 py-3">{sales}</td><td className="px-2 py-3 font-bold">{productRoas}</td><td className="px-2 py-3 pr-5 font-extrabold" style={{ color: C.green }}>{difference}</td></tr>)}</tbody></table><p className="border-t px-5 py-3 text-[11px]" style={{ borderColor: C.border, color: C.gray500 }}>Aceleași bugete și aceeași rată de conversie: CPC 1 RON → 0,80 RON. Fiecare produs primește cu 25% mai multe clickuri, comenzi și vânzări.</p></div>
+              <div className="min-w-0 max-w-full border-t" data-product-economics-table="css" style={{ borderColor: C.border, background: "#f6fbfb" }}><p className="px-5 pt-4 text-[11px] font-bold" style={{ color: C.navy }}>Direct Google → CSS partener, la același buget</p><table className="w-full max-w-full table-fixed border-collapse text-[8px] sm:text-[10px]"><thead><tr className="border-b text-left uppercase tracking-wide" style={{ borderColor: C.border, color: C.gray400 }}>{["Produs", "Clickuri", "Buget", "Comenzi", "CPA", "Vânzări", "ROAS", "Câștig CSS"].map((header, index) => <th key={header} className={`${index === 0 ? "w-[25%]" : ""} break-all px-1 py-3 font-bold sm:px-2 first:pl-2 sm:first:pl-5 last:pr-2 sm:last:pr-5`}>{header}</th>)}</tr></thead><tbody>{[["Rochie office bleumarin", "1.000 → 1.250", 1000, "20 → 25", "50 → 40 RON", "5.000 → 6.250 RON", "5,00 → 6,25×", "+1.250 RON"], ["Set 3 tricouri bumbac", "800 → 1.000", 800, "16 → 20", "50 → 40 RON", "4.000 → 5.000 RON", "5,00 → 6,25×", "+1.000 RON"], ["Geantă din piele ecologică", "600 → 750", 600, "12 → 15", "50 → 40 RON", "3.000 → 3.750 RON", "5,00 → 6,25×", "+750 RON"]].map(([label, clicks, cost, orders, cpa, sales, productRoas, difference]) => <tr key={String(label)} className="border-b last:border-b-0" style={{ borderColor: C.border }}><td className="break-all px-1 py-3 pl-2 font-bold sm:px-2 sm:pl-5" style={{ color: C.navy }}>{label}</td><td className="break-all px-1 py-3 sm:px-2">{clicks}</td><td className="break-all px-1 py-3 sm:px-2">{money(Number(cost))}</td><td className="break-all px-1 py-3 sm:px-2">{orders}</td><td className="break-all px-1 py-3 sm:px-2">{cpa}</td><td className="break-all px-1 py-3 sm:px-2">{sales}</td><td className="break-all px-1 py-3 font-bold sm:px-2">{productRoas}</td><td className="break-all px-1 py-3 pr-2 font-extrabold sm:px-2 sm:pr-5" style={{ color: C.green }}>{difference}</td></tr>)}</tbody></table><p className="border-t px-5 py-3 text-[11px]" style={{ borderColor: C.border, color: C.gray500 }}>Aceleași bugete și aceeași rată de conversie: CPC 1 RON → 0,80 RON. Fiecare produs primește cu 25% mai multe clickuri, comenzi și vânzări.</p></div>
             </article>
           </div>
           <p className="mt-10 text-center text-lg font-bold" style={{ color: C.navy }}>Media contului ascunde problema. Auditul iti arata fiecare produs in parte.</p>
