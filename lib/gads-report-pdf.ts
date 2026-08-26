@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import PDFDocument from "pdfkit";
-import type { DeliveryProduct, GadsReportSnapshot } from "./gads-report-delivery";
+import type { DeliveryCampaign, DeliveryProduct, GadsReportSnapshot } from "./gads-report-delivery";
 
 const NAVY = "#171A4A";
 const PURPLE = "#4F46B5";
@@ -93,6 +93,32 @@ function productTable(doc: PDFKit.PDFDocument, rows: DeliveryProduct[], amountLa
   doc.y = y + 12;
 }
 
+function campaignTable(doc: PDFKit.PDFDocument, rows: DeliveryCampaign[]): void {
+  const headers = ["CAMPANIE", "TIP", "COST", "VANZARI", "ROAS"];
+  const widths = [205, 105, 70, 75, 60];
+  const x = 40;
+  let y = doc.y;
+  doc.rect(x, y, 515, 26).fill("#F2F4FB");
+  let cellX = x;
+  headers.forEach((header, index) => {
+    doc.fillColor(MUTED).font("Helvetica-Bold").fontSize(6.5).text(header, cellX + 5, y + 9, { width: widths[index] - 10, align: index < 2 ? "left" : "right", lineBreak: false });
+    cellX += widths[index];
+  });
+  y += 26;
+  rows.forEach((row) => {
+    const values = [row.name, row.channel.replaceAll("_", " "), money(row.spend), money(row.revenue), metric(row.roas, "x")];
+    cellX = x;
+    values.forEach((value, index) => {
+      doc.fillColor(NAVY).font(index === 0 ? "Helvetica-Bold" : "Helvetica").fontSize(index === 0 ? 8 : 7.5)
+        .text(value, cellX + 5, y + 9, { width: widths[index] - 10, align: index < 2 ? "left" : "right", height: 18, ellipsis: true });
+      cellX += widths[index];
+    });
+    doc.moveTo(x, y + 34).lineTo(x + 515, y + 34).strokeColor(BORDER).lineWidth(0.5).stroke();
+    y += 34;
+  });
+  doc.y = y + 12;
+}
+
 function buildPdf(report: GadsReportSnapshot): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ size: "A4", margin: 40, info: { Title: `Google Ads profitability audit - ${report.accountName}`, Author: "Devrika" } });
@@ -131,6 +157,21 @@ function buildPdf(report: GadsReportSnapshot): Promise<Buffer> {
     doc.moveDown(0.7).fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("3. Grow under control");
     doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Increase spend only while simulated ROAS remains above break-even.");
     doc.moveDown(1.2).fontSize(8).text("Operating costs are modeled at a fixed 20% of sales. All current-account figures come from the connected Google Ads account; future figures are simulations.");
+
+    if (report.campaigns?.length) {
+      ensureSpace(doc, 150);
+      addPageTitle(doc, "Cum sunt organizate campaniile acum", "Masurat din Google Ads - ultimele 30 de zile");
+      campaignTable(doc, report.campaigns);
+    }
+
+    ensureSpace(doc, 190);
+    addPageTitle(doc, "Cum trebuie organizat contul", "Recomandare Devrika");
+    doc.fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("1. Search - protectie brand");
+    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Doar cautarile dupa numele magazinului. Mereu activa, cu buget mic si controlat.");
+    doc.moveDown(0.7).fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("2. Performance Max - produse profitabile");
+    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Produsele dovedite peste ROAS-ul minim primesc bugetul principal de crestere.");
+    doc.moveDown(0.7).fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("3. Standard Shopping - control");
+    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Produsele si cautarile sunt controlate separat; produsele sub prag sunt limitate.");
     doc.end();
   });
 }

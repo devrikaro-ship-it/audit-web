@@ -592,14 +592,75 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/st
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/strong[0]/text "3×"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/p[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/p[0]/text "Valorile actuale sunt măsurate din contul Google Ads conectat. Valorile viitoare sunt simulări. Scenariul CSS presupune o reducere estimată de 20% a CPC-ului și nu este garantat."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4] role="region" aria-label="Structura recomandată a campaniilor"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/a[0] href="#contact-form"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/a[0]/text "Vreau planul de optimizare →"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/text "Structura contului · măsurat și recomandat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/h3[0]/text "Cum trebuie construite campaniile tale"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[0]/text "Separăm protecția brandului, creșterea produselor profitabile și controlul căutărilor. Astfel, fiecare campanie are un singur rol și bugetul nu se mai amestecă între produse cu rezultate opuse."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]/text "Măsurat din Google Ads · ultimele 30 de zile"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]/text "Cum sunt organizate campaniile acum"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]/text "0"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/p[0]/text "Structura campaniilor nu a putut fi citită. Recomandarea de mai jos rămâne modelul de organizare, nu o constatare despre cont."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]/text "Recomandare Devrika"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]/text "Cum trebuie organizat contul"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]/text "3 roluri"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]/text "01"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]/text "Search · protecție brand"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]/text "Doar căutările după numele magazinului"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]/text "Mereu activă · buget mic și controlat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]/text "02"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]/text "Performance Max · produse profitabile"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]/text "Produsele dovedite peste ROAS-ul minim"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]/text "Bugetul principal · licitare pe valoarea vânzărilor"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]/text "03"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]/text "Standard Shopping · control"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]/text "Produse și căutări care au nevoie de control separat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]/text "Produsele sub prag sunt limitate, nu finanțate automat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[1]/text "Campaniile actuale sunt măsurate din ultimele 30 de zile. Structura recomandată descrie rolurile contului optimizat; nu modificăm nimic automat în cont."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/a[0] href="#contact-form"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/a[0]/text "Vreau planul de optimizare →"
 root/div[0]/main[0]/div[4] aria-hidden="true"
 root/div[0]/main[0]/div[4]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
@@ -1364,14 +1425,75 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/st
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/strong[0]/text "3×"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/p[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/p[0]/text "Valorile actuale sunt măsurate din contul Google Ads conectat. Valorile viitoare sunt simulări. Scenariul CSS presupune o reducere estimată de 20% a CPC-ului și nu este garantat."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4] role="region" aria-label="Structura recomandată a campaniilor"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/a[0] href="#contact-form"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/a[0]/text "Vreau planul de optimizare →"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/text "Structura contului · măsurat și recomandat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/h3[0]/text "Cum trebuie construite campaniile tale"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[0]/text "Separăm protecția brandului, creșterea produselor profitabile și controlul căutărilor. Astfel, fiecare campanie are un singur rol și bugetul nu se mai amestecă între produse cu rezultate opuse."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]/text "Măsurat din Google Ads · ultimele 30 de zile"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]/text "Cum sunt organizate campaniile acum"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]/text "0"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/p[0]/text "Structura campaniilor nu a putut fi citită. Recomandarea de mai jos rămâne modelul de organizare, nu o constatare despre cont."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]/text "Recomandare Devrika"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]/text "Cum trebuie organizat contul"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]/text "3 roluri"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]/text "01"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]/text "Search · protecție brand"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]/text "Doar căutările după numele magazinului"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]/text "Mereu activă · buget mic și controlat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]/text "02"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]/text "Performance Max · produse profitabile"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]/text "Produsele dovedite peste ROAS-ul minim"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]/text "Bugetul principal · licitare pe valoarea vânzărilor"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]/text "03"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]/text "Standard Shopping · control"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]/text "Produse și căutări care au nevoie de control separat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]/text "Produsele sub prag sunt limitate, nu finanțate automat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[1]/text "Campaniile actuale sunt măsurate din ultimele 30 de zile. Structura recomandată descrie rolurile contului optimizat; nu modificăm nimic automat în cont."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/a[0] href="#contact-form"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/a[0]/text "Vreau planul de optimizare →"
 root/div[0]/main[0]/div[4] aria-hidden="true"
 root/div[0]/main[0]/div[4]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
@@ -2122,14 +2244,75 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/st
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/strong[0]/text "3×"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/p[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/p[0]/text "Valorile actuale sunt măsurate din contul Google Ads conectat. Valorile viitoare sunt simulări. Scenariul CSS presupune o reducere estimată de 20% a CPC-ului și nu este garantat."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4] role="region" aria-label="Structura recomandată a campaniilor"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/a[0] href="#contact-form"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/a[0]/text "Vreau planul de optimizare →"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/text "Structura contului · măsurat și recomandat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/h3[0]/text "Cum trebuie construite campaniile tale"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[0]/text "Separăm protecția brandului, creșterea produselor profitabile și controlul căutărilor. Astfel, fiecare campanie are un singur rol și bugetul nu se mai amestecă între produse cu rezultate opuse."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]/text "Măsurat din Google Ads · ultimele 30 de zile"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]/text "Cum sunt organizate campaniile acum"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]/text "0"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/p[0]/text "Structura campaniilor nu a putut fi citită. Recomandarea de mai jos rămâne modelul de organizare, nu o constatare despre cont."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]/text "Recomandare Devrika"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]/text "Cum trebuie organizat contul"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]/text "3 roluri"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]/text "01"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]/text "Search · protecție brand"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]/text "Doar căutările după numele magazinului"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]/text "Mereu activă · buget mic și controlat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]/text "02"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]/text "Performance Max · produse profitabile"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]/text "Produsele dovedite peste ROAS-ul minim"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]/text "Bugetul principal · licitare pe valoarea vânzărilor"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]/text "03"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]/text "Standard Shopping · control"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]/text "Produse și căutări care au nevoie de control separat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]/text "Produsele sub prag sunt limitate, nu finanțate automat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[1]/text "Campaniile actuale sunt măsurate din ultimele 30 de zile. Structura recomandată descrie rolurile contului optimizat; nu modificăm nimic automat în cont."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/a[0] href="#contact-form"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/a[0]/text "Vreau planul de optimizare →"
 root/div[0]/main[0]/div[4] aria-hidden="true"
 root/div[0]/main[0]/div[4]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
@@ -2871,14 +3054,75 @@ root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/st
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/strong[0]/text "3×"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/p[0]
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[3]/p[0]/text "Valorile actuale sunt măsurate din contul Google Ads conectat. Valorile viitoare sunt simulări. Scenariul CSS presupune o reducere estimată de 20% a CPC-ului și nu este garantat."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4] role="region" aria-label="Structura recomandată a campaniilor"
 root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/a[0] href="#contact-form"
-root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/a[0]/text "Vreau planul de optimizare →"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[0]/text "Structura contului · măsurat și recomandat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/h3[0]/text "Cum trebuie construite campaniile tale"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[0]/text "Separăm protecția brandului, creșterea produselor profitabile și controlul căutărilor. Astfel, fiecare campanie are un singur rol și bugetul nu se mai amestecă între produse cu rezultate opuse."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]/text "Măsurat din Google Ads · ultimele 30 de zile"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]/text "Cum sunt organizate campaniile acum"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]/text "0"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/p[0]/text "Structura campaniilor nu a putut fi citită. Recomandarea de mai jos rămâne modelul de organizare, nu o constatare despre cont."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]/text "Recomandare Devrika"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]/text "Cum trebuie organizat contul"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]/text "3 roluri"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]/text "01"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]/text "Search · protecție brand"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]/text "Doar căutările după numele magazinului"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]/text "Mereu activă · buget mic și controlat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]/text "02"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]/text "Performance Max · produse profitabile"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]/text "Produsele dovedite peste ROAS-ul minim"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]/text "Bugetul principal · licitare pe valoarea vânzărilor"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]/text "03"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]/text "Standard Shopping · control"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]/text "Produse și căutări care au nevoie de control separat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]/text "Produsele sub prag sunt limitate, nu finanțate automat"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[1]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[4]/p[1]/text "Campaniile actuale sunt măsurate din ultimele 30 de zile. Structura recomandată descrie rolurile contului optimizat; nu modificăm nimic automat în cont."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/a[0] href="#contact-form"
+root/div[0]/main[0]/div[3]/div[0]/section[0]/main[0]/section[5]/a[0]/text "Vreau planul de optimizare →"
 root/div[0]/main[0]/div[4] aria-hidden="true"
 root/div[0]/main[0]/div[4]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
@@ -3938,14 +4182,106 @@ root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/st
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/div[4]/div[1]/strong[0]/text "3×"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/p[0]
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[3]/p[0]/text "Valorile actuale sunt măsurate din contul Google Ads conectat. Valorile viitoare sunt simulări. Scenariul CSS presupune o reducere estimată de 20% a CPC-ului și nu este garantat."
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4] role="region" aria-label="Structura recomandată a campaniilor"
 root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[0]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/a[0] href="#contact-form"
-root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/a[0]/text "Vreau planul de optimizare →"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[0]/text "Structura contului · măsurat și recomandat"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/h3[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/h3[0]/text "Cum trebuie construite campaniile tale"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/p[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/p[0]/text "Separăm protecția brandului, creșterea produselor profitabile și controlul căutărilor. Astfel, fiecare campanie are un singur rol și bugetul nu se mai amestecă între produse cu rezultate opuse."
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/span[0]/text "Măsurat din Google Ads · ultimele 30 de zile"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/div[0]/h4[0]/text "Cum sunt organizate campaniile acum"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[0]/strong[0]/text "3"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[0]/strong[0]/text "PMax — Catalog complet"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[0]/span[0]/text "PERFORMANCE MAX"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[1]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[1]/strong[0]/text "28.800 RON"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[1]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[0]/div[1]/span[0]/text "ROAS 3×"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[0]/strong[0]/text "Shopping — Toate produsele"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[0]/span[0]/text "SHOPPING"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[1]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[1]/strong[0]/text "28.260 RON"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[1]/div[1]/span[0]/text "ROAS 3×"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[0]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[0]/strong[0]/text "Search — Brand"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[0]/span[0]/text "SEARCH"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[1]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[1]/strong[0]/text "9.600 RON"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[1]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[0]/div[1]/div[2]/div[1]/span[0]/text "ROAS 6×"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/span[0]/text "Recomandare Devrika"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/div[0]/h4[0]/text "Cum trebuie organizat contul"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[0]/strong[0]/text "3 roluri"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/span[0]/text "01"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/strong[0]/text "Search · protecție brand"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[0]/text "Doar căutările după numele magazinului"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[1]/div[0]/small[1]/text "Mereu activă · buget mic și controlat"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/span[0]/text "02"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/strong[0]/text "Performance Max · produse profitabile"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[0]/text "Produsele dovedite peste ROAS-ul minim"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[2]/div[0]/small[1]/text "Bugetul principal · licitare pe valoarea vânzărilor"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/span[0]/text "03"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/strong[0]/text "Standard Shopping · control"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[0]/text "Produse și căutări care au nevoie de control separat"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/div[1]/div[1]/div[3]/div[0]/small[1]/text "Produsele sub prag sunt limitate, nu finanțate automat"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/p[1]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[4]/p[1]/text "Campaniile actuale sunt măsurate din ultimele 30 de zile. Structura recomandată descrie rolurile contului optimizat; nu modificăm nimic automat în cont."
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[5]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[5]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[5]/div[0]/h3[0]/text "Recuperează bugetul blocat în produsele greșite."
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[5]/div[0]/p[0]/text "Primește un plan de optimizare prioritizat, construit din performanța reală a produselor tale."
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[5]/a[0] href="#contact-form"
+root/div[0]/main[0]/div[4]/div[0]/section[0]/main[0]/section[5]/a[0]/text "Vreau planul de optimizare →"
 root/div[0]/main[0]/div[5] aria-hidden="true"
 root/div[0]/main[0]/div[5]/div[0]
 root/div[0]/main[0]/div[5]/div[0]/span[0] aria-hidden="true"

@@ -12,6 +12,7 @@ const snapshot: GadsReportSnapshot = {
   optimized: { spend: 1000, revenue: 5800, orders: 12, cpa: 83.33, roas: 5.8 },
   losses: [{ productId: "loss", title: "Loss product", cost: 700, revenue: 700, orders: 1, cpa: 700, roas: 1, amount: 560 }],
   opportunities: [{ productId: "win", title: "Winning product", cost: 100, revenue: 1200, orders: 3, cpa: 33.33, roas: 12, amount: 1680 }],
+  campaigns: [{ name: "PMax All Products", channel: "PERFORMANCE_MAX", spend: 900, revenue: 2700, roas: 3, status: "ENABLED" }],
 };
 
 describe("stored Google Ads report delivery", () => {
@@ -24,6 +25,15 @@ describe("stored Google Ads report delivery", () => {
     const changed = Buffer.from(JSON.stringify({ ...snapshot, breakEvenRoas: 1 })).toString("base64url");
     expect(openReportSnapshot(`${changed}.${signature}`)).toBeNull();
     expect(openReportSnapshot(`${payload}.invalid`)).toBeNull();
+  });
+
+  it("keeps old reports compatible and refuses malformed campaign data", () => {
+    const legacySnapshot = { ...snapshot };
+    delete legacySnapshot.campaigns;
+    expect(openReportSnapshot(sealReportSnapshot(legacySnapshot))).toEqual(legacySnapshot);
+
+    const malformed = { ...snapshot, campaigns: [{ ...snapshot.campaigns![0], spend: "900" }] };
+    expect(openReportSnapshot(sealReportSnapshot(malformed as unknown as GadsReportSnapshot))).toBeNull();
   });
 
   it("renders measured and simulated values with their status labels", () => {
@@ -42,5 +52,11 @@ describe("stored Google Ads report delivery", () => {
     expect(html).not.toContain(">8.0<");
     expect(html).toContain("83 RON");
     expect(html).toContain("6×");
+    expect(html).toContain("Cum sunt organizate campaniile acum");
+    expect(html).toContain("PMax All Products");
+    expect(html).toContain("Cum trebuie organizat contul");
+    expect(html).toContain("Search · protecție brand");
+    expect(html).toContain("Performance Max · produse profitabile");
+    expect(html).toContain("Standard Shopping · control");
   });
 });

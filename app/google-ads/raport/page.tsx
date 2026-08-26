@@ -207,6 +207,18 @@ export default async function Raport() {
     },
     losses: profitability.losses.map((row) => ({ productId: row.productId, title: row.title, cost: row.monthlyCost, revenue: row.monthlyRevenue, orders: row.monthlyOrders, cpa: row.cpa, roas: row.roas, amount: row.monthlyMoneyAtRisk })),
     opportunities: profitability.opportunities.map((row) => ({ productId: row.productId, title: row.title, cost: row.monthlyCost, revenue: row.monthlyRevenue, orders: row.monthlyOrders, cpa: row.cpa, roas: row.roas, amount: row.estimatedSalesOpportunity })),
+    campaigns: structura?.campanii
+      .filter((campaign) => campaign.cost > 0 || campaign.status === "ENABLED")
+      .sort((left, right) => right.cost - left.cost)
+      .slice(0, 10)
+      .map((campaign) => ({
+        name: campaign.nume,
+        channel: campaign.canal,
+        spend: campaign.cost,
+        revenue: campaign.valoare,
+        roas: campaign.cost > 0 ? campaign.valoare / campaign.cost : 0,
+        status: campaign.status,
+      })),
   };
   const signedReportSnapshot = sealReportSnapshot(snapshot);
 

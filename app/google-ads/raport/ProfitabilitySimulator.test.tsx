@@ -19,6 +19,10 @@ const snapshot = {
   optimized: { spend: 120, revenue: 900, orders: 3, cpa: 40, roas: 7.5 },
   losses: [],
   opportunities: [],
+  campaigns: [
+    { name: "PMax All Products", channel: "PERFORMANCE_MAX", spend: 900, revenue: 2700, roas: 3, status: "ENABLED" },
+    { name: "Search Generic", channel: "SEARCH", spend: 100, revenue: 200, roas: 2, status: "ENABLED" },
+  ],
 };
 
 afterEach(cleanup);
@@ -98,6 +102,21 @@ describe("profitability report simulator", () => {
     expect(screen.getByText("2 · Mută bugetul")).toBeTruthy();
     expect(screen.getByText("3 · Crește controlat")).toBeTruthy();
     expect(screen.getAllByText(/reducere estimată de 20% a CPC-ului/i)).toHaveLength(2);
+  });
+
+  it("compares the measured campaign structure with the recommended ecommerce architecture", () => {
+    render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
+
+    expect(screen.getByRole("region", { name: "Structura recomandată a campaniilor" })).toBeTruthy();
+    expect(screen.getByText("Cum sunt organizate campaniile acum")).toBeTruthy();
+    expect(screen.getByText("PMax All Products")).toBeTruthy();
+    expect(screen.getByText("Search Generic")).toBeTruthy();
+    expect(screen.getByText("Cum trebuie organizat contul")).toBeTruthy();
+    expect(screen.getByText("Search · protecție brand")).toBeTruthy();
+    expect(screen.getByText("Performance Max · produse profitabile")).toBeTruthy();
+    expect(screen.getByText("Standard Shopping · control")).toBeTruthy();
+    expect(screen.getByText("Măsurat din Google Ads · ultimele 30 de zile")).toBeTruthy();
+    expect(screen.getByText("Recomandare Devrika")).toBeTruthy();
   });
 
   it("renders a wide report surface instead of the narrow legacy report", () => {
