@@ -71,10 +71,10 @@ function ProductEconomicsTable({ rows, kind, compact = false, markNames = false 
 }) {
   const amountLabel = kind === "loss" ? "Pierdere" : "Potențial";
   return (
-    <div className="overflow-x-auto" data-product-economics-table={kind}>
-      <table className={`${compact ? "min-w-[720px] text-[10px]" : "min-w-[820px] text-[11px]"} w-full border-collapse`}>
+    <div data-product-economics-table={kind}>
+      <table className={`${compact ? "text-[10px]" : "text-[11px]"} w-full table-fixed border-collapse`}>
         <thead><tr className="border-b text-left uppercase tracking-wide" style={{ borderColor: C.border, color: C.gray400 }}>
-          {['Produs', 'Clickuri', 'Buget', 'Comenzi', 'CPA', 'Vânzări', 'ROAS', amountLabel].map((header) => <th key={header} className="px-3 py-3 font-bold first:pl-5 last:pr-5">{header}</th>)}
+          {['Produs', 'Clickuri', 'Buget', 'Comenzi', 'CPA', 'Vânzări', 'ROAS', amountLabel].map((header, index) => <th key={header} className={`${index === 0 ? "w-[25%]" : ""} px-2 py-3 font-bold first:pl-5 last:pr-5`}>{header}</th>)}
         </tr></thead>
         <tbody>{rows.map((row) => {
           const cpa = cpaFor(row);
@@ -82,14 +82,14 @@ function ProductEconomicsTable({ rows, kind, compact = false, markNames = false 
           const accent = kind === "loss" ? C.red : C.green;
           const background = kind === "loss" ? C.redBg : C.greenBg;
           return <tr key={row.product} className="border-b last:border-b-0" style={{ borderColor: C.border }}>
-            <td className="max-w-[210px] px-3 py-3 pl-5 font-bold leading-snug" style={{ color: C.navy }}><span data-report-product-name={markNames ? "visible" : undefined} className="break-words">{row.product}</span></td>
-            <td className="px-3 py-3 tabular-nums">{number(row.clicks)}</td>
-            <td className="px-3 py-3 tabular-nums">{money(row.cost)}</td>
-            <td className="px-3 py-3 tabular-nums">{number(row.orders)}</td>
-            <td className="px-3 py-3 font-bold tabular-nums" style={{ color: cpa && cpa > DEMO_BREAK_EVEN_CPA ? C.red : C.green }}>{cpa === null ? "—" : money(cpa)}</td>
-            <td className="px-3 py-3 tabular-nums">{money(row.sales)}</td>
-            <td className="px-3 py-3 font-bold tabular-nums" style={{ color: roasFor(row) < DEMO_BREAK_EVEN_ROAS ? C.red : C.green }}>{number(roasFor(row))}×</td>
-            <td className="px-3 py-3 pr-5"><span className="inline-block whitespace-nowrap rounded-lg px-2 py-1.5 font-extrabold tabular-nums" style={{ background, color: accent }}>{kind === "loss" ? "−" : "+"}{money(amount)}</span></td>
+            <td className="px-2 py-3 pl-5 font-bold leading-snug" style={{ color: C.navy }}><span data-report-product-name={markNames ? "visible" : undefined} className="break-words">{row.product}</span></td>
+            <td className="px-2 py-3 tabular-nums">{number(row.clicks)}</td>
+            <td className="px-2 py-3 tabular-nums">{money(row.cost)}</td>
+            <td className="px-2 py-3 tabular-nums">{number(row.orders)}</td>
+            <td className="px-2 py-3 font-bold tabular-nums" style={{ color: cpa && cpa > DEMO_BREAK_EVEN_CPA ? C.red : C.green }}>{cpa === null ? "—" : money(cpa)}</td>
+            <td className="px-2 py-3 tabular-nums">{money(row.sales)}</td>
+            <td className="px-2 py-3 font-bold tabular-nums" style={{ color: roasFor(row) < DEMO_BREAK_EVEN_ROAS ? C.red : C.green }}>{number(roasFor(row))}×</td>
+            <td className="px-2 py-3 pr-5"><span className="inline-block whitespace-nowrap rounded-lg px-2 py-1.5 font-extrabold tabular-nums" style={{ background, color: accent }}>{kind === "loss" ? "−" : "+"}{money(amount)}</span></td>
           </tr>;
         })}</tbody>
       </table>
@@ -165,20 +165,20 @@ export default function GoogleAdsLanding() {
             <h2 className="font-black leading-[1.08] tracking-[-1.4px]" style={{ fontFamily: sora, fontSize: "clamp(32px,4.5vw,52px)", color: C.navy }}>De ce poti pierde bani chiar daca ROAS-ul contului pare bun</h2>
             <p className="mx-auto mt-6 max-w-[680px] text-lg leading-relaxed" style={{ color: C.gray500 }}>Google optimizeaza pentru vanzari, dar nu stie automat cat profit iti ramane din fiecare produs.</p>
           </div>
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-6">
             <article data-problem-example="shared-budget" className="overflow-hidden rounded-[22px] border bg-white" style={{ borderColor: C.border }}>
               <div className="p-6"><span className="text-xs font-extrabold" style={{ color: C.indigo }}>01</span><h3 className="mt-3 text-xl font-extrabold leading-tight" style={{ fontFamily: sora, color: C.navy }}>Toate produsele concureaza pentru acelasi buget</h3><p className="mt-3 text-sm leading-relaxed" style={{ color: C.gray500 }}>Google distribuie bugetul dupa sansele de vanzare, nu dupa profitul real pe care ti-l lasa fiecare produs.</p></div>
-              <div className="border-t" style={{ borderColor: C.border, background: "#f7f8fc" }}><ProductEconomicsTable rows={[losingProducts[0]]} kind="loss" compact /><CalculationNote kind="loss" /></div>
+              <div className="border-t" style={{ borderColor: C.border, background: "#f7f8fc" }}><ProductEconomicsTable rows={losingProducts} kind="loss" compact /><CalculationNote kind="loss" /></div>
             </article>
 
             <article data-problem-example="traffic-without-profit" className="overflow-hidden rounded-[22px] border bg-white" style={{ borderColor: C.border }}>
               <div className="p-6"><span className="text-xs font-extrabold" style={{ color: C.indigo }}>02</span><h3 className="mt-3 text-xl font-extrabold leading-tight" style={{ fontFamily: sora, color: C.navy }}>Traficul mare nu inseamna profit</h3><p className="mt-3 text-sm leading-relaxed" style={{ color: C.gray500 }}>Un produs poate primi foarte multe clickuri si poate consuma cea mai mare parte din buget, dar sa fie extrem de neprofitabil.</p></div>
-              <div className="border-t" style={{ borderColor: C.border, background: "#fff8f8" }}><ProductEconomicsTable rows={[losingProducts[0]]} kind="loss" compact /><CalculationNote kind="loss" /></div>
+              <div className="border-t" style={{ borderColor: C.border, background: "#fff8f8" }}><ProductEconomicsTable rows={losingProducts} kind="loss" compact /><CalculationNote kind="loss" /></div>
             </article>
 
             <article data-problem-example="css-cost" className="overflow-hidden rounded-[22px] border bg-white" style={{ borderColor: C.border }}>
               <div className="p-6"><span className="text-xs font-extrabold" style={{ color: C.indigo }}>03</span><h3 className="mt-3 text-xl font-extrabold leading-tight" style={{ fontFamily: sora, color: C.navy }}>Fara un CSS partener, platesti cu aproximativ 20% mai mult per click</h3><p className="mt-3 text-sm leading-relaxed" style={{ color: C.gray500 }}>Un cost per click mai mic inseamna mai mult trafic, mai multe vanzari si un ROAS mai mare din acelasi buget.</p></div>
-              <div className="overflow-x-auto border-t" data-product-economics-table="css" style={{ borderColor: C.border, background: "#f6fbfb" }}><table className="min-w-[720px] w-full border-collapse text-[10px]"><thead><tr className="border-b text-left uppercase tracking-wide" style={{ borderColor: C.border, color: C.gray400 }}>{["Scenariu", "Clickuri", "Buget", "Comenzi", "CPA", "Vânzări", "ROAS", "Diferență"].map((header) => <th key={header} className="px-3 py-3 font-bold first:pl-5 last:pr-5">{header}</th>)}</tr></thead><tbody>{[["Direct Google", 1000, 1000, 20, 50, 5000, 5, "—"], ["CSS partener", 1250, 1000, 25, 40, 6250, 6.25, "+1.250 RON"]].map(([label, clicks, cost, orders, cpa, sales, roas, difference]) => <tr key={String(label)} className="border-b last:border-b-0" style={{ borderColor: C.border }}><td className="px-3 py-3 pl-5 font-bold" style={{ color: label === "CSS partener" ? C.green : C.navy }}>{label}</td><td className="px-3 py-3">{number(Number(clicks))}</td><td className="px-3 py-3">{money(Number(cost))}</td><td className="px-3 py-3">{number(Number(orders))}</td><td className="px-3 py-3">{money(Number(cpa))}</td><td className="px-3 py-3">{money(Number(sales))}</td><td className="px-3 py-3 font-bold">{number(Number(roas), 2)}×</td><td className="px-3 py-3 pr-5 font-extrabold" style={{ color: label === "CSS partener" ? C.green : C.gray400 }}>{difference}</td></tr>)}</tbody></table><p className="border-t px-5 py-3 text-[11px]" style={{ borderColor: C.border, color: C.gray500 }}>Același buget și aceeași rată de conversie: CPC 1 RON → 0,80 RON, deci 250 clickuri și 5 comenzi în plus.</p></div>
+              <div className="border-t" data-product-economics-table="css" style={{ borderColor: C.border, background: "#f6fbfb" }}><p className="px-5 pt-4 text-[11px] font-bold" style={{ color: C.navy }}>Direct Google → CSS partener, la același buget</p><table className="w-full table-fixed border-collapse text-[10px]"><thead><tr className="border-b text-left uppercase tracking-wide" style={{ borderColor: C.border, color: C.gray400 }}>{["Produs", "Clickuri", "Buget", "Comenzi", "CPA", "Vânzări", "ROAS", "Câștig CSS"].map((header, index) => <th key={header} className={`${index === 0 ? "w-[25%]" : ""} px-2 py-3 font-bold first:pl-5 last:pr-5`}>{header}</th>)}</tr></thead><tbody>{[["Rochie office bleumarin", "1.000 → 1.250", 1000, "20 → 25", "50 → 40 RON", "5.000 → 6.250 RON", "5,00 → 6,25×", "+1.250 RON"], ["Set 3 tricouri bumbac", "800 → 1.000", 800, "16 → 20", "50 → 40 RON", "4.000 → 5.000 RON", "5,00 → 6,25×", "+1.000 RON"], ["Geantă din piele ecologică", "600 → 750", 600, "12 → 15", "50 → 40 RON", "3.000 → 3.750 RON", "5,00 → 6,25×", "+750 RON"]].map(([label, clicks, cost, orders, cpa, sales, productRoas, difference]) => <tr key={String(label)} className="border-b last:border-b-0" style={{ borderColor: C.border }}><td className="px-2 py-3 pl-5 font-bold" style={{ color: C.navy }}>{label}</td><td className="px-2 py-3">{clicks}</td><td className="px-2 py-3">{money(Number(cost))}</td><td className="px-2 py-3">{orders}</td><td className="px-2 py-3">{cpa}</td><td className="px-2 py-3">{sales}</td><td className="px-2 py-3 font-bold">{productRoas}</td><td className="px-2 py-3 pr-5 font-extrabold" style={{ color: C.green }}>{difference}</td></tr>)}</tbody></table><p className="border-t px-5 py-3 text-[11px]" style={{ borderColor: C.border, color: C.gray500 }}>Aceleași bugete și aceeași rată de conversie: CPC 1 RON → 0,80 RON. Fiecare produs primește cu 25% mai multe clickuri, comenzi și vânzări.</p></div>
             </article>
           </div>
           <p className="mt-10 text-center text-lg font-bold" style={{ color: C.navy }}>Media contului ascunde problema. Auditul iti arata fiecare produs in parte.</p>
@@ -188,7 +188,7 @@ export default function GoogleAdsLanding() {
       <section id="report-preview" data-landing-section="evidence" className="scroll-mt-20 px-5 py-20 sm:px-8 sm:py-24" style={{ background: "#f6f7fc" }}>
         <div className="mx-auto max-w-[1160px]">
           <div className="mx-auto mb-14 max-w-[760px] text-center"><p className="mb-3 text-xs font-bold uppercase tracking-[0.14em]" style={{ color: C.indigo }}>Cifre reale, nu concluzii vagi</p><h2 className="font-black leading-[1.08] tracking-[-1.4px]" style={{ fontFamily: sora, fontSize: "clamp(32px,4.5vw,52px)", color: C.navy }}>Vezi cu ochii tai unde se duc banii</h2><p className="mx-auto mt-6 max-w-[680px] text-lg leading-relaxed" style={{ color: C.gray500 }}>Raportul foloseste datele din contul tau si separa clar produsele care consuma buget de cele in care merita sa investesti mai mult.</p></div>
-          <div className="grid gap-7 lg:grid-cols-2">
+          <div className="grid gap-7">
             <article data-evidence-example="losses" className="overflow-hidden rounded-[22px] border bg-white" style={{ borderColor: C.border }}>
               <div className="border-b p-6" style={{ borderColor: C.border }}><p className="text-xs font-bold uppercase tracking-[0.12em]" style={{ color: C.red }}>Oprești risipa</p><h3 className="mt-2 text-2xl font-extrabold" style={{ fontFamily: sora, color: C.navy }}>Produse care îți consumă bugetul</h3><p className="mt-3 text-sm leading-relaxed" style={{ color: C.gray500 }}>Au primit trafic și au cheltuit bani, dar nu au generat suficiente vânzări. Cea mai mare pierdere apare prima.</p></div><ProductEconomicsTable rows={losingProducts} kind="loss" /><CalculationNote kind="loss" />
             </article>

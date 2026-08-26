@@ -661,9 +661,9 @@ describe("public Google Ads access boundary", () => {
     expect(html).toContain("Direct Google");
     expect(html).toContain("CSS partener");
     expect(html).toContain("5.000 RON");
-    expect(html).toContain("5,00×");
+    expect(html).toContain("5,00 → 6,25×");
     expect(html).toContain("6.250 RON");
-    expect(html).toContain("6,25×");
+    expect(html).toContain("Direct Google → CSS partener");
     expect(html).toContain("+1.250 RON");
     expect(html).toContain('<details data-oauth-disclosure="progressive"');
     expect(html.match(/data-process-step=/g) ?? []).toHaveLength(3);
@@ -700,6 +700,21 @@ describe("public Google Ads access boundary", () => {
     expect(html).toContain("Potențial = vânzări × (ROAS ÷ ROAS minim − 1)");
     expect(html).toContain("ROAS minim 5×");
     expect(html).toContain("CPA maxim 60 RON");
+  });
+
+  it("shows every landing example vertically without horizontal table scrolling", () => {
+    const source = fs.readFileSync(path.join(process.cwd(), "app/google-ads/page.tsx"), "utf8");
+    const html = renderToStaticMarkup(<LandingPage />);
+
+    expect(source).not.toContain("overflow-x-auto");
+    expect(source).not.toContain("min-w-[720px]");
+    expect(source).not.toContain("min-w-[820px]");
+    expect(source).toContain('className="grid gap-6"');
+    expect(source).toContain('className="grid gap-7"');
+    expect(source.match(/rows=\{losingProducts\}/g) ?? []).toHaveLength(4);
+    expect(html.match(/>Rochie office bleumarin</g) ?? []).toHaveLength(5);
+    expect(html.match(/>Set 3 tricouri bumbac</g) ?? []).toHaveLength(5);
+    expect(html.match(/>Geantă din piele ecologică</g) ?? []).toHaveLength(5);
   });
 
   it("derives internally consistent ROAS, CPA, loss and potential values", () => {
