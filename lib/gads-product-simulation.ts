@@ -1,5 +1,5 @@
 export const CSS_CPC_REDUCTION_PCT = 20;
-export const DIMINISHING_RETURN_RATE = 0.05;
+export const DIMINISHING_RETURN_RATE = 0.03;
 const MIN_QUALIFIED_PURCHASES = 2;
 const MAX_ROWS = 20;
 

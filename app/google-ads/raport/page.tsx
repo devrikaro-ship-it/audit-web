@@ -255,7 +255,7 @@ export default async function Raport() {
             { k: "Constatari care costa bani", v: String(bani.length) },
             { k: "Setari de reparat", v: String(rep.puncte.length) },
             { k: "Produse analizate", v: String(products.length) },
-            { k: "Pragul tau minim", v: `ROAS ${minRoas.toFixed(2)}x` },
+            { k: "Pragul tau minim", v: `ROAS ${Math.round(minRoas)}x` },
           ].map((x) => (
             <div key={x.k} className="bg-white px-4 py-4 text-center">
               <p className="mb-1 text-[19px] font-black tabular-nums" style={{ fontFamily: sora, color: C.navy }}>{x.v}</p>
@@ -299,7 +299,7 @@ export default async function Raport() {
                       celule: [
                         p.titlu,
                         p.cost > 0 ? lei(p.cost) : "—",
-                        p.roas === undefined ? "—" : `${p.roas.toFixed(2)}x`,
+                        p.roas === undefined ? "—" : `${Math.round(p.roas)}x`,
                       ],
                       alarma: p.roas !== undefined && p.roas < minRoas,
                     }))}

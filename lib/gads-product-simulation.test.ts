@@ -52,7 +52,7 @@ describe("product profitability analysis", () => {
 });
 
 describe("controlled optimized budget simulation", () => {
-  it("uses a five-percent diminishing-return rate for each additional product-spend multiple", () => {
+  it("uses a three-percent diminishing-return rate for each additional product-spend multiple", () => {
     const singleProduct = [{
       productId: "scalable",
       title: "Scalable product",
@@ -65,8 +65,8 @@ describe("controlled optimized budget simulation", () => {
     const analysis = analyzeProducts(singleProduct, { breakEvenRoas: 5, months: 12 });
     const result = simulateOptimizedBudget(analysis, 200);
 
-    expect(DIMINISHING_RETURN_RATE).toBe(0.05);
-    expect(result.products[0].simulatedRoas).toBeCloseTo(12.5 / 1.05, 6);
+    expect(DIMINISHING_RETURN_RATE).toBe(0.03);
+    expect(result.products[0].simulatedRoas).toBeCloseTo(12.5 / 1.03, 6);
   });
 
   it("returns zero sales and orders when the slider reaches zero", () => {

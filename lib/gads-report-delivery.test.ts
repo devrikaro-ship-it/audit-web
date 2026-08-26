@@ -37,5 +37,10 @@ describe("stored Google Ads report delivery", () => {
     expect(html).toContain("Produse care îți consumă bugetul");
     expect(html).toContain("Produse profitabile care primesc prea puțin trafic");
     expect(html).not.toContain("Profit after advertising");
+    expect(html).not.toContain("83.33 RON");
+    expect(html).not.toContain("3.20×");
+    expect(html).not.toContain(">8.0<");
+    expect(html).toContain("83 RON");
+    expect(html).toContain("6×");
   });
 });

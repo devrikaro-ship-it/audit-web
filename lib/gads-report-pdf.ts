@@ -15,7 +15,7 @@ function reportsDirectory(): string {
 }
 
 const money = (value: number) => `${Math.round(value).toLocaleString("en-US")} RON`;
-const metric = (value: number | null, suffix = "") => value === null ? "-" : `${value.toFixed(2)}${suffix}`;
+const metric = (value: number | null, suffix = "") => value === null ? "-" : `${Math.round(value).toLocaleString("ro-RO")}${suffix}`;
 
 function addPageTitle(doc: PDFKit.PDFDocument, title: string, badge: string): void {
   const y = doc.y;
@@ -38,7 +38,7 @@ function ensureSpace(doc: PDFKit.PDFDocument, height: number): void {
 function comparisonTable(doc: PDFKit.PDFDocument, report: GadsReportSnapshot): void {
   const rows = [
     ["Advertising cost", money(report.current.spend), money(report.optimized.spend)],
-    ["Orders", report.current.orders.toFixed(1), report.optimized.orders.toFixed(1)],
+    ["Orders", Math.round(report.current.orders).toLocaleString("ro-RO"), Math.round(report.optimized.orders).toLocaleString("ro-RO")],
     ["CPA", metric(report.current.cpa, " RON"), metric(report.optimized.cpa, " RON")],
     ["Sales", money(report.current.revenue), money(report.optimized.revenue)],
     ["ROAS", metric(report.current.roas, "x"), metric(report.optimized.roas, "x")],
@@ -80,7 +80,7 @@ function productTable(doc: PDFKit.PDFDocument, rows: DeliveryProduct[], amountLa
       doc.addPage();
       y = 45;
     }
-    const values = [row.title, money(row.cost), row.orders.toFixed(1), metric(row.cpa, " RON"), money(row.revenue), metric(row.roas, "x"), money(row.amount)];
+    const values = [row.title, money(row.cost), Math.round(row.orders).toLocaleString("ro-RO"), metric(row.cpa, " RON"), money(row.revenue), metric(row.roas, "x"), money(row.amount)];
     cellX = x;
     values.forEach((value, index) => {
       doc.fillColor(index === 6 ? amountColor : NAVY).font(index === 0 || index === 6 ? "Helvetica-Bold" : "Helvetica").fontSize(index === 0 ? 8.5 : 7.5)

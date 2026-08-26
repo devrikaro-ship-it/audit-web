@@ -75,14 +75,21 @@ describe("profitability report simulator", () => {
   it("switches the scenario summary between measured and optimized values", () => {
     render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
 
-    expect(screen.getByTestId("scenario-outcome").textContent).toContain("7.5× ROAS");
+    expect(screen.getByTestId("scenario-outcome").textContent).toContain("8× ROAS");
     fireEvent.click(screen.getByRole("tab", { name: "Contul actual" }));
-    expect(screen.getByTestId("scenario-outcome").textContent).toContain("5.0× ROAS");
+    expect(screen.getByTestId("scenario-outcome").textContent).toContain("5× ROAS");
     expect(screen.getByRole("tab", { name: "Contul actual" }).getAttribute("aria-selected")).toBe("true");
 
     fireEvent.click(screen.getByRole("tab", { name: "Optimizat + CSS" }));
-    expect(screen.getByTestId("scenario-outcome").textContent).toContain("7.5× ROAS");
+    expect(screen.getByTestId("scenario-outcome").textContent).toContain("8× ROAS");
     expect(screen.getByRole("tab", { name: "Optimizat + CSS" }).getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("shows orders, CPA and ROAS as whole numbers throughout the interactive report", () => {
+    const { container } = render(<ProfitabilitySimulator analysis={analysis} averageOrderValue={300} snapshot={snapshot} />);
+    expect(container.textContent).not.toMatch(/\d+[,.]\d+×/);
+    expect(container.textContent).not.toContain("40.00 RON");
+    expect(container.textContent).toContain("40 RON");
   });
 
   it("explains the exact three-step strategy and the CSS assumption", () => {
