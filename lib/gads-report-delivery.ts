@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import type { ProductAnalysis, ProductAnalysisRow } from "@/lib/gads-product-simulation";
 
 export type DeliveryProduct = {
   productId: string;
@@ -34,6 +35,7 @@ export type GadsReportSnapshot = {
   losses: DeliveryProduct[];
   opportunities: DeliveryProduct[];
   campaigns?: DeliveryCampaign[];
+  productAnalysis?: ProductAnalysis;
 };
 
 function signingSecret(): string {
@@ -70,6 +72,7 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
       typeof campaign.status === "string"
     )
   );
+  const productAnalysisValid = item.productAnalysis === undefined || validProductAnalysis(item.productAnalysis);
   return (
     typeof item.website === "string" &&
     typeof item.accountName === "string" &&
@@ -77,8 +80,66 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
     Number.isFinite(item.breakEvenRoas) &&
     Array.isArray(item.losses) && item.losses.length <= 20 &&
     Array.isArray(item.opportunities) && item.opportunities.length <= 20 &&
-    campaignsValid
+    campaignsValid &&
+    productAnalysisValid
   );
+}
+
+function validProductAnalysis(value: unknown): value is ProductAnalysis {
+  if (!value || typeof value !== "object") return false;
+  const analysis = value as Partial<ProductAnalysis>;
+  return (
+    Number.isFinite(analysis.breakEvenRoas) &&
+    Number.isFinite(analysis.months) &&
+    Number.isFinite(analysis.currentMonthlySpend) &&
+    Number.isFinite(analysis.lossProductMonthlyCap) &&
+    Number.isFinite(analysis.economicBudgetLimit) &&
+    Array.isArray(analysis.losses) && analysis.losses.length <= 20 && analysis.losses.every(validProductRow) &&
+    Array.isArray(analysis.opportunities) && analysis.opportunities.length <= 20 && analysis.opportunities.every(validProductRow)
+  );
+}
+
+function validProductRow(value: unknown): value is ProductAnalysisRow {
+  if (!value || typeof value !== "object") return false;
+  const row = value as Partial<ProductAnalysisRow>;
+  return (
+    typeof row.productId === "string" &&
+    typeof row.title === "string" &&
+    [row.cost, row.conversionValue, row.conversions, row.clicks, row.impressions, row.monthlyCost, row.monthlyRevenue, row.monthlyOrders, row.roas, row.monthlyMoneyAtRisk, row.estimatedSalesOpportunity].every(Number.isFinite) &&
+    (row.cpa === null || Number.isFinite(row.cpa))
+  );
+}
+
+export function productAnalysisFromSnapshot(snapshot: GadsReportSnapshot): ProductAnalysis {
+  if (snapshot.productAnalysis) return snapshot.productAnalysis;
+  const months = 12;
+  const convert = (row: DeliveryProduct): ProductAnalysisRow => ({
+    productId: row.productId,
+    title: row.title,
+    cost: row.cost * months,
+    conversionValue: row.revenue * months,
+    conversions: row.orders * months,
+    clicks: 0,
+    impressions: 0,
+    monthlyCost: row.cost,
+    monthlyRevenue: row.revenue,
+    monthlyOrders: row.orders,
+    roas: row.roas,
+    cpa: row.cpa,
+    monthlyMoneyAtRisk: row.amount,
+    estimatedSalesOpportunity: row.amount,
+  });
+  const losses = snapshot.losses.map(convert);
+  const opportunities = snapshot.opportunities.map(convert);
+  return {
+    breakEvenRoas: snapshot.breakEvenRoas,
+    months,
+    currentMonthlySpend: snapshot.current.spend,
+    lossProductMonthlyCap: losses.reduce((sum, row) => sum + row.monthlyCost, 0) * 0.1,
+    economicBudgetLimit: snapshot.current.spend,
+    losses,
+    opportunities,
+  };
 }
 
 export function openReportSnapshot(raw: string): GadsReportSnapshot | null {

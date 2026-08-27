@@ -219,6 +219,7 @@ export default async function Raport() {
         roas: campaign.cost > 0 ? campaign.valoare / campaign.cost : 0,
         status: campaign.status,
       })),
+    productAnalysis: profitability,
   };
   const signedReportSnapshot = sealReportSnapshot(snapshot);
 
