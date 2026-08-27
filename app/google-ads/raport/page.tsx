@@ -31,7 +31,7 @@ import type { TermenBrut } from "@/lib/gads-keywords";
 import { ReportSurface, reportGuards, runReportStep } from "./report-contract";
 import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 import { analyzeProducts, simulateOptimizedBudget } from "@/lib/gads-product-simulation";
-import ProfitabilitySimulator from "./ProfitabilitySimulator";
+import ReportingDashboard from "./ReportingDashboard";
 import { sealReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
 
 export const dynamic = "force-dynamic";
@@ -184,6 +184,8 @@ export default async function Raport() {
   const optimized = simulateOptimizedBudget(profitability, profitability.currentMonthlySpend);
   const currentRevenue = products.reduce((sum, product) => sum + product.conversionValue / 12, 0);
   const currentOrders = products.reduce((sum, product) => sum + product.conversions / 12, 0);
+  const currentClicks = products.reduce((sum, product) => sum + product.clicks / 12, 0);
+  const currentImpressions = products.reduce((sum, product) => sum + product.impressions / 12, 0);
   const snapshot: GadsReportSnapshot = {
     website: session.website ?? "",
     accountName: session.customerName || "Your account",
@@ -197,6 +199,8 @@ export default async function Raport() {
       orders: currentOrders,
       cpa: currentOrders > 0 ? profitability.currentMonthlySpend / currentOrders : null,
       roas: profitability.currentMonthlySpend > 0 ? currentRevenue / profitability.currentMonthlySpend : 0,
+      clicks: currentClicks,
+      impressions: currentImpressions,
     },
     optimized: {
       spend: optimized.budget,
@@ -220,6 +224,7 @@ export default async function Raport() {
         status: campaign.status,
       })),
     productAnalysis: profitability,
+    reportProducts: products.map((product) => ({ ...product, catalogEligible: catalogComplete })),
   };
   const signedReportSnapshot = sealReportSnapshot(snapshot);
 
@@ -340,7 +345,7 @@ export default async function Raport() {
         </ReportSurface>
 
         <ReportSurface id="profitability-simulator" when={reportGuards.catalogMap(products.length)} className="contents">
-          <ProfitabilitySimulator analysis={profitability} averageOrderValue={session.averageOrderValue ?? 0} snapshot={snapshot} />
+          <ReportingDashboard snapshot={snapshot} />
         </ReportSurface>
 
         {/* ── Catalogul pe performanta ── */}

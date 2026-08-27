@@ -48,8 +48,8 @@ beforeEach(() => {
 
 it("renders the complete selected report inside the client portal without a PDF link", async () => {
   const html = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({}) }));
-  expect(html).toContain('data-report-concept="original"');
-  expect(html).toContain('aria-label="Buget lunar simulat"');
+  expect(html).toContain('data-report-dashboard="live"');
+  expect(html).toContain('aria-label="All product performance"');
   expect(html).toContain("Current live report");
   expect(html).not.toContain("Open PDF");
   expect(html).not.toContain("application/pdf");

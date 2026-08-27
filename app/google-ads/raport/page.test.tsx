@@ -223,12 +223,12 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain("900 RON");
   });
 
-  it("keeps the measured 365-day window and the original prototype label", async () => {
+  it("keeps the measured 365-day window in the live dashboard", async () => {
     const h = await html();
     expect(h).toContain('data-report-surface="headline-summary"');
     const visibleText = h.replace(/<[^>]*>/g, " ");
     expect(h).toContain(AUDIT_WINDOW_LABEL);
-    expect(visibleText).toContain("Audit doar în citire · 12 luni");
+    expect(visibleText).toContain("Read-only audit · 12 months");
   });
 
   it("are amandoua sectiunile, si banda de sumar deasupra lor", async () => {
@@ -281,9 +281,8 @@ describe("pagina de raport, randata", () => {
     expect(h.indexOf("Unde pierzi bani")).toBeLessThan(h.indexOf('data-test="contact"'));
   });
 
-  it("gives every report CTA a real contact-form anchor target", async () => {
+  it("keeps the report contact form target available", async () => {
     const h = await html();
-    expect(h).toContain('href="#contact-form"');
     expect(h).toContain('id="contact-form"');
   });
 
@@ -337,16 +336,14 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain('data-report-surface="honesty-and-caveats"');
   });
 
-  it("renders measured before tables and the interactive simulated after table", async () => {
+  it("renders the live measured dashboard with the complete product table", async () => {
     const h = await html();
-    expect(h).toContain('data-report-surface="profitability-simulator"');
-    expect(h).toContain("Cum ar putea arăta contul după optimizare");
-    expect(h).toContain("Produse care îți consumă bugetul");
-    expect(h).toContain("Cum ar fi promovate aceleași produse");
-    expect(h).toContain("Simulare viitoare");
+    expect(h).toContain('data-report-dashboard="live"');
+    expect(h).toContain('aria-label="All product performance"');
+    expect(h).toContain("Loss maker");
+    expect(h).toContain("Not promoted");
     expect(h).not.toContain("Profit after advertising");
     expect(h).toContain('data-report-version="profitability-v3-original"');
-    expect(h).toContain('data-report-concept="original"');
   });
 
   it("visually suppresses every legacy report section in the profitability report", async () => {
@@ -378,10 +375,10 @@ describe("pagina de raport, randata", () => {
     expect(normalizedDemo).toContain("MOD DEMO");
   });
 
-  it("renders the original gradient hero and metric strip together", async () => {
+  it("renders the familiar reporting KPI strip", async () => {
     const h = await html();
-    expect(h).toContain('data-report-concept="original"');
-    expect(h).toMatch(/class="hero"[\s\S]*class="metricStrip"/);
+    expect(h).toContain('data-report-dashboard="live"');
+    expect(h).toContain('class="kpis"');
   });
 
   it("exercises account, simulator, and contact availability branches", async () => {

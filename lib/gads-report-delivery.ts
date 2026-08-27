@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import type { ProductAnalysis, ProductAnalysisRow } from "@/lib/gads-product-simulation";
+import type { ReportProductInput } from "@/lib/gads-product-classification";
 
 export type DeliveryProduct = {
   productId: string;
@@ -12,7 +13,7 @@ export type DeliveryProduct = {
   amount: number;
 };
 
-export type DeliveryTotals = { spend: number; revenue: number; orders: number; cpa: number | null; roas: number };
+export type DeliveryTotals = { spend: number; revenue: number; orders: number; cpa: number | null; roas: number; clicks?: number; impressions?: number };
 
 export type DeliveryCampaign = {
   name: string;
@@ -36,6 +37,7 @@ export type GadsReportSnapshot = {
   opportunities: DeliveryProduct[];
   campaigns?: DeliveryCampaign[];
   productAnalysis?: ProductAnalysis;
+  reportProducts?: ReportProductInput[];
 };
 
 function signingSecret(): string {
@@ -73,6 +75,7 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
     )
   );
   const productAnalysisValid = item.productAnalysis === undefined || validProductAnalysis(item.productAnalysis);
+  const reportProductsValid = item.reportProducts === undefined || (Array.isArray(item.reportProducts) && item.reportProducts.length <= 10000 && item.reportProducts.every(validReportProduct));
   return (
     typeof item.website === "string" &&
     typeof item.accountName === "string" &&
@@ -81,8 +84,16 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
     Array.isArray(item.losses) && item.losses.length <= 20 &&
     Array.isArray(item.opportunities) && item.opportunities.length <= 20 &&
     campaignsValid &&
-    productAnalysisValid
+    productAnalysisValid && reportProductsValid
   );
+}
+
+function validReportProduct(value: unknown): value is ReportProductInput {
+  if (!value || typeof value !== "object") return false;
+  const row = value as Partial<ReportProductInput>;
+  return typeof row.productId === "string" && typeof row.title === "string" &&
+    [row.cost, row.conversionValue, row.conversions, row.clicks, row.impressions].every(Number.isFinite) &&
+    (row.catalogEligible === undefined || typeof row.catalogEligible === "boolean");
 }
 
 function validProductAnalysis(value: unknown): value is ProductAnalysis {

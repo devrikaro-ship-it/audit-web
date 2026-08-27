@@ -36,6 +36,15 @@ describe("stored Google Ads report delivery", () => {
     expect(openReportSnapshot(sealReportSnapshot(malformed as unknown as GadsReportSnapshot))).toBeNull();
   });
 
+  it("round-trips complete account traffic and product reporting rows", () => {
+    const expanded = {
+      ...snapshot,
+      current: { ...snapshot.current, clicks: 420, impressions: 9000 },
+      reportProducts: [{ productId: "all", title: "All product", cost: 120, conversionValue: 600, conversions: 2, clicks: 50, impressions: 1000, catalogEligible: true }],
+    };
+    expect(openReportSnapshot(sealReportSnapshot(expanded))).toEqual(expanded);
+  });
+
   it("renders measured and simulated values with their status labels", () => {
     const html = renderReportHtml(snapshot);
     expect(html).toContain("Măsurat din Google Ads");

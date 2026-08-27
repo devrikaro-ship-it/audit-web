@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import { C, brandGradient, inter, sora } from "@/lib/theme";
 import { listPortalReports } from "@/lib/gads-leads";
-import { openReportSnapshot, productAnalysisFromSnapshot } from "@/lib/gads-report-delivery";
+import { openReportSnapshot } from "@/lib/gads-report-delivery";
 import { readStoredReportSnapshot } from "@/lib/gads-report-snapshot";
 import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
-import ProfitabilitySimulator from "@/app/google-ads/raport/ProfitabilitySimulator";
+import ReportingDashboard from "@/app/google-ads/raport/ReportingDashboard";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +30,6 @@ export default async function ClientReportPortal({ params, searchParams }: { par
   const latest = reports[0];
   if (!latest) notFound();
   const selected = reports.find(({ lead }) => lead.reportId === requestedReportId) ?? latest;
-  const productAnalysis = productAnalysisFromSnapshot(selected.snapshot);
 
   return <main {...publicOAuthAttributes("client-portal")} style={{ minHeight: "100vh", background: C.slate, color: C.navy, fontFamily: inter }}>
     <section style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.indigo})`, color: C.white }}>
@@ -56,7 +55,7 @@ export default async function ClientReportPortal({ params, searchParams }: { par
       </section>
 
       <section style={{ marginTop: 28 }}>
-        <ProfitabilitySimulator analysis={productAnalysis} averageOrderValue={selected.snapshot.averageOrderValue} snapshot={selected.snapshot} />
+        <ReportingDashboard snapshot={selected.snapshot} updatedAt={new Date(selected.lead.createdAt).toISOString()} />
       </section>
     </div>
   </main>;
