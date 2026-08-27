@@ -36,7 +36,7 @@ export default function ContactForm({ action, reportSnapshot }: { action: (formD
     <Field label="Telefon" name="phone" type="tel" autoComplete="tel" />
     <label className="flex items-start gap-2 text-left text-xs leading-relaxed" style={{ color: C.gray500 }}>
       <input name="reportConsent" value="yes" type="checkbox" required className="mt-0.5 h-4 w-4" />
-      Sunt de acord ca Devrika să folosească aceste date pentru a genera, salva și trimite pe email raportul de audit. Acest acord nu mă abonează la mesaje de marketing.
+      I agree that Devrika may use these details to generate, store, and email my audit. Monthly campaign reports will be sent to this email while Devrika has access to the campaign data. This agreement does not subscribe me to promotional messages.
     </label>
     <button type="submit" disabled={status === "SENDING"} className="mt-1 flex min-h-11 cursor-pointer items-center justify-center rounded-[14px] px-8 py-[14px] text-[15.5px] font-bold text-white disabled:cursor-wait disabled:opacity-70" style={{ background: brandGradient, fontFamily: sora }}>
       {status === "SENDING" ? "Generăm raportul PDF…" : "Trimite-mi raportul PDF pe email"}

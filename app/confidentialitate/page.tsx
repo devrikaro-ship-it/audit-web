@@ -87,7 +87,9 @@ export default function Confidentialitate() {
           the lead. If you request the PDF, we store your name, email, phone number, store website,
           selected account identity, confirmed financial inputs, calculated break-even values, the
           report PDF, and its delivery status. We use this record only to generate, deliver, and
-          support the requested audit. You may request its deletion at any time.
+          support the requested audit and monthly reports about the connected campaigns while Devrika
+          has access to the campaign data. We do not use this agreement for newsletters or general
+          promotional messages. You may request its deletion at any time.
         </P>
 
         <H2>Conformarea cu politicile Google</H2>

@@ -464,7 +464,7 @@ describe("public Google Ads access boundary", () => {
       "connect:normal", "hub:normal", "landing:normal", "privacy:normal", "terms:normal",
     ]);
     expect(publicOAuthOracle.version).toBe(publicOAuthOracle.transition.to);
-    expect(publicOAuthOracle.transition.operatorSource.quote).toBe("go la implementare");
+    expect(publicOAuthOracle.transition.operatorSource.quote).toBe("2");
     expect(publicOAuthOracle.transition.operatorSource.scope).toContain("implementation");
 
     const clauseStates = {

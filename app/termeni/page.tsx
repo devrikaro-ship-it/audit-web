@@ -81,6 +81,14 @@ export default function Termeni() {
           financial inputs, and delivery status so the report can be delivered and supported.
         </P>
 
+        <H2>Monthly campaign reports</H2>
+        <P>
+          When you request the audit by accepting these terms, the email address you provide becomes
+          the delivery address for the audit and for monthly reports about the connected campaigns.
+          Monthly reporting continues only while Devrika has access to the campaign data. This service
+          does not include newsletters, general promotional materials, or third-party advertising.
+        </P>
+
         <H2>Disponibilitate</H2>
         <P>
           Fiind un serviciu gratuit, il oferim &laquo;asa cum este&raquo; si putem sa il oprim sau

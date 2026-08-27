@@ -31,6 +31,9 @@ export type GadsLead = {
   emailMessageId?: string;
   deliveryStatus?: "NEW_LEAD" | "PDF_READY" | "PDF_FAILED" | "EMAIL_SENT" | "EMAIL_FAILED";
   consentAt?: number;
+  serviceReportsEnabled?: boolean;
+  serviceReportsConsentAt?: number;
+  serviceTermsVersion?: string;
 };
 
 const FILE = process.env.GADS_LEADS_FILE

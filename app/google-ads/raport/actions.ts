@@ -11,6 +11,8 @@ import { sendReportEmail } from "@/lib/gads-report-email";
 
 export type ContactResult = { ok: true; deliveryStatus: "EMAIL_SENT" | "EMAIL_FAILED"; reportId: string; portalPath: string } | { ok: false; error: string };
 
+const SERVICE_TERMS_VERSION = "2026-08-27";
+
 function text(formData: FormData, key: string, max: number): string {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim().slice(0, max) : "";
@@ -37,6 +39,7 @@ export async function saveContact(formData: FormData): Promise<ContactResult> {
   const reportId = randomUUID();
   const reportToken = randomBytes(24).toString("base64url");
   const portalToken = await findPortalToken(email, session.customerId) || randomBytes(24).toString("base64url");
+  const consentAt = Date.now();
   const lead = await saveLead({
     nume: name,
     email,
@@ -53,7 +56,10 @@ export async function saveContact(formData: FormData): Promise<ContactResult> {
     reportToken,
     portalToken,
     deliveryStatus: "NEW_LEAD",
-    consentAt: Date.now(),
+    consentAt,
+    serviceReportsEnabled: true,
+    serviceReportsConsentAt: consentAt,
+    serviceTermsVersion: SERVICE_TERMS_VERSION,
   });
 
   let pdf: { path: string; buffer: Buffer };

@@ -83,6 +83,7 @@ export default async function DashboardGoogleAds() {
                     <th style={th}>Cont Google Ads</th>
                     <th style={th}>Marja</th>
                     <th style={th}>Prag ROAS</th>
+                    <th style={th}>Monthly reports</th>
                     <th style={th}>Livrare</th>
                   </tr>
                 </thead>
@@ -107,6 +108,10 @@ export default async function DashboardGoogleAds() {
                       <td style={{ ...td, fontVariantNumeric: "tabular-nums" }}>{l.marginPct ? `${l.marginPct}%` : "—"}</td>
                       <td style={{ ...td, fontVariantNumeric: "tabular-nums", fontWeight: 700, color: C.indigo }}>
                         {l.breakEvenRoas ? `${l.breakEvenRoas.toFixed(2)}×` : "—"}
+                      </td>
+                      <td style={td}>
+                        <div style={{ fontWeight: 700, color: l.serviceReportsEnabled ? C.green : C.gray500 }}>{l.serviceReportsEnabled ? "Enabled" : "Not enrolled"}</div>
+                        {l.serviceReportsConsentAt && <div style={{ marginTop: 2, fontSize: 12.5, color: C.gray400 }}>{fmtDate(l.serviceReportsConsentAt)}</div>}
                       </td>
                       <td style={td}>
                         <div style={{ fontWeight: 700, color: l.deliveryStatus === "EMAIL_SENT" ? C.green : C.gray500 }}>{l.deliveryStatus || "—"}</div>

@@ -13,6 +13,8 @@ describe("report contact form states", () => {
   it("opens the client portal after an accepted submission", async () => {
     const view = render(<ContactForm action={vi.fn().mockResolvedValue({ ok: true, deliveryStatus: "EMAIL_SENT", reportId: "r", portalPath: "/google-ads/portal/client-token" })} reportSnapshot="signed" />);
     expect(view.getByLabelText("Nume")).toBeTruthy();
+    expect(view.getByText(/monthly campaign reports will be sent to this email/i)).toBeTruthy();
+    expect(view.container.textContent).not.toMatch(/newsletter|promotional materials/i);
     expect(view.getByRole("button", { name: "Trimite-mi raportul PDF pe email" })).toBeTruthy();
     fireEvent.submit(view.container.querySelector("form")!);
     await waitFor(() => expect(push).toHaveBeenCalledWith("/google-ads/portal/client-token"));

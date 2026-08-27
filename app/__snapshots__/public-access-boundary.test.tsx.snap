@@ -1901,7 +1901,7 @@ root/div[0]/div[0]/h2[2]/text "Ce facem cu ele"
 root/div[0]/div[0]/p[5]
 root/div[0]/div[0]/p[5]/text "Le folosim intr-un singur scop: sa generam raportul pe care il vezi pe ecran, folosind categoriile de date enumerate mai sus. Analiza se face in momentul in care esti pe site."
 root/div[0]/div[0]/p[6]
-root/div[0]/div[0]/p[6]/text "Your Google authorization remains in a secure cookie for one hour and is not stored with the lead. If you request the PDF, we store your name, email, phone number, store website, selected account identity, confirmed financial inputs, calculated break-even values, the report PDF, and its delivery status. We use this record only to generate, deliver, and support the requested audit. You may request its deletion at any time."
+root/div[0]/div[0]/p[6]/text "Your Google authorization remains in a secure cookie for one hour and is not stored with the lead. If you request the PDF, we store your name, email, phone number, store website, selected account identity, confirmed financial inputs, calculated break-even values, the report PDF, and its delivery status. We use this record only to generate, deliver, and support the requested audit and monthly reports about the connected campaigns while Devrika has access to the campaign data. We do not use this agreement for newsletters or general promotional messages. You may request its deletion at any time."
 root/div[0]/div[0]/h2[3]
 root/div[0]/div[0]/h2[3]/text "Conformarea cu politicile Google"
 root/div[0]/div[0]/p[7]
@@ -1988,16 +1988,20 @@ root/div[0]/div[0]/p[6]/a[0] href="/confidentialitate"
 root/div[0]/div[0]/p[6]/a[0]/text "politica de confidentialitate"
 root/div[0]/div[0]/p[6]/text ". In short: we read only what is needed for the audit. If you request the PDF, we store the report, your contact details, the store and selected-account context, the confirmed financial inputs, and delivery status so the report can be delivered and supported."
 root/div[0]/div[0]/h2[5]
-root/div[0]/div[0]/h2[5]/text "Disponibilitate"
+root/div[0]/div[0]/h2[5]/text "Monthly campaign reports"
 root/div[0]/div[0]/p[7]
-root/div[0]/div[0]/p[7]/text "Fiind un serviciu gratuit, il oferim «asa cum este» si putem sa il oprim sau sa il modificam oricand, fara notificare prealabila."
+root/div[0]/div[0]/p[7]/text "When you request the audit by accepting these terms, the email address you provide becomes the delivery address for the audit and for monthly reports about the connected campaigns. Monthly reporting continues only while Devrika has access to the campaign data. This service does not include newsletters, general promotional materials, or third-party advertising."
 root/div[0]/div[0]/h2[6]
-root/div[0]/div[0]/h2[6]/text "Contact"
+root/div[0]/div[0]/h2[6]/text "Disponibilitate"
 root/div[0]/div[0]/p[8]
-root/div[0]/div[0]/p[8]/text "Pentru orice intrebare legata de acesti termeni:"
-root/div[0]/div[0]/p[8]/a[0] href="mailto:hello@devrika.ro"
-root/div[0]/div[0]/p[8]/a[0]/text "hello@devrika.ro"
-root/div[0]/div[0]/p[8]/text "."
+root/div[0]/div[0]/p[8]/text "Fiind un serviciu gratuit, il oferim «asa cum este» si putem sa il oprim sau sa il modificam oricand, fara notificare prealabila."
+root/div[0]/div[0]/h2[7]
+root/div[0]/div[0]/h2[7]/text "Contact"
+root/div[0]/div[0]/p[9]
+root/div[0]/div[0]/p[9]/text "Pentru orice intrebare legata de acesti termeni:"
+root/div[0]/div[0]/p[9]/a[0] href="mailto:hello@devrika.ro"
+root/div[0]/div[0]/p[9]/a[0]/text "hello@devrika.ro"
+root/div[0]/div[0]/p[9]/text "."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
 root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la aplicatie"

@@ -43,7 +43,16 @@ it("refuses incomplete contact data before creating a lead", async () => {
 
 it("stores the lead, saves the PDF, sends it, and records the final status", async () => {
   await expect(saveContact(validForm())).resolves.toMatchObject({ ok: true, deliveryStatus: "EMAIL_SENT", portalPath: expect.stringMatching(/^\/google-ads\/portal\//) });
-  expect(saveLead).toHaveBeenCalledWith(expect.objectContaining({ nume: "Ion Popescu", email: "ion@fitn4ss.ro", telefon: "0722000111", website: "https://fitn4ss.ro/", deliveryStatus: "NEW_LEAD" }));
+  expect(saveLead).toHaveBeenCalledWith(expect.objectContaining({
+    nume: "Ion Popescu",
+    email: "ion@fitn4ss.ro",
+    telefon: "0722000111",
+    website: "https://fitn4ss.ro/",
+    deliveryStatus: "NEW_LEAD",
+    serviceReportsEnabled: true,
+    serviceReportsConsentAt: expect.any(Number),
+    serviceTermsVersion: "2026-08-27",
+  }));
   expect(saveLead).toHaveBeenCalledWith(expect.objectContaining({ portalToken: expect.any(String) }));
   expect(saveStoredReportSnapshot).toHaveBeenCalledWith("report-1", "signed-report");
   expect(generateStoredReportPdf).toHaveBeenCalledWith("report-1", expect.objectContaining({ website: "https://fitn4ss.ro/", accountName: "Fitn4ss" }));
