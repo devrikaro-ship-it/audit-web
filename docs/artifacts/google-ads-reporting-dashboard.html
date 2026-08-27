@@ -1,0 +1,2070 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Devrika — Google Ads Profitability Reporting (Demo)</title>
+<style>
+/* ============================================================
+   Devrika Google Ads profitability reporting — visual prototype
+   Standalone: no external fonts, images, scripts or network calls.
+   All numbers on this page are DEMO data.
+   ============================================================ */
+:root{
+  --rail:#f8fafd;
+  --rail-hi:#c2e7ff;
+  --canvas:#f1f3f4;
+  --surface:#ffffff;
+  --surface-2:#f8fafd;
+  --surface-3:#f1f3f4;
+  --line:#dadce0;
+  --line-soft:#e8eaed;
+  --ink:#202124;
+  --ink-2:#3c4043;
+  --ink-3:#5f6368;
+  --blue:#1a73e8;
+  --blue-2:#0b57d0;
+  --blue-soft:#e7effc;
+  --green:#106b41;
+  --green-soft:#e3f5ea;
+  --red:#c02617;
+  --red-soft:#fdeae7;
+  --amber:#96590a;
+  --amber-soft:#fdf1dc;
+  --violet:#1a73e8;
+  --violet-soft:#e8f0fe;
+  --slate-soft:#eef0f4;
+  --radius:16px;
+  --shadow-1:none;
+  --shadow-2:0 8px 24px rgba(16,24,40,.10);
+  --shadow-3:0 24px 60px rgba(13,22,45,.16);
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--canvas);
+  color:var(--ink);
+  font-family:"Google Sans",Roboto,Arial,sans-serif;
+  font-size:13px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.02em}
+button,input,select{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+
+/* ---------- App shell ---------- */
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+
+/* ---------- Left rail ---------- */
+.rail{
+  background:var(--rail);color:var(--ink-2);position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;padding:18px 14px;gap:18px;
+  border-right:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 6px 0}
+.brand .mark{
+  width:32px;height:32px;border-radius:9px;flex:0 0 32px;
+  background:#1a73e8;
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;
+  box-shadow:none;
+}
+.brand b{color:var(--ink);font-size:14px;letter-spacing:.14em}
+.brand small{display:block;color:var(--ink-3);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.railGroup{margin-top:2px}
+.railGroup > span{
+  display:block;padding:0 10px 6px;color:var(--ink-3);font-size:9.5px;
+  letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+}
+.navItem{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:20px;
+  color:var(--ink-2);cursor:pointer;border:0;background:transparent;width:100%;text-align:left;font-size:12.5px;
+}
+.navItem:hover{background:#e8eaed;color:var(--ink)}
+.navItem.active{background:var(--rail-hi);color:#001d35;font-weight:600;box-shadow:none}
+.navItem .ic{width:16px;height:16px;flex:0 0 16px;opacity:.9}
+.railFoot{margin-top:auto;border-top:1px solid var(--line);padding-top:14px}
+.acctCard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+.acctCard b{display:block;color:var(--ink);font-size:12px}
+.acctCard span{display:block;color:var(--ink-3);font-size:10.5px;margin-top:2px}
+.demoPill{
+  display:inline-flex;align-items:center;gap:6px;margin-top:10px;
+  background:#fef7e0;border:1px solid #f9ab00;color:#7a4f01;
+  border-radius:999px;padding:4px 9px;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+}
+
+/* ---------- Top bar ---------- */
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{
+  position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(1.4) blur(8px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;padding:11px 24px;
+}
+.crumbs{display:flex;align-items:center;gap:8px;color:var(--ink-3);font-size:12px}
+.crumbs b{color:var(--ink);font-weight:600}
+.crumbs .sep{opacity:.5}
+.topbar .spacer{margin-left:auto}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;
+  background:#fff;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--ink-2);
+  cursor:pointer;white-space:nowrap;
+}
+.chip:hover{border-color:#c4ccdb;background:var(--surface-2)}
+.chip b{color:var(--ink);font-weight:600}
+.chip select{border:0;background:transparent;outline:0;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer}
+.liveDot{width:7px;height:7px;border-radius:50%;background:#22a06b;box-shadow:0 0 0 3px rgba(34,160,107,.16)}
+.btnPrimary{
+  height:36px;padding:0 16px;border-radius:18px;border:1px solid var(--blue-2);
+  background:var(--blue-2);color:#fff;font-weight:600;font-size:12.5px;cursor:pointer;
+  box-shadow:0 1px 2px rgba(11,87,208,.35);
+}
+.btnPrimary:hover{background:#0a4bb5}
+.btnGhost{height:36px;padding:0 14px;border-radius:18px;border:1px solid var(--line);background:#fff;font-size:12.5px;cursor:pointer;color:var(--ink-2)}
+.btnGhost:hover{background:var(--surface-2);color:var(--ink)}
+
+/* ---------- Demo banner ---------- */
+.demoBar{
+  display:flex;align-items:center;gap:10px;padding:8px 24px;font-size:11.5px;
+  background:repeating-linear-gradient(135deg,#fff8e8,#fff8e8 12px,#fdf2d9 12px,#fdf2d9 24px);
+  border-bottom:1px solid #f0dfb4;color:#7a5a10;
+}
+.demoBar b{color:#5f4409;letter-spacing:.06em}
+
+/* ---------- Page ---------- */
+.page{padding:22px 24px 64px;max-width:1720px;width:100%}
+.pageHead{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:16px}
+.pageHead h1{font-size:24px}
+.pageHead p{margin:5px 0 0;color:var(--ink-2);font-size:12.5px}
+.pageHead .meta{margin-left:auto;text-align:right;color:var(--ink-3);font-size:11px}
+.pageHead .meta b{display:block;color:var(--ink);font-size:12.5px;font-weight:600}
+
+/* ---------- Status band ---------- */
+.statusBand{
+  display:grid;grid-template-columns:minmax(320px,1fr) minmax(220px,.55fr) minmax(220px,.55fr);
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-1);margin-bottom:14px;
+}
+.statusBand > div{background:#fff;padding:18px 20px}
+.targetIntro{display:flex;align-items:center;gap:14px}
+.targetIntroIcon{width:40px;height:40px;flex:0 0 40px;border-radius:12px;background:var(--blue-soft);display:grid;place-items:center;color:var(--blue-2)}
+.targetIntro strong{display:block;font-size:16px;color:var(--ink)}
+.targetIntro span{display:block;margin-top:3px;color:var(--ink-3);font-size:12px}
+.targetCard{display:flex;flex-direction:column;justify-content:center}
+.targetCard span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.targetCard strong{font-size:28px;line-height:1.15;letter-spacing:-.03em;margin-top:5px;color:var(--blue-2)}
+.targetCard small{margin-top:4px;color:var(--ink-3);font-size:11px}
+.statusMain{display:flex;gap:14px;align-items:flex-start}
+.statusIcon{width:38px;height:38px;flex:0 0 38px;border-radius:10px;display:grid;place-items:center}
+.statusMain.bad .statusIcon{background:var(--red-soft)}
+.statusMain.good .statusIcon{background:var(--green-soft)}
+.statusTitle{font-size:15.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+.statusMain.bad .statusTitle{color:var(--red)}
+.statusMain.good .statusTitle{color:var(--green)}
+.statusSub{color:var(--ink-2);font-size:12px;margin-top:3px}
+.gaugeWrap b{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.gauge{position:relative;height:10px;border-radius:999px;background:var(--surface-3);margin:12px 0 8px;overflow:hidden}
+.gauge .fill{position:absolute;inset:0 auto 0 0;border-radius:999px;background:linear-gradient(90deg,#e05242,#f0a92f)}
+.gauge.good .fill{background:linear-gradient(90deg,#1f9e63,#12b3a2)}
+.gauge .mark{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);border-radius:2px}
+.gaugeLegend{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3)}
+.gaugeLegend b{display:inline;font-size:11px;letter-spacing:0;text-transform:none;color:var(--ink)}
+.moneyStat{display:flex;flex-direction:column;justify-content:center;height:100%}
+.moneyStat span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.moneyStat strong{font-size:26px;letter-spacing:-.03em;margin-top:2px}
+.moneyStat small{color:var(--ink-3);font-size:11px;margin-top:4px}
+.moneySplit{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tRed{color:var(--red)} .tGreen{color:var(--green)} .tAmber{color:var(--amber)} .tBlue{color:var(--blue)}
+
+/* ---------- Persistent label results ---------- */
+.persistentLabelStrip{position:sticky;top:58px;z-index:32;display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:14px;padding:8px 0;background:var(--surface)}
+.persistentLabelCard{display:grid;grid-template-columns:minmax(190px,1.2fr) repeat(3,minmax(120px,.65fr));align-items:stretch;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-1)}
+.persistentLabelIntro{display:flex;align-items:center;gap:11px;padding:15px 18px}
+.persistentLabelIntro i{width:11px;height:11px;border-radius:50%;flex:0 0 11px}
+.persistentLabelIntro strong{display:block;font-size:16px}
+.persistentLabelIntro span{display:block;margin-top:3px;color:var(--ink-3);font-size:11px}
+.persistentLabelMetric{display:flex;flex-direction:column;justify-content:center;padding:13px 15px;border-left:1px solid var(--line-soft)}
+.persistentLabelMetric span{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.persistentLabelMetric strong{margin-top:5px;font-size:19px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.persistentLabelCard.losers{border-color:#f2c7c3}
+.stickyLabelGuide{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.stickyLabelPill{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px 9px;min-width:0;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:14px;color:var(--ink-2)}
+.stickyLabelPill i{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
+.stickyLabelPill b{font-size:11px;white-space:nowrap}
+.stickyLabelPill span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;color:var(--ink-3)}
+.stickyLabelPill strong{margin-left:auto;font-size:12px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.stickyLabelNumbers{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:7px;border-top:1px solid var(--line-soft)}
+.stickyLabelNumber span{display:block;font-size:8px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.stickyLabelNumber strong{display:block;margin:3px 0 0;font-size:11px}
+
+/* ---------- KPI strip ---------- */
+.kpiStrip{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow-1);margin-bottom:18px;
+}
+.kpi{background:#fff;padding:14px 16px 12px;position:relative;min-width:0}
+.kpi:hover{background:var(--surface-2)}
+.kpi .k{display:flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.kpi .v{font-size:22px;font-weight:700;letter-spacing:-.03em;margin-top:6px;white-space:nowrap}
+.kpi .d{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:var(--ink-3)}
+.trend{display:inline-flex;align-items:center;gap:3px;font-weight:700;border-radius:5px;padding:1px 5px;font-size:10.5px}
+.trend.up{background:var(--green-soft);color:var(--green)}
+.trend.down{background:var(--red-soft);color:var(--red)}
+.trend.flat{background:var(--slate-soft);color:var(--ink-2)}
+.kpi .spark{position:absolute;right:12px;top:12px;opacity:.85}
+.kpi.accentGood{box-shadow:inset 0 -3px 0 #1f9e63}
+.kpi.accentBad{box-shadow:inset 0 -3px 0 #d9483a}
+
+/* ---------- Panel ---------- */
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-1);overflow:hidden}
+.panelHead{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;padding:16px 18px 12px;border-bottom:1px solid var(--line-soft)}
+.panelHead h2{font-size:17px}
+.panelHead p{margin:4px 0 0;color:var(--ink-2);font-size:12px}
+.tagMeasured,.tagSim{
+  display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 8px;
+  font-size:10px;font-weight:600;letter-spacing:0;text-transform:none;
+}
+.tagMeasured{background:var(--blue-soft);color:var(--blue-2)}
+.tagSim{background:var(--violet-soft);color:var(--violet)}
+
+/* ---------- Toolbar ---------- */
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 18px;background:var(--surface-2);border-bottom:1px solid var(--line-soft)}
+.search{position:relative;flex:0 0 auto}
+.search input{
+  height:34px;width:270px;border:1px solid var(--line);border-radius:8px;background:#fff;
+  padding:0 32px 0 32px;outline:0;font-size:12.5px;
+}
+.search input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,103,210,.14)}
+.search .mag{position:absolute;left:10px;top:9px;opacity:.5}
+.search .clr{position:absolute;right:6px;top:6px;border:0;background:transparent;cursor:pointer;color:var(--ink-3);font-size:15px;line-height:22px;padding:0 6px;border-radius:6px}
+.search .clr:hover{background:var(--slate-soft)}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.fchip{
+  display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 10px;border-radius:999px;
+  border:1px solid var(--line);background:#fff;cursor:pointer;font-size:11.5px;color:var(--ink-2);
+}
+.fchip:hover{border-color:#c4ccdb}
+.fchip .swatch{width:8px;height:8px;border-radius:2px}
+.fchip .cnt{font-variant-numeric:tabular-nums;color:var(--ink-3);font-size:10.5px;background:var(--slate-soft);border-radius:5px;padding:0 5px}
+.fchip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.fchip[aria-pressed="true"] .cnt{background:rgba(255,255,255,.18);color:#fff}
+.selectWrap{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:12px;color:var(--ink-3)}
+.selectWrap select{border:0;outline:0;background:transparent;font-weight:600;color:var(--ink);cursor:pointer}
+.toolbar .right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.rowCount{font-size:11.5px;color:var(--ink-3)}
+.rowCount b{color:var(--ink)}
+/* ---------- Outcome strip ---------- */
+.outcomeStrip{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow-1);margin-bottom:14px;
+}
+.outcomeCard{background:#fff;padding:14px 18px}
+.outcomeCard span{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.outcomeCard strong{display:block;font-size:24px;letter-spacing:-.03em;margin-top:6px}
+.outcomeCard small{display:block;color:var(--ink-3);font-size:11px;margin-top:4px}
+.outcomeCard.bad strong{color:var(--red)}
+.outcomeCard.good strong{color:var(--green)}
+.outcomeCard.neutral strong{color:var(--ink)}
+
+/* ---------- Real results by product label ---------- */
+.labelBreakdownPanel{margin-bottom:14px}
+.labelBreakdownPanel .panelHead{min-height:auto;padding:14px 18px}
+.labelBreakdownPanel .panelHead h2{font-size:16px}
+.labelBreakdownPanel .panelHead p{margin-top:3px}
+.yourDataLabelResults{padding:14px 18px 18px}
+.yourDataLabelResults .labelFinancials{grid-template-columns:repeat(2,minmax(0,1fr))}
+.yourDataLabelResults .labelFinancialNote{grid-column:1/-1}
+
+/* ---------- Tabs ---------- */
+.tabBar{display:inline-flex;align-items:stretch;gap:0;margin-bottom:14px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#fff}
+.tabBtn{height:40px;padding:0 20px;border:0;border-right:1px solid var(--line);border-radius:0;background:#fff;color:var(--ink-2);font-size:12.5px;font-weight:600;cursor:pointer}
+.tabBtn:last-child{border-right:0}
+.tabBtn:hover{background:var(--surface-2)}
+.tabBtn[aria-selected="true"]{background:var(--blue);color:#fff}
+
+.categorySummary{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line-soft);border-bottom:1px solid var(--line)}
+.categorySummaryMetric{background:#fff;padding:11px 16px}
+.categorySummaryMetric span{display:block;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.categorySummaryMetric strong{display:block;margin-top:5px;font-size:17px;font-variant-numeric:tabular-nums}
+
+/* ---------- Table ---------- */
+.tableScroll{max-height:620px;overflow:auto;position:relative;background:#fff}
+table.grid{border-collapse:separate;border-spacing:0;width:100%;min-width:1560px;font-size:12px}
+table.grid th,table.grid td{padding:0 12px;height:44px;border-bottom:1px solid var(--line-soft);white-space:nowrap;background:#fff}
+table.grid thead th{
+  position:sticky;top:0;z-index:20;background:var(--surface-3);color:var(--ink-2);
+  font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;height:40px;
+  border-bottom:1px solid var(--line);cursor:pointer;user-select:none;
+}
+table.grid thead th .th{display:flex;align-items:center;gap:5px;justify-content:flex-end}
+table.grid thead th.left .th{justify-content:flex-start}
+table.grid thead th:hover{background:#e7ebf3;color:var(--ink)}
+table.grid thead th.sorted{color:var(--blue-2);background:#e6eefb}
+.caret{opacity:.35;font-size:9px}
+th.sorted .caret{opacity:1}
+td.n,th.n{text-align:right}
+td.n{font-variant-numeric:tabular-nums}
+tbody tr:hover td{background:#f6f9ff}
+tbody tr.zebra td{background:#fcfdff}
+tbody tr.zebra:hover td{background:#f4f8ff}
+
+/* sticky columns */
+.stick1{position:sticky;left:0;z-index:15}
+.stick2{position:sticky;left:296px;z-index:15}
+thead .stick1,thead .stick2{z-index:30}
+.stick2::after{
+  content:"";position:absolute;top:0;right:-10px;bottom:-1px;width:10px;pointer-events:none;
+  background:linear-gradient(90deg,rgba(19,26,43,.10),transparent);
+}
+tbody tr:hover .stick1,tbody tr:hover .stick2{background:#f6f9ff}
+tbody tr.zebra .stick1,tbody tr.zebra .stick2{background:#fcfdff}
+thead .stick1,thead .stick2{background:var(--surface-3)}
+
+.prodCell{display:flex;align-items:center;gap:10px;min-width:0;width:272px}
+.thumb{
+  width:36px;height:36px;flex:0 0 36px;border-radius:8px;border:1px solid var(--line);
+  background:#fff;object-fit:cover;
+}
+.prodText{min-width:0}
+.prodName{font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:214px}
+.prodMeta{color:var(--ink-3);font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:214px}
+.itemId{font-family:var(--mono);font-size:11px;color:var(--ink-2);letter-spacing:-.02em}
+.copyId{border:0;background:transparent;color:var(--ink-3);cursor:pointer;padding:2px 4px;border-radius:5px;font-size:10px}
+.copyId:hover{background:var(--slate-soft);color:var(--ink)}
+
+.lbl{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 9px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.lbl .swatch{width:7px;height:7px;border-radius:2px}
+.lbl.LOSS_MAKER{background:var(--red-soft);color:var(--red)}
+.lbl.LOSS_MAKER .swatch{background:#d9483a}
+.lbl.NOT_PROMOTED{background:var(--slate-soft);color:#4a5568}
+.lbl.NOT_PROMOTED .swatch{background:#8a94a6}
+.lbl.UNDERPROMOTED_POTENTIAL{background:var(--amber-soft);color:var(--amber)}
+.lbl.UNDERPROMOTED_POTENTIAL .swatch{background:#e0a02c}
+.lbl.PERFORMER{background:var(--green-soft);color:var(--green)}
+.lbl.PERFORMER .swatch{background:#1f9e63}
+.lbl.INSUFFICIENT_DATA{background:#eef2fb;color:#4b5b7a}
+.lbl.INSUFFICIENT_DATA .swatch{background:#93a2c0}
+
+.roasCell{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.roasBar{width:56px;height:6px;border-radius:999px;background:var(--surface-3);overflow:hidden;position:relative}
+.roasBar i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;display:block}
+.roasBar i.ok{background:#1f9e63}
+.roasBar i.no{background:#d9483a}
+.roasBar b{position:absolute;top:-2px;bottom:-2px;width:2px;background:#131a2b;opacity:.55}
+.gapPos{color:var(--green);font-weight:700}
+.gapNeg{color:var(--red);font-weight:700}
+.dash{color:#a8b1c2}
+.impact{display:inline-flex;align-items:center;gap:6px;border-radius:7px;padding:3px 8px;font-weight:700;font-size:11.5px}
+.impact.risk{background:var(--red-soft);color:var(--red)}
+.impact.opp{background:var(--green-soft);color:var(--green)}
+.impact.none{background:transparent;color:#a8b1c2;font-weight:500}
+.empty{padding:56px 20px;text-align:center;color:var(--ink-3)}
+.empty b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
+
+.tableFoot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:11px 18px;border-top:1px solid var(--line);background:var(--surface-2);font-size:11.5px;color:var(--ink-3)}
+.tableFoot .totals{display:flex;gap:18px;flex-wrap:wrap}
+.tableFoot .totals span b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ---------- Campaign tables ---------- */
+.campTables{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;padding:16px 18px 4px;align-items:stretch}
+.campTableWrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;box-shadow:var(--shadow-1)}
+.campTableWrap.proposed{border-color:#a8c7fa}
+.campTableHead{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;min-height:76px;padding:12px 14px;border-bottom:1px solid var(--line-soft);background:var(--surface-2)}
+.campTableWrap.proposed .campTableHead{background:#f8fbff;border-bottom-color:#d3e3fd}
+.campTableHead h3{font-size:13px;color:var(--ink)}
+.campTableHead p{margin:2px 0 0;font-size:11px;color:var(--ink-3)}
+.campTableScroll{overflow-x:auto}
+table.campGrid{width:100%;min-width:0;table-layout:fixed;border-collapse:separate;border-spacing:0;font-size:11px}
+table.campGrid th:nth-child(1){width:27%}
+table.campGrid th:nth-child(2){width:25%}
+table.campGrid th:nth-child(n+3){width:9.6%}
+table.campGrid th{text-align:right;padding:9px 11px;background:var(--surface-3);color:var(--ink-2);
+  font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;
+  border-bottom:1px solid var(--line);white-space:nowrap}
+table.campGrid th.left{text-align:left}
+table.campGrid td{padding:10px 11px;text-align:right;border-bottom:1px solid var(--line-soft);
+  white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink)}
+table.campGrid td.left{text-align:left}
+table.campGrid td:nth-child(1),table.campGrid td:nth-child(2){white-space:normal;line-height:1.35}
+table.campGrid tbody tr:hover td{background:#f6f9ff}
+table.campGrid tr.simRow td{background:#fcfbff}
+table.campGrid tr.simRow:hover td{background:#f7f4ff}
+table.campGrid tr.totalRow td{font-weight:700;background:var(--surface-2);border-top:2px solid var(--line);border-bottom:none}
+table.campGrid tr.totalRow .campNameCell b{font-weight:700}
+.campNameCell{display:flex;flex-direction:column;gap:2px}
+.campNameCell b{font-weight:600;color:var(--ink);font-size:12px}
+.campNameCell small{color:var(--ink-3);font-size:10px;display:flex;align-items:center;gap:5px}
+.chStatus{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;color:var(--green)}
+.chStatus i{width:6px;height:6px;border-radius:50%;background:var(--green);flex:0 0 6px}
+.chDash{color:#a8b1c2}
+.campFoot{padding:10px 14px;font-size:11px;color:var(--ink-3);border-top:1px solid var(--line-soft);background:var(--surface-2)}
+.campTableWrap.proposed .campFoot{background:#faf8ff;border-top-color:#ece7fb}
+.campSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:0 18px 18px}
+.campSummaryCard{border:1px dashed #cfc6ee;border-radius:10px;background:#faf9ff;padding:13px 14px}
+.campSummaryCard span{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.campSummaryCard strong{display:block;font-size:21px;margin-top:5px;letter-spacing:-.03em}
+.campSummaryCard small{display:block;color:var(--ink-3);font-size:11px;margin-top:4px}
+.campaignFocus .statusBand,.campaignFocus .kpiStrip,.campaignFocus .outcomeStrip,.campaignFocus .labelBreakdownPanel{display:none}
+.potentialView .tabBar{display:none}
+.potentialView .simWrap{display:none}
+.potentialView .pageHead,.potentialView #panelCampaigns > .panelHead{display:none}
+.structureMap{display:grid;gap:12px;padding:14px}
+.productPool{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:12px;background:#f1f3f4;font-size:11px;color:var(--ink-2)}
+.productPool strong{color:var(--ink);font-size:13px}
+.structureLanes{display:grid;gap:8px}
+.structureLane{display:grid;grid-template-columns:minmax(170px,1fr) minmax(180px,1.2fr);align-items:center;gap:12px;padding:14px;border:1px solid var(--line-soft);border-radius:12px;background:#fff}
+.structureLane strong{font-size:12px}
+.structureLane small{display:block;margin-top:3px;color:var(--ink-3);font-size:10.5px}
+.productTags{display:flex;justify-content:flex-end;gap:5px;flex-wrap:wrap}
+.productTag{padding:4px 7px;border-radius:999px;background:#eef2f8;color:var(--ink-2);font-size:9.5px;font-weight:700}
+.productTag.good{background:var(--green-soft);color:var(--green)}
+.productTag.test{background:var(--amber-soft);color:var(--amber)}
+.structureMetrics{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}
+.structureMetric{padding:11px 12px;border-right:1px solid var(--line-soft)}
+.structureMetric:last-child{border-right:0}
+.structureMetric span{display:block;font-size:10px;letter-spacing:0;text-transform:none;color:var(--ink-3);font-weight:600}
+.structureMetric strong{display:block;margin-top:3px;font-size:14px;font-variant-numeric:tabular-nums}
+.campaignImpact{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 18px 18px;padding:14px 16px;border:1px solid #cde9dc;border-radius:10px;background:var(--green-soft)}
+.campaignImpact strong{font-size:20px;color:var(--green)}
+.campaignImpact span{color:var(--ink-2);font-size:11.5px}
+.campaignImpactDetails{display:flex;gap:20px;flex-wrap:wrap}
+.campaignImpactDetails b{color:var(--ink);font-variant-numeric:tabular-nums}
+.campaignViewTabs{display:flex;gap:4px;padding:14px 18px 0;border-bottom:1px solid var(--line);background:#fff}
+.campaignViewTab{height:42px;padding:0 18px;border:0;border-bottom:3px solid transparent;background:transparent;color:#5f6368;font-family:"Google Sans",Roboto,Arial,sans-serif;font-weight:500;cursor:pointer}
+.campaignViewTab:hover{background:#f8fafd;color:#202124}
+.campaignViewTab[aria-selected="true"]{border-bottom-color:#1a73e8;color:#1a73e8}
+.campaignViewPane{padding:16px 18px}
+.campaignViewPane[hidden]{display:none}
+.campaignViewPane .campTables{display:block;padding:0}
+.campaignViewPane .campTableWrap{width:100%}
+.campaignComparison{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;padding:16px 18px}
+.campaignComparison .campaignViewPane{display:flex;flex-direction:column;gap:14px;padding:14px;min-width:0;border-radius:18px}
+.campaignComparison #campaignViewCurrent{background:#f8f9fa;border:1px solid #cfd4da}
+.campaignComparison #campaignViewRecommended{background:#f4f8ff;border:2px solid #8ab4f8}
+.campaignComparison .campTables{height:auto;flex:1}
+.campaignComparison .campTableWrap{height:100%}
+.campaignComparison .campTableWrap{display:flex;flex-direction:column}
+.campaignComparison .campTableScroll{display:flex;flex:1}
+.campaignComparison .googleCampaignGrid{height:100%}
+.mirrorLaneHead{padding:14px 16px;border-radius:14px;font-weight:700;font-size:17px;letter-spacing:-.01em}
+.mirrorLaneHead small{display:block;margin-top:3px;font-size:11px;font-weight:400;letter-spacing:0}
+.mirrorLaneHead.before{background:#f1f3f4;color:#3c4043;border:1px solid #dadce0}
+.mirrorLaneHead.after{background:#e8f0fe;color:#0b57d0;border:1px solid #a8c7fa}
+.laneExplanation{display:grid;gap:7px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.laneExplanationRow{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;align-items:start;font-size:11px;line-height:1.4;color:var(--ink-2)}
+.laneExplanationRow strong{color:var(--ink);font-size:11px}
+.laneExplanation.after{border-color:#a8c7fa;background:#f8fbff}
+.labelFinancials{display:grid;gap:9px}
+.labelFinancialCard{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.labelFinancialHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 11px;background:#f8fafd;font-size:11px}
+.labelFinancialName{display:flex;align-items:center;gap:7px;font-weight:700}
+.labelFinancialName i{width:9px;height:9px;border-radius:50%}
+.labelFinancialHead span:last-child{color:var(--ink-3)}
+.labelFinancialMetrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:1px solid var(--line-soft)}
+.labelFinancialMetric{padding:8px;border-right:1px solid var(--line-soft);min-width:0}
+.labelFinancialMetric:last-child{border-right:0}
+.labelFinancialMetric span{display:block;color:var(--ink-3);font-size:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.labelFinancialMetric strong{display:block;margin-top:3px;font-size:10.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.labelFinancialNote{padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:10.5px;color:var(--ink-2)}
+.labelFinancialNote b{color:var(--ink)}
+.mirrorMetrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.mirrorMetric{padding:12px;border-right:1px solid var(--line-soft)}
+.mirrorMetric:last-child{border-right:0}
+.mirrorMetric span{display:block;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.mirrorMetric strong{display:block;margin-top:4px;font-size:16px;white-space:nowrap}
+.mirrorSignals{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.mirrorSignal{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line-soft)}
+.mirrorSignal:last-child{border-bottom:0}
+.mirrorSignalName{display:flex;align-items:flex-start;gap:9px}
+.mirrorSignalName i{width:10px;height:10px;border-radius:50%;margin-top:4px;flex:0 0 10px}
+.mirrorSignalName b{display:block;font-size:12px}
+.mirrorSignalName small{display:block;color:var(--ink-3);font-size:10.5px;margin-top:2px}
+.mirrorSignal strong{font-size:14px;text-align:right}
+.laneProducts{display:flex;flex-direction:column;gap:18px;margin-top:4px}
+.productMirror{padding:0 18px 18px;display:flex;flex-direction:column;gap:18px}
+.productMirrorSection{border-top:1px solid var(--line);padding-top:18px}
+.productMirrorTitle{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:10px}
+.productMirrorTitle h3{font-size:15px}
+.productMirrorTitle p{margin:3px 0 0;color:var(--ink-3);font-size:11px}
+.productMirrorTitle strong{font-size:15px}
+.productMirrorGrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.productMirrorCard{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.productMirrorCard.after{border-color:#a8c7fa}
+.productMirrorCardHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 13px;background:#f8fafd;border-bottom:1px solid var(--line);font-weight:600}
+.productMirrorCard.after .productMirrorCardHead{background:#f4f8ff}
+.productActionTable{width:100%;border-collapse:collapse;table-layout:fixed;font-family:Roboto,Arial,sans-serif}
+.productActionTable th{padding:9px 10px;background:#fff;border-bottom:1px solid var(--line);color:var(--ink-3);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;text-align:right}
+.productActionTable th:first-child{width:29%;text-align:left}
+.productActionTable td{padding:10px;border-bottom:1px solid var(--line-soft);font-size:11px;text-align:right;font-variant-numeric:tabular-nums}
+.productActionTable tr:last-child td{border-bottom:0}
+.productActionTable td:first-child{text-align:left}
+.productActionTable .productName{display:block;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.productActionTable .productMeta{display:block;color:var(--ink-3);font-size:9.5px;margin-top:2px}
+.productActionTable .badValue{color:var(--red);font-weight:700}
+.productActionTable .goodValue{color:var(--green);font-weight:700}
+.googleCampaignGrid{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff;font-family:Roboto,Arial,sans-serif}
+.googleCampaignGrid th{height:48px;padding:0 8px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:#f8fafd;color:#5f6368;font-size:10px;font-weight:500;text-align:right;white-space:nowrap}
+.googleCampaignGrid th:first-child{width:31%;text-align:left}
+.googleCampaignGrid th:last-child{border-right:0}
+.googleCampaignGrid td{height:64px;padding:10px 8px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);color:#3c4043;font-size:10.5px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.googleCampaignGrid td:last-child{border-right:0}
+.googleCampaignGrid td:first-child{text-align:left;white-space:normal}
+.googleCampaignGrid tbody tr:hover td{background:#f8fafd}
+.googleCampaignGrid .campaignLink{display:flex;align-items:center;gap:8px;color:#1a73e8;font-family:"Google Sans",Roboto,Arial,sans-serif;font-weight:500;line-height:1.25}
+.googleCampaignGrid .campaignLink::before{content:"";width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:#0f9d58}
+.googleCampaignGrid tr.zombies .campaignLink::before{background:#f9ab00}
+.googleCampaignGrid tr.villains .campaignLink::before{background:#d93025}
+.googleCampaignGrid .campaignKind{display:block;margin:4px 0 0 17px;color:#5f6368;font-size:10.5px;line-height:1.25}
+.googleCampaignGrid .totalRow td{height:54px;background:#f8fafd;color:#202124;font-weight:600;border-bottom:0;border-top:1px solid var(--line)}
+.campaignLegend{margin-top:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.campaignLegendRow{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:start;padding:12px 14px;border-bottom:1px solid var(--line-soft)}
+.campaignLegendRow:last-child{border-bottom:0}
+.campaignLegendName{display:flex;align-items:center;gap:8px;font-family:"Google Sans",Roboto,Arial,sans-serif;font-weight:600}
+.campaignLegendName i{width:10px;height:10px;border-radius:50%}
+.campaignLegendRow p{margin:0;color:#5f6368;font-size:11.5px}
+
+/* ---------- Simulator ---------- */
+.simWrap{margin-top:22px;border-radius:var(--radius);position:relative;overflow:hidden;
+  border:1px solid #ddd6f7;background:
+    linear-gradient(180deg,#faf8ff, #ffffff 220px);
+  box-shadow:var(--shadow-1);
+}
+.simWrap::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(135deg,rgba(90,63,192,.045),rgba(90,63,192,.045) 10px,transparent 10px,transparent 20px);
+  height:96px;
+}
+.simHead{position:relative;display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;padding:18px 20px 14px;border-bottom:1px solid #ece7fb}
+.simHead h2{font-size:18px}
+.simHead p{margin:5px 0 0;color:var(--ink-2);font-size:12.5px;max-width:720px}
+.simReadout{margin-left:auto;text-align:right}
+.simReadout strong{display:block;font-size:28px;letter-spacing:-.03em;color:var(--violet)}
+.simReadout span{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.simBody{padding:18px 20px 20px;position:relative}
+.sliderRow{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.sliderRow .lab{font-size:11.5px;color:var(--ink-2);min-width:132px}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;flex:1;min-width:260px;height:26px;background:transparent;cursor:pointer;
+}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:999px;background:linear-gradient(90deg,#5a3fc0 var(--pct,50%),#e6e2f6 var(--pct,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;margin-top:-6px;border-radius:50%;background:#fff;border:3px solid #5a3fc0;box-shadow:0 2px 6px rgba(90,63,192,.4)}
+input[type=range]::-moz-range-track{height:8px;border-radius:999px;background:#e6e2f6}
+input[type=range]::-moz-range-progress{height:8px;border-radius:999px;background:#5a3fc0}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid #5a3fc0}
+.scaleMarks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-3);margin-top:2px}
+.scaleMarks b{color:var(--ink-2)}
+.simGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:18px}
+.simCard{border:1px dashed #cfc6ee;border-radius:10px;background:#fff;padding:13px 14px}
+.simCard span{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.simCard strong{display:block;font-size:21px;letter-spacing:-.03em;margin-top:5px}
+.simCard small{display:block;font-size:11px;color:var(--ink-3);margin-top:3px}
+.simSplit{display:grid;grid-template-columns:1.1fr 1fr;gap:14px;margin-top:16px}
+.simPanel{border:1px solid #e6e1f6;border-radius:10px;background:#fff;overflow:hidden}
+.simPanel h4{font-size:12.5px;padding:11px 14px;border-bottom:1px solid #eee9fa;background:#faf9ff}
+.allocRow{display:grid;grid-template-columns:1fr 100px 62px;gap:10px;align-items:center;padding:9px 14px;border-bottom:1px solid #f2effb;font-size:11.5px}
+.allocRow:last-child{border-bottom:0}
+.allocRow .bar{height:7px;border-radius:999px;background:#f0edfa;overflow:hidden}
+.allocRow .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#5a3fc0,#28aecf)}
+.allocRow .bar i.cut{background:linear-gradient(90deg,#c95445,#e08b4a)}
+.allocRow .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.allocRow .vl{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.stratRow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px}
+.strat{border:1px solid #eae5f9;border-radius:9px;padding:11px 12px;background:#fbfaff}
+.strat b{display:block;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--violet)}
+.strat strong{display:block;font-size:12.5px;margin-top:4px}
+.strat small{display:block;font-size:11px;color:var(--ink-3);margin-top:3px}
+.disclaimer{margin:14px 0 0;font-size:11px;color:var(--ink-3);border-left:3px solid #d9d0f5;padding-left:10px}
+
+/* ---------- Toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
+  background:var(--ink);color:#fff;border-radius:9px;padding:9px 15px;font-size:12px;
+  box-shadow:var(--shadow-3);opacity:0;pointer-events:none;transition:.18s ease;z-index:90;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1400px){
+  .kpiStrip{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .simGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:1120px){
+  .app{grid-template-columns:1fr}
+  .rail{position:static;height:auto;flex-direction:row;align-items:center;gap:14px;overflow:auto}
+  .rail .railGroup,.rail .railFoot{display:none}
+  .statusBand{grid-template-columns:1fr}
+  .persistentLabelStrip{grid-template-columns:1fr}
+  .categorySummary{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .simSplit{grid-template-columns:1fr}
+  .campTables{grid-template-columns:1fr}
+  .campaignComparison{grid-template-columns:1fr}
+  .productMirrorGrid{grid-template-columns:1fr}
+  .campaignComparison #campaignViewCurrent .campTables{grid-column:1;grid-row:1}
+  .campaignComparison #campaignViewRecommended .campTables{grid-column:1;grid-row:2}
+  .campaignComparison #campaignLegend{grid-column:1;grid-row:3}
+  .structureMetrics{grid-template-columns:repeat(5,minmax(90px,1fr));overflow-x:auto}
+  .campSummary{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .kpiStrip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .simGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .outcomeStrip{grid-template-columns:1fr}
+  .persistentLabelCard{grid-template-columns:1fr 1fr}
+  .stickyLabelGuide{grid-template-columns:1fr 1fr}
+  .stickyLabelPill{border-radius:14px}
+  .persistentLabelIntro{grid-column:1/-1}
+  .persistentLabelMetric{border-left:0;border-top:1px solid var(--line-soft)}
+  .categorySummary{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stick2{position:static}
+  .page{padding:16px 14px 48px}
+  .search input{width:100%}
+  .search{flex:1 1 100%}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="rail" aria-label="Report navigation">
+    <div class="brand">
+      <div class="mark">D</div>
+      <div><b>DEVRIKA</b><small>Ads reporting</small></div>
+    </div>
+
+    <div class="railGroup">
+      <span>Report</span>
+      <button class="navItem active" type="button" data-view="data">
+        <svg class="ic" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="8" width="3" height="6.5" rx="1" fill="currentColor" opacity=".45"/><rect x="6.5" y="4" width="3" height="10.5" rx="1" fill="currentColor"/><rect x="11.5" y="1.5" width="3" height="13" rx="1" fill="currentColor" opacity=".45"/></svg>
+        Your data
+      </button>
+      <button class="navItem" type="button" data-view="potential">
+        <svg class="ic" viewBox="0 0 16 16" fill="none"><path d="M2 12.5 6 7l3 3 5-6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.8 3.5H14V6.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Optimization potential
+      </button>
+    </div>
+
+    <div class="railFoot">
+      <div class="acctCard">
+        <b>Nordvel Home</b>
+        <span>nordvel.example · 481-905-2270</span>
+        <span class="demoPill">Demo account</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+
+    <header class="topbar">
+      <div class="crumbs">
+        <b>Nordvel Home</b><span class="sep">›</span><span>Shopping &amp; Performance Max</span><span class="sep">›</span><span>Product profitability</span>
+      </div>
+      <div class="spacer"></div>
+      <label class="chip" title="Reporting period">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="2" stroke="#5f6b80" stroke-width="1.3"/><path d="M2 6.5h12M5.5 1.8v2.4M10.5 1.8v2.4" stroke="#5f6b80" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <select id="period" aria-label="Reporting period">
+          <option value="30" selected>Last 30 days</option>
+          <option value="last_month">Last month</option>
+          <option value="90">Last 3 months</option>
+          <option value="365">Last 12 months</option>
+        </select>
+      </label>
+      <span class="chip" title="Data source"><span class="liveDot"></span>Google Ads data · <b id="snapStamp">—</b></span>
+      <button class="btnGhost" type="button" id="exportBtn">Export CSV</button>
+      <button class="btnPrimary" type="button" id="planBtn">Get the action plan</button>
+    </header>
+
+    <div class="demoBar">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1.8 15 14H1L8 1.8Z" stroke="#8a6410" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6.2v3.4" stroke="#8a6410" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11.6" r=".9" fill="#8a6410"/></svg>
+      <b>DEMO DATA</b> — every account, product, figure and label on this page is generated for design review. Nothing here was measured from a live Google Ads account. Not affiliated with or endorsed by Google.
+    </div>
+
+    <main class="page">
+
+      <div class="pageHead">
+        <div>
+          <h1 id="pageTitle">Product profitability</h1>
+          <p id="pageSubtitle">Performance measured directly from your connected Google Ads account, for the selected reporting period.</p>
+        </div>
+        <div class="meta">
+          Currency <b>RON</b>
+          <span>Attribution: last click · conversions include store orders</span>
+        </div>
+      </div>
+
+      <!-- ===== Status band ===== -->
+      <section class="statusBand" aria-label="Profitability targets">
+        <div class="targetIntro">
+          <div class="targetIntroIcon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M15 9l5-5M17 4h3v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div><strong>Your profitability targets</strong><span>Calculated from the business data confirmed during your scan.</span></div>
+        </div>
+        <div class="targetCard">
+          <span>Max CPA</span>
+          <strong class="num" id="targetMaxCpa">—</strong>
+          <small>Maximum cost for one sale</small>
+        </div>
+        <div class="targetCard">
+          <span>Min ROAS</span>
+          <strong class="num" id="targetMinRoas">—</strong>
+          <small>Minimum return required for profitability</small>
+        </div>
+      </section>
+
+      <section class="persistentLabelStrip" id="persistentLabelStrip" aria-label="Permanent product label results"></section>
+
+      <!-- ===== KPI strip ===== -->
+      <section class="kpiStrip" id="kpiStrip" aria-label="Account key performance indicators"></section>
+
+      <section class="panel labelBreakdownPanel" aria-label="Real results by product label">
+        <div class="panelHead">
+          <div>
+            <h2>Where your advertising budget went</h2>
+            <p>Real Google Ads results grouped by product label for the selected reporting period.</p>
+          </div>
+          <span class="tagMeasured" style="margin-left:auto">● Real data · Google Ads</span>
+        </div>
+        <div class="yourDataLabelResults" id="yourDataLabelResults"></div>
+      </section>
+
+      <!-- ===== Tabs ===== -->
+      <div class="tabBar" role="tablist" aria-label="Report views" id="tabBar">
+        <button class="tabBtn" type="button" role="tab" data-tab="all" aria-selected="true">All products</button>
+        <button class="tabBtn" type="button" role="tab" data-tab="losers" aria-selected="false">Losers</button>
+        <button class="tabBtn" type="button" role="tab" data-tab="opportunities" aria-selected="false">Opportunities</button>
+        <button class="tabBtn" type="button" role="tab" data-tab="unpromoted" aria-selected="false">Unpromoted</button>
+        <button class="tabBtn" type="button" role="tab" data-tab="winners" aria-selected="false">Winners</button>
+      </div>
+
+      <!-- ===== Product table ===== -->
+      <section class="panel" id="panelProducts" aria-label="Product performance table">
+        <div class="panelHead">
+          <div>
+            <h2><span id="panelTitleText">Products</span> <span class="dash num" id="prodCount"></span></h2>
+            <p id="panelDesc">Every product in the report population. Exactly one label per product.</p>
+          </div>
+          <span class="tagMeasured" style="margin-left:auto">● Real data · Google Ads</span>
+        </div>
+        <div class="categorySummary" id="categorySummary" aria-label="Selected category totals"></div>
+
+        <div class="toolbar">
+          <div class="search">
+            <svg class="mag" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.6" stroke="#6b7688" stroke-width="1.5"/><path d="M10.6 10.6 14 14" stroke="#6b7688" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <input id="search" type="search" placeholder="Search product or item ID" aria-label="Search products by name or item ID" />
+            <button class="clr" id="searchClear" type="button" aria-label="Clear search" hidden>×</button>
+          </div>
+          <div class="filters" id="filters" role="group" aria-label="Filter by label"></div>
+          <div class="right">
+            <label class="selectWrap">Sort
+              <select id="sortSel" aria-label="Sort products">
+                <option value="priority">Priority (action first)</option>
+                <option value="impact">Money at risk / opportunity</option>
+                <option value="cost">Cost</option>
+                <option value="revenue">Sales</option>
+                <option value="roas">ROAS</option>
+                <option value="gap">ROAS gap</option>
+                <option value="clicks">Clicks</option>
+                <option value="impressions">Impressions</option>
+                <option value="conversions">Conversions</option>
+                <option value="cvr">Conversion rate</option>
+                <option value="cpa">CPA</option>
+                <option value="title">Product name</option>
+              </select>
+            </label>
+            <span class="rowCount"><b id="shownCount">0</b> shown</span>
+          </div>
+        </div>
+
+        <div class="tableScroll" id="tableScroll" tabindex="0" role="region" aria-label="Scrollable product performance table">
+          <table class="grid" id="grid">
+            <thead><tr id="headRow"></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+          <div class="empty" id="emptyState" hidden><b>No products match these filters</b>Clear the search or select a different label.</div>
+        </div>
+
+        <div class="tableFoot">
+          <div class="totals" id="footTotals"></div>
+          <span style="margin-left:auto">Scroll horizontally for every column · product and item ID stay pinned</span>
+        </div>
+      </section>
+
+      <!-- ===== Recommended campaigns ===== -->
+      <section class="panel" id="panelCampaigns" hidden aria-label="Recommended campaign structure">
+        <div class="panelHead">
+          <div>
+            <h2>Before vs. after optimization</h2>
+            <p>The same product-advertising spend, shown as it performs today and as it could perform after the Devrika structure is implemented.</p>
+          </div>
+        </div>
+
+        <div class="campaignComparison">
+        <div class="campaignViewPane" id="campaignViewCurrent">
+          <div class="mirrorLaneHead before">BEFORE — Your data now<small>Measured directly from your connected Google Ads account</small></div>
+          <div class="mirrorMetrics" id="beforeMetrics"></div>
+          <div class="campTables">
+          <div class="campTableWrap">
+            <div class="campTableHead">
+              <div>
+                <h3>Before — your product campaigns now</h3>
+                <p><span id="currentCampaignPeriod">Last 30 days</span> · data from your connected Google Ads account</p>
+              </div>
+              <span class="tagMeasured" style="margin-left:auto">● Real data · Google Ads</span>
+            </div>
+            <div class="campTableScroll">
+              <table class="googleCampaignGrid">
+                <thead><tr><th>Campaign</th><th>Budget</th><th>Sales</th><th>Revenue</th><th>Avg. CPA</th><th>ROAS</th><th>Profit / Loss</th></tr></thead>
+                <tbody id="campCurrentBody"></tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+          <div class="laneProducts" id="beforeProducts"></div>
+        </div>
+
+        <div class="campaignViewPane" id="campaignViewRecommended">
+          <div class="mirrorLaneHead after">AFTER — After optimization<small>Estimated result after the Devrika product structure is implemented</small></div>
+          <div class="mirrorMetrics" id="afterMetrics"></div>
+          <div class="campTables">
+          <div class="campTableWrap proposed">
+            <div class="campTableHead">
+              <div>
+                <h3>After — Devrika product structure</h3>
+                <p><span id="correctCampaignPeriod">Last 30 days</span> · same total spend, redistributed by the Devrika structure</p>
+              </div>
+              <span class="tagSim" style="margin-left:auto">◆ Estimated after optimization</span>
+            </div>
+            <div class="campTableScroll">
+              <table class="googleCampaignGrid">
+                <thead><tr><th>Campaign</th><th>Budget</th><th>Sales</th><th>Revenue</th><th>Avg. CPA</th><th>ROAS</th><th>Profit / Loss</th></tr></thead>
+                <tbody id="campCorrectBody"></tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+          <div class="campaignLegend" id="campaignLegend" hidden></div>
+          <div class="laneProducts" id="afterProducts"></div>
+        </div>
+        </div>
+
+        <div id="campSummary" hidden></div>
+      </section>
+
+      <!-- ===== Simulator ===== -->
+      <section class="simWrap" aria-label="Budget simulator" hidden>
+        <div class="simHead">
+          <div>
+            <span class="tagSim">◆ Simulation · not measured</span>
+            <h2 style="margin-top:8px">Budget reallocation simulator</h2>
+            <p>Move the monthly budget and see where each extra RON would go if loss makers were capped and profitable products were funded first. Everything below this line is a projection built on the demo figures above — it is not a promise and it is not measured performance.</p>
+          </div>
+          <div class="simReadout">
+            <strong class="num" id="simBudget">—</strong>
+            <span>Simulated monthly budget</span>
+          </div>
+        </div>
+
+        <div class="simBody">
+          <div class="sliderRow">
+            <span class="lab">Monthly budget</span>
+            <input type="range" id="budget" min="0" max="100" step="1" value="50" aria-label="Simulated monthly budget" />
+            <span class="lab" style="text-align:right;min-width:150px">Diminishing returns applied</span>
+          </div>
+          <div class="scaleMarks">
+            <span>0 RON</span>
+            <span>Measured spend <b id="markCurrent">—</b></span>
+            <span>Economic limit <b id="markLimit">—</b></span>
+          </div>
+
+          <div class="simGrid">
+            <div class="simCard"><span>Simulated sales</span><strong class="num tBlue" id="simRevenue">—</strong><small id="simRevenueDelta">—</small></div>
+            <div class="simCard"><span>Simulated orders</span><strong class="num" id="simOrders">—</strong><small id="simOrdersDelta">—</small></div>
+            <div class="simCard"><span>Simulated ROAS</span><strong class="num" id="simRoas">—</strong><small id="simRoasNote">—</small></div>
+            <div class="simCard"><span>Simulated CPA</span><strong class="num" id="simCpa">—</strong><small id="simCpaNote">—</small></div>
+            <div class="simCard"><span>Budget on capped products</span><strong class="num tRed" id="simCapped">—</strong><small>Loss makers held at a strict limit</small></div>
+          </div>
+
+          <div class="simSplit">
+            <div class="simPanel">
+              <h4>Where the simulated budget lands · top 8 products</h4>
+              <div id="allocList"></div>
+            </div>
+            <div class="simPanel">
+              <h4>Simulation logic</h4>
+              <div class="stratRow">
+                <div class="strat"><b>Step 1</b><strong>Cap the losses</strong><small>Products below break-even ROAS stop absorbing new budget.</small></div>
+                <div class="strat"><b>Step 2</b><strong>Fund proven products</strong><small>Freed budget goes to products already above break-even.</small></div>
+                <div class="strat"><b>Step 3</b><strong>Grow to the limit</strong><small>Spend rises only while simulated ROAS stays above break-even.</small></div>
+              </div>
+              <p class="disclaimer" style="margin:0 14px 14px">Model: each profitable product can absorb up to 3× its measured cost; efficiency decays as spend rises, so simulated ROAS falls as the budget grows. Demo model for design review only.</p>
+            </div>
+          </div>
+
+          <p class="disclaimer">Simulated values never share a column or a status colour with measured values. Measured figures are tagged <span class="tagMeasured">● Measured</span> and simulated figures are tagged <span class="tagSim">◆ Simulation</span>. All inputs on this page are demo data.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ==========================================================================
+   DEMO DATA GENERATION — deterministic, no network, no dependencies.
+   Every figure produced here is fictional and exists for design review only.
+   ========================================================================== */
+
+var CURRENCY = "RON";
+var GROSS_MARGIN = 0.29;
+var BREAK_EVEN_ROAS = 1 / GROSS_MARGIN;      /* 3.45x */
+var ACCOUNT_AOV = 268;                        /* demo average order value */
+var BREAK_EVEN_CPA = ACCOUNT_AOV * GROSS_MARGIN;
+var BUDGET_ALLOCATION = {
+  opportunities: 0.40,
+  winners: 0.30,
+  unpromoted: 0.20,
+  losers: 0.10
+};
+
+/* Deterministic pseudo random so the demo never changes between reloads. */
+function seeded(seed){
+  var s = seed >>> 0;
+  return function(){
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
+}
+
+var CATALOG = [
+  ["Oak Veneer Extending Dining Table 160cm","Furniture","#8a5a2b","#c9925a"],
+  ["Linen Slipcover 3-Seat Sofa, Sand","Furniture","#7d6a52","#c4b199"],
+  ["Cast Iron Wood Burning Stove 8kW","Heating","#33373d","#767c85"],
+  ["Ceramic Tower Heater 2000W","Heating","#2a4c6d","#5f93c2"],
+  ["Nordic Wool Area Rug 200x300","Textiles","#4a4460","#9a90bd"],
+  ["Blackout Thermal Curtain Pair, Slate","Textiles","#3d4650","#7e8a99"],
+  ["Solid Beech Bar Stool, Set of 2","Furniture","#9a6b30","#d2a366"],
+  ["Robot Vacuum with Lidar Mapping","Appliances","#1f3a5c","#4d7fb5"],
+  ["Cordless Stick Vacuum 450W","Appliances","#5c2340","#a9557e"],
+  ["Stainless Steel Kettle 1.7L","Kitchen","#3a4a52","#7d949e"],
+  ["Cast Iron Casserole Pot 5.2L","Kitchen","#7a2f2b","#c46b62"],
+  ["Non-Stick Frying Pan Set, 3 Pieces","Kitchen","#4b4238","#96897a"],
+  ["Espresso Machine with Milk Frother","Kitchen","#25303d","#5f7488"],
+  ["Air Fryer 6.5L Dual Basket","Kitchen","#2f4a3a","#679a7d"],
+  ["Memory Foam Mattress 160x200","Bedroom","#3c4a63","#8494b3"],
+  ["Goose Down Duvet 200x220, 4 Seasons","Bedroom","#4d5568","#9aa3b6"],
+  ["Percale Cotton Sheet Set, White","Bedroom","#5b6472","#a6adbb"],
+  ["Solid Pine Bed Frame 140x200","Bedroom","#8a6534","#cfa269"],
+  ["LED Ceiling Panel 60x60 Warm White","Lighting","#3b4a2f","#87a06a"],
+  ["Brass Pendant Lamp, Smoked Glass","Lighting","#6f5320","#c19a4c"],
+  ["Outdoor Solar Path Light, Set of 6","Lighting","#264a45","#5d998f"],
+  ["Rattan Garden Lounge Set, 4 Seats","Garden","#7d5a33","#c39e6c"],
+  ["Aluminium Folding Bistro Table","Garden","#3c4753","#83909f"],
+  ["Pressure Washer 150 Bar","Garden","#1f4a58","#4f93a5"],
+  ["Cordless Hedge Trimmer 40V","Garden","#2f5230","#6ea36f"],
+  ["Wall Mounted Bathroom Cabinet, Oak","Bathroom","#8b6a3c","#cfab72"],
+  ["Rainfall Shower Head 30cm Chrome","Bathroom","#40505c","#8b9aa6"],
+  ["Heated Towel Rail 120cm","Bathroom","#4a4a4a","#8f8f8f"],
+  ["Smart Thermostat with App Control","Smart home","#1e4256","#568aa5"],
+  ["Wi-Fi Video Doorbell 2K","Smart home","#3a2f52","#8577ac"],
+  ["Smart Plug 4-Pack, Energy Metering","Smart home","#274a3f","#5f9c88"],
+  ["Indoor Security Camera Pan &amp; Tilt","Smart home","#442f3a","#96707f"],
+  ["Acoustic Wall Panel Walnut, 6-Pack","Interiors","#6a4327","#b58a63"],
+  ["Freestanding Full Length Mirror 160cm","Interiors","#4c5560","#96a0ab"],
+  ["Storage Ottoman Bench, Charcoal","Interiors","#3f4348","#8b8f95"],
+  ["Modular Shoe Rack, 5 Tiers","Interiors","#5b5140","#a79a83"],
+  ["Ceramic Planter Set with Saucers","Interiors","#7c5340","#c08f76"],
+  ["Insulated Water Bottle 750ml","Outdoor","#274766","#5e8db8"]
+];
+
+/* thumbnail: inline SVG data URI (no network) */
+function thumbFor(name, c1, c2, idx){
+  var initials = name.replace(/&amp;/g,"&").split(/\s+/).slice(0,2).map(function(w){return w[0];}).join("").toUpperCase();
+  var svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72">' +
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+    '<stop offset="0" stop-color="' + c2 + '"/><stop offset="1" stop-color="' + c1 + '"/>' +
+    '</linearGradient></defs>' +
+    '<rect width="72" height="72" rx="10" fill="url(#g)"/>' +
+    '<g opacity="0.22" fill="#ffffff">' +
+    '<circle cx="' + (14 + (idx % 5) * 9) + '" cy="16" r="13"/>' +
+    '<rect x="' + (30 + (idx % 3) * 6) + '" y="40" width="34" height="34" rx="8"/>' +
+    '</g>' +
+    '<text x="36" y="44" font-family="Helvetica,Arial,sans-serif" font-size="24" font-weight="700" ' +
+    'fill="#ffffff" fill-opacity="0.95" text-anchor="middle">' + initials + '</text>' +
+    '</svg>';
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+/* Per-product monthly baseline. Period metrics scale from this. */
+var BASE = CATALOG.map(function(row, i){
+  var rnd = seeded(9173 + i * 7919);
+  var price = 79 + Math.round(rnd() * 2100);
+  var quality = rnd();                                   /* drives ROAS band */
+  var demand = rnd();
+  var imprPerMonth = Math.round(60 + demand * demand * 9400);
+  var ctr = 0.006 + rnd() * 0.052;
+  var cpc = 0.55 + rnd() * 4.6;
+  var cvr = 0.002 + quality * quality * 0.085;
+  /* a slice of the catalog is eligible but never served in the period */
+  var dormant = (i % 9 === 4) || (i % 13 === 7);
+  if (dormant) { imprPerMonth = 0; }
+  /* a slice is tiny-traffic → insufficient data */
+  if (i % 11 === 3) { imprPerMonth = Math.round(imprPerMonth * 0.012); }
+  return {
+    productId: "NV-" + (10480 + i * 37),
+    itemId: "shopping-" + ["ro","ro","eu"][i % 3] + "-" + (748100 + i * 613),
+    title: CATALOG[i][0],
+    category: CATALOG[i][1],
+    thumb: thumbFor(CATALOG[i][0], CATALOG[i][2], CATALOG[i][3], i),
+    price: price,
+    imprPerMonth: imprPerMonth,
+    ctr: ctr, cpc: cpc, cvr: cvr,
+    catalogEligible: true,
+    jitter: seeded(4111 + i * 131)
+  };
+});
+
+var PERIOD_MONTHS = { "30": 1, "last_month": 1, "90": 3, "365": 12 };
+var PERIOD_SEED = { "30": 30, "last_month": 31, "90": 90, "365": 365 };
+var PERIOD_LABEL = { "30": "last 30 days", "last_month": "last month", "90": "last 3 months", "365": "last 12 months" };
+
+/* Build the measured product population for a period. */
+function buildProducts(periodKey){
+  var months = PERIOD_MONTHS[periodKey];
+  return BASE.map(function(b, i){
+    var rnd = seeded(2207 + i * 977 + PERIOD_SEED[periodKey] * 41);
+    var seasonal = 0.82 + rnd() * 0.42;
+    var impressions = Math.round(b.imprPerMonth * months * seasonal);
+    var clicks = Math.round(impressions * b.ctr * (0.9 + rnd() * 0.25));
+    var cost = +(clicks * b.cpc * (0.92 + rnd() * 0.18)).toFixed(2);
+    var conversions = Math.round(clicks * b.cvr * (0.75 + rnd() * 0.6));
+    var conversionValue = +(conversions * b.price * (0.9 + rnd() * 0.3)).toFixed(2);
+
+    var roas = cost > 0 ? conversionValue / cost : null;
+    var cpa = conversions > 0 ? cost / conversions : null;
+    var cvr = clicks > 0 ? conversions / clicks : null;
+    var clicksPerSale = conversions > 0 ? clicks / conversions : null;
+
+    return {
+      productId: b.productId, itemId: b.itemId, title: b.title, category: b.category,
+      thumb: b.thumb, price: b.price, catalogEligible: b.catalogEligible,
+      impressions: impressions, clicks: clicks, cost: cost,
+      conversions: conversions, conversionValue: conversionValue,
+      roas: roas, cpa: cpa, conversionRate: cvr, clicksPerSale: clicksPerSale
+    };
+  });
+}
+
+/* ---- Classification: exactly one label per product ---- */
+var LABELS = {
+  LOSS_MAKER:               { text:"Loser",       swatch:"#d9483a", rank:0 },
+  UNDERPROMOTED_POTENTIAL:  { text:"Opportunity", swatch:"#e0a02c", rank:1 },
+  PERFORMER:                { text:"Winner",      swatch:"#1f9e63", rank:2 },
+  NOT_PROMOTED:             { text:"Unpromoted",  swatch:"#8a94a6", rank:3 },
+  INSUFFICIENT_DATA:        { text:"Unpromoted",  swatch:"#8a94a6", rank:3 }
+};
+
+function classify(rows){
+  /* Opportunities are the strongest profitable signals that still have low traffic. */
+  var profitable = rows.filter(function(r){ return r.clicksPerSale !== null && r.roas !== null && r.roas >= BREAK_EVEN_ROAS; });
+  var cps = profitable.map(function(r){ return r.clicksPerSale; }).sort(function(a,b){ return a - b; });
+  var medianClicksPerSale = cps.length ? cps[Math.floor(cps.length / 2)] : 40;
+  var profitableClicks = profitable.map(function(r){ return r.clicks; }).sort(function(a,b){ return a - b; });
+  var profitableRoas = profitable.map(function(r){ return r.roas; }).sort(function(a,b){ return a - b; });
+  var lowTrafficCeiling = profitableClicks.length ? profitableClicks[Math.floor(profitableClicks.length / 2)] : 0;
+  var highRoasFloor = profitableRoas.length ? profitableRoas[Math.floor(profitableRoas.length / 2)] : BREAK_EVEN_ROAS;
+  var minCostForVerdict = BREAK_EVEN_CPA * 0.5;
+
+  rows.forEach(function(r){
+    var label;
+    if (r.impressions === 0 && r.catalogEligible) {
+      label = "NOT_PROMOTED";
+    } else if (r.cost >= minCostForVerdict && (r.roas === null || r.roas < BREAK_EVEN_ROAS)) {
+      label = "LOSS_MAKER";
+    } else if (r.roas !== null && r.roas >= BREAK_EVEN_ROAS) {
+      label = (r.conversions > 0 && r.clicks <= lowTrafficCeiling && r.roas >= highRoasFloor)
+        ? "UNDERPROMOTED_POTENTIAL"
+        : "PERFORMER";
+    } else {
+      label = "INSUFFICIENT_DATA";
+    }
+    r.label = label;
+    r.profitabilityGap = r.roas === null ? null : r.roas - BREAK_EVEN_ROAS;
+
+    /* Money at risk = spend that could not be supported at break-even.
+       Opportunity  = estimated sales the missing traffic would have produced. */
+    if (label === "LOSS_MAKER") {
+      r.moneyAtRisk = Math.max(0, r.cost - (r.conversionValue / BREAK_EVEN_ROAS));
+      r.opportunity = 0;
+    } else if (label === "UNDERPROMOTED_POTENTIAL") {
+      var missingClicks = Math.max(0, medianClicksPerSale * 1.35 - r.clicks);
+      var extraOrders = r.conversionRate ? missingClicks * r.conversionRate : 0;
+      r.opportunity = extraOrders * r.price;
+      r.moneyAtRisk = 0;
+    } else {
+      r.moneyAtRisk = 0; r.opportunity = 0;
+    }
+    r.impact = r.moneyAtRisk > 0 ? -r.moneyAtRisk : r.opportunity;
+  });
+  return rows;
+}
+
+/* ---- Formatting ---- */
+function fmtMoney(v){
+  if (v === null || v === undefined || !isFinite(v)) return "—";
+  return Math.round(v).toLocaleString("en-US") + " " + CURRENCY;
+}
+function fmtMoneyShort(v){
+  if (v === null || v === undefined || !isFinite(v)) return "—";
+  var a = Math.abs(v);
+  if (a >= 1000000) return (v/1000000).toFixed(1) + "M " + CURRENCY;
+  if (a >= 10000) return Math.round(v/1000) + "k " + CURRENCY;
+  return Math.round(v).toLocaleString("en-US") + " " + CURRENCY;
+}
+function fmtInt(v){ return (v === null || v === undefined) ? "—" : Math.round(v).toLocaleString("en-US"); }
+function fmtRatio(v){ return (v === null || v === undefined || !isFinite(v)) ? "—" : v.toFixed(2) + "×"; }
+function fmtPct(v){ return (v === null || v === undefined || !isFinite(v)) ? "—" : (v * 100).toFixed(2) + "%"; }
+function fmtOne(v){ return (v === null || v === undefined || !isFinite(v)) ? "—" : v.toFixed(1); }
+
+/* ==========================================================================
+   STATE
+   ========================================================================== */
+var state = {
+  period: "30",
+  query: "",
+  labels: {},                 /* label -> boolean (active filter) */
+  sort: "priority",
+  sortDir: -1,
+  tab: "all",
+  products: [],
+  visible: [],
+  budgetPct: 50
+};
+
+var TAB_META = {
+  all:           { forcedLabels:null,                                  title:"All products",  description:"Every product grouped by its measured performance.", sort:"priority" },
+  losers:        { forcedLabels:["LOSS_MAKER"],                        title:"Losers",        description:"Promoted products measured below your minimum ROAS.", sort:"impact" },
+  opportunities: { forcedLabels:["UNDERPROMOTED_POTENTIAL"],          title:"Opportunities", description:"Profitable products limited by too little traffic.", sort:"impact" },
+  unpromoted:    { forcedLabels:["NOT_PROMOTED","INSUFFICIENT_DATA"], title:"Unpromoted",    description:"Products without enough traffic or budget to evaluate.", sort:"cost" },
+  winners:       { forcedLabels:["PERFORMER"],                         title:"Winners",       description:"Profitable products validated by enough traffic.", sort:"roas" }
+};
+
+var COLUMNS = [
+  { key:"title",          label:"Product",        align:"left",  sticky:1, width:296 },
+  { key:"itemId",         label:"Item ID",        align:"left",  sticky:2, width:170 },
+  { key:"label",          label:"Label",          align:"left" },
+  { key:"impressions",    label:"Impr.",          align:"n" },
+  { key:"clicks",         label:"Clicks",         align:"n" },
+  { key:"cost",           label:"Cost",           align:"n" },
+  { key:"conversions",    label:"Conv.",          align:"n" },
+  { key:"conversionRate", label:"Conv. rate",     align:"n" },
+  { key:"clicksPerSale",  label:"Clicks / sale",  align:"n" },
+  { key:"conversionValue",label:"Sales",          align:"n" },
+  { key:"cpa",            label:"CPA",            align:"n" },
+  { key:"roas",           label:"ROAS",           align:"n" },
+  { key:"profitabilityGap",label:"ROAS gap",      align:"n" },
+  { key:"impact",         label:"At risk / opportunity", align:"n" }
+];
+
+var SORT_KEY_ALIAS = {
+  priority:"priority", impact:"impact", cost:"cost", revenue:"conversionValue",
+  roas:"roas", gap:"profitabilityGap", clicks:"clicks", impressions:"impressions",
+  conversions:"conversions", cvr:"conversionRate", cpa:"cpa", title:"title"
+};
+
+/* ==========================================================================
+   RENDER
+   ========================================================================== */
+var $ = function(id){ return document.getElementById(id); };
+
+function recomputePeriod(){
+  state.products = classify(buildProducts(state.period));
+  renderAll();
+}
+
+function accountTotals(rows){
+  var t = { impressions:0, clicks:0, cost:0, conversions:0, revenue:0 };
+  rows.forEach(function(r){
+    t.impressions += r.impressions; t.clicks += r.clicks; t.cost += r.cost;
+    t.conversions += r.conversions; t.revenue += r.conversionValue;
+  });
+  t.roas = t.cost > 0 ? t.revenue / t.cost : null;
+  t.cpa = t.conversions > 0 ? t.cost / t.conversions : null;
+  t.cvr = t.clicks > 0 ? t.conversions / t.clicks : null;
+  return t;
+}
+
+/* small inline sparkline, deterministic per metric */
+function sparkline(seed, positive){
+  var rnd = seeded(seed);
+  var pts = [], n = 14, v = 0.5;
+  for (var i = 0; i < n; i++){
+    v = Math.min(0.94, Math.max(0.06, v + (rnd() - (positive ? 0.42 : 0.58)) * 0.26));
+    pts.push((i / (n - 1) * 54).toFixed(1) + "," + (20 - v * 18).toFixed(1));
+  }
+  var color = positive ? "#1f9e63" : "#d9483a";
+  return '<svg class="spark" width="56" height="22" viewBox="0 0 56 22" aria-hidden="true">' +
+         '<polyline fill="none" stroke="' + color + '" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" opacity="0.75" points="' + pts.join(" ") + '"/>' +
+         '</svg>';
+}
+
+function renderKpis(t){
+  var months = PERIOD_MONTHS[state.period];
+  var profitable = t.roas !== null && t.roas >= BREAK_EVEN_ROAS;
+  var cards = [
+    { k:"Cost",            v:fmtMoney(t.cost),        d:"across " + PERIOD_LABEL[state.period], trend:"+11.4%", dir:"up",   spark:true,  pos:true },
+    { k:"Sales",           v:fmtMoney(t.revenue),     d:"conversion value",                     trend:"+4.9%",  dir:"up",   spark:true,  pos:true },
+    { k:"Clicks",          v:fmtInt(t.clicks),        d:fmtInt(t.impressions) + " impressions",  trend:"+7.2%",  dir:"up",   spark:true,  pos:true },
+    { k:"Conversions",     v:fmtInt(t.conversions),   d:"store orders",                          trend:"−2.1%",  dir:"down", spark:true,  pos:false },
+    { k:"Conv. rate",      v:fmtPct(t.cvr),           d:"clicks to orders",                      trend:"−0.4pp", dir:"down", spark:true,  pos:false },
+    { k:"CPA",             v:fmtMoney(t.cpa),         d:"break-even " + fmtMoney(BREAK_EVEN_CPA), trend:(t.cpa > BREAK_EVEN_CPA ? "over" : "under") + " break-even", dir:(t.cpa > BREAK_EVEN_CPA ? "down" : "up"), spark:false },
+    { k:"ROAS",            v:fmtRatio(t.roas),        d:"break-even " + fmtRatio(BREAK_EVEN_ROAS), trend:(t.roas - BREAK_EVEN_ROAS >= 0 ? "+" : "") + (t.roas - BREAK_EVEN_ROAS).toFixed(2) + "× gap", dir:(profitable ? "up" : "down"), spark:false, accent:(profitable ? "accentGood" : "accentBad") }
+  ];
+  $("kpiStrip").innerHTML = cards.map(function(c, i){
+    return '<div class="kpi ' + (c.accent || "") + '">' +
+      (c.spark ? sparkline(3301 + i * 71, c.pos) : "") +
+      '<div class="k">' + c.k + '</div>' +
+      '<div class="v num">' + c.v + '</div>' +
+      '<div class="d"><span class="trend ' + c.dir + '">' + c.trend + '</span><span>' + c.d + '</span></div>' +
+    '</div>';
+  }).join("");
+}
+
+function renderStatus(t){
+  $("targetMaxCpa").textContent = fmtMoney(BREAK_EVEN_CPA);
+  $("targetMinRoas").textContent = fmtRatio(BREAK_EVEN_ROAS);
+}
+
+function renderPersistentLabels(){
+  var losers = state.products.filter(function(row){ return row.label === "LOSS_MAKER"; });
+  var winners = state.products.filter(function(row){ return row.label === "PERFORMER"; });
+  var opportunities = state.products.filter(function(row){ return row.label === "UNDERPROMOTED_POTENTIAL"; });
+  var unpromoted = state.products.filter(function(row){ return row.label === "NOT_PROMOTED" || row.label === "INSUFFICIENT_DATA"; });
+  var loserBudget = losers.reduce(function(sum, row){ return sum + row.cost; }, 0);
+  var loserLoss = losers.reduce(function(sum, row){ return sum + row.moneyAtRisk; }, 0);
+  function labelSummary(rows){
+    var spend = rows.reduce(function(sum, row){ return sum + row.cost; }, 0);
+    var revenue = rows.reduce(function(sum, row){ return sum + row.conversionValue; }, 0);
+    return { count:rows.length, spend:spend, profit:revenue * GROSS_MARGIN - spend };
+  }
+  function labelPill(name, description, color, summary){
+    var positive = summary.profit >= 0;
+    return '<div class="stickyLabelPill" title="' + description + '"><i style="background:' + color + '"></i><b>' + name + '</b><span>' + description + '</span>' +
+      '<div class="stickyLabelNumbers"><div class="stickyLabelNumber"><span>Products</span><strong>' + fmtInt(summary.count) + '</strong></div>' +
+      '<div class="stickyLabelNumber"><span>Spend</span><strong>' + fmtMoney(summary.spend) + '</strong></div>' +
+      '<div class="stickyLabelNumber"><span>Profit / Loss</span><strong class="' + (positive ? 'tGreen' : 'tRed') + '">' + (positive ? '+' : '−') + fmtMoney(Math.abs(summary.profit)) + '</strong></div></div></div>';
+  }
+
+  $("persistentLabelStrip").innerHTML =
+    '<article class="persistentLabelCard losers">' +
+      '<div class="persistentLabelIntro"><i style="background:#d93025"></i><div><strong>Losers</strong><span>You are currently spending <b>' + fmtMoney(loserBudget) + '</b> on products that waste <b>' + fmtMoney(loserLoss) + '</b> of your ad budget · ' + PERIOD_LABEL[state.period] + '</span></div></div>' +
+      '<div class="persistentLabelMetric"><span>Products</span><strong>' + fmtInt(losers.length) + '</strong></div>' +
+      '<div class="persistentLabelMetric"><span>Budget consumed</span><strong>' + fmtMoney(loserBudget) + '</strong></div>' +
+      '<div class="persistentLabelMetric"><span>Loss produced</span><strong class="tRed">−' + fmtMoney(loserLoss) + '</strong></div>' +
+    '</article>' +
+    '<div class="stickyLabelGuide" aria-label="Product label definitions">' +
+      labelPill('Winners', 'Products that are profitable', '#1f9e63', labelSummary(winners)) +
+      labelPill('Opportunities', 'High-profit products with too little traffic', '#e0a02c', labelSummary(opportunities)) +
+      labelPill('Unpromoted', 'Products without enough promotion data', '#8a94a6', labelSummary(unpromoted)) +
+      labelPill('Losers', 'Products losing money in ads', '#d9483a', labelSummary(losers)) +
+    '</div>';
+}
+
+function renderOutcomes(){
+  var waste = 0, wasteN = 0, missed = 0, missedN = 0, unvalidatedN = 0;
+  state.products.forEach(function(r){
+    if (r.moneyAtRisk > 0){ waste += r.moneyAtRisk; wasteN++; }
+    if (r.opportunity > 0){ missed += r.opportunity; missedN++; }
+    if (r.label === "NOT_PROMOTED" || r.label === "INSUFFICIENT_DATA") unvalidatedN++;
+  });
+  $("outWaste").textContent = fmtMoneyShort(waste);
+  $("outWasteCount").textContent = wasteN;
+  $("outMissed").textContent = fmtMoneyShort(missed);
+  $("outMissedCount").textContent = missedN;
+  $("outUnvalidated").textContent = unvalidatedN;
+}
+
+function renderFilters(){
+  $("filters").style.display = "none";
+  $("filters").innerHTML = "";
+}
+
+function renderHead(){
+  $("headRow").innerHTML = COLUMNS.map(function(c){
+    var sortKey = SORT_KEY_ALIAS[state.sort] || state.sort;
+    var sorted = sortKey === c.key;
+    var cls = [];
+    if (c.align === "n") cls.push("n"); else cls.push("left");
+    if (c.sticky === 1) cls.push("stick1");
+    if (c.sticky === 2) cls.push("stick2");
+    if (sorted) cls.push("sorted");
+    var caret = sorted ? (state.sortDir < 0 ? "▼" : "▲") : "▲";
+    return '<th class="' + cls.join(" ") + '" data-col="' + c.key + '" scope="col" ' +
+      (c.width ? 'style="min-width:' + c.width + 'px"' : "") +
+      ' title="Sort by ' + c.label + '"><span class="th">' + c.label +
+      '<span class="caret">' + caret + '</span></span></th>';
+  }).join("");
+}
+
+function applyFilters(){
+  var q = state.query.trim().toLowerCase();
+  var forced = TAB_META[state.tab] ? TAB_META[state.tab].forcedLabels : null;
+  var anyLabel = Object.keys(state.labels).some(function(k){ return state.labels[k]; });
+  var rows = state.products.filter(function(r){
+    if (forced) { if (forced.indexOf(r.label) === -1) return false; }
+    else if (anyLabel && !state.labels[r.label]) return false;
+    if (!q) return true;
+    return (r.title + " " + r.itemId + " " + r.productId + " " + r.category).toLowerCase().indexOf(q) !== -1;
+  });
+
+  var key = SORT_KEY_ALIAS[state.sort] || state.sort;
+  if (state.sort === "priority"){
+    rows.sort(function(a,b){
+      var ra = LABELS[a.label].rank, rb = LABELS[b.label].rank;
+      if (ra !== rb) return ra - rb;
+      return Math.abs(b.impact) - Math.abs(a.impact) || b.cost - a.cost;
+    });
+  } else if (key === "title" || key === "itemId" || key === "label"){
+    rows.sort(function(a,b){
+      var av = key === "label" ? LABELS[a.label].text : a[key];
+      var bv = key === "label" ? LABELS[b.label].text : b[key];
+      return String(av).localeCompare(String(bv)) * (state.sortDir < 0 ? -1 : 1);
+    });
+  } else {
+    rows.sort(function(a,b){
+      var av = a[key], bv = b[key];
+      if (key === "impact"){ av = Math.abs(a.impact) * (a.impact < 0 ? 1 : 1); bv = Math.abs(b.impact); av = Math.abs(a.impact); }
+      if (av === null || av === undefined || !isFinite(av)) av = state.sortDir < 0 ? -Infinity : Infinity;
+      if (bv === null || bv === undefined || !isFinite(bv)) bv = state.sortDir < 0 ? -Infinity : Infinity;
+      return (av - bv) * state.sortDir;
+    });
+  }
+  state.visible = rows;
+}
+
+function labelChip(k){
+  return '<span class="lbl ' + k + '"><span class="swatch"></span>' + LABELS[k].text + '</span>';
+}
+
+function roasCell(r){
+  if (r.roas === null) return '<span class="dash">—</span>';
+  var max = BREAK_EVEN_ROAS * 2.2;
+  var w = Math.max(3, Math.min(100, (r.roas / max) * 100));
+  var markPct = (BREAK_EVEN_ROAS / max) * 100;
+  var ok = r.roas >= BREAK_EVEN_ROAS;
+  return '<span class="roasCell"><span class="roasBar" aria-hidden="true">' +
+    '<i class="' + (ok ? "ok" : "no") + '" style="width:' + w + '%"></i>' +
+    '<b style="left:' + markPct + '%"></b></span>' +
+    '<span class="num ' + (ok ? "gapPos" : "gapNeg") + '">' + fmtRatio(r.roas) + '</span></span>';
+}
+
+function impactCell(r){
+  if (r.moneyAtRisk > 0) return '<span class="impact risk">− ' + fmtMoneyShort(r.moneyAtRisk) + '</span>';
+  if (r.opportunity > 0) return '<span class="impact opp">+ ' + fmtMoneyShort(r.opportunity) + '</span>';
+  return '<span class="impact none">—</span>';
+}
+
+function renderCategorySummary(){
+  var totals = accountTotals(state.visible);
+  var profit = totals.revenue * GROSS_MARGIN - totals.cost;
+  var metrics = [
+    ["Products", fmtInt(state.visible.length), ""],
+    ["Budget", fmtMoney(totals.cost), ""],
+    ["Sales", fmtInt(totals.conversions), ""],
+    ["Revenue", fmtMoney(totals.revenue), ""],
+    ["Avg. CPA", fmtMoney(totals.cpa), ""],
+    ["ROAS", fmtRatio(totals.roas), ""],
+    ["Profit / Loss", (profit >= 0 ? "+" : "−") + fmtMoney(Math.abs(profit)), profit >= 0 ? "tGreen" : "tRed"]
+  ];
+  $("categorySummary").innerHTML = metrics.map(function(metric){
+    return '<div class="categorySummaryMetric"><span>' + metric[0] + '</span><strong class="' + metric[2] + '">' + metric[1] + '</strong></div>';
+  }).join("");
+}
+
+function renderRows(){
+  var tb = $("tbody");
+  if (!state.visible.length){
+    tb.innerHTML = "";
+    $("emptyState").hidden = false;
+  } else {
+    $("emptyState").hidden = true;
+    tb.innerHTML = state.visible.map(function(r, i){
+      var gapCls = r.profitabilityGap === null ? "dash" : (r.profitabilityGap >= 0 ? "gapPos" : "gapNeg");
+      var gapTxt = r.profitabilityGap === null ? "—" : ((r.profitabilityGap >= 0 ? "+" : "") + r.profitabilityGap.toFixed(2) + "×");
+      return '<tr class="' + (i % 2 ? "zebra" : "") + '">' +
+        '<td class="stick1"><div class="prodCell">' +
+          '<img class="thumb" src="' + r.thumb + '" alt="" loading="lazy" />' +
+          '<div class="prodText"><div class="prodName" title="' + r.title + '">' + r.title + '</div>' +
+          '<div class="prodMeta">' + r.category + ' · ' + fmtMoney(r.price) + ' · ' + r.productId + '</div></div>' +
+        '</div></td>' +
+        '<td class="stick2"><span class="itemId">' + r.itemId + '</span>' +
+          '<button class="copyId" type="button" data-copy="' + r.itemId + '" title="Copy item ID">copy</button></td>' +
+        '<td>' + labelChip(r.label) + '</td>' +
+        '<td class="n">' + fmtInt(r.impressions) + '</td>' +
+        '<td class="n">' + fmtInt(r.clicks) + '</td>' +
+        '<td class="n">' + fmtMoney(r.cost) + '</td>' +
+        '<td class="n">' + fmtInt(r.conversions) + '</td>' +
+        '<td class="n">' + fmtPct(r.conversionRate) + '</td>' +
+        '<td class="n">' + fmtOne(r.clicksPerSale) + '</td>' +
+        '<td class="n">' + fmtMoney(r.conversionValue) + '</td>' +
+        '<td class="n">' + fmtMoney(r.cpa) + '</td>' +
+        '<td class="n">' + roasCell(r) + '</td>' +
+        '<td class="n ' + gapCls + '">' + gapTxt + '</td>' +
+        '<td class="n">' + impactCell(r) + '</td>' +
+      '</tr>';
+    }).join("");
+  }
+  $("shownCount").textContent = state.visible.length;
+  $("prodCount").textContent = "· " + state.visible.length + " products";
+  renderCategorySummary();
+
+  var t = accountTotals(state.visible);
+  $("footTotals").innerHTML =
+    '<span>Filtered cost <b class="num">' + fmtMoney(t.cost) + '</b></span>' +
+    '<span>Filtered sales <b class="num">' + fmtMoney(t.revenue) + '</b></span>' +
+    '<span>Filtered clicks <b class="num">' + fmtInt(t.clicks) + '</b></span>' +
+    '<span>Filtered conversions <b class="num">' + fmtInt(t.conversions) + '</b></span>' +
+    '<span>Filtered ROAS <b class="num">' + fmtRatio(t.roas) + '</b></span>';
+}
+
+/* ==========================================================================
+   RECOMMENDED CAMPAIGNS — two dense Google-Ads-style tables, Last 30 days,
+   product-promoting campaigns only (Search Brand and every non-product
+   campaign are excluded).
+
+   "Your product campaigns now" = today's real, unsegmented mix: every
+   product running under two blended campaigns, no ROAS target, no split
+   between winners and losers.
+
+   "How they should be structured" = the SAME measured 30-day total spend,
+   simply regrouped: Performance Max keeps the measured, already-happening
+   result of the profitable products; Standard Shopping is a SIMULATION of
+   that same leftover spend at a break-even test target, for loss makers +
+   not-promoted + insufficient-data products. Total cost is identical
+   between the two tables by construction — only the split changes.
+   ========================================================================== */
+function campSum(list){
+  return list.reduce(function(a, r){
+    a.impressions += r.impressions; a.clicks += r.clicks; a.cost += r.cost;
+    a.conversions += r.conversions; a.revenue += r.conversionValue;
+    return a;
+  }, { impressions:0, clicks:0, cost:0, conversions:0, revenue:0 });
+}
+
+function campMetrics(sum, targetRoas, simulated){
+  return {
+    impressions: sum.impressions, clicks: sum.clicks, cost: sum.cost,
+    conversions: sum.conversions, revenue: sum.revenue,
+    roas: sum.cost > 0 ? sum.revenue / sum.cost : null,
+    cpa: sum.conversions > 0 ? sum.cost / sum.conversions : null,
+    cvr: sum.clicks > 0 ? sum.conversions / sum.clicks : null,
+    avgCpc: sum.clicks > 0 ? sum.cost / sum.clicks : null,
+    dailyBudget: Math.round((sum.cost / 30 * 1.12) / 10) * 10,
+    targetRoas: (targetRoas === undefined ? null : targetRoas),
+    simulated: !!simulated
+  };
+}
+
+function campRowHtml(name, channel, m, productsLabel){
+  return '<tr' + (m.simulated ? ' class="simRow"' : '') + '>' +
+    '<td class="left"><div class="campNameCell"><b>' + name + '</b>' +
+      '<small>' + (m.simulated ? '<span class="tagSim">◆ Sim</span>' : '<span class="tagMeasured">● Measured</span>') + '</small>' +
+    '</div></td>' +
+    '<td class="left">' + productsLabel + '</td>' +
+    '<td>' + fmtMoney(m.cost) + '</td>' +
+    '<td>' + fmtInt(m.conversions) + '</td>' +
+    '<td>' + fmtMoney(m.revenue) + '</td>' +
+    '<td>' + fmtMoney(m.cpa) + '</td>' +
+    '<td>' + (m.roas === null ? '<span class="chDash">—</span>' : fmtRatio(m.roas)) + '</td>' +
+  '</tr>';
+}
+
+function campTotalRowHtml(m){
+  return '<tr class="totalRow">' +
+    '<td class="left"><div class="campNameCell"><b>Total</b></div></td>' +
+    '<td class="left">' + state.products.length + ' products</td>' +
+    '<td>' + fmtMoney(m.cost) + '</td>' +
+    '<td>' + fmtInt(m.conversions) + '</td>' +
+    '<td>' + fmtMoney(m.revenue) + '</td>' +
+    '<td>' + fmtMoney(m.cpa) + '</td>' +
+    '<td>' + (m.roas === null ? '—' : fmtRatio(m.roas)) + '</td>' +
+  '</tr>';
+}
+
+function structureMetricHtml(label, value){
+  return '<div class="structureMetric"><span>' + label + '</span><strong>' + value + '</strong></div>';
+}
+
+function structureMetricsHtml(m){
+  return structureMetricHtml("Cost", fmtMoney(m.cost)) +
+    structureMetricHtml("Sales", fmtInt(m.conversions)) +
+    structureMetricHtml("Revenue", fmtMoney(m.revenue)) +
+    structureMetricHtml("CPA", fmtMoney(m.cpa)) +
+    structureMetricHtml("ROAS", fmtRatio(m.roas));
+}
+
+function structureLaneHtml(name, tags, tone){
+  return '<div class="structureLane"><div><strong>' + name + '</strong></div>' +
+    '<div class="productTags">' + tags.map(function(tag){
+      return '<span class="productTag ' + tone + '">' + tag + '</span>';
+    }).join("") + '</div></div>';
+}
+
+function googleCampaignRowHtml(name, kind, m, simulated, group){
+  var hasForecast = !m.unmeasured;
+  var profit = hasForecast ? m.revenue * GROSS_MARGIN - m.cost : null;
+  return '<tr class="' + (group || '') + '"><td><span class="campaignLink">' + name + '</span><span class="campaignKind">' + kind +
+    (simulated ? ' · Simulation' : '') + '</span></td>' +
+    '<td>' + fmtMoney(m.cost) + '</td>' +
+    '<td>' + (hasForecast ? fmtInt(m.conversions) : '—') + '</td>' +
+    '<td>' + (hasForecast ? fmtMoney(m.revenue) : '—') + '</td>' +
+    '<td>' + (hasForecast ? fmtMoney(m.cpa) : '—') + '</td>' +
+    '<td>' + (hasForecast ? fmtRatio(m.roas) : '—') + '</td>' +
+    '<td class="' + (hasForecast ? (profit >= 0 ? 'goodValue' : 'badValue') : '') + '">' + (hasForecast ? (profit >= 0 ? '+' : '−') + fmtMoney(Math.abs(profit)) : '—') + '</td></tr>';
+}
+
+function googleCampaignTotalHtml(m){
+  var hasForecast = !m.unmeasured;
+  var profit = hasForecast ? m.revenue * GROSS_MARGIN - m.cost : null;
+  return '<tr class="totalRow"><td>Total</td><td>' + fmtMoney(m.cost) + '</td><td>' +
+    (hasForecast ? fmtInt(m.conversions) : '—') + '</td><td>' + (hasForecast ? fmtMoney(m.revenue) : '—') + '</td><td>' + (hasForecast ? fmtMoney(m.cpa) : '—') + '</td><td>' +
+    (hasForecast ? fmtRatio(m.roas) : '—') + '</td><td class="' + (hasForecast ? (profit >= 0 ? 'goodValue' : 'badValue') : '') + '">' +
+    (hasForecast ? (profit >= 0 ? '+' : '−') + fmtMoney(Math.abs(profit)) : '—') + '</td></tr>';
+}
+
+function mirrorMetricsHtml(m){
+  var hasForecast = !m.unmeasured;
+  var profit = hasForecast ? m.revenue * GROSS_MARGIN - m.cost : null;
+  return [
+    ["Budget", fmtMoney(m.cost), ""],
+    ["Sales", hasForecast ? fmtInt(m.conversions) : "Not measured", ""],
+    ["Revenue", hasForecast ? fmtMoney(m.revenue) : "Not measured", ""],
+    ["Avg. CPA", hasForecast ? fmtMoney(m.cpa) : "Not measured", ""],
+    ["ROAS", hasForecast ? fmtRatio(m.roas) : "Not measured", ""],
+    ["Profit / Loss", hasForecast ? (profit >= 0 ? '+' : '−') + fmtMoney(Math.abs(profit)) : "Not measured", hasForecast ? (profit >= 0 ? "goodValue" : "badValue") : ""]
+  ].map(function(metric){
+    return '<div class="mirrorMetric"><span>' + metric[0] + '</span><strong class="num ' + metric[2] + '">' + metric[1] + '</strong></div>';
+  }).join("");
+}
+
+function labelFinancialsHtml(groups, note){
+  var colors = { Winners:"#1a73e8", Opportunities:"#f9ab00", Losers:"#d93025", Unpromoted:"#8a94a6" };
+  return '<div class="labelFinancials">' + groups.map(function(group){
+    var m = group.metrics;
+    var profit = m.revenue * GROSS_MARGIN - m.cost;
+    var metrics = [
+      ["Budget", fmtMoney(m.cost)], ["Sales", Number.isInteger(m.conversions) ? fmtInt(m.conversions) : fmtOne(m.conversions)], ["Revenue", fmtMoney(m.revenue)],
+      ["Avg. CPA", fmtMoney(m.cpa)], ["ROAS", fmtRatio(m.roas)],
+      ["Profit / Loss", (profit >= 0 ? '+' : '−') + fmtMoney(Math.abs(profit))]
+    ];
+    return '<div class="labelFinancialCard"><div class="labelFinancialHead"><span class="labelFinancialName"><i style="background:' + colors[group.name] + '"></i>' + group.name + '</span><span>' + group.description + '</span></div><div class="labelFinancialMetrics">' + metrics.map(function(metric, index){
+      var valueClass = index === 5 ? (profit >= 0 ? 'goodValue' : 'badValue') : '';
+      return '<div class="labelFinancialMetric"><span>' + metric[0] + '</span><strong class="' + valueClass + '">' + metric[1] + '</strong></div>';
+    }).join('') + '</div></div>';
+  }).join('') + '<div class="labelFinancialNote">' + note + '</div></div>';
+}
+
+function renderCampaigns(){
+  var all = classify(buildProducts(state.period));
+  $("currentCampaignPeriod").textContent = PERIOD_LABEL[state.period];
+  $("correctCampaignPeriod").textContent = PERIOD_LABEL[state.period];
+
+  /* ---- "Your product campaigns now": deterministic 50/50 split by
+     catalog position — today's real mix has no separation by performance,
+     just two blended campaigns covering the whole product set. ---- */
+  var mixA = all.filter(function(r, i){ return i % 2 === 0; });
+  var mixB = all.filter(function(r, i){ return i % 2 === 1; });
+
+  var mA = campMetrics(campSum(mixA), null, false);
+  var mB = campMetrics(campSum(mixB), null, false);
+  var currentTotal = campMetrics(campSum(all), null, false);
+  var observedAov = currentTotal.conversions > 0 ? currentTotal.revenue / currentTotal.conversions : ACCOUNT_AOV;
+
+  $("campCurrentBody").innerHTML =
+    googleCampaignRowHtml("PMax - All Products - Dvk", "Performance Max · all products mixed", mA, false, "") +
+    googleCampaignRowHtml("Shopping - All Products - Dvk", "Standard Shopping · all products mixed", mB, false, "") +
+    googleCampaignTotalHtml(currentTotal);
+
+  /* ---- "How they should be structured": same total spend, allocated
+     across the four product labels using the configured strategy. ---- */
+  var villains = all.filter(function(r){ return r.label === "LOSS_MAKER"; });
+
+  var potentialGroup = all.filter(function(row){ return row.label === "UNDERPROMOTED_POTENTIAL"; });
+  var heroGroup = all.filter(function(row){ return row.label === "PERFORMER"; });
+  var villainGroup = all.filter(function(row){ return row.label === "LOSS_MAKER"; });
+  var zombieGroup = all.filter(function(row){ return row.label === "NOT_PROMOTED" || row.label === "INSUFFICIENT_DATA"; });
+  var heroBudget = campSum(heroGroup).cost;
+  var potentialBudget = campSum(potentialGroup).cost;
+  var villainBudget = campSum(villainGroup).cost;
+  var zombieBudget = campSum(zombieGroup).cost;
+  var totalBudget = currentTotal.cost;
+  var heroBudgetAfter = totalBudget * BUDGET_ALLOCATION.winners;
+  var potentialBudgetAfter = totalBudget * BUDGET_ALLOCATION.opportunities;
+  var zombieBudgetAfter = totalBudget * BUDGET_ALLOCATION.unpromoted;
+  var villainBudgetAfter = totalBudget * BUDGET_ALLOCATION.losers;
+  var villainLossNow = villainGroup.reduce(function(sum, row){ return sum + row.moneyAtRisk; }, 0);
+
+  var heroBefore = campMetrics(campSum(heroGroup), null, false);
+  var potentialBefore = campMetrics(campSum(potentialGroup), null, false);
+  var villainBefore = campMetrics(campSum(villainGroup), null, false);
+  var zombieBefore = campMetrics(campSum(zombieGroup), null, false);
+  function projectMeasuredGroup(before, targetBudget){
+    var measuredRoas = before.roas;
+    var revenue = measuredRoas === null ? 0 : targetBudget * measuredRoas;
+    return campMetrics({
+      impressions:before.impressions,
+      clicks:before.clicks,
+      cost:targetBudget,
+      conversions:observedAov > 0 ? Math.round(revenue / observedAov) : 0,
+      revenue:revenue
+    }, null, true);
+  }
+  var heroAfter = projectMeasuredGroup(heroBefore, heroBudgetAfter);
+  var potentialAfter = projectMeasuredGroup(potentialBefore, potentialBudgetAfter);
+  var zombieAfter = campMetrics({
+    impressions:zombieBefore.impressions,
+    clicks:zombieBefore.clicks,
+    cost:zombieBudgetAfter,
+    conversions:0,
+    revenue:0
+  }, null, true);
+  zombieAfter.unmeasured = true;
+  zombieAfter.roas = null;
+  zombieAfter.cpa = null;
+  var villainAfter = projectMeasuredGroup(villainBefore, villainBudgetAfter);
+  var correctTotalSum = campSum(all);
+  correctTotalSum.cost = heroAfter.cost + potentialAfter.cost + zombieAfter.cost + villainAfter.cost;
+  correctTotalSum.conversions = heroAfter.conversions + potentialAfter.conversions + zombieAfter.conversions + villainAfter.conversions;
+  correctTotalSum.revenue = heroAfter.revenue + potentialAfter.revenue + zombieAfter.revenue + villainAfter.revenue;
+  var correctTotal = campMetrics(correctTotalSum, null, true);
+  correctTotal.unmeasured = zombieAfter.unmeasured;
+
+  $("yourDataLabelResults").innerHTML = labelFinancialsHtml([
+    {name:"Winners", metrics:heroBefore, description:"Profitable products validated by enough traffic"},
+    {name:"Opportunities", metrics:potentialBefore, description:"Profitable products limited by too little traffic"},
+    {name:"Losers", metrics:villainBefore, description:"Promoted products below your minimum ROAS"},
+    {name:"Unpromoted", metrics:zombieBefore, description:"Products without enough traffic or budget to evaluate"}
+  ], 'Losers received <b>' + fmtMoney(villainBudget) + '</b> of your budget and produced a measured loss of <b>' + fmtMoney(villainLossNow) + '</b>. Opportunities are profitable products that have not received enough traffic yet.');
+  $("beforeMetrics").innerHTML = mirrorMetricsHtml(currentTotal);
+  $("afterMetrics").innerHTML = mirrorMetricsHtml(correctTotal);
+
+  $("campCorrectBody").innerHTML =
+    googleCampaignRowHtml("PMax - Winners - Dvk", "Performance Max · forecast at the measured Winners ROAS", heroAfter, true, "winners") +
+    googleCampaignRowHtml("PMax - Opportunities - Dvk", "Performance Max · forecast at the measured Opportunities ROAS", potentialAfter, true, "opportunities") +
+    googleCampaignRowHtml("Shopping - Unpromoted - Dvk", "Standard Shopping · no forecast until performance is measured", zombieAfter, true, "unpromoted") +
+    googleCampaignRowHtml("Shopping - Losers - Dvk", "Standard Shopping · forecast at the measured Losers ROAS", villainAfter, true, "losers") +
+    googleCampaignTotalHtml(correctTotal);
+
+  $("campaignLegend").innerHTML =
+    '<div class="campaignLegendRow"><div class="campaignLegendName"><i style="background:#0f9d58"></i>Winners</div><p>Products with ROAS at or above the account average of <b>' + fmtRatio(currentTotal.roas) + '</b> during ' + PERIOD_LABEL[state.period] + '.</p></div>' +
+    '<div class="campaignLegendRow"><div class="campaignLegendName"><i style="background:#f9ab00"></i>Opportunities</div><p>Profitable products limited by too little traffic during ' + PERIOD_LABEL[state.period] + '.</p></div>' +
+    '<div class="campaignLegendRow"><div class="campaignLegendName"><i style="background:#8a94a6"></i>Unpromoted</div><p>Products without enough traffic or budget to evaluate during ' + PERIOD_LABEL[state.period] + '.</p></div>' +
+    '<div class="campaignLegendRow"><div class="campaignLegendName"><i style="background:#d93025"></i>Losers</div><p>Products measured below the break-even ROAS of <b>' + fmtRatio(BREAK_EVEN_ROAS) + '</b> during ' + PERIOD_LABEL[state.period] + '.</p></div>';
+
+  var moneyAtRisk = villains.reduce(function(sum, row){ return sum + row.moneyAtRisk; }, 0);
+  var opportunity = all.reduce(function(sum, row){ return sum + row.opportunity; }, 0);
+  var underpromotedCount = all.filter(function(row){ return row.label === "UNDERPROMOTED_POTENTIAL"; }).length;
+  var unvalidatedCount = all.filter(function(row){ return row.label === "NOT_PROMOTED" || row.label === "INSUFFICIENT_DATA"; }).length;
+
+  var lossRows = villains.slice().sort(function(a,b){ return b.moneyAtRisk - a.moneyAtRisk; });
+  var heroRows = heroGroup.slice().sort(function(a,b){ return b.roas - a.roas; });
+  var potentialRows = all.filter(function(row){ return row.label === "UNDERPROMOTED_POTENTIAL"; })
+    .filter(function(row){ return row.clicks > 0 && row.roas !== null; })
+    .sort(function(a,b){ return b.roas - a.roas; });
+
+  var heroWeight = heroRows.reduce(function(sum, row){ return sum + row.cost * row.roas; }, 0);
+  heroRows.forEach(function(row){
+    row.simulatedBudget = heroWeight > 0 ? heroBudgetAfter * (row.cost * row.roas / heroWeight) : 0;
+    var heroBudgetDelta = row.simulatedBudget - row.cost;
+    row.simulatedSales = heroBudgetDelta >= 0 ? row.conversionValue + heroBudgetDelta * row.roas * 0.78 : row.conversionValue * (row.cost > 0 ? row.simulatedBudget / row.cost : 0);
+    row.simulatedOrders = observedAov > 0 ? row.simulatedSales / observedAov : 0;
+    row.simulatedCpa = row.simulatedOrders > 0 ? row.simulatedBudget / row.simulatedOrders : null;
+    row.simulatedRoas = row.simulatedBudget > 0 ? row.simulatedSales / row.simulatedBudget : null;
+    row.simulatedProfit = row.simulatedSales * GROSS_MARGIN - row.simulatedBudget;
+  });
+
+  var potentialWeight = potentialRows.reduce(function(sum, row){ return sum + row.cost * row.roas; }, 0);
+  potentialRows.forEach(function(row){
+    row.simulatedBudget = potentialWeight > 0 ? potentialBudgetAfter * (row.cost * row.roas / potentialWeight) : 0;
+    row.simulatedSales = row.simulatedBudget * potentialBefore.roas;
+    row.simulatedOrders = observedAov > 0 ? row.simulatedSales / observedAov : 0;
+    row.simulatedCpa = row.simulatedOrders > 0 ? row.simulatedBudget / row.simulatedOrders : null;
+    row.simulatedRoas = potentialBefore.roas;
+    row.simulatedProfit = row.simulatedSales * GROSS_MARGIN - row.simulatedBudget;
+  });
+
+  function productIdentity(row){
+    return '<span class="productName">' + row.title + '</span><span class="productMeta">' + row.itemId + '</span>';
+  }
+  function tableCard(title, after, headings, rowsHtml, totalHtml){
+    return '<div class="productMirrorCard ' + (after ? 'after' : '') + '"><div class="productMirrorCardHead"><span>' + title + '</span><span class="' + (after ? 'tagSim' : 'tagMeasured') + '">' + (after ? '◆ Estimated after' : '● Real data now') + '</span></div>' +
+      '<table class="productActionTable"><thead><tr>' + headings.map(function(h){ return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rowsHtml + totalHtml + '</tbody></table></div>';
+  }
+
+  function profitHtml(value){
+    var positive = value >= 0;
+    return '<td class="' + (positive ? 'goodValue' : 'badValue') + '">' + (positive ? '+' : '−') + fmtMoney(Math.abs(value)) + '</td>';
+  }
+
+  function financialTotalHtml(label, budget, sales, orders){
+    var cpa = orders > 0 ? budget / orders : null;
+    var roas = budget > 0 ? sales / budget : null;
+    var profit = sales * GROSS_MARGIN - budget;
+    return '<tr class="totalRow"><td>' + label + '</td><td>' + fmtMoney(budget) + '</td><td>' + fmtMoney(sales) + '</td><td>' + fmtMoney(cpa) + '</td><td>' + fmtRatio(roas) + '</td>' + profitHtml(profit) + '</tr>';
+  }
+
+  var lossBeforeRows = lossRows.map(function(row){
+    var profit = row.conversionValue * GROSS_MARGIN - row.cost;
+    return '<tr><td>' + productIdentity(row) + '</td><td>' + fmtMoney(row.cost) + '</td><td>' + fmtMoney(row.conversionValue) + '</td><td>' + fmtMoney(row.cpa) + '</td><td>' + fmtRatio(row.roas) + '</td>' + profitHtml(profit) + '</tr>';
+  }).join('');
+  var lossBeforeBudget = lossRows.reduce(function(sum, row){ return sum + row.cost; }, 0);
+  var lossBeforeSales = lossRows.reduce(function(sum, row){ return sum + row.conversionValue; }, 0);
+  var lossBeforeOrders = lossRows.reduce(function(sum, row){ return sum + row.conversions; }, 0);
+  var lossBudgetRatio = lossBeforeBudget > 0 ? villainBudgetAfter / lossBeforeBudget : 0;
+  var lossAfterRows = lossRows.map(function(row){
+    var cappedCost = row.cost * lossBudgetRatio;
+    var cappedSales = cappedCost * villainBefore.roas;
+    var cappedOrders = observedAov > 0 ? cappedSales / observedAov : 0;
+    var cappedCpa = cappedOrders > 0 ? cappedCost / cappedOrders : null;
+    var cappedRoas = villainBefore.roas;
+    var profit = cappedSales * GROSS_MARGIN - cappedCost;
+    return '<tr><td>' + productIdentity(row) + '</td><td>' + fmtMoney(cappedCost) + '</td><td>' + fmtMoney(cappedSales) + '</td><td>' + fmtMoney(cappedCpa) + '</td><td>' + fmtRatio(cappedRoas) + '</td>' + profitHtml(profit) + '</tr>';
+  }).join('');
+  var lossAfterBudget = lossBeforeBudget * lossBudgetRatio;
+  var lossAfterSales = lossAfterBudget * villainBefore.roas;
+  var lossAfterOrders = observedAov > 0 ? lossAfterSales / observedAov : 0;
+
+  var lossNow = villains.reduce(function(sum, row){
+    return sum + Math.max(0, row.cost - row.conversionValue * GROSS_MARGIN);
+  }, 0);
+  var lossAfter = villains.reduce(function(sum, row){
+    var cappedCost = row.cost * lossBudgetRatio;
+    var cappedSales = cappedCost * villainBefore.roas;
+    return sum + Math.max(0, cappedCost - cappedSales * GROSS_MARGIN);
+  }, 0);
+
+  var heroBeforeRows = heroRows.map(function(row){
+    var profit = row.conversionValue * GROSS_MARGIN - row.cost;
+    return '<tr><td>' + productIdentity(row) + '</td><td>' + fmtMoney(row.cost) + '</td><td>' + fmtMoney(row.conversionValue) + '</td><td>' + fmtMoney(row.cpa) + '</td><td>' + fmtRatio(row.roas) + '</td>' + profitHtml(profit) + '</tr>';
+  }).join('');
+  var heroAfterRows = heroRows.map(function(row){
+    return '<tr><td>' + productIdentity(row) + '</td><td>' + fmtMoney(row.simulatedBudget) + '</td><td>' + fmtMoney(row.simulatedSales) + '</td><td>' + fmtMoney(row.simulatedCpa) + '</td><td>' + fmtRatio(row.simulatedRoas) + '</td>' + profitHtml(row.simulatedProfit) + '</tr>';
+  }).join('');
+  var heroBeforeBudget = heroRows.reduce(function(sum, row){ return sum + row.cost; }, 0);
+  var heroBeforeSales = heroRows.reduce(function(sum, row){ return sum + row.conversionValue; }, 0);
+  var heroBeforeOrders = heroRows.reduce(function(sum, row){ return sum + row.conversions; }, 0);
+  var heroAfterBudget = heroRows.reduce(function(sum, row){ return sum + row.simulatedBudget; }, 0);
+  var heroAfterSales = heroRows.reduce(function(sum, row){ return sum + row.simulatedSales; }, 0);
+  var heroAfterOrders = heroRows.reduce(function(sum, row){ return sum + row.simulatedOrders; }, 0);
+  var heroEstimatedGrowth = heroAfterSales - heroBeforeSales;
+
+  var potentialBeforeRows = potentialRows.map(function(row){
+    var profit = row.conversionValue * GROSS_MARGIN - row.cost;
+    return '<tr><td>' + productIdentity(row) + '</td><td>' + fmtMoney(row.cost) + '</td><td>' + fmtInt(row.conversions) + '</td><td>' + fmtMoney(row.conversionValue) + '</td><td>' + fmtMoney(row.cpa) + '</td><td>' + fmtRatio(row.roas) + '</td>' + profitHtml(profit) + '</tr>';
+  }).join('');
+  var potentialAfterRows = potentialRows.map(function(row){
+    return '<tr><td>' + productIdentity(row) + '</td><td>' + fmtMoney(row.simulatedBudget) + '</td><td>' + fmtOne(row.simulatedOrders) + '</td><td>' + fmtMoney(row.simulatedSales) + '</td><td>' + fmtMoney(row.simulatedCpa) + '</td><td>' + fmtRatio(row.simulatedRoas) + '</td>' + profitHtml(row.simulatedProfit) + '</tr>';
+  }).join('');
+
+  var potentialBeforeBudget = potentialRows.reduce(function(sum, row){ return sum + row.cost; }, 0);
+  var potentialBeforeSales = potentialRows.reduce(function(sum, row){ return sum + row.conversionValue; }, 0);
+  var potentialBeforeOrders = potentialRows.reduce(function(sum, row){ return sum + row.conversions; }, 0);
+  var potentialAfterBudget = potentialRows.reduce(function(sum, row){ return sum + row.simulatedBudget; }, 0);
+  var potentialAfterSales = potentialRows.reduce(function(sum, row){ return sum + row.simulatedSales; }, 0);
+  var potentialAfterOrders = potentialRows.reduce(function(sum, row){ return sum + row.simulatedOrders; }, 0);
+  $("beforeProducts").innerHTML =
+    '<section class="productMirrorSection"><div class="productMirrorTitle"><div><h3>LOSERS — Budget consumed now</h3><p>Products measured below your minimum ROAS.</p></div><strong class="tRed">Spend ' + fmtMoney(lossBeforeBudget) + ' · Loss −' + fmtMoney(lossNow) + '</strong></div>' +
+      tableCard('Losers before optimization', false, ['Product','Budget','Sales','Avg. CPA','ROAS','Profit / Loss'], lossBeforeRows, financialTotalHtml('Total Losers', lossBeforeBudget, lossBeforeSales, lossBeforeOrders)) +
+    '</section>' +
+    '<section class="productMirrorSection"><div class="productMirrorTitle"><div><h3>OPPORTUNITIES — Budget limited now</h3><p>Profitable products receiving too little traffic, ordered by ROAS.</p></div><strong>Spend ' + fmtMoney(potentialBeforeBudget) + ' · Revenue ' + fmtMoney(potentialBeforeSales) + '</strong></div>' +
+      tableCard('Opportunities before optimization', false, ['Product','Budget','Sales','Avg. CPA','ROAS','Profit / Loss'], potentialBeforeRows, financialTotalHtml('Total Opportunities', potentialBeforeBudget, potentialBeforeSales, potentialBeforeOrders)) +
+    '</section>';
+
+  $("afterProducts").innerHTML =
+    '<section class="productMirrorSection"><div class="productMirrorTitle"><div><h3>LOSERS — Budget reduced after optimization</h3><p>The same products keep only a controlled validation budget.</p></div><strong class="tGreen">Spend ' + fmtMoney(lossBeforeBudget) + ' → ' + fmtMoney(lossAfterBudget) + ' · Loss −' + fmtMoney(lossNow) + ' → −' + fmtMoney(lossAfter) + '</strong></div>' +
+      tableCard('Losers after optimization', true, ['Product','Budget','Sales','Avg. CPA','ROAS','Profit / Loss'], lossAfterRows, financialTotalHtml('Total Losers', lossAfterBudget, lossAfterSales, lossAfterOrders)) +
+    '</section>' +
+    '<section class="productMirrorSection"><div class="productMirrorTitle"><div><h3>OPPORTUNITIES — Budget increased after optimization</h3><p>The same high-ROAS products receive enough budget to grow.</p></div><strong class="tGreen">Spend ' + fmtMoney(potentialBeforeBudget) + ' → ' + fmtMoney(potentialAfterBudget) + ' · Revenue ' + fmtMoney(potentialBeforeSales) + ' → ' + fmtMoney(potentialAfterSales) + '</strong></div>' +
+      tableCard('Opportunities after optimization', true, ['Product','Budget','Sales','Avg. CPA','ROAS','Profit / Loss'], potentialAfterRows, financialTotalHtml('Total Opportunities', potentialAfterBudget, potentialAfterSales, potentialAfterOrders)) +
+    '</section>';
+
+  /* ---- Comparison strip: current measured total vs. simulated proposed total ---- */
+  var salesDiff = correctTotal.unmeasured ? null : correctTotal.revenue - currentTotal.revenue;
+  var ordersDiff = correctTotal.unmeasured ? null : correctTotal.conversions - currentTotal.conversions;
+  var currentCpa = currentTotal.cpa, correctCpa = correctTotal.cpa;
+  var cpaDiff = (currentCpa === null || correctCpa === null) ? null : correctCpa - currentCpa;
+  var roasDiff = (currentTotal.roas === null || correctTotal.roas === null) ? null : correctTotal.roas - currentTotal.roas;
+
+  $("campSummary").innerHTML = correctTotal.unmeasured
+    ? '<div><span>Total forecast</span><strong>Available after Unpromoted products collect performance data</strong></div>'
+    : '<div><span>With the same spend</span><strong>+' + fmtMoney(Math.abs(salesDiff)) + ' revenue</strong></div>' +
+      '<div class="campaignImpactDetails"><span>Sales <b>+' + fmtInt(Math.abs(ordersDiff)) + '</b></span>' +
+      '<span>CPA <b>' + fmtMoney(currentCpa) + ' → ' + fmtMoney(correctCpa) + '</b></span>' +
+      '<span>ROAS <b>' + fmtRatio(currentTotal.roas) + ' → ' + fmtRatio(correctTotal.roas) + '</b></span></div>';
+}
+
+function renderAll(){
+  var t = accountTotals(state.products);
+  renderStatus(t);
+  renderPersistentLabels();
+  renderKpis(t);
+  renderFilters();
+  renderHead();
+  applyFilters();
+  renderRows();
+  renderCampaigns();
+  renderSimulator();
+  $("snapStamp").textContent = PERIOD_LABEL[state.period];
+}
+
+/* ==========================================================================
+   SIMULATOR — clearly separated from measured data
+   ========================================================================== */
+function simulate(budget){
+  var months = PERIOD_MONTHS[state.period];
+  var scalable = state.products
+    .filter(function(r){ return r.roas !== null && r.roas >= BREAK_EVEN_ROAS && r.cost > 0; })
+    .sort(function(a,b){ return b.roas - a.roas; });
+
+  var capped = state.products.filter(function(r){ return r.label === "LOSS_MAKER"; });
+  var cappedFloor = capped.reduce(function(s,r){ return s + (r.cost / months) * 0.15; }, 0);
+
+  var remaining = Math.max(0, budget - cappedFloor);
+  var revenue = 0, orders = 0, allocated = [];
+
+  for (var i = 0; i < scalable.length && remaining > 0; i++){
+    var r = scalable[i];
+    var monthlyCost = r.cost / months;
+    var capacity = monthlyCost * 3;
+    var spend = Math.min(capacity, remaining);
+    var extraRatio = monthlyCost > 0 ? spend / monthlyCost : 1;
+    var decay = 1 - 0.16 * Math.log(1 + Math.max(0, extraRatio - 1));
+    var effRoas = Math.max(BREAK_EVEN_ROAS * 0.72, r.roas * decay);
+    var rev = spend * effRoas;
+    revenue += rev;
+    orders += rev / r.price;
+    remaining -= spend;
+    allocated.push({ title:r.title, thumb:r.thumb, spend:spend, roas:effRoas, cut:false });
+  }
+
+  /* what is still unallocated stays in low-efficiency generic traffic */
+  if (remaining > 0){
+    var fallbackRoas = BREAK_EVEN_ROAS * 0.85;
+    revenue += remaining * fallbackRoas;
+    orders += (remaining * fallbackRoas) / ACCOUNT_AOV;
+  }
+
+  /* capped loss makers still return something at their measured efficiency */
+  capped.forEach(function(r){
+    var s = (r.cost / months) * 0.15;
+    var rr = r.roas === null ? 0 : r.roas;
+    revenue += s * rr;
+    orders += r.price > 0 ? (s * rr) / r.price : 0;
+  });
+
+  return {
+    budget: budget,
+    revenue: revenue,
+    orders: orders,
+    roas: budget > 0 ? revenue / budget : null,
+    cpa: orders > 0 ? budget / orders : null,
+    capped: cappedFloor,
+    allocated: allocated.slice(0, 8)
+  };
+}
+
+function renderSimulator(){
+  var months = PERIOD_MONTHS[state.period];
+  var measuredMonthly = state.products.reduce(function(s,r){ return s + r.cost; }, 0) / months;
+  var limit = Math.round(measuredMonthly * 2.4);
+  var budget = Math.round(limit * (state.budgetPct / 100));
+
+  var el = $("budget");
+  el.style.setProperty("--pct", state.budgetPct + "%");
+
+  var sim = simulate(budget);
+  var baseline = simulate(Math.round(measuredMonthly));
+
+  $("simBudget").textContent = fmtMoney(budget);
+  $("markCurrent").textContent = fmtMoney(measuredMonthly);
+  $("markLimit").textContent = fmtMoney(limit);
+
+  $("simRevenue").textContent = fmtMoney(sim.revenue);
+  var dRev = sim.revenue - baseline.revenue;
+  $("simRevenueDelta").textContent = (dRev >= 0 ? "+" : "−") + fmtMoney(Math.abs(dRev)) + " vs measured spend level";
+
+  $("simOrders").textContent = fmtInt(sim.orders);
+  var dOrd = sim.orders - baseline.orders;
+  $("simOrdersDelta").textContent = (dOrd >= 0 ? "+" : "−") + fmtInt(Math.abs(dOrd)) + " orders vs measured spend level";
+
+  var simRoasEl = $("simRoas");
+  simRoasEl.textContent = fmtRatio(sim.roas);
+  simRoasEl.className = "num " + (sim.roas !== null && sim.roas >= BREAK_EVEN_ROAS ? "tGreen" : "tRed");
+  $("simRoasNote").textContent = (sim.roas !== null && sim.roas >= BREAK_EVEN_ROAS ? "above" : "below") + " break-even " + fmtRatio(BREAK_EVEN_ROAS);
+
+  $("simCpa").textContent = fmtMoney(sim.cpa);
+  $("simCpaNote").textContent = "break-even CPA " + fmtMoney(BREAK_EVEN_CPA);
+  $("simCapped").textContent = fmtMoney(sim.capped);
+
+  var maxSpend = sim.allocated.reduce(function(m,a){ return Math.max(m, a.spend); }, 1);
+  $("allocList").innerHTML = sim.allocated.length ? sim.allocated.map(function(a){
+    return '<div class="allocRow">' +
+      '<span class="nm" title="' + a.title + '">' + a.title + '</span>' +
+      '<span class="bar"><i style="width:' + Math.max(4, (a.spend / maxSpend) * 100) + '%"></i></span>' +
+      '<span class="vl num">' + fmtMoneyShort(a.spend) + '</span>' +
+    '</div>';
+  }).join("") : '<div class="allocRow"><span class="nm">No profitable product can absorb this budget.</span><span></span><span></span></div>';
+}
+
+/* ==========================================================================
+   EVENTS
+   ========================================================================== */
+function toast(msg){
+  var t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function(){ t.classList.remove("show"); }, 1900);
+}
+
+$("period").addEventListener("change", function(e){
+  state.period = e.target.value;
+  recomputePeriod();
+  toast("Reporting period: " + PERIOD_LABEL[state.period] + " (demo snapshot)");
+});
+
+$("search").addEventListener("input", function(e){
+  state.query = e.target.value;
+  $("searchClear").hidden = !state.query;
+  applyFilters(); renderRows();
+});
+$("searchClear").addEventListener("click", function(){
+  state.query = ""; $("search").value = ""; $("searchClear").hidden = true;
+  applyFilters(); renderRows(); $("search").focus();
+});
+
+$("filters").addEventListener("click", function(e){
+  var btn = e.target.closest(".fchip");
+  if (!btn) return;
+  var k = btn.getAttribute("data-label");
+  state.labels[k] = !state.labels[k];
+  btn.setAttribute("aria-pressed", String(!!state.labels[k]));
+  applyFilters(); renderRows();
+});
+
+$("sortSel").addEventListener("change", function(e){
+  state.sort = e.target.value;
+  state.sortDir = (state.sort === "title" || state.sort === "cpa") ? 1 : -1;
+  renderHead(); applyFilters(); renderRows();
+});
+
+$("headRow").addEventListener("click", function(e){
+  var th = e.target.closest("th");
+  if (!th) return;
+  var col = th.getAttribute("data-col");
+  var current = SORT_KEY_ALIAS[state.sort] || state.sort;
+  if (current === col){ state.sortDir = -state.sortDir; }
+  else {
+    var alias = Object.keys(SORT_KEY_ALIAS).filter(function(k){ return SORT_KEY_ALIAS[k] === col; })[0];
+    state.sort = alias || col;
+    state.sortDir = -1;
+  }
+  $("sortSel").value = (SORT_KEY_ALIAS[state.sort] ? state.sort : "priority");
+  renderHead(); applyFilters(); renderRows();
+});
+
+$("tbody").addEventListener("click", function(e){
+  var btn = e.target.closest(".copyId");
+  if (!btn) return;
+  var value = btn.getAttribute("data-copy");
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(value).then(function(){ toast("Item ID copied: " + value); },
+                                              function(){ toast("Item ID: " + value); });
+  } else { toast("Item ID: " + value); }
+});
+
+function setTab(tab){
+  state.tab = tab;
+  document.body.classList.toggle("campaignFocus", tab === "campaigns");
+  var meta = TAB_META[tab];
+  document.querySelectorAll(".tabBtn").forEach(function(b){
+    b.setAttribute("aria-selected", String(b.getAttribute("data-tab") === tab));
+  });
+  $("panelProducts").hidden = (tab === "campaigns");
+  $("panelCampaigns").hidden = (tab !== "campaigns");
+  if (meta){
+    $("panelTitleText").textContent = meta.title;
+    $("panelDesc").textContent = meta.description;
+    state.labels = {};
+    state.query = ""; $("search").value = ""; $("searchClear").hidden = true;
+    state.sort = meta.sort;
+    state.sortDir = -1;
+    $("sortSel").value = meta.sort;
+  }
+  renderFilters(); renderHead(); applyFilters(); renderRows();
+}
+$("tabBar").addEventListener("click", function(e){
+  var btn = e.target.closest(".tabBtn");
+  if (!btn) return;
+  setTab(btn.getAttribute("data-tab"));
+});
+
+
+$("budget").addEventListener("input", function(e){
+  state.budgetPct = Number(e.target.value);
+  renderSimulator();
+});
+
+$("exportBtn").addEventListener("click", function(){
+  toast("Demo prototype — CSV export is not wired in this artifact.");
+});
+$("planBtn").addEventListener("click", function(){
+  toast("Demo prototype — this button would open the optimisation plan request.");
+});
+
+function setPrimaryView(view){
+    var btn = document.querySelector('.navItem[data-view="' + view + '"]');
+    if (!btn) return;
+    document.querySelectorAll(".navItem").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    if (view === "potential"){
+      document.body.classList.add("potentialView");
+      $("pageTitle").textContent = "Optimization potential";
+      $("pageSubtitle").textContent = "Compare your current product performance with the estimated impact after optimization.";
+      setTab("campaigns");
+      document.querySelector(".simWrap").hidden = true;
+      window.scrollTo({ top:0, behavior:"smooth" });
+    } else {
+      document.body.classList.remove("potentialView");
+      $("pageTitle").textContent = "Product profitability";
+      $("pageSubtitle").textContent = "Performance measured directly from your connected Google Ads account, for the selected reporting period.";
+      document.querySelector(".simWrap").hidden = true;
+      setTab("all");
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+}
+
+document.querySelectorAll(".navItem[data-view]").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var view = btn.getAttribute("data-view");
+    history.replaceState(null, "", view === "potential" ? "#potential" : "#data");
+    setPrimaryView(view);
+  });
+});
+
+/* boot */
+recomputePeriod();
+if (location.hash === "#potential") setPrimaryView("potential");
+</script>
+</body>
+</html>
