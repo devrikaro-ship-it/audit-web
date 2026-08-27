@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { C, sora, brandGradient } from "@/lib/theme";
 import type { ContactResult } from "./actions";
 
 export default function ContactForm({ action, reportSnapshot }: { action: (formData: FormData) => Promise<ContactResult>; reportSnapshot: string }) {
+  const router = useRouter();
   const [status, setStatus] = useState<"READY" | "SENDING" | "SENT" | "SAVED" | "FAILED">("READY");
   const [portalPath, setPortalPath] = useState("");
 
@@ -22,6 +24,7 @@ export default function ContactForm({ action, reportSnapshot }: { action: (formD
     else {
       setPortalPath(result.portalPath);
       setStatus(result.deliveryStatus === "EMAIL_SENT" ? "SENT" : "SAVED");
+      router.push(result.portalPath);
     }
   }} className="flex flex-col gap-3">
     <input type="hidden" name="reportSnapshot" value={reportSnapshot} />

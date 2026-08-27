@@ -29,6 +29,7 @@ export async function alegeCont(formData: FormData) {
     SESSION_COOKIE,
     seal({
       refreshToken: session.refreshToken,
+      website: session.website,
       customerId,
       customerName: String(formData.get("name") ?? "") || undefined,
       customerTimeZone,

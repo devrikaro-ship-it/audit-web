@@ -29,11 +29,12 @@ beforeEach(() => {
 });
 
 it.each(["oauth-refresh", DEMO_REFRESH_TOKEN])("keeps the %s pre-margin account flow normalized through margin submission", async (refreshToken) => {
-  state.cookie = seal({ refreshToken });
+  state.cookie = seal({ refreshToken, website: "https://shop.example/" });
   const { alegeCont } = await import("./actions");
   await expect(alegeCont(accountSubmission())).rejects.toThrow("REDIRECT /google-ads/marja");
   expect(unseal(state.cookie)).toMatchObject({
     refreshToken,
+    website: "https://shop.example/",
     customerId: "1234567890",
     customerTimeZone: "UTC",
   });
@@ -54,4 +55,13 @@ it("preserves an invalid stored margin across account re-selection", async () =>
   await expect(alegeCont(accountSubmission())).rejects.toThrow("REDIRECT /google-ads/marja");
   expect(unseal(state.cookie)?.marginPct).toBeUndefined();
   expect(unseal(state.cookie)?.marginStatus).toBe("invalid");
+});
+
+it("keeps the store identity without carrying account financials into a new selection", async () => {
+  state.cookie = seal({ refreshToken: "oauth-refresh", website: "https://shop.example/", averageOrderValue: 500, goodsCost: 300 });
+  const { alegeCont } = await import("./actions");
+  await expect(alegeCont(accountSubmission())).rejects.toThrow("REDIRECT /google-ads/marja");
+  expect(unseal(state.cookie)?.website).toBe("https://shop.example/");
+  expect(unseal(state.cookie)?.averageOrderValue).toBeUndefined();
+  expect(unseal(state.cookie)?.goodsCost).toBeUndefined();
 });
