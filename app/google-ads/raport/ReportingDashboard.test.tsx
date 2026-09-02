@@ -26,6 +26,7 @@ const snapshot = {
     {
       productId: "bad",
       title: "Budget burner",
+      category: "Furniture",
       cost: 400,
       conversionValue: 400,
       conversions: 1,
@@ -310,7 +311,7 @@ it("aggregates real label financials without inventing KPI trends", () => {
 
   const losers = view.getByRole("region", { name: "Losers measured results" });
   expect(within(losers).getByText("400 RON")).toBeTruthy();
-  expect(within(losers).getByText("1 conversion")).toBeTruthy();
+  expect(within(losers).getByText("−320 RON")).toBeTruthy();
   expect(
     view.getByRole("region", { name: "Permanent product label results" })
       .children.length,
@@ -322,15 +323,15 @@ it("aggregates real label financials without inventing KPI trends", () => {
   expect(container.querySelectorAll("[data-kpi-sparkline]").length).toBe(7);
 });
 
-it("uses label chips and sortable table headers from the artifact", () => {
+it("uses only tabs as label filters and makes every table column sortable", () => {
   const { container } = render(
     <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
   );
   const view = within(container);
   const table = view.getByRole("region", { name: "All product performance" });
 
-  expect(view.getByRole("group", { name: "Filter by label" })).toBeTruthy();
-  fireEvent.click(view.getByRole("button", { name: /Performer/ }));
+  expect(view.queryByRole("group", { name: "Filter by label" })).toBeNull();
+  fireEvent.click(view.getByRole("tab", { name: /Winners/ }));
   expect(within(table).getByText("Growth product")).toBeTruthy();
   expect(within(table).queryByText("Budget burner")).toBeNull();
 
@@ -340,6 +341,9 @@ it("uses label chips and sortable table headers from the artifact", () => {
   expect(
     within(table).getByRole("columnheader", { name: /Conversions/ }).className,
   ).toContain("sorted");
+  expect(
+    within(table).getAllByRole("button", { name: /^Sort by / }),
+  ).toHaveLength(14);
 });
 
 it("matches the artifact product row details", () => {
@@ -376,4 +380,71 @@ it("keeps the demo disclosure inside the shell below the top bar", () => {
       .querySelector(".reportApp")
       ?.firstElementChild?.classList.contains("reportRail"),
   ).toBe(true);
+});
+
+it("matches the artifact topbar actions and retains them with breadcrumbs on mobile", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const topbar = container.querySelector(".reportTopbar") as HTMLElement;
+
+  expect(
+    within(topbar).getByRole("button", { name: "Export CSV" }),
+  ).toBeTruthy();
+  expect(
+    within(topbar).getByRole("link", { name: "Get the action plan" }),
+  ).toBeTruthy();
+  const css = container.querySelector("style")?.textContent ?? "";
+  expect(css).not.toContain(".crumbs{display:none}");
+  expect(css).toContain(".topbarActions");
+});
+
+it("uses exact measured losers, summary, footer, and product metadata fields", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const view = within(container);
+  const losers = view.getByRole("region", { name: "Losers measured results" });
+  for (const label of ["Products", "Budget consumed", "Loss produced"]) {
+    expect(within(losers).getByText(label)).toBeTruthy();
+  }
+
+  const summary = view.getByRole("region", { name: "Product summary" });
+  expect(
+    Array.from(summary.children).map(
+      (element) => element.firstElementChild?.textContent,
+    ),
+  ).toEqual([
+    "Products",
+    "Budget",
+    "Sales count",
+    "Revenue",
+    "Avg CPA",
+    "ROAS",
+    "Profit / loss",
+  ]);
+
+  const footer = view.getByRole("contentinfo", { name: "Product totals" });
+  expect(footer.querySelectorAll("[data-total]")).toHaveLength(5);
+  const firstRow = view
+    .getByRole("region", { name: "All product performance" })
+    .querySelector("tbody tr")!;
+  expect(firstRow.textContent).toContain("Furniture");
+  expect(firstRow.textContent).toContain("Price unavailable");
+});
+
+it("keeps KPI trend containers measurable when trend history is unavailable", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const kpis = within(container).getByRole("region", {
+    name: "Account key performance indicators",
+  });
+  expect(kpis.querySelectorAll("[data-kpi-trend='unavailable']")).toHaveLength(
+    7,
+  );
+  const css = container.querySelector("style")?.textContent ?? "";
+  expect(css).toContain("min-height:104px");
+  expect(css).toContain(".kpiTrend");
+  expect(css).toContain(".reportTable .stickId{position:sticky");
 });
