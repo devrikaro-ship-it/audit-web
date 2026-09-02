@@ -277,7 +277,7 @@ it("keeps the artifact responsive shell and sticky product columns", () => {
     "@media(max-width:1120px){.reportApp{grid-template-columns:1fr}",
   );
   expect(css).toContain(
-    "@media(max-width:720px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))",
+    ".kpis{grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}",
   );
 });
 
@@ -447,6 +447,26 @@ it("keeps KPI trend containers measurable when trend history is unavailable", ()
   expect(css).toContain("min-height:104px");
   expect(css).toContain(".kpiTrend");
   expect(css).toContain(".reportTable .stickId{position:sticky");
+});
+
+it("keeps sortable metric headers exposed beside both sticky columns on mobile", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const css = container.querySelector("style")?.textContent ?? "";
+
+  expect(css).toContain(
+    "@media(max-width:720px){.reportTable{--sticky-product-width:112px;--sticky-id-width:56px}",
+  );
+  expect(css).toContain(
+    ".reportTable .stickId{left:var(--sticky-product-width);width:var(--sticky-id-width)",
+  );
+  expect(css).toContain(
+    ".reportTable .stickProduct{width:var(--sticky-product-width);max-width:var(--sticky-product-width)}",
+  );
+  expect(css).toContain(
+    "width:var(--sticky-id-width);max-width:var(--sticky-id-width)",
+  );
 });
 
 it("derives profit and loss everywhere from the break-even ROAS margin", () => {
