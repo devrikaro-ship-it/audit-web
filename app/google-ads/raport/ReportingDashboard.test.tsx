@@ -66,7 +66,7 @@ it("renders live account KPIs and filters the complete product table", () => {
     />,
   );
   expect(screen.getByText("Below break-even")).toBeTruthy();
-  expect(screen.getByText("100")).toBeTruthy();
+  expect(screen.getAllByText("100").length).toBeGreaterThan(0);
   expect(screen.getByText("Budget burner")).toBeTruthy();
   expect(screen.getByText("Growth product")).toBeTruthy();
   fireEvent.change(screen.getByLabelText("Search products"), {
@@ -447,4 +447,127 @@ it("keeps KPI trend containers measurable when trend history is unavailable", ()
   expect(css).toContain("min-height:104px");
   expect(css).toContain(".kpiTrend");
   expect(css).toContain(".reportTable .stickId{position:sticky");
+});
+
+it("derives profit and loss everywhere from the break-even ROAS margin", () => {
+  const marginSnapshot = {
+    ...snapshot,
+    breakEvenRoas: 20,
+    reportProducts: [
+      {
+        productId: "margin-loss",
+        title: "Margin loss",
+        category: "Furniture",
+        cost: 2355,
+        conversionValue: 8125,
+        conversions: 10,
+        clicks: 100,
+        impressions: 1000,
+        catalogEligible: true,
+      },
+    ],
+  };
+  const { container } = render(
+    <ReportingDashboard snapshot={marginSnapshot} analysis={analysis} />,
+  );
+  const view = within(container);
+
+  expect(
+    within(view.getByRole("region", { name: "Product summary" })).getByText(
+      "−1.949 RON",
+    ),
+  ).toBeTruthy();
+  expect(
+    within(
+      view.getByRole("region", { name: "Permanent product label results" }),
+    ).getByText("−1.949 RON"),
+  ).toBeTruthy();
+  expect(
+    within(
+      view.getByRole("region", { name: "Real results by product label" }),
+    ).getByText("−1.949 RON"),
+  ).toBeTruthy();
+});
+
+it("uses the artifact label card structures and exact financial metrics", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const labels = container.querySelectorAll(".labelCard");
+  expect(labels).toHaveLength(4);
+  for (const card of labels) {
+    expect(card.querySelector(".labelDescription")?.textContent).toBeTruthy();
+    expect(
+      Array.from(card.querySelectorAll("[data-label-metric]")).map(
+        (metric) => metric.firstElementChild?.textContent,
+      ),
+    ).toEqual(["Products", "Spend", "Profit / Loss"]);
+  }
+
+  const financialCards = container.querySelectorAll(".financialCard");
+  expect(financialCards).toHaveLength(4);
+  for (const card of financialCards) {
+    expect(
+      Array.from(card.querySelectorAll(".resultMetric")).map(
+        (metric) => metric.firstElementChild?.textContent,
+      ),
+    ).toEqual([
+      "Budget",
+      "Sales",
+      "Revenue",
+      "Avg CPA",
+      "ROAS",
+      "Profit / Loss",
+    ]);
+  }
+});
+
+it("matches the artifact footer and normalizes raw Google category metadata", () => {
+  const rawCategorySnapshot = {
+    ...snapshot,
+    reportProducts: [
+      {
+        ...snapshot.reportProducts[0],
+        category: "productCategoryConstants/LEVEL1~436",
+      },
+    ],
+  };
+  const { container } = render(
+    <ReportingDashboard snapshot={rawCategorySnapshot} analysis={analysis} />,
+  );
+  const view = within(container);
+  const footer = view.getByRole("contentinfo", { name: "Product totals" });
+  expect(
+    Array.from(footer.querySelectorAll("[data-total]")).map(
+      (metric) => metric.childNodes[0]?.textContent?.trim(),
+    ),
+  ).toEqual([
+    "Filtered cost",
+    "Filtered sales",
+    "Filtered clicks",
+    "Filtered conversions",
+    "Filtered ROAS",
+  ]);
+  const row = view
+    .getByRole("region", { name: "All product performance" })
+    .querySelector("tbody tr")!;
+  expect(row.querySelector("img[data-product-thumbnail]")).toBeTruthy();
+  expect(row.textContent).toContain("Google category 436");
+  expect(row.textContent).toContain("Price unavailable");
+  expect(row.textContent?.match(/margin-loss/g) ?? []).toHaveLength(0);
+  expect(row.textContent?.match(/bad/g) ?? []).toHaveLength(1);
+});
+
+it("links the action button to the real optimization plan section", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const link = within(container).getByRole("link", {
+    name: "Get the action plan",
+  });
+  expect(link.getAttribute("href")).toBe("#optimization-plan");
+  expect(container.querySelector("#optimization-plan")).toBeTruthy();
+  expect(
+    container.querySelector("#optimization-plan input[type='range']"),
+  ).toBeTruthy();
 });
