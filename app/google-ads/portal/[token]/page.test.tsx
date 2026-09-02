@@ -26,6 +26,7 @@ const productAnalysis = {
 };
 
 const snapshot = {
+  generatedAt: "2026-08-27T08:00:00.000Z",
   website: "https://store.example",
   accountName: "Example Store",
   averageOrderValue: 500,
@@ -51,6 +52,10 @@ it("renders the complete selected report inside the client portal without a PDF 
   expect(html).toContain('data-report-dashboard="live"');
   expect(html).toContain('aria-label="All product performance"');
   expect(html).toContain("Current live report");
+  expect(html).toContain("August 2026");
+  expect(html).toContain("12-month average");
+  expect(html).not.toContain("1-month average");
+  expect(html).not.toContain("January 1970");
   expect(html).not.toContain("Open PDF");
   expect(html).not.toContain("application/pdf");
   expect(html).not.toContain("<iframe");

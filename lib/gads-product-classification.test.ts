@@ -22,4 +22,28 @@ describe("product reporting classifications", () => {
     });
     expect(rows.find((row) => row.productId === "winner")?.clicksPerSale).toBe(20);
   });
+
+  it("quantifies measured risk and estimated opportunity without mixing their sources", () => {
+    const rows = classifyReportProducts([
+      product({ productId: "loss", cost: 500, conversionValue: 500, conversions: 1 }),
+      product({ productId: "benchmark", cost: 500, conversionValue: 3000, conversions: 10, clicks: 200 }),
+      product({ productId: "potential", cost: 20, conversionValue: 500, conversions: 1, clicks: 5 }),
+    ], 5);
+
+    expect(rows.find((row) => row.productId === "loss")).toMatchObject({
+      financialImpact: 400,
+      financialImpactKind: "MEASURED_RISK",
+    });
+    expect(rows.find((row) => row.productId === "potential")).toMatchObject({
+      financialImpact: 375,
+      financialImpactKind: "ESTIMATED_OPPORTUNITY",
+    });
+  });
+
+  it("uses the full evidence window when displayed values are period averages", () => {
+    expect(classifyReportProducts([
+      product({ productId: "benchmark", impressions: 100, clicks: 20, conversions: 1, cost: 50, conversionValue: 500 }),
+      product({ productId: "potential", impressions: 100, clicks: 5, conversions: 0.5, cost: 20, conversionValue: 250 }),
+    ], 5, 12).find((row) => row.productId === "potential")?.label).toBe("UNDERPROMOTED_POTENTIAL");
+  });
 });

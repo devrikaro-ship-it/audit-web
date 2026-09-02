@@ -25,6 +25,8 @@ export type DeliveryCampaign = {
 };
 
 export type GadsReportSnapshot = {
+  generatedAt?: string;
+  evidenceMonths?: number;
   website: string;
   accountName: string;
   averageOrderValue: number;
@@ -39,6 +41,18 @@ export type GadsReportSnapshot = {
   productAnalysis?: ProductAnalysis;
   reportProducts?: ReportProductInput[];
 };
+
+export function normalizeReportProductsToPeriod(products: ReportProductInput[], periodCount: number): ReportProductInput[] {
+  if (!Number.isFinite(periodCount) || periodCount <= 0) throw new Error("periodCount must be positive");
+  return products.map((product) => ({
+    ...product,
+    cost: product.cost / periodCount,
+    conversionValue: product.conversionValue / periodCount,
+    conversions: product.conversions / periodCount,
+    clicks: product.clicks / periodCount,
+    impressions: product.impressions / periodCount,
+  }));
+}
 
 function signingSecret(): string {
   const value = process.env.GADS_REPORT_SIGNING_SECRET || process.env.GADS_SESSION_SECRET;
@@ -76,6 +90,8 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
   );
   const productAnalysisValid = item.productAnalysis === undefined || validProductAnalysis(item.productAnalysis);
   const reportProductsValid = item.reportProducts === undefined || (Array.isArray(item.reportProducts) && item.reportProducts.length <= 10000 && item.reportProducts.every(validReportProduct));
+  const generatedAtValid = item.generatedAt === undefined || (typeof item.generatedAt === "string" && Number.isFinite(Date.parse(item.generatedAt)));
+  const evidenceMonthsValid = item.evidenceMonths === undefined || (typeof item.evidenceMonths === "number" && Number.isInteger(item.evidenceMonths) && item.evidenceMonths > 0);
   return (
     typeof item.website === "string" &&
     typeof item.accountName === "string" &&
@@ -84,7 +100,7 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
     Array.isArray(item.losses) && item.losses.length <= 20 &&
     Array.isArray(item.opportunities) && item.opportunities.length <= 20 &&
     campaignsValid &&
-    productAnalysisValid && reportProductsValid
+    productAnalysisValid && reportProductsValid && generatedAtValid && evidenceMonthsValid
   );
 }
 

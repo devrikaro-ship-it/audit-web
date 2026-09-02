@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { openReportSnapshot, renderReportHtml, sealReportSnapshot, type GadsReportSnapshot } from "./gads-report-delivery";
+import { normalizeReportProductsToPeriod, openReportSnapshot, renderReportHtml, sealReportSnapshot, type GadsReportSnapshot } from "./gads-report-delivery";
 
 const snapshot: GadsReportSnapshot = {
   website: "https://fitn4ss.ro/",
@@ -39,10 +39,21 @@ describe("stored Google Ads report delivery", () => {
   it("round-trips complete account traffic and product reporting rows", () => {
     const expanded = {
       ...snapshot,
+      evidenceMonths: 12,
       current: { ...snapshot.current, clicks: 420, impressions: 9000 },
       reportProducts: [{ productId: "all", title: "All product", cost: 120, conversionValue: 600, conversions: 2, clicks: 50, impressions: 1000, catalogEligible: true }],
     };
     expect(openReportSnapshot(sealReportSnapshot(expanded))).toEqual(expanded);
+  });
+
+  it("normalizes every product metric to the same reporting period", () => {
+    expect(normalizeReportProductsToPeriod([{
+      productId: "all", title: "All product", cost: 1200, conversionValue: 6000,
+      conversions: 24, clicks: 600, impressions: 12000, catalogEligible: true,
+    }], 12)).toEqual([{
+      productId: "all", title: "All product", cost: 100, conversionValue: 500,
+      conversions: 2, clicks: 50, impressions: 1000, catalogEligible: true,
+    }]);
   });
 
   it("renders measured and simulated values with their status labels", () => {

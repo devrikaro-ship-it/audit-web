@@ -32,7 +32,7 @@ import { ReportSurface, reportGuards, runReportStep } from "./report-contract";
 import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 import { analyzeProducts, simulateOptimizedBudget } from "@/lib/gads-product-simulation";
 import ReportingDashboard from "./ReportingDashboard";
-import { sealReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
+import { normalizeReportProductsToPeriod, sealReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Raportul tau · Audit Google Ads Devrika" };
@@ -187,6 +187,8 @@ export default async function Raport() {
   const currentClicks = products.reduce((sum, product) => sum + product.clicks / 12, 0);
   const currentImpressions = products.reduce((sum, product) => sum + product.impressions / 12, 0);
   const snapshot: GadsReportSnapshot = {
+    generatedAt: new Date().toISOString(),
+    evidenceMonths: 12,
     website: session.website ?? "",
     accountName: session.customerName || "Your account",
     averageOrderValue: session.averageOrderValue ?? 0,
@@ -224,7 +226,10 @@ export default async function Raport() {
         status: campaign.status,
       })),
     productAnalysis: profitability,
-    reportProducts: products.map((product) => ({ ...product, catalogEligible: catalogComplete })),
+    reportProducts: normalizeReportProductsToPeriod(
+      products.map((product) => ({ ...product, catalogEligible: catalogComplete })),
+      12
+    ),
   };
   const signedReportSnapshot = sealReportSnapshot(snapshot);
 
@@ -345,7 +350,7 @@ export default async function Raport() {
         </ReportSurface>
 
         <ReportSurface id="profitability-simulator" when={reportGuards.catalogMap(products.length)} className="contents">
-          <ReportingDashboard snapshot={snapshot} />
+          <ReportingDashboard snapshot={snapshot} analysis={profitability} updatedAt={snapshot.generatedAt} periodLabel={`${snapshot.evidenceMonths}-month average · source: ${AUDIT_WINDOW_LABEL}`} />
         </ReportSurface>
 
         {/* ── Catalogul pe performanta ── */}

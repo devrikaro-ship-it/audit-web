@@ -1,5 +1,5 @@
 // LANG: pending full translation to EN
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
@@ -140,6 +140,8 @@ const reportPlaceholders = () => [
 
 describe("pagina de raport, randata", () => {
   beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-08-27T08:00:00Z"));
     stareTracking.ok = true;
     stareTracking.reasons = [];
     sourceState.primaryCatalogFails = false;
@@ -159,6 +161,8 @@ describe("pagina de raport, randata", () => {
     emptyCatalog = false;
     catalogReadCount = 0;
   });
+
+  afterEach(() => vi.useRealTimers());
 
   it.each([
     ["missing", "/google-ads/connect?eroare=sesiune"],
@@ -228,7 +232,7 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain('data-report-surface="headline-summary"');
     const visibleText = h.replace(/<[^>]*>/g, " ");
     expect(h).toContain(AUDIT_WINDOW_LABEL);
-    expect(visibleText).toContain("Read-only audit · 12 months");
+    expect(visibleText).toContain(`Read-only audit · 12-month average · source: ${AUDIT_WINDOW_LABEL}`);
   });
 
   it("are amandoua sectiunile, si banda de sumar deasupra lor", async () => {
@@ -379,6 +383,7 @@ describe("pagina de raport, randata", () => {
     const h = await html();
     expect(h).toContain('data-report-dashboard="live"');
     expect(h).toContain('class="kpis"');
+    expect(h).not.toContain("Current report");
   });
 
   it("exercises account, simulator, and contact availability branches", async () => {

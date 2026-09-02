@@ -13,6 +13,7 @@
     "app/google-ads/portal/[token]/page.tsx",
     "app/google-ads/raport/CatalogPePerformanta.tsx",
     "app/google-ads/raport/ContactForm.tsx",
+    "app/google-ads/raport/ProfitabilitySimulator.tsx",
     "app/google-ads/raport/ReportingDashboard.tsx",
     "app/google-ads/raport/actions.ts",
     "app/google-ads/raport/page.tsx",
