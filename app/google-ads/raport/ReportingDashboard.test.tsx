@@ -4,13 +4,45 @@ import { expect, it } from "vitest";
 import ReportingDashboard from "./ReportingDashboard";
 
 const snapshot = {
-  website: "https://store.example", accountName: "Example Store", averageOrderValue: 300, goodsCost: 180,
-  breakEvenCpa: 100, breakEvenRoas: 5,
-  current: { spend: 500, revenue: 1500, orders: 5, cpa: 100, roas: 3, clicks: 100, impressions: 5000 },
-  optimized: { spend: 500, revenue: 3000, orders: 10, cpa: 50, roas: 6 }, losses: [], opportunities: [],
+  website: "https://store.example",
+  accountName: "Example Store",
+  averageOrderValue: 300,
+  goodsCost: 180,
+  breakEvenCpa: 100,
+  breakEvenRoas: 5,
+  current: {
+    spend: 500,
+    revenue: 1500,
+    orders: 5,
+    cpa: 100,
+    roas: 3,
+    clicks: 100,
+    impressions: 5000,
+  },
+  optimized: { spend: 500, revenue: 3000, orders: 10, cpa: 50, roas: 6 },
+  losses: [],
+  opportunities: [],
   reportProducts: [
-    { productId: "bad", title: "Budget burner", cost: 400, conversionValue: 400, conversions: 1, clicks: 80, impressions: 3000, catalogEligible: true },
-    { productId: "good", title: "Growth product", cost: 100, conversionValue: 1100, conversions: 4, clicks: 20, impressions: 2000, catalogEligible: true },
+    {
+      productId: "bad",
+      title: "Budget burner",
+      cost: 400,
+      conversionValue: 400,
+      conversions: 1,
+      clicks: 80,
+      impressions: 3000,
+      catalogEligible: true,
+    },
+    {
+      productId: "good",
+      title: "Growth product",
+      cost: 100,
+      conversionValue: 1100,
+      conversions: 4,
+      clicks: 20,
+      impressions: 2000,
+      catalogEligible: true,
+    },
   ],
 };
 
@@ -25,76 +57,130 @@ const analysis = {
 };
 
 it("renders live account KPIs and filters the complete product table", () => {
-  render(<ReportingDashboard snapshot={snapshot} analysis={analysis} updatedAt="2026-08-27T08:00:00Z" />);
+  render(
+    <ReportingDashboard
+      snapshot={snapshot}
+      analysis={analysis}
+      updatedAt="2026-08-27T08:00:00Z"
+    />,
+  );
   expect(screen.getByText("Below break-even")).toBeTruthy();
   expect(screen.getByText("100")).toBeTruthy();
   expect(screen.getByText("Budget burner")).toBeTruthy();
   expect(screen.getByText("Growth product")).toBeTruthy();
-  fireEvent.change(screen.getByLabelText("Search products"), { target: { value: "Growth" } });
+  fireEvent.change(screen.getByLabelText("Search products"), {
+    target: { value: "Growth" },
+  });
   expect(screen.queryByText("Budget burner")).toBeNull();
   expect(screen.getByText("Growth product")).toBeTruthy();
 });
 
 it("keeps the simulated budget tool below the measured dashboard", () => {
-  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
   const view = within(container);
 
-  const measuredTable = view.getByRole("region", { name: "All product performance" });
-  const simulator = view.getByRole("region", { name: "Simularea alocării bugetului" });
+  const measuredTable = view.getByRole("region", {
+    name: "All product performance",
+  });
+  const simulator = view.getByRole("region", {
+    name: "Simularea alocării bugetului",
+  });
 
-  expect(measuredTable.compareDocumentPosition(simulator) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-  expect(view.getAllByText("Simulare viitoare", { selector: ".source.simulated" }).length).toBeGreaterThan(0);
+  expect(
+    measuredTable.compareDocumentPosition(simulator) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
+  expect(
+    view.getAllByText("Simulare viitoare", { selector: ".source.simulated" })
+      .length,
+  ).toBeGreaterThan(0);
 });
 
 it("shows product IDs and labels financial impact by evidence type", () => {
-  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
-  const table = within(container).getByRole("region", { name: "All product performance" });
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const table = within(container).getByRole("region", {
+    name: "All product performance",
+  });
 
-  expect(within(table).getByRole("columnheader", { name: "Item ID" })).toBeTruthy();
-  expect(within(table).getByRole("columnheader", { name: "Financial impact" })).toBeTruthy();
+  expect(
+    within(table).getByRole("columnheader", { name: "Item ID" }),
+  ).toBeTruthy();
+  expect(
+    within(table).getByRole("columnheader", { name: "Financial impact" }),
+  ).toBeTruthy();
   expect(within(table).getByText("Measured risk")).toBeTruthy();
 });
 
 it("starts in action priority order and sorts by every numeric table metric", () => {
-  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
   const view = within(container);
   const table = view.getByRole("region", { name: "All product performance" });
   const sort = view.getByLabelText("Sort products");
 
-  expect(within(table).getAllByRole("row")[1].textContent).toContain("Budget burner");
-  expect(within(sort).getAllByRole("option").map((option) => option.getAttribute("value"))).toEqual([
-    "priority", "impressions", "clicks", "cost", "conversions", "conversionRate", "clicksPerSale",
-    "conversionValue", "cpa", "roas", "profitabilityGap", "financialImpact",
+  expect(within(table).getAllByRole("row")[1].textContent).toContain(
+    "Budget burner",
+  );
+  expect(
+    within(sort)
+      .getAllByRole("option")
+      .map((option) => option.getAttribute("value")),
+  ).toEqual([
+    "priority",
+    "impressions",
+    "clicks",
+    "cost",
+    "conversions",
+    "conversionRate",
+    "clicksPerSale",
+    "conversionValue",
+    "cpa",
+    "roas",
+    "profitabilityGap",
+    "financialImpact",
   ]);
 
   fireEvent.change(sort, { target: { value: "conversions" } });
-  expect(within(table).getAllByRole("row")[1].textContent).toContain("Growth product");
+  expect(within(table).getAllByRole("row")[1].textContent).toContain(
+    "Growth product",
+  );
 });
 
 it("offers only signed reporting periods and preserves the selected report", () => {
-  const { container } = render(<ReportingDashboard
-    snapshot={snapshot}
-    analysis={analysis}
-    periodLabel="August 2026"
-    periodSelector={{
-      action: "/google-ads/portal/safe-token",
-      selected: "august",
-      options: [
-        { value: "august", label: "August 2026" },
-        { value: "july", label: "July 2026" },
-      ],
-    }}
-  />);
+  const { container } = render(
+    <ReportingDashboard
+      snapshot={snapshot}
+      analysis={analysis}
+      periodLabel="August 2026"
+      periodSelector={{
+        action: "/google-ads/portal/safe-token",
+        selected: "august",
+        options: [
+          { value: "august", label: "August 2026" },
+          { value: "july", label: "July 2026" },
+        ],
+      }}
+    />,
+  );
   const view = within(container);
 
   expect(view.getAllByText(/August 2026/).length).toBeGreaterThan(0);
-  expect((view.getByLabelText("Reporting period") as HTMLSelectElement).value).toBe("august");
+  expect(
+    (view.getByLabelText("Reporting period") as HTMLSelectElement).value,
+  ).toBe("august");
   expect(view.getByRole("button", { name: "Apply period" })).toBeTruthy();
   expect(view.queryByRole("option", { name: "June 2026" })).toBeNull();
 });
 
 it("proves every KPI, label filter, empty state, and scroll-table semantics", () => {
-  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
   const view = within(container);
 
   for (const value of ["500 RON", "1.500 RON", "100", "5", "5.00%", "3.00×"]) {
@@ -102,54 +188,192 @@ it("proves every KPI, label filter, empty state, and scroll-table semantics", ()
   }
   const table = view.getByRole("region", { name: "All product performance" });
   expect(table.getAttribute("tabindex")).toBe("0");
-  expect(within(table).getByRole("columnheader", { name: "Product" })).toBeTruthy();
+  expect(
+    within(table).getByRole("columnheader", { name: "Product" }),
+  ).toBeTruthy();
 
-  fireEvent.change(view.getByLabelText("Filter products"), { target: { value: "PERFORMER" } });
+  fireEvent.change(view.getByLabelText("Filter products"), {
+    target: { value: "PERFORMER" },
+  });
   expect(within(table).queryByText("Budget burner")).toBeNull();
   expect(within(table).getByText("Growth product")).toBeTruthy();
 
-  fireEvent.change(view.getByLabelText("Search products"), { target: { value: "missing product" } });
-  expect(within(table).getByText("No products match these filters.")).toBeTruthy();
+  fireEvent.change(view.getByLabelText("Search products"), {
+    target: { value: "missing product" },
+  });
+  expect(
+    within(table).getByText("No products match these filters."),
+  ).toBeTruthy();
 });
 
 it("uses a compact KPI grid instead of a horizontal KPI strip on mobile", () => {
-  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
-  expect(container.querySelector("style")?.textContent).toContain(".kpis{grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}");
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  expect(container.querySelector("style")?.textContent).toContain(
+    ".kpis{grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}",
+  );
 });
 
 it("matches the approved reporting artifact structure", () => {
-  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
   const artifact = container.querySelector("[data-report-dashboard='live']")!;
   const view = within(artifact as HTMLElement);
 
-  expect(view.getByRole("navigation", { name: "Report navigation" })).toBeTruthy();
+  expect(
+    view.getByRole("navigation", { name: "Report navigation" }),
+  ).toBeTruthy();
   expect(view.getByText("Ads reporting")).toBeTruthy();
   expect(view.getByRole("banner")).toBeTruthy();
-  expect(view.getByRole("heading", { name: "Product profitability" })).toBeTruthy();
-  expect(view.getByRole("region", { name: "Profitability targets" })).toBeTruthy();
-  expect(view.getByRole("region", { name: "Account key performance indicators" })).toBeTruthy();
+  expect(
+    view.getByRole("heading", { name: "Product profitability" }),
+  ).toBeTruthy();
+  expect(
+    view.getByRole("region", { name: "Profitability targets" }),
+  ).toBeTruthy();
+  expect(
+    view.getByRole("region", { name: "Account key performance indicators" }),
+  ).toBeTruthy();
   expect(view.getByRole("tablist", { name: "Report views" })).toBeTruthy();
-  expect(view.getByRole("region", { name: "Product performance table" })).toBeTruthy();
-  expect(view.getByText("Scroll horizontally for every column · product and item ID stay pinned")).toBeTruthy();
+  expect(
+    view.getByRole("region", { name: "Product performance table" }),
+  ).toBeTruthy();
+  expect(
+    view.getByText(
+      "Scroll horizontally for every column · product and item ID stay pinned",
+    ),
+  ).toBeTruthy();
 });
 
 it("uses artifact tabs as working product label filters", () => {
-  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
   const view = within(container);
   const table = view.getByRole("region", { name: "All product performance" });
 
   fireEvent.click(view.getByRole("tab", { name: /Losers/ }));
   expect(within(table).getByText("Budget burner")).toBeTruthy();
   expect(within(table).queryByText("Growth product")).toBeNull();
-  expect(view.getByRole("tab", { name: /Losers/ }).getAttribute("aria-selected")).toBe("true");
+  expect(
+    view.getByRole("tab", { name: /Losers/ }).getAttribute("aria-selected"),
+  ).toBe("true");
 });
 
 it("keeps the artifact responsive shell and sticky product columns", () => {
-  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
   const css = container.querySelector("style")?.textContent ?? "";
 
-  expect(css).toContain(".reportApp{display:grid;grid-template-columns:232px minmax(0,1fr)");
+  expect(css).toContain(
+    ".reportApp{display:grid;grid-template-columns:232px minmax(0,1fr)",
+  );
   expect(css).toContain(".reportTable .stickProduct{position:sticky;left:0");
-  expect(css).toContain("@media(max-width:1120px){.reportApp{grid-template-columns:1fr}");
-  expect(css).toContain("@media(max-width:720px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))");
+  expect(css).toContain(
+    "@media(max-width:1120px){.reportApp{grid-template-columns:1fr}",
+  );
+  expect(css).toContain(
+    "@media(max-width:720px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))",
+  );
+});
+
+it("renders every approved major block in the exact artifact order", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const artifact = container.querySelector("[data-report-dashboard='live']")!;
+  const orderedSections = Array.from(
+    artifact.querySelectorAll("[data-dashboard-block]"),
+  ).map((element) => element.getAttribute("data-dashboard-block"));
+
+  expect(orderedSections).toEqual([
+    "targets",
+    "losers",
+    "persistent-labels",
+    "kpis",
+    "budget-breakdown",
+    "tabs",
+    "products",
+  ]);
+});
+
+it("aggregates real label financials without inventing KPI trends", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const view = within(
+    container.querySelector("[data-report-dashboard='live']") as HTMLElement,
+  );
+
+  const losers = view.getByRole("region", { name: "Losers measured results" });
+  expect(within(losers).getByText("400 RON")).toBeTruthy();
+  expect(within(losers).getByText("1 conversion")).toBeTruthy();
+  expect(
+    view.getByRole("region", { name: "Permanent product label results" })
+      .children.length,
+  ).toBe(4);
+  expect(
+    view.getByRole("region", { name: "Real results by product label" }),
+  ).toBeTruthy();
+  expect(view.queryByText(/versus previous/i)).toBeNull();
+  expect(container.querySelectorAll("[data-kpi-sparkline]").length).toBe(7);
+});
+
+it("uses label chips and sortable table headers from the artifact", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const view = within(container);
+  const table = view.getByRole("region", { name: "All product performance" });
+
+  expect(view.getByRole("group", { name: "Filter by label" })).toBeTruthy();
+  fireEvent.click(view.getByRole("button", { name: /Performer/ }));
+  expect(within(table).getByText("Growth product")).toBeTruthy();
+  expect(within(table).queryByText("Budget burner")).toBeNull();
+
+  fireEvent.click(
+    within(table).getByRole("button", { name: "Sort by conversions" }),
+  );
+  expect(
+    within(table).getByRole("columnheader", { name: /Conversions/ }).className,
+  ).toContain("sorted");
+});
+
+it("matches the artifact product row details", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+  const view = within(container);
+  const row = within(
+    view.getByRole("region", { name: "All product performance" }),
+  ).getAllByRole("row")[1];
+
+  expect(
+    within(row).getByRole("button", { name: "Copy item ID bad" }),
+  ).toBeTruthy();
+  expect(row.querySelector("[data-product-thumbnail]")).toBeTruthy();
+  expect(row.querySelector("[data-roas-bar]")).toBeTruthy();
+});
+
+it("keeps the demo disclosure inside the shell below the top bar", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} demo />,
+  );
+  const shell = container.querySelector(".reportMain")!;
+  const topbar = shell.querySelector(".reportTopbar")!;
+  const banner = within(shell as HTMLElement)
+    .getByText(/figures below are simulated/)
+    .closest(".demoBar")!;
+
+  expect(
+    topbar.compareDocumentPosition(banner) & Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
+  expect(
+    container
+      .querySelector(".reportApp")
+      ?.firstElementChild?.classList.contains("reportRail"),
+  ).toBe(true);
 });
