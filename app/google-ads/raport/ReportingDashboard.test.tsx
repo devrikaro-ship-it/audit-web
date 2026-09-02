@@ -116,3 +116,40 @@ it("uses a compact KPI grid instead of a horizontal KPI strip on mobile", () => 
   const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
   expect(container.querySelector("style")?.textContent).toContain(".kpis{grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}");
 });
+
+it("matches the approved reporting artifact structure", () => {
+  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
+  const artifact = container.querySelector("[data-report-dashboard='live']")!;
+  const view = within(artifact as HTMLElement);
+
+  expect(view.getByRole("navigation", { name: "Report navigation" })).toBeTruthy();
+  expect(view.getByText("Ads reporting")).toBeTruthy();
+  expect(view.getByRole("banner")).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Product profitability" })).toBeTruthy();
+  expect(view.getByRole("region", { name: "Profitability targets" })).toBeTruthy();
+  expect(view.getByRole("region", { name: "Account key performance indicators" })).toBeTruthy();
+  expect(view.getByRole("tablist", { name: "Report views" })).toBeTruthy();
+  expect(view.getByRole("region", { name: "Product performance table" })).toBeTruthy();
+  expect(view.getByText("Scroll horizontally for every column · product and item ID stay pinned")).toBeTruthy();
+});
+
+it("uses artifact tabs as working product label filters", () => {
+  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
+  const view = within(container);
+  const table = view.getByRole("region", { name: "All product performance" });
+
+  fireEvent.click(view.getByRole("tab", { name: /Losers/ }));
+  expect(within(table).getByText("Budget burner")).toBeTruthy();
+  expect(within(table).queryByText("Growth product")).toBeNull();
+  expect(view.getByRole("tab", { name: /Losers/ }).getAttribute("aria-selected")).toBe("true");
+});
+
+it("keeps the artifact responsive shell and sticky product columns", () => {
+  const { container } = render(<ReportingDashboard snapshot={snapshot} analysis={analysis} />);
+  const css = container.querySelector("style")?.textContent ?? "";
+
+  expect(css).toContain(".reportApp{display:grid;grid-template-columns:232px minmax(0,1fr)");
+  expect(css).toContain(".reportTable .stickProduct{position:sticky;left:0");
+  expect(css).toContain("@media(max-width:1120px){.reportApp{grid-template-columns:1fr}");
+  expect(css).toContain("@media(max-width:720px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))");
+});
