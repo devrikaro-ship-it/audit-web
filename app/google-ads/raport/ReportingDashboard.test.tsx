@@ -522,6 +522,29 @@ it("uses the artifact label card structures and exact financial metrics", () => 
   }
 });
 
+it("keeps artifact card titles, order, and compact desktop and mobile layout", () => {
+  const { container } = render(
+    <ReportingDashboard snapshot={snapshot} analysis={analysis} />,
+  );
+
+  expect(
+    Array.from(container.querySelectorAll(".labelCard .labelIntro strong")).map(
+      (title) => title.textContent,
+    ),
+  ).toEqual(["Winners", "Opportunities", "Unpromoted", "Losers"]);
+  expect(
+    Array.from(container.querySelectorAll(".financialCard .financialHead .productLabel")).map(
+      (title) => title.textContent?.trim(),
+    ),
+  ).toEqual(["Winners", "Opportunities", "Losers", "Unpromoted"]);
+
+  const css = container.querySelector("style")?.textContent ?? "";
+  expect(css).toContain(".labelCard{min-height:85px");
+  expect(css).toMatch(
+    /@media\(max-width:720px\)\{[\s\S]*?\.labelCard\{min-height:100px\}/,
+  );
+});
+
 it("matches the artifact footer and normalizes raw Google category metadata", () => {
   const rawCategorySnapshot = {
     ...snapshot,
