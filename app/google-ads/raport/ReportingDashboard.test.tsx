@@ -538,9 +538,27 @@ it("keeps artifact card titles, order, and compact desktop and mobile layout", (
     ),
   ).toEqual(["Winners", "Opportunities", "Losers", "Unpromoted"]);
 
-  const css = container.querySelector("style")?.textContent ?? "";
-  expect(css).toContain(".labelCard{min-height:85px");
-  expect(css).toMatch(
+  const persistentCard = container.querySelector<HTMLElement>(".labelCard")!;
+  const persistentIntro = persistentCard.querySelector<HTMLElement>(
+    ".labelIntro",
+  )!;
+  const persistentMetric = persistentCard.querySelector<HTMLElement>(
+    ".labelNumbers .resultMetric",
+  )!;
+  const financialCard = container.querySelector<HTMLElement>(".financialCard")!;
+  const financialHead = financialCard.querySelector<HTMLElement>(
+    ".financialHead",
+  )!;
+  const financialMetric = financialCard.querySelector<HTMLElement>(
+    ".financialMetrics .resultMetric",
+  )!;
+
+  expect(window.getComputedStyle(persistentCard).minHeight).toBe("85px");
+  expect(window.getComputedStyle(persistentIntro).minHeight).toBe("40px");
+  expect(window.getComputedStyle(persistentMetric).paddingTop).toBe("6px");
+  expect(window.getComputedStyle(financialHead).paddingTop).toBe("6px");
+  expect(window.getComputedStyle(financialMetric).paddingTop).toBe("9px");
+  expect(container.querySelector("style")?.textContent).toMatch(
     /@media\(max-width:720px\)\{[\s\S]*?\.labelCard\{min-height:100px\}/,
   );
 });
