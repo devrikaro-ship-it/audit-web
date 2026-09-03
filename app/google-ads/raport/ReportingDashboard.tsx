@@ -1,1126 +1,729 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Image from "next/image";
-import {
-  classifyReportProducts,
-  type ProductPerformanceLabel,
-} from "@/lib/gads-product-classification";
-import type { GadsReportSnapshot } from "@/lib/gads-report-delivery";
-import type { ProductAnalysis } from "@/lib/gads-product-simulation";
-import ProfitabilitySimulator from "./ProfitabilitySimulator";
+import { useState, type KeyboardEvent, type ReactElement } from "react";
+import type {
+  GoogleAdsReportV2Conclusion,
+  GoogleAdsReportV2Group,
+  GoogleAdsReportV2ProductRow,
+  GoogleAdsReportV2ViewModel,
+  ProfitOrLossValue,
+  ReportMetric,
+  ReportPeriodRow,
+  V2ProductLabel,
+} from "@/lib/gads-report-metrics";
 
-const money = (value: number) =>
-  `${Math.round(value).toLocaleString("ro-RO")} RON`;
-const number = (value: number) => Math.round(value).toLocaleString("ro-RO");
-const ratio = (value: number | null) =>
-  value === null ? "—" : `${value.toFixed(2)}×`;
-const percent = (value: number | null) =>
-  value === null ? "—" : `${(value * 100).toFixed(2)}%`;
-const signedMoney = (value: number) =>
-  `${value >= 0 ? "+" : "−"}${money(Math.abs(value))}`;
-const categoryText = (category?: string) => {
-  if (!category) return "Category unavailable";
-  const rawGoogleCategory = category.match(
-    /^productCategoryConstants\/(?:LEVEL\d+~)?(.+)$/,
-  );
-  return rawGoogleCategory
-    ? `Google category ${rawGoogleCategory[1]}`
-    : category;
-};
-const productThumbnail = (title: string) => {
-  const initial = title.trim().charAt(0).toUpperCase() || "P";
-  return `data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#eef3fb"/><circle cx="32" cy="26" r="15" fill="#d8e4f6"/><path d="M15 55c4-12 12-18 17-18s13 6 17 18" fill="#c2d4ee"/><text x="32" y="33" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#0b57d0">${initial}</text></svg>`,
-  )}`;
-};
-const labelText: Record<ProductPerformanceLabel, string> = {
-  LOSS_MAKER: "Loss maker",
-  NOT_PROMOTED: "Not promoted",
-  UNDERPROMOTED_POTENTIAL: "Underpromoted potential",
-  PERFORMER: "Performer",
-  INSUFFICIENT_DATA: "Insufficient data",
-};
-const labelCardText: Record<
-  ProductPerformanceLabel,
-  { title: string; description: string }
-> = {
-  LOSS_MAKER: {
-    title: "Losers",
-    description: "Products losing money in ads",
-  },
-  NOT_PROMOTED: {
-    title: "Unpromoted",
-    description: "Products without enough promotion data",
-  },
-  UNDERPROMOTED_POTENTIAL: {
-    title: "Opportunities",
-    description: "High-profit products with too little traffic",
-  },
-  PERFORMER: {
-    title: "Winners",
-    description: "Products that are profitable",
-  },
-  INSUFFICIENT_DATA: {
-    title: "Insufficient data",
-    description: "Products without enough evidence to classify",
-  },
-};
-const tabs: { value: ProductPerformanceLabel | "ALL"; label: string }[] = [
-  { value: "ALL", label: "All products" },
-  { value: "LOSS_MAKER", label: "Losers" },
-  { value: "UNDERPROMOTED_POTENTIAL", label: "Opportunities" },
-  { value: "NOT_PROMOTED", label: "Unpromoted" },
-  { value: "PERFORMER", label: "Winners" },
-];
-type SortMetric =
-  | "priority"
-  | "title"
-  | "productId"
-  | "label"
-  | "impressions"
-  | "clicks"
-  | "cost"
-  | "conversions"
-  | "conversionRate"
-  | "clicksPerSale"
-  | "conversionValue"
-  | "cpa"
-  | "roas"
-  | "profitabilityGap"
-  | "financialImpact";
-type PeriodSelector = {
+export type PeriodSelector = {
   action: string;
   selected: string;
   options: { value: string; label: string }[];
 };
-const sortOptions: { value: SortMetric; label: string }[] = [
-  ["priority", "Sort by action priority"],
-  ["impressions", "Sort by impressions"],
-  ["clicks", "Sort by clicks"],
-  ["cost", "Sort by cost"],
-  ["conversions", "Sort by conversions"],
-  ["conversionRate", "Sort by conversion rate"],
-  ["clicksPerSale", "Sort by clicks per sale"],
-  ["conversionValue", "Sort by sales"],
-  ["cpa", "Sort by CPA"],
-  ["roas", "Sort by ROAS"],
-  ["profitabilityGap", "Sort by ROAS gap"],
-  ["financialImpact", "Sort by financial impact"],
-].map(([value, label]) => ({ value: value as SortMetric, label }));
 
-export default function ReportingDashboard({
-  snapshot,
-  analysis,
-  updatedAt,
-  periodLabel = "12 months",
-  periodSelector,
-  demo = false,
-}: {
-  snapshot: GadsReportSnapshot;
-  analysis: ProductAnalysis;
-  updatedAt?: string;
-  periodLabel?: string;
+type ReportingDashboardProps = {
+  report: GoogleAdsReportV2ViewModel;
   periodSelector?: PeriodSelector;
   demo?: boolean;
-}) {
-  const [query, setQuery] = useState("");
-  const [label, setLabel] = useState<ProductPerformanceLabel | "ALL">("ALL");
-  const [sort, setSort] = useState<SortMetric>("priority");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-  const products = useMemo(() => {
-    const legacy = snapshot.productAnalysis
-      ? [
-          ...snapshot.productAnalysis.losses,
-          ...snapshot.productAnalysis.opportunities,
-        ]
-      : [];
-    return classifyReportProducts(
-      snapshot.reportProducts ?? legacy,
-      snapshot.breakEvenRoas,
-      snapshot.evidenceMonths ?? 1,
-    );
-  }, [snapshot]);
-  const visible = useMemo(
-    () =>
-      products
-        .filter(
-          (row) =>
-            (label === "ALL" || row.label === label) &&
-            `${row.title} ${row.productId}`
-              .toLowerCase()
-              .includes(query.toLowerCase()),
-        )
-        .sort((a, b) => {
-          if (sort === "priority") return 0;
-          const left = a[sort];
-          const right = b[sort];
-          const compared =
-            typeof left === "string" && typeof right === "string"
-              ? left.localeCompare(right)
-              : Number(left ?? -Infinity) - Number(right ?? -Infinity);
-          return sortDirection === "asc" ? compared : -compared;
-        }),
-    [products, query, label, sort, sortDirection],
-  );
-  const clicks = snapshot.current.clicks;
-  const conversionRate =
-    clicks && clicks > 0 ? snapshot.current.orders / clicks : null;
-  const profitable = snapshot.current.roas >= snapshot.breakEvenRoas;
-  const counts = Object.fromEntries(
-    tabs.map((tab) => [
-      tab.value,
-      tab.value === "ALL"
-        ? products.length
-        : products.filter((row) => row.label === tab.value).length,
-    ]),
-  );
-  const shownCost = visible.reduce((sum, row) => sum + row.cost, 0);
-  const shownSales = visible.reduce((sum, row) => sum + row.conversionValue, 0);
-  const shownConversions = visible.reduce(
-    (sum, row) => sum + row.conversions,
-    0,
-  );
-  const grossMargin = snapshot.breakEvenRoas > 0 ? 1 / snapshot.breakEvenRoas : 0;
-  const shownProfit = shownSales * grossMargin - shownCost;
-  const labelRows = (value: ProductPerformanceLabel) =>
-    products.filter((row) => row.label === value);
-  const labelTotals = (value: ProductPerformanceLabel) => {
-    const rows = labelRows(value);
-    const cost = rows.reduce((sum, row) => sum + row.cost, 0);
-    const sales = rows.reduce((sum, row) => sum + row.conversionValue, 0);
-    const conversions = rows.reduce((sum, row) => sum + row.conversions, 0);
-    const clicks = rows.reduce((sum, row) => sum + row.clicks, 0);
-    return {
-      rows,
-      cost,
-      sales,
-      conversions,
-      clicks,
-      roas: cost > 0 ? sales / cost : null,
-      profit: sales * grossMargin - cost,
-    };
-  };
-  const losers = labelTotals("LOSS_MAKER");
-  const lossProduced = losers.rows.reduce(
-    (sum, row) => sum + (row.financialImpact ?? 0),
-    0,
-  );
-  const setTableSort = (metric: SortMetric) => {
-    if (metric === sort)
-      setSortDirection((value) => (value === "desc" ? "asc" : "desc"));
-    else {
-      setSort(metric);
-      setSortDirection(
-        metric === "title" || metric === "productId" || metric === "label"
-          ? "asc"
-          : "desc",
-      );
+};
+
+type GroupPresentation = {
+  tabLabel: string;
+  metricLabel: string;
+  resultHeader: string;
+  tone: "loss" | "neutral" | "opportunity" | "profit";
+};
+
+const GROUP_PRESENTATION: Record<V2ProductLabel, GroupPresentation> = {
+  LOSS_MAKER: {
+    tabLabel: "Consumă buget",
+    metricLabel: "Pierdere totală",
+    resultHeader: "Pierdere",
+    tone: "loss",
+  },
+  NOT_PROMOTED: {
+    tabLabel: "Insuficient promovate",
+    metricLabel: "Produse valide",
+    resultHeader: "Stare",
+    tone: "neutral",
+  },
+  UNDERPROMOTED_POTENTIAL: {
+    tabLabel: "Au potențial",
+    metricLabel: "Volum vanzari ratat",
+    resultHeader: "Potențial",
+    tone: "opportunity",
+  },
+  PERFORMER: {
+    tabLabel: "Profitabile",
+    metricLabel: "Profit total",
+    resultHeader: "Profit",
+    tone: "profit",
+  },
+};
+
+const CONCLUSION_PRESENTATION: Record<
+  GoogleAdsReportV2Conclusion["key"],
+  { label: string; tone: GroupPresentation["tone"] }
+> = {
+  MEASURED_PRODUCT_LOSS: { label: "Pierdere măsurată", tone: "loss" },
+  SIMULATED_MISSED_SALES: { label: "Vânzări ratate", tone: "opportunity" },
+  NOT_PROMOTED_PRODUCTS: {
+    label: "Produse insuficient promovate",
+    tone: "neutral",
+  },
+};
+
+const PERIOD_PRESENTATION = {
+  SELECTED: { label: "Perioada selectată", unavailableLabel: "Perioada selectată" },
+  PREVIOUS: { label: "Perioada anterioară", unavailableLabel: "Perioada anterioară" },
+  PREVIOUS_YEAR: {
+    label: "Aceeași perioadă anul trecut",
+    unavailableLabel: "Aceeași perioadă anul trecut",
+  },
+} as const;
+
+const formatNumber = (value: number, maximumFractionDigits = 0): string =>
+  new Intl.NumberFormat("ro-RO", { maximumFractionDigits }).format(value);
+
+const formatRatio = (value: number): string =>
+  `${formatNumber(value, 2)}×`;
+
+const formatMoney = (
+  value: number,
+  currency: ReportMetric<string>,
+): string => {
+  if (currency.status === "UNAVAILABLE") {
+    return `${formatNumber(value)} · Monedă indisponibilă`;
+  }
+  return new Intl.NumberFormat("ro-RO", {
+    style: "currency",
+    currency: currency.value,
+    maximumFractionDigits: 0,
+  }).format(value);
+};
+
+const metricRawValue = (metric: ReportMetric<number>): string =>
+  metric.status === "AVAILABLE" ? String(metric.value) : "unavailable";
+
+const formatDateRange = (from: string, to: string): string => {
+  const date = (value: string) => new Date(`${value}T12:00:00Z`);
+  const start = date(from);
+  const end = date(to);
+  const sameMonth =
+    start.getUTCMonth() === end.getUTCMonth() &&
+    start.getUTCFullYear() === end.getUTCFullYear();
+  const day = new Intl.DateTimeFormat("ro-RO", {
+    day: "numeric",
+    timeZone: "UTC",
+  });
+  const monthYear = new Intl.DateTimeFormat("ro-RO", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  const full = new Intl.DateTimeFormat("ro-RO", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  return sameMonth
+    ? `${day.format(start)}–${day.format(end)} ${monthYear.format(end)}`
+    : `${full.format(start)} – ${full.format(end)}`;
+};
+
+const groupDomId = (key: V2ProductLabel): string =>
+  key.toLowerCase().replaceAll("_", "-");
+
+export default function ReportingDashboard({
+  report,
+  periodSelector,
+  demo = false,
+}: ReportingDashboardProps): ReactElement {
+  const [activeGroupKey, setActiveGroupKey] =
+    useState<V2ProductLabel>("LOSS_MAKER");
+  const activeGroup =
+    report.groups.find((group) => group.key === activeGroupKey) ?? report.groups[0];
+  const selectedPeriod = report.periods.selected;
+  const selectedPeriodLabel =
+    selectedPeriod.status === "AVAILABLE"
+      ? formatDateRange(selectedPeriod.range.from, selectedPeriod.range.to)
+      : "Perioadă indisponibilă";
+
+  const selectTabFromKeyboard = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    currentIndex: number,
+  ) => {
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowRight") {
+      nextIndex = (currentIndex + 1) % report.groups.length;
+    } else if (event.key === "ArrowLeft") {
+      nextIndex = (currentIndex - 1 + report.groups.length) % report.groups.length;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = report.groups.length - 1;
     }
-  };
-  const exportCsv = () => {
-    const fields = [
-      "Product",
-      "Item ID",
-      "Label",
-      "Impressions",
-      "Clicks",
-      "Budget",
-      "Sales count",
-      "Revenue",
-      "CPA",
-      "ROAS",
-    ];
-    const rows = visible.map((row) => [
-      row.title,
-      row.productId,
-      labelText[row.label],
-      row.impressions,
-      row.clicks,
-      row.cost,
-      row.conversions,
-      row.conversionValue,
-      row.cpa ?? "",
-      row.roas,
-    ]);
-    const csv = [fields, ...rows]
-      .map((row) =>
-        row
-          .map((value) => `"${String(value).replaceAll('"', '""')}"`)
-          .join(","),
-      )
-      .join("\n");
-    const url = URL.createObjectURL(
-      new Blob([csv], { type: "text/csv;charset=utf-8" }),
+    if (nextIndex === null) return;
+    event.preventDefault();
+    const nextGroup = report.groups[nextIndex];
+    setActiveGroupKey(nextGroup.key);
+    const buttons = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
+      '[role="tab"]',
     );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "google-ads-product-profitability.csv";
-    link.click();
-    URL.revokeObjectURL(url);
+    buttons?.[nextIndex]?.focus();
   };
 
   return (
-    <>
-      <div className="reportArtifact" data-report-dashboard="live">
-        <div className="reportApp">
-          <nav className="reportRail" aria-label="Report navigation">
-            <div className="brand">
-              <span className="brandMark">D</span>
-              <div>
-                <b>DEVRIKA</b>
-                <small>Ads reporting</small>
-              </div>
-            </div>
-            <div className="railGroup">
-              <span>Report</span>
-              <button type="button" className="navItem active">
-                ▥ <span>Your data</span>
-              </button>
-              <button type="button" className="navItem">
-                ↗ <span>Optimization potential</span>
-              </button>
-            </div>
-            <div className="railFoot">
-              <div className="accountCard">
-                <b>{snapshot.accountName}</b>
-                <span>{snapshot.website}</span>
-                <em>Read-only report</em>
-              </div>
-            </div>
-          </nav>
-          <div className="reportMain">
-            <header className="reportTopbar">
-              <div className="crumbs">
-                <b>{snapshot.accountName}</b>
-                <span>›</span>
-                <span>Shopping &amp; Performance Max</span>
-                <span>›</span>
-                <span>Product profitability</span>
-              </div>
-              <div className="topbarSpacer" />
-              <div className="topbarActions">
-                {periodSelector ? (
-                  <form
-                    action={periodSelector.action}
-                    method="get"
-                    className="periodForm"
-                  >
-                    <label className="topChip" htmlFor="reporting-period">
-                      ▣{" "}
-                      <select
-                        id="reporting-period"
-                        name="report"
-                        aria-label="Reporting period"
-                        defaultValue={periodSelector.selected}
-                      >
-                        {periodSelector.options.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <button className="applyButton" type="submit">
-                      Apply period
-                    </button>
-                  </form>
-                ) : (
-                  <span className="topChip">
-                    ▣ <b>{periodLabel}</b>
-                  </span>
-                )}
-                <span className="topChip">
-                  <i className="liveDot" />
-                  Google Ads data ·{" "}
-                  <b>
-                    {updatedAt
-                      ? new Date(updatedAt).toLocaleString("ro-RO")
-                      : "Current report"}
-                  </b>
-                </span>
-                <button
-                  className="exportButton"
-                  type="button"
-                  onClick={exportCsv}
-                >
-                  Export CSV
-                </button>
-                <a className="actionButton" href="#optimization-plan">
-                  Get the action plan
-                </a>
-              </div>
-            </header>
-            {demo && (
-              <div
-                className="demoBar"
-                style={{
-                  display: "flex",
-                  gap: 8,
-                  padding: "8px 24px",
-                  borderBottom: "1px solid #f0dfb4",
-                  background: "#fff8e8",
-                  color: "#7a5a10",
-                  fontSize: 11.5,
-                }}
-              >
-                <b>MOD DEMO</b> — figures below are simulated and do not come
-                from a live account.
-              </div>
+    <div className="reportV2" data-report-dashboard="v2">
+      <header className="brandHeader" data-report-section="brand-header">
+        <div className="brandIdentity">
+          <span className="brandMark" aria-hidden="true">D</span>
+          <strong>DEVRIKA</strong>
+        </div>
+        <div className="reportPeriod">
+          <span>Audit doar în citire</span>
+          <b>{selectedPeriodLabel}</b>
+        </div>
+        {periodSelector ? (
+          <form action={periodSelector.action} method="get" className="periodForm">
+            <label htmlFor="report-period">Raport salvat</label>
+            <select
+              id="report-period"
+              name="report"
+              defaultValue={periodSelector.selected}
+            >
+              {periodSelector.options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <button type="submit">Arată perioada</button>
+          </form>
+        ) : null}
+        {demo ? <span className="demoBadge">MOD DEMO · Date simulate</span> : null}
+      </header>
+
+      <section className="accountSummary" data-report-section="account-summary">
+        <div className="heroCopy">
+          <span>Raport Google Ads · Produse și profitabilitate</span>
+          <h1>{report.accountHeadline}</h1>
+          <p>
+            Rezultatul compară vânzările măsurate cu țintele configurate pentru
+            publicitate. Nu reprezintă profit contabil net.
+          </p>
+        </div>
+        <div
+          className="targetGrid"
+          role="region"
+          aria-label="Țintele contului"
+          data-mobile-target-columns="2"
+        >
+          <TargetTile
+            label="ROAS actual"
+            metric={report.targets.currentRoas}
+            format={formatRatio}
+            status={targetStatus(
+              report.targets.currentRoas,
+              report.targets.minimumRoas,
+              "minimum",
             )}
-            <main className="reportPage">
-              <div className="pageHead">
-                <div>
-                  <h1>Product profitability</h1>
-                  <p>
-                    Performance measured directly from your connected Google Ads
-                    account, for the selected reporting period.
-                  </p>
-                </div>
-                <div className="meta">
-                  Currency <b>RON</b>
-                  <span>Read-only audit · {periodLabel}</span>
-                </div>
-              </div>
-              <section
-                className="statusBand"
-                aria-label="Profitability targets"
-                data-dashboard-block="targets"
-              >
-                <div className="targetIntro">
-                  <span className="targetIcon">◎</span>
-                  <div>
-                    <strong>Your profitability targets</strong>
-                    <span>
-                      Calculated from the business data confirmed during your
-                      scan.
-                    </span>
-                  </div>
-                </div>
-                <Target
-                  label="Max CPA"
-                  value={money(snapshot.breakEvenCpa)}
-                  note="Maximum cost for one sale"
-                />
-                <Target
-                  label="Min ROAS"
-                  value={ratio(snapshot.breakEvenRoas)}
-                  note="Minimum return required for profitability"
-                />
-              </section>
-              <section
-                className="losersBand"
-                aria-label="Losers measured results"
-                data-dashboard-block="losers"
-              >
-                <div className="losersIntro">
-                  <i />
-                  <div>
-                    <strong>Losers</strong>
-                    <span>
-                      Products spending below your profitability threshold.
-                    </span>
-                    {!profitable && <b>Below break-even</b>}
-                  </div>
-                </div>
-                <ResultMetric
-                  label="Products"
-                  value={number(losers.rows.length)}
-                />
-                <ResultMetric
-                  label="Budget consumed"
-                  value={money(losers.cost)}
-                />
-                <ResultMetric
-                  label="Loss produced"
-                  value={
-                    lossProduced > 0 ? `−${money(lossProduced)}` : money(0)
-                  }
-                />
-              </section>
-              <section
-                className="persistentLabels"
-                aria-label="Permanent product label results"
-                data-dashboard-block="persistent-labels"
-              >
-                {(
-                  [
-                    "PERFORMER",
-                    "UNDERPROMOTED_POTENTIAL",
-                    "NOT_PROMOTED",
-                    "LOSS_MAKER",
-                  ] as ProductPerformanceLabel[]
-                ).map((value) => (
-                  <LabelCard
-                    key={value}
-                    label={value}
-                    totals={labelTotals(value)}
-                  />
-                ))}
-              </section>
-              <section
-                className="kpis"
-                aria-label="Account key performance indicators"
-                data-dashboard-block="kpis"
-              >
-                <Kpi
-                  label="Cost"
-                  value={money(snapshot.current.spend)}
-                  detail="Measured spend"
-                />
-                <Kpi
-                  label="Sales"
-                  value={money(snapshot.current.revenue)}
-                  detail="Conversion value"
-                />
-                <Kpi
-                  label="Clicks"
-                  value={clicks === undefined ? "—" : number(clicks)}
-                  detail="Paid traffic"
-                />
-                <Kpi
-                  label="Conversions"
-                  value={number(snapshot.current.orders)}
-                  detail="Store orders"
-                />
-                <Kpi
-                  label="Conv. rate"
-                  value={percent(conversionRate)}
-                  detail="Orders / clicks"
-                />
-                <Kpi
-                  label="Cost / conv."
-                  value={
-                    snapshot.current.cpa === null
-                      ? "—"
-                      : money(snapshot.current.cpa)
-                  }
-                  detail={`Max ${money(snapshot.breakEvenCpa)}`}
-                />
-                <Kpi
-                  label="ROAS"
-                  value={ratio(snapshot.current.roas)}
-                  detail={`${profitable ? "Above" : "Below"} ${ratio(snapshot.breakEvenRoas)} minimum`}
-                  accent={profitable ? "good" : "bad"}
-                />
-              </section>
-              <section
-                className="breakdownPanel"
-                aria-label="Real results by product label"
-                data-dashboard-block="budget-breakdown"
-              >
-                <div className="panelHead">
-                  <div>
-                    <h2>Where your advertising budget went</h2>
-                    <p>
-                      Real Google Ads results grouped by product label for the
-                      selected reporting period.
-                    </p>
-                  </div>
-                  <em>● Real data · Google Ads</em>
-                </div>
-                <div className="financialGrid">
-                  {(
-                    [
-                      "PERFORMER",
-                      "UNDERPROMOTED_POTENTIAL",
-                      "LOSS_MAKER",
-                      "NOT_PROMOTED",
-                    ] as ProductPerformanceLabel[]
-                  ).map((value) => (
-                    <FinancialCard
-                      key={value}
-                      label={value}
-                      totals={labelTotals(value)}
-                    />
+          />
+          <TargetTile
+            label="ROAS minim"
+            metric={report.targets.minimumRoas}
+            format={formatRatio}
+            status={
+              report.targets.minimumRoas.status === "AVAILABLE"
+                ? "positive"
+                : "unavailable"
+            }
+          />
+          <TargetTile
+            label="CPA actual"
+            metric={report.targets.currentCpa}
+            format={(value) => formatMoney(value, report.currencyCode)}
+            status={targetStatus(
+              report.targets.currentCpa,
+              report.targets.maximumCpa,
+              "maximum",
+            )}
+          />
+          <TargetTile
+            label="CPA maxim"
+            metric={report.targets.maximumCpa}
+            format={(value) => formatMoney(value, report.currencyCode)}
+            status={
+              report.targets.maximumCpa.status === "AVAILABLE"
+                ? "positive"
+                : "unavailable"
+            }
+          />
+        </div>
+      </section>
+
+      <main className="reportContent">
+        <section
+          className="conclusionGrid"
+          aria-label="Concluziile principale"
+          data-report-section="primary-conclusions"
+          data-mobile-conclusions="stack"
+        >
+          {report.conclusions.map((conclusion) => (
+            <ConclusionCard
+              key={conclusion.key}
+              conclusion={conclusion}
+              group={report.groups.find((group) => group.key === conclusion.groupKey)}
+              currency={report.currencyCode}
+            />
+          ))}
+        </section>
+
+        <section className="comparisonSection" data-report-section="period-comparison">
+          <SectionHeading
+            title="Cifrele importante, comparate"
+            description="Perioada aleasă este comparată cu perioada anterioară și cu aceeași perioadă din anul trecut."
+          />
+          <div className="comparisonScroll" data-horizontal-scroll="comparison" tabIndex={0}>
+            <table aria-label="Comparația perioadelor" className="comparisonTable">
+              <thead>
+                <tr>
+                  {[
+                    "Perioadă",
+                    "Buget",
+                    "Volum vanzari",
+                    "Nr. vanzari",
+                    "CPA",
+                    "ROAS",
+                    "Profit / Pierdere",
+                  ].map((label) => (
+                    <th key={label} scope="col">{label}</th>
                   ))}
-                </div>
-              </section>
-              <div
-                className="reportTabs"
-                role="tablist"
-                aria-label="Report views"
-                data-dashboard-block="tabs"
-              >
-                {tabs.map((tab) => (
-                  <button
-                    key={tab.value}
-                    type="button"
-                    role="tab"
-                    aria-selected={label === tab.value}
-                    onClick={() => setLabel(tab.value)}
-                  >
-                    {tab.label} <span>{counts[tab.value]}</span>
-                  </button>
-                ))}
-              </div>
-              <section
-                className="productPanel"
-                aria-label="Product performance table"
-                data-dashboard-block="products"
-              >
-                <div className="panelHead">
-                  <div>
-                    <h2>
-                      Products <span>— {products.length}</span>
-                    </h2>
-                    <p>
-                      Every product in the report population. Exactly one label
-                      per product.
-                    </p>
-                  </div>
-                  <em>● Real data · Google Ads</em>
-                </div>
-                <div
-                  className="categorySummary"
-                  role="region"
-                  aria-label="Product summary"
+                </tr>
+              </thead>
+              <tbody>
+                <PeriodRow row={report.periods.selected} currency={report.currencyCode} />
+                <PeriodRow row={report.periods.previous} currency={report.currencyCode} />
+                <PeriodRow row={report.periods.previousYear} currency={report.currencyCode} />
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="productActions" data-report-section="product-actions">
+          <SectionHeading
+            title="Produsele, grupate după ce trebuie să faci"
+            description="Fiecare produs apare o singură dată, în categoria indicată de datele perioadei selectate."
+          />
+          {report.productPopulationStatus === "PARTIAL" ? (
+            <p className="partialNotice" role="status">
+              Date parțiale: sumele de mai jos descriu numai produsele măsurate,
+              nu întregul cont.
+            </p>
+          ) : null}
+          <div
+            className="actionTabs"
+            role="tablist"
+            aria-label="Acțiuni pentru produse"
+            data-horizontal-scroll="tabs"
+          >
+            {report.groups.map((group, index) => {
+              const selected = group.key === activeGroup.key;
+              const id = groupDomId(group.key);
+              const validCount =
+                group.totals.productCount.status === "AVAILABLE"
+                  ? group.totals.productCount.value
+                  : 0;
+              const quarantinedCount = group.quarantinedRows.length;
+              return (
+                <button
+                  key={group.key}
+                  type="button"
+                  role="tab"
+                  id={`product-tab-${id}`}
+                  aria-selected={selected}
+                  aria-controls={`product-panel-${id}`}
+                  tabIndex={selected ? 0 : -1}
+                  onClick={() => setActiveGroupKey(group.key)}
+                  onKeyDown={(event) => selectTabFromKeyboard(event, index)}
                 >
-                  <Summary
-                    label="Products"
-                    value={`${number(visible.length)} products`}
-                  />
-                  <Summary label="Budget" value={money(shownCost)} />
-                  <Summary
-                    label="Sales count"
-                    value={`${number(shownConversions)} sales`}
-                  />
-                  <Summary label="Revenue" value={money(shownSales)} />
-                  <Summary
-                    label="Avg CPA"
-                    value={
-                      shownConversions > 0
-                        ? money(shownCost / shownConversions)
-                        : "—"
-                    }
-                  />
-                  <Summary
-                    label="ROAS"
-                    value={shownCost ? ratio(shownSales / shownCost) : "—"}
-                  />
-                  <Summary
-                    label="Profit / loss"
-                    value={signedMoney(shownProfit)}
-                  />
-                </div>
-                <div className="toolbar">
-                  <label className="searchBox">
-                    <span>⌕</span>
-                    <input
-                      aria-label="Search products"
-                      type="search"
-                      value={query}
-                      onChange={(event) => setQuery(event.target.value)}
-                      placeholder="Search product or item ID"
-                    />
-                  </label>
-                  <label className="srOnly">
-                    Filter products
-                    <select
-                      aria-label="Filter products"
-                      value={label}
-                      onChange={(event) =>
-                        setLabel(
-                          event.target.value as ProductPerformanceLabel | "ALL",
-                        )
-                      }
-                    >
-                      <option value="ALL">All labels</option>
-                      {Object.entries(labelText).map(([value, text]) => (
-                        <option key={value} value={value}>
-                          {text}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <div className="toolbarRight">
-                    <label className="selectWrap">
-                      Sort
-                      <select
-                        aria-label="Sort products"
-                        value={sort}
-                        onChange={(event) =>
-                          setTableSort(event.target.value as SortMetric)
-                        }
-                      >
-                        {sortOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <span>
-                      <b>{visible.length}</b> shown
-                    </span>
-                  </div>
-                </div>
-                <div
-                  className="reportTable"
-                  role="region"
-                  aria-label="All product performance"
-                  tabIndex={0}
-                >
-                  <table>
-                    <thead>
-                      <tr>
-                        <SortHeader
-                          metric="title"
-                          label="Product"
-                          active={sort}
-                          direction={sortDirection}
-                          onSort={setTableSort}
-                          className="stickProduct"
-                        />
-                        <SortHeader
-                          metric="productId"
-                          label="Item ID"
-                          active={sort}
-                          direction={sortDirection}
-                          onSort={setTableSort}
-                          className="stickId"
-                        />
-                        <SortHeader
-                          metric="label"
-                          label="Label"
-                          active={sort}
-                          direction={sortDirection}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="impressions"
-                          label="Impressions"
-                          active={sort}
-                          direction={sortDirection}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="clicks"
-                          label="Clicks"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="cost"
-                          label="Cost"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="conversions"
-                          label="Conversions"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="conversionRate"
-                          label="Conv. rate"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="clicksPerSale"
-                          label="Clicks / sale"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="conversionValue"
-                          label="Sales"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="cpa"
-                          label="CPA"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="roas"
-                          label="ROAS"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="profitabilityGap"
-                          label="ROAS gap"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                        <SortHeader
-                          metric="financialImpact"
-                          label="Financial impact"
-                          active={sort}
-                          onSort={setTableSort}
-                        />
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {visible.map((row, index) => (
-                        <tr
-                          key={row.productId}
-                          className={index % 2 ? "zebra" : ""}
-                        >
-                          <td className="stickProduct">
-                            <div className="productCell">
-                              <Image
-                                data-product-thumbnail
-                                src={productThumbnail(row.title)}
-                                alt=""
-                                width={36}
-                                height={36}
-                                unoptimized
-                                loading="lazy"
-                              />
-                              <div>
-                                <strong>{row.title}</strong>
-                                <small>
-                                  {categoryText(
-                                    (
-                                      row as typeof row & {
-                                        category?: string;
-                                      }
-                                    ).category,
-                                  )} · Price unavailable
-                                </small>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="stickId">
-                            <code>{row.productId}</code>
-                            <button
-                              type="button"
-                              className="copyId"
-                              aria-label={`Copy item ID ${row.productId}`}
-                              onClick={() =>
-                                void navigator.clipboard?.writeText(
-                                  row.productId,
-                                )
-                              }
-                            >
-                              □
-                            </button>
-                          </td>
-                          <td>
-                            <span className={`productLabel ${row.label}`}>
-                              <i />
-                              {labelText[row.label]}
-                            </span>
-                          </td>
-                          <td>{number(row.impressions)}</td>
-                          <td>{number(row.clicks)}</td>
-                          <td>{money(row.cost)}</td>
-                          <td>{number(row.conversions)}</td>
-                          <td>{percent(row.conversionRate)}</td>
-                          <td>
-                            {row.clicksPerSale === null
-                              ? "—"
-                              : row.clicksPerSale.toFixed(1)}
-                          </td>
-                          <td>{money(row.conversionValue)}</td>
-                          <td>{row.cpa === null ? "—" : money(row.cpa)}</td>
-                          <td
-                            className={
-                              row.profitabilityGap >= 0
-                                ? "positive"
-                                : "negative"
-                            }
-                          >
-                            <span className="roasCell">
-                              <span className="roasBar" data-roas-bar>
-                                <i
-                                  className={
-                                    row.profitabilityGap >= 0 ? "ok" : "no"
-                                  }
-                                  style={{
-                                    width: `${Math.min(100, Math.max(0, (row.roas / Math.max(snapshot.breakEvenRoas * 1.5, 1)) * 100))}%`,
-                                  }}
-                                />
-                                <b
-                                  style={{
-                                    left: `${Math.min(100, 100 / 1.5)}%`,
-                                  }}
-                                />
-                              </span>
-                              {ratio(row.roas)}
-                            </span>
-                          </td>
-                          <td
-                            className={
-                              row.profitabilityGap >= 0
-                                ? "positive"
-                                : "negative"
-                            }
-                          >
-                            {row.profitabilityGap >= 0 ? "+" : ""}
-                            {row.profitabilityGap.toFixed(2)}×
-                          </td>
-                          <td>
-                            {row.financialImpact === null ? (
-                              "—"
-                            ) : (
-                              <span
-                                className={`impact ${row.financialImpactKind === "MEASURED_RISK" ? "risk" : "opportunity"}`}
-                              >
-                                <strong>{money(row.financialImpact)}</strong>
-                                <small>
-                                  {row.financialImpactKind === "MEASURED_RISK"
-                                    ? "Measured risk"
-                                    : "Estimated opportunity"}
-                                </small>
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  {!visible.length && (
-                    <div className="empty">
-                      <b>No products match these filters.</b>
-                      <span>Clear the search or select a different label.</span>
-                    </div>
-                  )}
-                </div>
-                <footer className="tableFoot" aria-label="Product totals">
-                  <div>
-                    <span data-total>
-                      Filtered cost <b>{money(shownCost)}</b>
-                    </span>
-                    <span data-total>
-                      Filtered sales <b>{money(shownSales)}</b>
-                    </span>
-                    <span data-total>
-                      Filtered clicks <b>{number(visible.reduce((sum, row) => sum + row.clicks, 0))}</b>
-                    </span>
-                    <span data-total>
-                      Filtered conversions <b>{number(shownConversions)}</b>
-                    </span>
-                    <span data-total>
-                      Filtered ROAS{" "}
-                      <b>{shownCost ? ratio(shownSales / shownCost) : "—"}</b>
-                    </span>
-                  </div>
-                  <span>
-                    Scroll horizontally for every column · product and item ID
-                    stay pinned
-                  </span>
-                </footer>
-              </section>
-            </main>
+                  <span>{GROUP_PRESENTATION[group.key].tabLabel}</span>
+                  <b>{validCount}</b>
+                  {quarantinedCount ? (
+                    <small>{quarantinedCount} indisponibil</small>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+          <GroupPanel group={activeGroup} report={report} />
+        </section>
+      </main>
+      <style>{dashboardCss}</style>
+    </div>
+  );
+}
+
+function targetStatus(
+  current: ReportMetric<number>,
+  target: ReportMetric<number>,
+  direction: "minimum" | "maximum",
+): "warning" | "positive" | "neutral" | "unavailable" {
+  if (current.status === "UNAVAILABLE" || target.status === "UNAVAILABLE") {
+    return current.status === "UNAVAILABLE" ? "unavailable" : "neutral";
+  }
+  const missesTarget =
+    direction === "minimum"
+      ? current.value < target.value
+      : current.value > target.value;
+  return missesTarget ? "warning" : "positive";
+}
+
+function TargetTile({
+  label,
+  metric,
+  format,
+  status,
+}: {
+  label: string;
+  metric: ReportMetric<number>;
+  format: (value: number) => string;
+  status: "warning" | "positive" | "neutral" | "unavailable";
+}) {
+  return (
+    <div className="targetTile" data-target-tile data-status={status}>
+      <small>{label}</small>
+      <strong>
+        {metric.status === "AVAILABLE" ? format(metric.value) : "Indisponibil"}
+      </strong>
+      <span>
+        {status === "warning"
+          ? "În afara țintei"
+          : status === "positive"
+            ? "În țintă"
+            : status === "unavailable"
+              ? "Indisponibil"
+              : "Ținta nu este disponibilă"}
+      </span>
+    </div>
+  );
+}
+
+function ConclusionCard({
+  conclusion,
+  group,
+  currency,
+}: {
+  conclusion: GoogleAdsReportV2Conclusion;
+  group?: GoogleAdsReportV2Group;
+  currency: ReportMetric<string>;
+}) {
+  const presentation = CONCLUSION_PRESENTATION[conclusion.key];
+  const count =
+    group?.totals.productCount.status === "AVAILABLE"
+      ? group.totals.productCount.value
+      : null;
+  const isCount = conclusion.key === "NOT_PROMOTED_PRODUCTS";
+  const metric =
+    conclusion.metric.status === "AVAILABLE"
+      ? isCount
+        ? `${formatNumber(conclusion.metric.value)} produse`
+        : formatMoney(conclusion.metric.value, currency)
+      : "Indisponibil";
+  return (
+    <article
+      className={`conclusionCard ${presentation.tone}`}
+      data-testid={`conclusion-${conclusion.key}`}
+      data-raw-value={metricRawValue(conclusion.metric)}
+    >
+      <span className="evidenceLabel">
+        {conclusion.evidenceLabel === "SIMULATED"
+          ? "Simulare"
+          : conclusion.evidenceLabel === "MEASURED"
+            ? "Măsurat"
+            : "Indisponibil"}
+      </span>
+      <h2>{presentation.label}</h2>
+      <strong className="conclusionValue">{metric}</strong>
+      <p>
+        {count === null ? "Număr indisponibil" : `${formatNumber(count)} produse`} ·{" "}
+        {conclusion.explanation}
+      </p>
+      {conclusion.totalScope === "PARTIAL" ? (
+        <small>Date parțiale, numai pentru produsele măsurate.</small>
+      ) : null}
+    </article>
+  );
+}
+
+function SectionHeading({ title, description }: { title: string; description: string }) {
+  return (
+    <div className="sectionHeading">
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
+  );
+}
+
+function PeriodRow({
+  row,
+  currency,
+}: {
+  row: ReportPeriodRow;
+  currency: ReportMetric<string>;
+}) {
+  const presentation = PERIOD_PRESENTATION[row.key];
+  if (row.status === "UNAVAILABLE") {
+    return (
+      <tr>
+        <td><strong>{presentation.unavailableLabel}</strong><span>Indisponibil</span></td>
+        {Array.from({ length: 6 }, (_, index) => (
+          <td key={index}><span>Indisponibil</span></td>
+        ))}
+      </tr>
+    );
+  }
+  return (
+    <tr className={row.key === "SELECTED" ? "selectedPeriod" : undefined}>
+      <td>
+        <strong>{formatDateRange(row.range.from, row.range.to)}</strong>
+        <span>{presentation.label}</span>
+      </td>
+      <td>{formatMetric(row.budget, (value) => formatMoney(value, currency))}</td>
+      <td>{formatMetric(row.salesVolume, (value) => formatMoney(value, currency))}</td>
+      <td>{formatMetric(row.numberOfSales, (value) => formatNumber(value, 2))}</td>
+      <td>{formatMetric(row.cpa, (value) => formatMoney(value, currency))}</td>
+      <td>{formatMetric(row.roas, formatRatio)}</td>
+      <td>{formatProfitOrLoss(row.profitOrLoss, currency)}</td>
+    </tr>
+  );
+}
+
+function formatMetric(
+  metric: ReportMetric<number>,
+  format: (value: number) => string,
+): string {
+  return metric.status === "AVAILABLE" ? format(metric.value) : "Indisponibil";
+}
+
+function formatProfitOrLoss(
+  metric: ReportMetric<ProfitOrLossValue>,
+  currency: ReportMetric<string>,
+): ReactElement | string {
+  if (metric.status === "UNAVAILABLE") return "Indisponibil";
+  const label =
+    metric.value.outcome === "LOSS"
+      ? "Pierdere"
+      : metric.value.outcome === "PROFIT"
+        ? "Profit"
+        : "La prag";
+  const tone = metric.value.outcome === "LOSS" ? "lossText" : "profitText";
+  return (
+    <span className={tone}>
+      <strong>{label}</strong>
+      <small>{formatMoney(Math.abs(metric.value.displayAmount), currency)}</small>
+    </span>
+  );
+}
+
+function GroupPanel({
+  group,
+  report,
+}: {
+  group: GoogleAdsReportV2Group;
+  report: GoogleAdsReportV2ViewModel;
+}) {
+  const presentation = GROUP_PRESENTATION[group.key];
+  const claim = groupClaim(group);
+  const count =
+    group.totals.productCount.status === "AVAILABLE"
+      ? group.totals.productCount.value
+      : 0;
+  const domId = groupDomId(group.key);
+  return (
+    <div
+      className={`groupPanel ${presentation.tone}`}
+      role="tabpanel"
+      id={`product-panel-${domId}`}
+      aria-labelledby={`product-tab-${domId}`}
+    >
+      <div className="groupSummary">
+        <div>
+          <span className="groupKicker">{presentation.tabLabel}</span>
+          <h3>{group.title}</h3>
+          <p>{group.explanation}</p>
+          <div className="supportFacts">
+            <span>{formatNumber(count)} produse valide</span>
+            <span>
+              Buget măsurat: {formatMetric(group.totals.spend, (value) =>
+                formatMoney(value, report.currencyCode),
+              )}
+            </span>
+            {group.benchmark.status === "AVAILABLE" ? (
+              <span>
+                Media contului: {formatNumber(group.benchmark.value, 1)} clickuri
+                pentru o vânzare
+              </span>
+            ) : null}
+            {group.quarantinedRows.length ? (
+              <span>{group.quarantinedRows.length} cu clasificare indisponibilă</span>
+            ) : null}
           </div>
         </div>
-        <style>{dashboardCss}</style>
-      </div>
-      <div className="simulatorFrame" id="optimization-plan">
-        <ProfitabilitySimulator
-          analysis={analysis}
-          averageOrderValue={snapshot.averageOrderValue}
-          snapshot={snapshot}
-        />
-      </div>
-    </>
-  );
-}
-
-function Target({
-  label,
-  value,
-  note,
-}: {
-  label: string;
-  value: string;
-  note: string;
-}) {
-  return (
-    <div className="targetCard">
-      <span>{label}</span>
-      <strong>{value}</strong>
-      <small>{note}</small>
-    </div>
-  );
-}
-function Kpi({
-  label,
-  value,
-  detail,
-  accent,
-}: {
-  label: string;
-  value: string;
-  detail: string;
-  accent?: "good" | "bad";
-}) {
-  return (
-    <div className={`kpi ${accent ? `accent${accent}` : ""}`}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-      <small>{detail}</small>
-      <div className="kpiTrend" data-kpi-trend="unavailable">
-        <span>Unavailable</span>
-      </div>
-      <svg
-        data-kpi-sparkline="unavailable"
-        viewBox="0 0 42 12"
-        aria-hidden="true"
-      >
-        <path d="M1 6 L41 6" />
-      </svg>
-    </div>
-  );
-}
-type LabelTotals = {
-  rows: unknown[];
-  cost: number;
-  sales: number;
-  conversions: number;
-  clicks: number;
-  roas: number | null;
-  profit: number;
-};
-function ResultMetric({
-  label,
-  value,
-  labelMetric = false,
-}: {
-  label: string;
-  value: string;
-  labelMetric?: boolean;
-}) {
-  return (
-    <div className="resultMetric" data-label-metric={labelMetric || undefined}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-function LabelCard({
-  label,
-  totals,
-}: {
-  label: ProductPerformanceLabel;
-  totals: LabelTotals;
-}) {
-  const copy = labelCardText[label];
-  return (
-    <article className={`labelCard ${label}`}>
-      <div className="labelIntro">
-        <i />
-        <div>
-          <strong>{copy.title}</strong>
-          <span className="labelDescription">{copy.description}</span>
+        <div
+          className="groupClaim"
+          data-testid={`group-claim-${group.key}`}
+          data-raw-value={metricRawValue(claim.metric)}
+        >
+          <small>{presentation.metricLabel}</small>
+          <strong>{formatGroupClaim(claim.metric, claim.kind, report.currencyCode)}</strong>
+          <span>{claim.kind === "simulation" ? "Simulare" : "Măsurat"}</span>
         </div>
       </div>
-      <div className="labelNumbers">
-        <ResultMetric
-          label="Products"
-          value={number(totals.rows.length)}
-          labelMetric
-        />
-        <ResultMetric label="Spend" value={money(totals.cost)} labelMetric />
-        <ResultMetric
-          label="Profit / Loss"
-          value={signedMoney(totals.profit)}
-          labelMetric
-        />
-      </div>
-    </article>
-  );
-}
-function FinancialCard({
-  label,
-  totals,
-}: {
-  label: ProductPerformanceLabel;
-  totals: LabelTotals;
-}) {
-  return (
-    <article className="financialCard">
-      <div className="financialHead">
-        <span className={`productLabel ${label}`}>
-          <i />
-          {labelCardText[label].title}
-        </span>
-        <small>{totals.rows.length} products</small>
-      </div>
-      <div className="financialMetrics">
-        <ResultMetric label="Budget" value={money(totals.cost)} />
-        <ResultMetric label="Sales" value={number(totals.conversions)} />
-        <ResultMetric label="Revenue" value={money(totals.sales)} />
-        <ResultMetric
-          label="Avg CPA"
-          value={
-            totals.conversions > 0
-              ? money(totals.cost / totals.conversions)
-              : "—"
-          }
-        />
-        <ResultMetric label="ROAS" value={ratio(totals.roas)} />
-        <ResultMetric
-          label="Profit / Loss"
-          value={signedMoney(totals.profit)}
-        />
-      </div>
-    </article>
-  );
-}
-function SortHeader({
-  metric,
-  label,
-  active,
-  direction,
-  onSort,
-  className,
-}: {
-  metric: SortMetric;
-  label: string;
-  active: SortMetric;
-  direction?: "asc" | "desc";
-  onSort: (metric: SortMetric) => void;
-  className?: string;
-}) {
-  return (
-    <th
-      className={`${className ?? ""} ${active === metric ? "sorted" : ""}`.trim()}
-      aria-label={label}
-      aria-sort={
-        active === metric
-          ? direction === "asc"
-            ? "ascending"
-            : "descending"
-          : "none"
-      }
-    >
-      <button
-        type="button"
-        onClick={() => onSort(metric)}
-        aria-label={`Sort by ${label.toLowerCase()}`}
+      {claim.kind === "simulation" ? (
+        <p className="simulationNotice">
+          Simularea folosește datele măsurate ale perioadei și nu este o garanție
+          pentru vânzări viitoare.
+        </p>
+      ) : null}
+      <div
+        className="productTableScroll"
+        data-horizontal-scroll="products"
+        tabIndex={0}
       >
-        {label}
-        <span>{active === metric && direction === "asc" ? "▴" : "▾"}</span>
-      </button>
-    </th>
-  );
-}
-function Summary({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <span>{label}</span>
-      <strong>{value}</strong>
+        <table aria-label={`Produse: ${presentation.tabLabel}`} className="productTable">
+          <thead>
+            <tr>
+              {[
+                "Produs",
+                "Clickuri",
+                "Cost",
+                "Nr. vanzari",
+                "Clickuri / vanzare",
+                "CPA",
+                "Volum vanzari",
+                "ROAS",
+                presentation.resultHeader,
+              ].map((label) => (
+                <th key={label} scope="col">{label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {group.rows.map((row) => (
+              <ProductRow
+                key={row.productId}
+                row={row}
+                currency={report.currencyCode}
+              />
+            ))}
+          </tbody>
+        </table>
+        {group.rows.length === 0 ? (
+          <div className="emptyState">
+            <strong>{group.emptyState}</strong>
+            <span>Categoria rămâne vizibilă și va primi produse când există date.</span>
+          </div>
+        ) : null}
+      </div>
+      <footer className="groupFooter">
+        Toate valorile sunt pentru perioada selectată.
+        {group.totalScope === "PARTIAL" ? " Totalurile folosesc date parțiale." : ""}
+      </footer>
     </div>
   );
 }
 
-const dashboardCss = `.srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.reportArtifact{overflow-x:hidden}
-.reportArtifact{--rail:#f8fafd;--railHi:#c2e7ff;--canvas:#f1f3f4;--surface2:#f8fafd;--surface3:#f1f3f4;--line:#dadce0;--lineSoft:#e8eaed;--ink:#202124;--ink2:#3c4043;--ink3:#5f6368;--blue:#1a73e8;--blue2:#0b57d0;--blueSoft:#e7effc;--green:#106b41;--greenSoft:#e3f5ea;--red:#c02617;--redSoft:#fdeae7;--amber:#96590a;--amberSoft:#fdf1dc;color:var(--ink);background:var(--canvas);font-family:"Google Sans",Roboto,Arial,sans-serif;font-size:13px;line-height:1.45;min-height:100vh}.reportArtifact *{box-sizing:border-box}.reportApp{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}.reportRail{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:18px;padding:18px 14px;background:var(--rail);border-right:1px solid var(--line);color:var(--ink2)}.brand{display:flex;align-items:center;gap:10px;padding:2px 6px}.brandMark{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;background:var(--blue);color:#fff;font-size:15px;font-weight:800}.brand b{display:block;font-size:14px;letter-spacing:.14em}.brand small{display:block;color:var(--ink3);font-size:10px;letter-spacing:.1em;text-transform:uppercase}.railGroup>span{display:block;padding:0 10px 6px;color:var(--ink3);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}.navItem{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;border-radius:20px;background:transparent;color:var(--ink2);font:inherit;text-align:left}.navItem.active{background:var(--railHi);color:#001d35;font-weight:600}.railFoot{margin-top:auto;border-top:1px solid var(--line);padding-top:14px}.accountCard{padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff}.accountCard b,.accountCard span{display:block}.accountCard span{color:var(--ink3);font-size:10.5px;overflow:hidden;text-overflow:ellipsis}.accountCard em{display:inline-flex;margin-top:10px;padding:4px 9px;border:1px solid #a8c7fa;border-radius:999px;background:#e8f0fe;color:var(--blue2);font-size:9.5px;font-style:normal;font-weight:800;text-transform:uppercase}.reportMain{min-width:0}.reportTopbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;padding:11px 24px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.94);backdrop-filter:saturate(1.4) blur(8px)}.crumbs{display:flex;align-items:center;gap:8px;color:var(--ink3);font-size:12px;white-space:nowrap}.crumbs b{color:var(--ink)}.topbarSpacer{margin-left:auto}.topbarActions{display:flex;align-items:center;gap:8px;min-width:max-content}.topChip{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;white-space:nowrap}.topChip select{max-width:160px;border:0;background:transparent;font:inherit;font-weight:600}.periodForm{display:flex;gap:6px}.applyButton,.exportButton,.actionButton{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);font:inherit;font-weight:600;text-decoration:none;white-space:nowrap}.applyButton,.actionButton{border-color:var(--blue2);background:var(--blue2);color:#fff}.liveDot{width:7px;height:7px;border-radius:50%;background:#22a06b;box-shadow:0 0 0 3px rgba(34,160,107,.16)}.reportPage{width:100%;max-width:1720px;padding:22px 24px 64px}.pageHead{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:16px}.pageHead h1{margin:0;font-size:24px}.pageHead p{margin:5px 0 0;color:var(--ink2);font-size:12.5px}.meta{margin-left:auto;color:var(--ink3);font-size:11px;text-align:right}.meta b,.meta span{display:block;color:var(--ink)}.statusBand{display:grid;grid-template-columns:minmax(320px,1fr) minmax(220px,.55fr) minmax(220px,.55fr);gap:1px;margin-bottom:14px;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--line)}.statusBand>div{padding:18px 20px;background:#fff}.statusMain{display:flex;align-items:center;gap:14px}.targetIcon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:var(--blueSoft);color:var(--blue2);font-size:25px}.statusMain.good .targetIcon{background:var(--greenSoft);color:var(--green)}.statusMain strong{display:block;color:var(--red);font-size:16px}.statusMain.good strong{color:var(--green)}.statusMain span{display:block;color:var(--ink3);font-size:12px}.targetCard span{color:var(--ink3);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.targetCard strong{display:block;margin-top:5px;color:var(--blue2);font-size:28px}.targetCard small{display:block;color:var(--ink3);font-size:11px}.kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;margin-bottom:18px;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--line)}.kpi{position:relative;min-width:0;min-height:104px;padding:14px 16px 12px;background:#fff}.kpi>span{display:block;color:var(--ink3);font-size:10.5px;font-weight:700;text-transform:uppercase}.kpi>strong{display:block;margin-top:6px;font-size:22px;white-space:nowrap}.kpi>small{display:block;margin-top:6px;color:var(--ink3);font-size:11px}.kpiTrend{display:flex;align-items:center;min-height:20px;margin-top:5px}.kpiTrend span{display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:5px;background:var(--surface3);color:var(--ink3);font-size:9px}.kpi.accentgood{box-shadow:inset 0 -3px 0 #1f9e63}.kpi.accentbad{box-shadow:inset 0 -3px 0 #d9483a}.reportTabs{display:inline-flex;margin-bottom:14px;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:#fff}.reportTabs button{height:40px;padding:0 20px;border:0;border-right:1px solid var(--line);background:#fff;font:inherit;font-weight:600}.reportTabs button[aria-selected=true]{background:var(--blue);color:#fff}.reportTabs button span{opacity:.7}.productPanel{overflow:hidden;border:1px solid var(--line);border-radius:16px;background:#fff}.panelHead{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;padding:16px 18px 12px;border-bottom:1px solid var(--lineSoft)}.panelHead h2{margin:0;font-size:17px}.panelHead h2 span{color:#a8b1c2}.panelHead p{margin:4px 0 0;color:var(--ink2);font-size:12px}.panelHead em{margin-left:auto;padding:3px 8px;border-radius:999px;background:var(--blueSoft);color:var(--blue2);font-size:10px;font-style:normal}.categorySummary{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;border-bottom:1px solid var(--line);background:var(--lineSoft)}.categorySummary>div{min-width:0;padding:11px 16px;background:#fff}.categorySummary span{display:block;color:var(--ink3);font-size:9.5px;font-weight:700;text-transform:uppercase}.categorySummary strong{display:block;margin-top:5px;overflow:hidden;font-size:17px;text-overflow:ellipsis;white-space:nowrap}.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid var(--lineSoft);background:var(--surface2)}.searchBox{position:relative}.searchBox span{position:absolute;left:10px;top:5px;font-size:20px}.searchBox input{width:270px;height:34px;padding:0 12px 0 32px;border:1px solid var(--line);border-radius:8px;font:inherit}.selectWrap{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink3)}.selectWrap select{max-width:210px;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:600}.toolbarRight{display:flex;align-items:center;gap:10px;margin-left:auto;color:var(--ink3)}.reportTable{position:relative;max-height:620px;overflow:auto;background:#fff}.reportTable table{width:100%;min-width:1560px;border-collapse:separate;border-spacing:0;font-size:12px}.reportTable th,.reportTable td{height:50px;padding:0 12px;border-bottom:1px solid var(--lineSoft);background:#fff;text-align:right;white-space:nowrap}.reportTable th{position:sticky;top:0;z-index:20;height:40px;background:var(--surface3);color:var(--ink2);font-size:10px;text-transform:uppercase}.reportTable tr:hover td{background:#f6f9ff}.reportTable tr.zebra td{background:#fcfdff}.reportTable .stickProduct{position:sticky;left:0;z-index:15;text-align:left}.reportTable .stickId{position:sticky;left:296px;z-index:15;text-align:left}.reportTable th.stickProduct,.reportTable th.stickId{z-index:30;background:var(--surface3)}.reportTable .stickId:after{content:"";position:absolute;top:0;right:-10px;bottom:0;width:10px;background:linear-gradient(90deg,rgba(19,26,43,.10),transparent)}.productCell{display:flex;align-items:center;gap:10px;width:272px}.productCell>span{width:36px;height:36px;display:grid;flex:0 0 36px;place-items:center;border:1px solid var(--line);border-radius:8px;background:var(--surface3);color:var(--ink3);font-size:10px;font-weight:700}.productCell strong,.productCell small{display:block;max-width:214px;overflow:hidden;text-align:left;text-overflow:ellipsis}.productCell small{color:var(--ink3);font-size:9.5px}.productLabel{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:700}.productLabel i{width:7px;height:7px;border-radius:2px}.LOSS_MAKER{background:var(--redSoft);color:var(--red)}.LOSS_MAKER i{background:#d9483a}.NOT_PROMOTED{background:#eef0f4;color:#4a5568}.NOT_PROMOTED i{background:#8a94a6}.UNDERPROMOTED_POTENTIAL{background:var(--amberSoft);color:var(--amber)}.UNDERPROMOTED_POTENTIAL i{background:#e0a02c}.PERFORMER{background:var(--greenSoft);color:var(--green)}.PERFORMER i{background:#1f9e63}.INSUFFICIENT_DATA{background:#eef2fb;color:#4b5b7a}.INSUFFICIENT_DATA i{background:#93a2c0}.positive{color:var(--green);font-weight:700}.negative{color:var(--red);font-weight:700}.impact{display:inline-flex;padding:3px 8px;border-radius:7px}.impact strong,.impact small{display:block}.impact small{font-size:9px}.impact.risk{background:var(--redSoft);color:var(--red)}.impact.opportunity{background:var(--greenSoft);color:var(--green)}.empty{padding:56px;text-align:center}.empty b,.empty span{display:block}.tableFoot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:11px 18px;border-top:1px solid var(--line);background:var(--surface2);color:var(--ink3)}.tableFoot>div{display:flex;gap:18px;flex-wrap:wrap}.tableFoot b{color:var(--ink)}.simulatorFrame{background:#f1f3f4;padding:0 24px 64px}
-.targetIntro{display:flex;align-items:center;gap:14px}.targetIntro strong{display:block;font-size:16px}.targetIntro span{display:block;color:var(--ink3);font-size:12px}.losersBand{display:grid;grid-template-columns:minmax(230px,1.25fr) repeat(3,minmax(120px,.65fr));margin-bottom:8px;overflow:hidden;border:1px solid #f2c7c3;border-radius:18px;background:#fff}.losersIntro{display:flex;align-items:center;gap:11px;padding:15px 18px}.losersIntro>i{width:11px;height:11px;border-radius:50%;background:#d9483a}.losersIntro strong,.losersIntro span{display:block}.losersIntro strong{font-size:16px;color:var(--red)}.losersIntro span{color:var(--ink3);font-size:11px}.resultMetric{display:flex;flex-direction:column;justify-content:center;padding:13px 15px;border-left:1px solid var(--lineSoft)}.resultMetric span{color:var(--ink3);font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}.resultMetric strong{margin-top:5px;font-size:17px}.persistentLabels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px;padding:8px 0;background:var(--canvas)}.labelCard{min-height:114px;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff}.labelIntro{display:flex;align-items:center;gap:8px;min-height:48px;padding:8px 11px}.labelIntro>i{width:9px;height:9px;flex:0 0 9px;border-radius:50%}.labelIntro strong,.labelDescription{display:block}.labelIntro strong{font-size:11px}.labelDescription{margin-top:2px;color:var(--ink3);font-size:9.5px;line-height:1.2}.labelNumbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--lineSoft)}.labelNumbers .resultMetric{min-width:0;padding:8px 7px;border-left:1px solid var(--lineSoft)}.labelNumbers .resultMetric:first-child{border-left:0}.labelNumbers .resultMetric span{font-size:7.5px;white-space:nowrap}.labelNumbers .resultMetric strong{margin-top:3px;overflow:hidden;font-size:10.5px;text-overflow:ellipsis;white-space:nowrap}.labelCard.LOSS_MAKER .labelIntro>i{background:#d9483a}.labelCard.UNDERPROMOTED_POTENTIAL .labelIntro>i{background:#e0a02c}.labelCard.NOT_PROMOTED .labelIntro>i{background:#8a94a6}.labelCard.PERFORMER .labelIntro>i{background:#1f9e63}.breakdownPanel{margin-bottom:14px;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:#fff}.financialGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:14px 18px 18px}.financialCard{overflow:hidden;border:1px solid var(--line);border-radius:14px}.financialHead{display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:var(--surface2)}.financialHead small{color:var(--ink3)}.financialMetrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:1px solid var(--lineSoft)}.financialMetrics .resultMetric{min-width:0;padding:8px;border-left:1px solid var(--lineSoft)}.financialMetrics .resultMetric:first-child{border-left:0}.financialMetrics .resultMetric span{font-size:8px}.financialMetrics .resultMetric strong{overflow:hidden;font-size:10.5px;text-overflow:ellipsis;white-space:nowrap}.kpi svg{position:absolute;right:10px;top:11px;width:42px;height:12px;opacity:.45}.kpi svg path{fill:none;stroke:#7c8ba1;stroke-width:1.3}.filterChips{display:flex;gap:6px;flex-wrap:wrap}.filterChips button{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font:inherit;font-size:11px}.filterChips button[aria-pressed=true]{border-color:var(--ink);background:var(--ink);color:#fff}.filterChips i{width:7px;height:7px;border-radius:2px}.filterChips i.LOSS_MAKER{background:#d9483a}.filterChips i.UNDERPROMOTED_POTENTIAL{background:#e0a02c}.filterChips i.NOT_PROMOTED{background:#8a94a6}.filterChips i.PERFORMER{background:#1f9e63}.filterChips i.INSUFFICIENT_DATA{background:#93a2c0}.reportTable th button{display:flex;align-items:center;justify-content:flex-end;gap:5px;width:100%;height:100%;padding:0;border:0;background:transparent;color:inherit;font:inherit;font-weight:700;text-transform:uppercase}.reportTable th.sorted{background:#e6eefb;color:var(--blue2)}.copyId{margin-left:5px;border:0;background:transparent;color:var(--ink3);cursor:pointer}.roasCell{display:flex;align-items:center;justify-content:flex-end;gap:8px}.roasBar{position:relative;width:56px;height:6px;overflow:hidden;border-radius:999px;background:var(--surface3)}.roasBar i{position:absolute;inset:0 auto 0 0;border-radius:999px}.roasBar i.ok{background:#1f9e63}.roasBar i.no{background:#d9483a}.roasBar b{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);opacity:.55}
-.productCell>img{width:36px;height:36px;display:block;flex:0 0 36px;border:1px solid var(--line);border-radius:8px;object-fit:cover;background:var(--surface3)}
-.labelCard{min-height:85px}
-.labelIntro{min-height:40px;padding:6px 10px}.labelNumbers .resultMetric{padding:6px 7px}.labelNumbers .resultMetric span,.financialMetrics .resultMetric span{line-height:1.1}.labelNumbers .resultMetric strong,.financialMetrics .resultMetric strong{margin-top:2px;line-height:1.15}.financialHead{padding:6px 11px}.financialMetrics .resultMetric{padding:9px 8px}
-@media(min-width:1121px){.crumbs{max-width:320px;overflow:hidden}}
-@media(max-width:1400px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}.categorySummary{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:1120px){.reportApp{grid-template-columns:1fr}.reportRail{position:static;height:auto;flex-direction:row;align-items:center;overflow:auto}.reportRail .railGroup,.reportRail .railFoot{display:none}.statusBand{grid-template-columns:1fr}.reportTopbar{align-items:flex-start;overflow:auto}.crumbs{flex:0 0 auto}.topbarActions{flex:0 0 auto}}
-@media(max-width:720px){.reportTable{--sticky-product-width:112px;--sticky-id-width:56px}.reportTable .stickProduct{width:var(--sticky-product-width);max-width:var(--sticky-product-width)}.reportTable .stickId{left:var(--sticky-product-width);width:var(--sticky-id-width);max-width:var(--sticky-id-width);overflow:hidden;text-overflow:ellipsis}.reportTable .productCell{width:88px;gap:6px}.reportTable .productCell>img{width:24px;height:24px;flex-basis:24px}.reportTable .productCell strong,.reportTable .productCell small{max-width:58px}.reportTable .copyId{display:none}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}.reportPage{padding:16px 14px 48px}.categorySummary,.persistentLabels{grid-template-columns:repeat(2,minmax(0,1fr))}.labelCard{min-height:100px}.financialGrid{grid-template-columns:1fr;padding:12px}.losersBand{grid-template-columns:1fr 1fr}.losersIntro{grid-column:1/-1}.losersBand>.resultMetric{border-top:1px solid var(--lineSoft);border-left:0}.reportTabs{display:flex;overflow:auto}.reportTabs button{flex:0 0 auto;padding:0 15px}.searchBox{flex:1 1 100%}.searchBox input{width:100%}.toolbarRight{width:100%;margin-left:0;justify-content:space-between}.simulatorFrame{padding:0;scroll-margin-top:12px}}
+function groupClaim(group: GoogleAdsReportV2Group): {
+  metric: ReportMetric<number>;
+  kind: "money" | "count" | "simulation";
+} {
+  if (group.key === "LOSS_MAKER") {
+    return { metric: group.totals.productLoss, kind: "money" };
+  }
+  if (group.key === "NOT_PROMOTED") {
+    return { metric: group.totals.productCount, kind: "count" };
+  }
+  if (group.key === "UNDERPROMOTED_POTENTIAL") {
+    return { metric: group.totals.missedSalesVolume, kind: "simulation" };
+  }
+  return { metric: group.totals.profitOrLoss, kind: "money" };
+}
+
+function formatGroupClaim(
+  metric: ReportMetric<number>,
+  kind: "money" | "count" | "simulation",
+  currency: ReportMetric<string>,
+): string {
+  if (metric.status === "UNAVAILABLE") return "Indisponibil";
+  if (kind === "count") return `${formatNumber(metric.value)} produse`;
+  return formatMoney(Math.abs(metric.value), currency);
+}
+
+function ProductRow({
+  row,
+  currency,
+}: {
+  row: GoogleAdsReportV2ProductRow;
+  currency: ReportMetric<string>;
+}) {
+  const initials = row.title
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((word) => word[0]?.toUpperCase())
+    .join("");
+  return (
+    <tr className={row.classificationStatus === "QUARANTINED" ? "quarantined" : undefined}>
+      <td data-product-id={row.productId}>
+        <div className="productIdentity">
+          <span aria-hidden="true">{initials || "P"}</span>
+          <div><strong>{row.title}</strong><small>ID produs: {row.productId}</small></div>
+        </div>
+      </td>
+      <td>{formatNumber(row.clicks, 2)}</td>
+      <td>{formatMoney(row.cost, currency)}</td>
+      <td>{formatNumber(row.conversions, 2)}</td>
+      <td>{formatMetric(row.clicksPerSale, (value) => formatNumber(value, 1))}</td>
+      <td>{formatMetric(row.cpa, (value) => formatMoney(value, currency))}</td>
+      <td>{formatMoney(row.conversionValue, currency)}</td>
+      <td>{formatMetric(row.roas, formatRatio)}</td>
+      <td><ProductResult row={row} currency={currency} /></td>
+    </tr>
+  );
+}
+
+function ProductResult({
+  row,
+  currency,
+}: {
+  row: GoogleAdsReportV2ProductRow;
+  currency: ReportMetric<string>;
+}) {
+  if (row.classificationStatus === "QUARANTINED") {
+    return (
+      <span className="unavailableResult">
+        <strong>Indisponibil</strong>
+        <small>{row.classificationText}</small>
+      </span>
+    );
+  }
+  if (row.groupKey === "NOT_PROMOTED") {
+    return <span className="neutralResult"><strong>Sub prag</strong><small>Măsurat</small></span>;
+  }
+  if (row.groupKey === "LOSS_MAKER") {
+    return row.productLoss.status === "AVAILABLE" ? (
+      <span className="lossText"><strong>Pierdere</strong><small>{formatMoney(row.productLoss.value, currency)}</small></span>
+    ) : "Indisponibil";
+  }
+  if (row.financialResult.status === "UNAVAILABLE") return "Indisponibil";
+  const isProfit = row.financialResult.value.outcome !== "LOSS";
+  return (
+    <span className={isProfit ? "profitText" : "lossText"}>
+      <strong>{isProfit ? "Profit" : "Pierdere"}</strong>
+      <small>{formatMoney(Math.abs(row.financialResult.value.displayAmount), currency)}</small>
+    </span>
+  );
+}
+
+const dashboardCss = `
+.reportV2,.reportContent,.conclusionGrid,.comparisonSection,.productActions{min-width:0}
+.reportV2{--ink:#101833;--muted:#66738c;--line:#e1e6ef;--surface:#fbfcfe;--surface-alt:#f5f7fb;--navy:#191d61;--blue:#2b4187;--cyan:#087c9c;--red:#cf3442;--red-soft:#fff2f3;--amber:#a76508;--amber-soft:#fff7e8;--green:#137755;--green-soft:#eaf8f2;min-height:100vh;background:var(--surface);color:var(--ink);font-family:var(--font-inter),sans-serif;font-size:14px;line-height:1.5}.reportV2 *{box-sizing:border-box}.brandHeader{display:flex;align-items:center;gap:24px;min-height:72px;padding:14px clamp(18px,4vw,52px);border-bottom:1px solid var(--line);background:#fefeff}.brandIdentity{display:flex;align-items:center;gap:11px;font-family:var(--font-sora),sans-serif;letter-spacing:.12em}.brandMark{display:grid;width:34px;height:34px;place-items:center;border-radius:10px;background:linear-gradient(135deg,#4c46c7,#13a7c5);color:#fdfcff;font-weight:800}.reportPeriod{display:flex;align-items:center;gap:8px;margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface-alt);color:var(--muted);font-size:12px}.reportPeriod b{color:var(--ink)}.periodForm{display:flex;align-items:center;gap:8px}.periodForm label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.periodForm select,.periodForm button{min-height:38px;border:1px solid var(--line);border-radius:9px;background:#fefeff;color:var(--ink);font:inherit}.periodForm select{max-width:220px;padding:0 10px}.periodForm button{padding:0 13px;font-weight:700}.demoBadge{padding:7px 10px;border-radius:7px;background:var(--amber-soft);color:var(--amber);font-size:11px;font-weight:800}.accountSummary{padding:42px clamp(18px,4vw,52px) 36px;background:linear-gradient(120deg,var(--navy),var(--blue) 58%,var(--cyan));color:#fdfcff}.heroCopy>span{color:#9be6ec;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.heroCopy h1{max-width:900px;margin:12px 0 10px;font-family:var(--font-sora),sans-serif;font-size:clamp(30px,4.2vw,48px);line-height:1.08;letter-spacing:-.035em}.heroCopy p{max-width:760px;margin:0;color:#d4dbef;font-size:16px}.targetGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:28px;overflow:hidden;border:1px solid rgba(255,255,255,.24);border-radius:15px;background:rgba(255,255,255,.07)}.targetTile{min-width:0;padding:16px 18px;border-inline-start:1px solid rgba(255,255,255,.18)}.targetTile:first-child{border-inline-start:0}.targetTile small,.targetTile span{display:block}.targetTile small{color:#c4cce4;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.targetTile strong{display:block;margin-top:6px;font-family:var(--font-sora),sans-serif;font-size:22px;overflow-wrap:anywhere}.targetTile span{margin-top:2px;color:#d4dbef;font-size:10px}.targetTile[data-status=warning] strong{color:#ff9da4}.targetTile[data-status=positive] strong{color:#7be9c3}.targetTile[data-status=unavailable] strong{color:#f5ca77}.reportContent{display:grid;gap:34px;padding:32px clamp(14px,4vw,52px) 56px}.conclusionGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.conclusionCard{display:flex;min-width:0;flex-direction:column;gap:7px;padding:22px;border:1px solid var(--line);border-radius:15px;background:#fefeff}.conclusionCard.loss{border-color:#f4c8cc;background:var(--red-soft)}.conclusionCard.opportunity{border-color:#eed7ae;background:var(--amber-soft)}.conclusionCard h2{margin:0;font-family:var(--font-sora),sans-serif;font-size:19px}.conclusionValue{font-family:var(--font-sora),sans-serif;font-size:27px;line-height:1.15;overflow-wrap:anywhere}.conclusionCard.loss .conclusionValue{color:var(--red)}.conclusionCard.opportunity .conclusionValue{color:var(--amber)}.conclusionCard p{margin:0;color:var(--muted);font-size:13px}.conclusionCard>small{color:var(--amber);font-weight:700}.evidenceLabel{width:max-content;padding:4px 7px;border-radius:6px;background:#eef1f6;color:#59657b;font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.loss .evidenceLabel{background:#ffe3e5;color:var(--red)}.opportunity .evidenceLabel{background:#fce8c4;color:var(--amber)}.sectionHeading h2{margin:0;font-family:var(--font-sora),sans-serif;font-size:22px}.sectionHeading p{max-width:70ch;margin:5px 0 13px;color:var(--muted);font-size:13px}.comparisonScroll,.productTableScroll{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fefeff}.comparisonScroll:focus-visible,.productTableScroll:focus-visible{outline:3px solid #8cb6ee;outline-offset:3px}.comparisonTable,.productTable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}.comparisonTable{min-width:820px}.comparisonTable th,.comparisonTable td,.productTable th,.productTable td{padding:12px 14px;border-bottom:1px solid #e9ecf2;text-align:right;white-space:nowrap}.comparisonTable th,.productTable th{background:#f4f6fa;color:#69768e;font-size:10px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.comparisonTable th:first-child,.comparisonTable td:first-child,.productTable th:first-child,.productTable td:first-child{text-align:left}.comparisonTable td:first-child strong,.comparisonTable td:first-child span{display:block}.comparisonTable td:first-child span{margin-top:2px;color:var(--muted);font-size:10px}.comparisonTable .selectedPeriod{background:#fbfcff}.lossText,.profitText,.unavailableResult,.neutralResult{display:inline-flex;flex-direction:column;align-items:flex-end;gap:1px}.lossText{color:var(--red)}.profitText{color:var(--green)}.neutralResult{color:var(--muted)}.unavailableResult{color:var(--amber)}.lossText small,.profitText small,.unavailableResult small,.neutralResult small{font-size:10px}.productActions{min-width:0}.partialNotice,.simulationNotice{margin:0 0 12px;padding:10px 12px;border:1px solid #ecd7ae;border-radius:10px;background:var(--amber-soft);color:#76510f;font-size:12px}.actionTabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}.actionTabs button{display:flex;align-items:center;gap:7px;flex:0 0 auto;min-height:44px;padding:9px 13px;border:1px solid var(--line);border-radius:11px 11px 0 0;background:#f5f7fb;color:#4c5871;font:inherit;font-weight:750;cursor:pointer}.actionTabs button b{display:grid;min-width:22px;height:22px;place-items:center;border-radius:999px;background:#e8ebf2;font-size:11px}.actionTabs button small{font-size:9px;color:var(--amber)}.actionTabs button[aria-selected=true]{border-color:#dd606a;background:#fefeff;color:#bd2532;box-shadow:inset 0 -3px #d93846}.actionTabs button:focus-visible{position:relative;z-index:2;outline:3px solid #8cb6ee;outline-offset:2px}.groupPanel{overflow:hidden;border:1px solid var(--line);border-radius:0 15px 15px 15px;background:#fefeff}.groupSummary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:center;padding:21px 22px;border-bottom:1px solid #e9ecf2}.groupKicker{color:var(--red);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.groupPanel.opportunity .groupKicker{color:var(--amber)}.groupPanel.profit .groupKicker{color:var(--green)}.groupSummary h3{margin:3px 0 4px;font-family:var(--font-sora),sans-serif;font-size:21px}.groupSummary p{max-width:70ch;margin:0;color:var(--muted);font-size:12px}.supportFacts{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.supportFacts span{padding:5px 8px;border-radius:7px;background:#f1f3f7;color:#56637b;font-size:10px;font-weight:750}.groupClaim{text-align:right}.groupClaim small,.groupClaim span{display:block;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.groupClaim strong{display:block;max-width:300px;margin:3px 0;font-family:var(--font-sora),sans-serif;font-size:25px;overflow-wrap:anywhere}.groupPanel.loss .groupClaim strong{color:var(--red)}.groupPanel.opportunity .groupClaim strong{color:var(--amber)}.groupPanel.profit .groupClaim strong{color:var(--green)}.groupPanel .simulationNotice{margin:14px 22px}.productTableScroll{border:0;border-radius:0}.productTable{min-width:1060px}.productTable tr:last-child td{border-bottom:0}.productTable tbody tr:hover{background:#f8faff}.productTable tbody tr.quarantined{background:#fffaf0}.productIdentity{display:flex;align-items:center;gap:9px;min-width:230px}.productIdentity>span{display:grid;width:32px;height:32px;flex:0 0 32px;place-items:center;border:1px solid #dfe4ed;border-radius:8px;background:#f4f6fa;color:#504bc0;font-size:9px;font-weight:850}.productIdentity strong,.productIdentity small{display:block;max-width:260px;overflow:hidden;text-overflow:ellipsis}.productIdentity small{color:#8b96aa;font-size:9px}.emptyState{display:grid;gap:5px;padding:38px 22px;text-align:center}.emptyState span{color:var(--muted);font-size:12px}.groupFooter{padding:12px 22px;border-top:1px solid #e9ecf2;background:#f7f8fb;color:var(--muted);font-size:11px}@media(max-width:900px){.brandHeader{align-items:flex-start;flex-wrap:wrap}.reportPeriod{margin-left:auto}.periodForm{width:100%;order:3}.periodForm select{flex:1}.targetGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.targetTile:nth-child(3){border-top:1px solid rgba(255,255,255,.18);border-inline-start:0}.targetTile:nth-child(4){border-top:1px solid rgba(255,255,255,.18)}.conclusionGrid{grid-template-columns:1fr}.groupSummary{grid-template-columns:1fr}.groupClaim{text-align:left}.lossText,.profitText,.unavailableResult,.neutralResult{align-items:flex-start}}@media(max-width:540px){.brandHeader{gap:12px;padding:13px 14px}.brandIdentity strong{font-size:13px}.reportPeriod{display:grid;gap:0;padding:7px 9px;font-size:10px}.demoBadge{width:100%;text-align:center}.accountSummary{padding:30px 18px}.heroCopy h1{font-size:30px}.heroCopy p{font-size:14px}.targetTile{padding:14px 12px}.targetTile strong{font-size:17px}.reportContent{gap:28px;padding:22px 14px 40px}.conclusionCard{padding:18px}.conclusionValue{font-size:23px}.sectionHeading h2{font-size:20px}.groupSummary{padding:18px}.groupClaim strong{font-size:22px}.actionTabs{margin-inline:-14px;padding-inline:14px}.productTableScroll{scrollbar-width:thin}}
 `;
