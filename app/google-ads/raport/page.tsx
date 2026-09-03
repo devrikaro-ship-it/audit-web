@@ -60,8 +60,10 @@ import {
   sealReportSnapshot,
   type GadsReportSnapshot,
 } from "@/lib/gads-report-delivery";
+import { stagePendingReportSnapshot } from "@/lib/gads-pending-report";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const metadata = { title: "Raportul tau · Audit Google Ads Devrika" };
 
 const TIER_STYLE: Record<Tier, { bg: string; fg: string; label: string }> = {
@@ -281,7 +283,8 @@ function reportProductsV2(
 
 export default async function Raport() {
   const jar = await cookies();
-  const session = unseal(jar.get(SESSION_COOKIE)?.value);
+  const sealedSession = jar.get(SESSION_COOKIE)?.value;
+  const session = unseal(sealedSession);
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.customerTimeZone) redirect("/google-ads/conturi");
@@ -503,6 +506,11 @@ export default async function Raport() {
   if (!openedReportSnapshot?.reportV2) {
     throw new Error("Signed V2 report snapshot validation failed");
   }
+  if (!sealedSession) throw new Error("Sealed report session is unavailable");
+  const { reference: pendingReportReference } = await stagePendingReportSnapshot(
+    signedReportSnapshot,
+    sealedSession,
+  );
   const snapshotViewV2 = buildGoogleAdsReportV2({
     currencyCode: openedReportSnapshot.reportV2.currencyCode,
     minimumRoasTarget: openedReportSnapshot.breakEvenRoas,
@@ -959,7 +967,7 @@ export default async function Raport() {
           </p>
           <ContactForm
             action={salveazaContact}
-            reportSnapshot={signedReportSnapshot}
+            pendingReportReference={pendingReportReference}
           />
         </ReportSurface>
 

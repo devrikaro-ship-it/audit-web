@@ -17,6 +17,8 @@ let expandedCatalog = false;
 let demoWithoutWindows = false;
 let emptyCatalog = false;
 let capturedReportSnapshot = "";
+let capturedPendingReference = "";
+let capturedSealedSession = "";
 let exactRangeReads: ReportDateRange[] = [];
 let failedExactRead: "selected" | "previous" | "previousYear" | null = null;
 let mutateSnapshotBeforeSeal: ((snapshot: GadsReportSnapshot) => GadsReportSnapshot) | null = null;
@@ -35,12 +37,19 @@ vi.mock("next/link", () => ({
   default: ({ children }: { children: React.ReactNode }) => <a>{children}</a>,
 }));
 vi.mock("./ContactForm", () => ({
-  default: ({ reportSnapshot }: { reportSnapshot: string }) => {
-    capturedReportSnapshot = reportSnapshot;
-    return <form data-test="contact" />;
+  default: ({ pendingReportReference }: { pendingReportReference: string }) => {
+    capturedPendingReference = pendingReportReference;
+    return <form data-test="contact" data-pending-reference={pendingReportReference} />;
   },
 }));
 vi.mock("./actions", () => ({ salveazaContact: async () => {} }));
+vi.mock("@/lib/gads-pending-report", () => ({
+  stagePendingReportSnapshot: async (signedSnapshot: string, sealedSession: string) => {
+    capturedReportSnapshot = signedSnapshot;
+    capturedSealedSession = sealedSession;
+    return { reference: "p".repeat(43) };
+  },
+}));
 vi.mock("@/lib/gads-report-delivery", async (original) => {
   const actual = await original<typeof import("@/lib/gads-report-delivery")>();
   return {
@@ -190,6 +199,8 @@ describe("pagina de raport, randata", () => {
     emptyCatalog = false;
     catalogReadCount = 0;
     capturedReportSnapshot = "";
+    capturedPendingReference = "";
+    capturedSealedSession = "";
     exactRangeReads = [];
     failedExactRead = null;
     mutateSnapshotBeforeSeal = null;
@@ -300,6 +311,15 @@ describe("pagina de raport, randata", () => {
       ["D", "UNDERPROMOTED_POTENTIAL"],
     ]);
     expect(new Set(stored?.reportV2?.products.map(({ productId }) => productId)).size).toBe(4);
+  });
+
+  it("stages the exact signed snapshot under the sealed session and sends only a fixed reference to the form", async () => {
+    const h = await html();
+    expect(capturedPendingReference).toBe("p".repeat(43));
+    expect(capturedSealedSession).toBe("cookie-fals");
+    expect(openReportSnapshot(capturedReportSnapshot)?.reportV2?.products).toHaveLength(4);
+    expect(h).toContain(`data-pending-reference="${"p".repeat(43)}"`);
+    expect(h).not.toContain(capturedReportSnapshot);
   });
 
   it("stores a failed comparison read as unavailable instead of a zero period", async () => {

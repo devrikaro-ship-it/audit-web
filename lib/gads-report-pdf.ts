@@ -1,7 +1,9 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import { link, mkdir, open, readFile, unlink } from "node:fs/promises";
 import path from "node:path";
 import PDFDocument from "pdfkit";
 import type { DeliveryCampaign, DeliveryProduct, GadsReportSnapshot } from "./gads-report-delivery";
+import { reportStorageDirectory } from "./gads-report-snapshot";
 
 const NAVY = "#171A4A";
 const PURPLE = "#4F46B5";
@@ -9,10 +11,6 @@ const MUTED = "#64748B";
 const BORDER = "#DFE5EF";
 const RED = "#DC3F4E";
 const GREEN = "#148458";
-
-function reportsDirectory(): string {
-  return process.env.GADS_REPORTS_DIR || path.join(path.dirname(process.env.GADS_LEADS_FILE || path.join(process.cwd(), "data", "gads-leads.json")), "gads-reports");
-}
 
 const money = (value: number) => `${Math.round(value).toLocaleString("en-US")} RON`;
 const metric = (value: number | null, suffix = "") => value === null ? "-" : `${Math.round(value).toLocaleString("ro-RO")}${suffix}`;
@@ -178,10 +176,30 @@ function buildPdf(report: GadsReportSnapshot): Promise<Buffer> {
 
 export async function generateStoredReportPdf(reportId: string, report: GadsReportSnapshot): Promise<{ path: string; buffer: Buffer }> {
   if (!/^[a-zA-Z0-9-]+$/.test(reportId)) throw new Error("Invalid report id");
-  const directory = reportsDirectory();
+  const directory = reportStorageDirectory();
   await mkdir(directory, { recursive: true });
   const pdfPath = path.join(directory, `${reportId}.pdf`);
+  const existing = await readFile(pdfPath).catch((error) => {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
+  });
+  if (existing) return { path: pdfPath, buffer: existing };
   const buffer = await buildPdf(report);
-  await writeFile(pdfPath, buffer);
-  return { path: pdfPath, buffer };
+  const temporary = path.join(directory, `.${reportId}.${process.pid}.${randomUUID()}.pdf.tmp`);
+  const handle = await open(temporary, "wx", 0o600);
+  try {
+    await handle.writeFile(buffer);
+    await handle.sync();
+  } finally {
+    await handle.close();
+  }
+  try {
+    await link(temporary, pdfPath);
+    return { path: pdfPath, buffer };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+    return { path: pdfPath, buffer: await readFile(pdfPath) };
+  } finally {
+    await unlink(temporary).catch(() => undefined);
+  }
 }

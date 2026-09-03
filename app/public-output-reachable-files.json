@@ -35,6 +35,7 @@
     "lib/gads-localized-copy.ts",
     "lib/gads-margin.ts",
     "lib/gads-oauth.ts",
+    "lib/gads-pending-report.ts",
     "lib/gads-pmax.ts",
     "lib/gads-product-classification.ts",
     "lib/gads-product-simulation.ts",

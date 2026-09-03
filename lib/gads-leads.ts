@@ -1,13 +1,6 @@
+import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-
-// Lead-urile din auditul de Google Ads pe cont conectat. Fisier separat de `leads-store`
-// (auditul de site), pentru ca forma datelor e alta: acolo url+scor, aici cont+marja.
-// Acelasi tipar de persistenta: volum durabil + scriere serializata prin fisier temporar,
-// ca un redeploy sau doua cereri simultane sa nu lase fisierul rupt la mijloc.
-//
-// NU salvam refresh token-ul. Accesul ne trebuie doar cat ruleaza auditul; pastrat degeaba,
-// ar fi o raspundere fara niciun castig.
 
 export type GadsLead = {
   id: string;
@@ -38,6 +31,7 @@ export type GadsLead = {
 
 const FILE = process.env.GADS_LEADS_FILE
   || path.join(path.dirname(process.env.LEADS_FILE || path.join(process.cwd(), "data", "x")), "gads-leads.json");
+const LOCK = `${FILE}.lock`;
 
 declare global {
   var __gadsLeads: GadsLead[] | undefined;
@@ -45,64 +39,131 @@ declare global {
 }
 
 async function load(): Promise<GadsLead[]> {
-  if (global.__gadsLeads) return global.__gadsLeads;
   try {
-    global.__gadsLeads = JSON.parse(await fs.readFile(FILE, "utf8")) as GadsLead[];
-  } catch {
-    global.__gadsLeads = [];
+    return JSON.parse(await fs.readFile(FILE, "utf8")) as GadsLead[];
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    return [];
   }
-  return global.__gadsLeads;
 }
 
-async function persist(): Promise<void> {
-  const data = global.__gadsLeads!;
+async function persist(data: GadsLead[]): Promise<void> {
   await fs.mkdir(path.dirname(FILE), { recursive: true });
-  const tmp = `${FILE}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(data, null, 2), "utf8");
-  await fs.rename(tmp, FILE);
+  const temporary = `${FILE}.${process.pid}.${randomUUID()}.tmp`;
+  const handle = await fs.open(temporary, "wx", 0o600);
+  try {
+    await handle.writeFile(JSON.stringify(data, null, 2), "utf8");
+    await handle.sync();
+  } finally {
+    await handle.close();
+  }
+  await fs.rename(temporary, FILE);
+}
+
+async function acquireLock(): Promise<void> {
+  await fs.mkdir(path.dirname(FILE), { recursive: true });
+  const deadline = Date.now() + 5_000;
+  while (true) {
+    try {
+      await fs.mkdir(LOCK, { mode: 0o700 });
+      return;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+      const age = Date.now() - (await fs.stat(LOCK)).mtimeMs;
+      if (age > 30_000) {
+        await fs.rm(LOCK, { recursive: true, force: true });
+        continue;
+      }
+      if (Date.now() >= deadline) throw new Error("Timed out acquiring Google Ads lead storage lock");
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+  }
+}
+
+async function withLock<T>(operation: () => Promise<T>): Promise<T> {
+  await acquireLock();
+  try {
+    return await operation();
+  } finally {
+    await fs.rm(LOCK, { recursive: true, force: true });
+  }
+}
+
+function createLead(rec: Omit<GadsLead, "id" | "createdAt">): GadsLead {
+  return {
+    ...rec,
+    id: randomUUID(),
+    createdAt: Date.now(),
+  };
 }
 
 export async function saveLead(rec: Omit<GadsLead, "id" | "createdAt">): Promise<GadsLead> {
-  const lead: GadsLead = {
-    ...rec,
-    id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`,
-    createdAt: Date.now(),
-  };
-  const list = await load();
-  list.unshift(lead);
-  global.__gadsLeadsWrite = (global.__gadsLeadsWrite ?? Promise.resolve()).then(persist, persist);
-  await global.__gadsLeadsWrite;
-  return lead;
+  return withLock(async () => {
+    const list = await load();
+    const lead = createLead(rec);
+    list.unshift(lead);
+    await persist(list);
+    return lead;
+  });
 }
 
-/**
- * Varianta care nu arunca. Pagina de raport are nevoie sa STIE daca lead-ul s-a salvat, ca sa
- * nu-i spuna omului "am notat" cand de fapt nu a notat nimeni. Daca scrierea pica, lead-ul
- * pleaca in log-ul serverului — de acolo se poate recupera manual, ceea ce e infinit mai bine
- * decat sa dispara.
- */
+const IMMUTABLE_REPORT_FIELDS = [
+  "nume",
+  "email",
+  "telefon",
+  "customerId",
+  "customerName",
+  "website",
+  "reportToken",
+] as const;
+
+export async function saveOrGetReportLead(
+  rec: Omit<GadsLead, "id" | "createdAt"> & { reportId: string; reportToken: string },
+): Promise<GadsLead> {
+  return withLock(async () => {
+    const list = await load();
+    const existing = list.find((lead) => lead.reportId === rec.reportId);
+    if (existing) {
+      const matches = IMMUTABLE_REPORT_FIELDS.every((field) => existing[field] === rec[field]);
+      if (!matches) throw new Error("Existing report lead conflicts with immutable delivery data");
+      return existing;
+    }
+    const normalizedEmail = rec.email.trim().toLowerCase();
+    const reusedPortalToken = list.find((lead) =>
+      lead.email.trim().toLowerCase() === normalizedEmail
+      && lead.customerId === rec.customerId
+      && typeof lead.portalToken === "string"
+    )?.portalToken;
+    const lead = createLead({ ...rec, portalToken: reusedPortalToken ?? rec.portalToken });
+    list.unshift(lead);
+    await persist(list);
+    return lead;
+  });
+}
+
 export async function saveLeadSafe(rec: Omit<GadsLead, "id" | "createdAt">): Promise<{ ok: boolean }> {
   try {
     await saveLead(rec);
     return { ok: true };
-  } catch (e) {
-    console.error("[gads-lead] SALVARE ESUATA — lead recuperabil din linia asta:", JSON.stringify(rec), e);
+  } catch (error) {
+    console.error("[gads-lead] SAVE FAILED — lead recoverable from this log line:", JSON.stringify(rec), error);
     return { ok: false };
   }
 }
 
 export async function listLeads(): Promise<GadsLead[]> {
-  return [...(await load())].sort((a, b) => b.createdAt - a.createdAt);
+  return (await load()).sort((left, right) => right.createdAt - left.createdAt);
 }
 
 export async function updateLead(id: string, patch: Partial<GadsLead>): Promise<GadsLead | null> {
-  const list = await load();
-  const index = list.findIndex((lead) => lead.id === id);
-  if (index < 0) return null;
-  list[index] = { ...list[index], ...patch, id: list[index].id, createdAt: list[index].createdAt };
-  global.__gadsLeadsWrite = (global.__gadsLeadsWrite ?? Promise.resolve()).then(persist, persist);
-  await global.__gadsLeadsWrite;
-  return list[index];
+  return withLock(async () => {
+    const list = await load();
+    const index = list.findIndex((lead) => lead.id === id);
+    if (index < 0) return null;
+    list[index] = { ...list[index], ...patch, id: list[index].id, createdAt: list[index].createdAt };
+    await persist(list);
+    return list[index];
+  });
 }
 
 export async function getLead(id: string): Promise<GadsLead | null> {
@@ -112,9 +173,9 @@ export async function getLead(id: string): Promise<GadsLead | null> {
 export async function findPortalToken(email: string, customerId?: string): Promise<string | null> {
   const normalizedEmail = email.trim().toLowerCase();
   const match = (await load()).find((lead) =>
-    lead.email.trim().toLowerCase() === normalizedEmail &&
-    lead.customerId === customerId &&
-    typeof lead.portalToken === "string"
+    lead.email.trim().toLowerCase() === normalizedEmail
+    && lead.customerId === customerId
+    && typeof lead.portalToken === "string"
   );
   return match?.portalToken ?? null;
 }

@@ -50,6 +50,45 @@ describe("salvarea lead-ului din auditul de Google Ads", () => {
     await expect(listPortalReports("unknown-portal")).resolves.toEqual([]);
   });
 
+  it("creates one stable report lead across isolated concurrent module contexts", async () => {
+    const input = {
+      ...rec,
+      customerId: "111",
+      customerName: "Example Store",
+      website: "https://store.example/",
+      reportId: "stable-report",
+      reportToken: "stable-report-token",
+      portalToken: "new-portal-token",
+      deliveryStatus: "NEW_LEAD" as const,
+    };
+    const firstModule = await import("./gads-leads");
+    vi.resetModules();
+    const secondModule = await import("./gads-leads");
+
+    const [first, second] = await Promise.all([
+      firstModule.saveOrGetReportLead(input),
+      secondModule.saveOrGetReportLead(input),
+    ]);
+
+    expect(first.id).toBe(second.id);
+    expect((await secondModule.listLeads()).filter((lead) => lead.reportId === "stable-report"))
+      .toHaveLength(1);
+  });
+
+  it("rejects changed immutable data for an existing report identity", async () => {
+    const { saveOrGetReportLead } = await import("./gads-leads");
+    const input = {
+      ...rec,
+      customerId: "111",
+      reportId: "stable-report",
+      reportToken: "stable-report-token",
+      portalToken: "portal-token",
+    };
+    await saveOrGetReportLead(input);
+    await expect(saveOrGetReportLead({ ...input, email: "changed@example.com" }))
+      .rejects.toThrow("conflicts");
+  });
+
   it("cand scrierea pica, raporteaza esecul si lasa lead-ul in log", async () => {
     vi.doMock("node:fs", () => ({
       promises: {

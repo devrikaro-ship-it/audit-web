@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { C, sora, brandGradient } from "@/lib/theme";
 import type { ContactResult } from "./actions";
 
-export default function ContactForm({ action, reportSnapshot }: { action: (formData: FormData) => Promise<ContactResult>; reportSnapshot: string }) {
+export default function ContactForm({ action, pendingReportReference }: { action: (formData: FormData) => Promise<ContactResult>; pendingReportReference: string }) {
   const router = useRouter();
   const [status, setStatus] = useState<"READY" | "SENDING" | "SENT" | "SAVED" | "FAILED">("READY");
   const [portalPath, setPortalPath] = useState("");
@@ -27,7 +27,7 @@ export default function ContactForm({ action, reportSnapshot }: { action: (formD
       router.push(result.portalPath);
     }
   }} className="flex flex-col gap-3">
-    <input type="hidden" name="reportSnapshot" value={reportSnapshot} />
+    <input type="hidden" name="pendingReportReference" value={pendingReportReference} />
     {status === "FAILED" && <p className="rounded-xl px-5 py-4 text-[14px]" style={{ background: C.redBg, color: C.red }}>Nu am putut genera raportul PDF. Verifică datele și încearcă din nou.</p>}
     <div className="flex flex-col gap-3 sm:flex-row">
       <Field label="Nume" name="name" autoComplete="name" />
