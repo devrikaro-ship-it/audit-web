@@ -9,6 +9,7 @@ import type {
   ProfitOrLossValue,
   ReportMetric,
   ReportPeriodRow,
+  TargetPresentationStatus,
   V2ProductLabel,
 } from "@/lib/gads-report-metrics";
 
@@ -46,7 +47,7 @@ const GROUP_PRESENTATION: Record<V2ProductLabel, GroupPresentation> = {
   },
   UNDERPROMOTED_POTENTIAL: {
     tabLabel: "Au potențial",
-    metricLabel: "Volum vanzari ratat",
+    metricLabel: "Volum de vânzări ratat",
     resultHeader: "Potențial",
     tone: "opportunity",
   },
@@ -101,6 +102,15 @@ const formatMoney = (
 
 const metricRawValue = (metric: ReportMetric<number>): string =>
   metric.status === "AVAILABLE" ? String(metric.value) : "unavailable";
+
+const formatProductCount = (count: number, valid = false): string => {
+  const noun = count === 1 ? "produs" : "produse";
+  const qualifier = valid ? (count === 1 ? " valid" : " valide") : "";
+  return `${formatNumber(count)} ${noun}${qualifier}`;
+};
+
+const formatUnavailableCount = (count: number): string =>
+  `${formatNumber(count)} ${count === 1 ? "indisponibil" : "indisponibile"}`;
 
 const formatDateRange = (from: string, to: string): string => {
   const date = (value: string) => new Date(`${value}T12:00:00Z`);
@@ -221,41 +231,25 @@ export default function ReportingDashboard({
             label="ROAS actual"
             metric={report.targets.currentRoas}
             format={formatRatio}
-            status={targetStatus(
-              report.targets.currentRoas,
-              report.targets.minimumRoas,
-              "minimum",
-            )}
+            status={report.targetPresentation.currentRoas}
           />
           <TargetTile
             label="ROAS minim"
             metric={report.targets.minimumRoas}
             format={formatRatio}
-            status={
-              report.targets.minimumRoas.status === "AVAILABLE"
-                ? "positive"
-                : "unavailable"
-            }
+            status={report.targetPresentation.minimumRoas}
           />
           <TargetTile
             label="CPA actual"
             metric={report.targets.currentCpa}
             format={(value) => formatMoney(value, report.currencyCode)}
-            status={targetStatus(
-              report.targets.currentCpa,
-              report.targets.maximumCpa,
-              "maximum",
-            )}
+            status={report.targetPresentation.currentCpa}
           />
           <TargetTile
             label="CPA maxim"
             metric={report.targets.maximumCpa}
             format={(value) => formatMoney(value, report.currencyCode)}
-            status={
-              report.targets.maximumCpa.status === "AVAILABLE"
-                ? "positive"
-                : "unavailable"
-            }
+            status={report.targetPresentation.maximumCpa}
           />
         </div>
       </section>
@@ -332,7 +326,9 @@ export default function ReportingDashboard({
                 group.totals.productCount.status === "AVAILABLE"
                   ? group.totals.productCount.value
                   : 0;
-              const quarantinedCount = group.quarantinedRows.length;
+              const quarantinedCount = group.totals.quarantinedProductCount.status === "AVAILABLE"
+                ? group.totals.quarantinedProductCount.value
+                : null;
               return (
                 <button
                   key={group.key}
@@ -347,8 +343,10 @@ export default function ReportingDashboard({
                 >
                   <span>{GROUP_PRESENTATION[group.key].tabLabel}</span>
                   <b>{validCount}</b>
-                  {quarantinedCount ? (
-                    <small>{quarantinedCount} indisponibil</small>
+                  {quarantinedCount === null ? (
+                    <small>Număr indisponibil</small>
+                  ) : quarantinedCount > 0 ? (
+                    <small>{formatUnavailableCount(quarantinedCount)}</small>
                   ) : null}
                 </button>
               );
@@ -362,21 +360,6 @@ export default function ReportingDashboard({
   );
 }
 
-function targetStatus(
-  current: ReportMetric<number>,
-  target: ReportMetric<number>,
-  direction: "minimum" | "maximum",
-): "warning" | "positive" | "neutral" | "unavailable" {
-  if (current.status === "UNAVAILABLE" || target.status === "UNAVAILABLE") {
-    return current.status === "UNAVAILABLE" ? "unavailable" : "neutral";
-  }
-  const missesTarget =
-    direction === "minimum"
-      ? current.value < target.value
-      : current.value > target.value;
-  return missesTarget ? "warning" : "positive";
-}
-
 function TargetTile({
   label,
   metric,
@@ -386,7 +369,7 @@ function TargetTile({
   label: string;
   metric: ReportMetric<number>;
   format: (value: number) => string;
-  status: "warning" | "positive" | "neutral" | "unavailable";
+  status: TargetPresentationStatus;
 }) {
   return (
     <div className="targetTile" data-target-tile data-status={status}>
@@ -425,7 +408,7 @@ function ConclusionCard({
   const metric =
     conclusion.metric.status === "AVAILABLE"
       ? isCount
-        ? `${formatNumber(conclusion.metric.value)} produse`
+        ? formatProductCount(conclusion.metric.value)
         : formatMoney(conclusion.metric.value, currency)
       : "Indisponibil";
   return (
@@ -444,7 +427,7 @@ function ConclusionCard({
       <h2>{presentation.label}</h2>
       <strong className="conclusionValue">{metric}</strong>
       <p>
-        {count === null ? "Număr indisponibil" : `${formatNumber(count)} produse`} ·{" "}
+        {count === null ? "Număr indisponibil" : formatProductCount(count)} ·{" "}
         {conclusion.explanation}
       </p>
       {conclusion.totalScope === "PARTIAL" ? (
@@ -537,6 +520,9 @@ function GroupPanel({
     group.totals.productCount.status === "AVAILABLE"
       ? group.totals.productCount.value
       : 0;
+  const quarantinedCount = group.totals.quarantinedProductCount.status === "AVAILABLE"
+    ? group.totals.quarantinedProductCount.value
+    : null;
   const domId = groupDomId(group.key);
   return (
     <div
@@ -551,20 +537,23 @@ function GroupPanel({
           <h3>{group.title}</h3>
           <p>{group.explanation}</p>
           <div className="supportFacts">
-            <span>{formatNumber(count)} produse valide</span>
+            <span>{formatProductCount(count, true)}</span>
             <span>
               Buget măsurat: {formatMetric(group.totals.spend, (value) =>
                 formatMoney(value, report.currencyCode),
               )}
             </span>
-            {group.benchmark.status === "AVAILABLE" ? (
+            {group.benchmarkApplies ? (
               <span>
-                Media contului: {formatNumber(group.benchmark.value, 1)} clickuri
-                pentru o vânzare
+                Media contului: {group.benchmark.status === "AVAILABLE"
+                  ? `${formatNumber(group.benchmark.value, 1)} clickuri pentru o vânzare`
+                  : "Indisponibil"}
               </span>
             ) : null}
-            {group.quarantinedRows.length ? (
-              <span>{group.quarantinedRows.length} cu clasificare indisponibilă</span>
+            {quarantinedCount === null ? (
+              <span>Număr de clasificări indisponibil</span>
+            ) : quarantinedCount > 0 ? (
+              <span>{formatProductCount(quarantinedCount)} cu clasificare indisponibilă</span>
             ) : null}
           </div>
         </div>
@@ -575,7 +564,13 @@ function GroupPanel({
         >
           <small>{presentation.metricLabel}</small>
           <strong>{formatGroupClaim(claim.metric, claim.kind, report.currencyCode)}</strong>
-          <span>{claim.kind === "simulation" ? "Simulare" : "Măsurat"}</span>
+          <span>
+            {claim.metric.status === "UNAVAILABLE"
+              ? "Indisponibil"
+              : claim.kind === "simulation"
+                ? "Simulare"
+                : "Măsurat"}
+          </span>
         </div>
       </div>
       {claim.kind === "simulation" ? (
@@ -597,7 +592,7 @@ function GroupPanel({
                 "Clickuri",
                 "Cost",
                 "Nr. vanzari",
-                "Clickuri / vanzare",
+                "Clickuri / vânzare",
                 "CPA",
                 "Volum vanzari",
                 "ROAS",
@@ -654,7 +649,7 @@ function formatGroupClaim(
   currency: ReportMetric<string>,
 ): string {
   if (metric.status === "UNAVAILABLE") return "Indisponibil";
-  if (kind === "count") return `${formatNumber(metric.value)} produse`;
+  if (kind === "count") return formatProductCount(metric.value);
   return formatMoney(Math.abs(metric.value), currency);
 }
 

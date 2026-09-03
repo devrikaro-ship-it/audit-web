@@ -202,7 +202,7 @@ it("shows each product once across four complete nine-column action tables", () 
     "Clickuri",
     "Cost",
     "Nr. vanzari",
-    "Clickuri / vanzare",
+    "Clickuri / vânzare",
     "CPA",
     "Volum vanzari",
     "ROAS",
@@ -325,4 +325,140 @@ it("keeps the mobile contract reachable: two target columns, stacked conclusions
   expect(tableScroller?.getAttribute("tabindex")).toBe("0");
   expect(within(tableScroller as HTMLElement).getAllByRole("columnheader")).toHaveLength(9);
   expect(container.querySelector("[data-legacy-permanent-labels]")).toBeNull();
+});
+
+it("labels unavailable group claims and meaningful benchmarks as unavailable inside their panels", () => {
+  const missingTarget = createReport({ minimumRoasTarget: null });
+  render(<ReportingDashboard report={missingTarget} />);
+
+  const lossClaim = screen.getByTestId("group-claim-LOSS_MAKER");
+  expect(within(lossClaim).getAllByText("Indisponibil")).toHaveLength(2);
+  expect(within(lossClaim).queryByText("Măsurat")).toBeNull();
+
+  fireEvent.click(screen.getByRole("tab", { name: /Profitabile/ }));
+  const profitableClaim = screen.getByTestId("group-claim-PERFORMER");
+  expect(within(profitableClaim).getAllByText("Indisponibil")).toHaveLength(2);
+  expect(within(profitableClaim).queryByText("Măsurat")).toBeNull();
+
+  cleanup();
+  const missingBenchmark = createReport({
+    periods: {
+      selected: {
+        range: { from: "2026-08-01", to: "2026-08-31" },
+        spend: 500,
+        salesVolume: 0,
+        numberOfSales: 0,
+      },
+      previous: null,
+      previousYear: null,
+    },
+    products: [
+      product("zero-sales", "NOT_PROMOTED", {
+        cost: 500,
+        conversionValue: 0,
+        conversions: 0,
+        clicks: 20,
+      }),
+    ],
+  });
+  render(<ReportingDashboard report={missingBenchmark} />);
+
+  fireEvent.click(screen.getByRole("tab", { name: /Insuficient promovate/ }));
+  expect(
+    within(screen.getByRole("tabpanel")).getByText("Media contului: Indisponibil"),
+  ).toBeTruthy();
+  fireEvent.click(screen.getByRole("tab", { name: /Au potențial/ }));
+  expect(
+    within(screen.getByRole("tabpanel")).getByText("Media contului: Indisponibil"),
+  ).toBeTruthy();
+
+  const selectedPeriodRow = within(
+    screen.getByRole("table", { name: "Comparația perioadelor" }),
+  ).getAllByRole("row")[1];
+  expect(selectedPeriodRow.textContent).toContain("500");
+  expect(selectedPeriodRow.textContent).toContain("0");
+});
+
+it("obeys hand-built target presentation states and authoritative quarantined totals", () => {
+  const builtReport = createReport();
+  const report: GoogleAdsReportV2ViewModel = {
+    ...builtReport,
+    targetPresentation: {
+      currentRoas: "positive",
+      minimumRoas: "unavailable",
+      currentCpa: "positive",
+      maximumCpa: "unavailable",
+    },
+    groups: builtReport.groups.map((group) =>
+      group.key === "NOT_PROMOTED"
+        ? {
+            ...group,
+            quarantinedRows: [],
+            totals: {
+              ...group.totals,
+              quarantinedProductCount: { status: "AVAILABLE", value: 7 },
+            },
+          }
+        : group,
+    ),
+  };
+  const { container } = render(<ReportingDashboard report={report} />);
+  const targetTiles = container.querySelectorAll("[data-target-tile]");
+
+  expect(targetTiles[0].getAttribute("data-status")).toBe("positive");
+  expect(targetTiles[1].getAttribute("data-status")).toBe("unavailable");
+  expect(targetTiles[2].getAttribute("data-status")).toBe("positive");
+  expect(targetTiles[3].getAttribute("data-status")).toBe("unavailable");
+
+  const notPromotedTab = screen.getByRole("tab", { name: /Insuficient promovate/ });
+  expect(within(notPromotedTab).getByText("7 indisponibile")).toBeTruthy();
+  fireEvent.click(notPromotedTab);
+  expect(
+    within(screen.getByRole("tabpanel")).getByText(
+      "7 produse cu clasificare indisponibilă",
+    ),
+  ).toBeTruthy();
+});
+
+it("renders authoritative Romanian copy and correct singular and plural product forms", () => {
+  render(<ReportingDashboard report={createReport()} />);
+
+  expect(
+    screen.getByRole("heading", {
+      name: "Contul este sub pragul minim de profitabilitate în perioada selectată.",
+    }),
+  ).toBeTruthy();
+  expect(screen.getByRole("heading", { name: "Produse care consumă buget" })).toBeTruthy();
+  expect(screen.getByText(/cheltuială măsurată/)).toBeTruthy();
+  expect(screen.getAllByText("1 produs").length).toBeGreaterThan(0);
+  expect(screen.getByText("1 produs valid")).toBeTruthy();
+  expect(screen.queryByText("1 produse")).toBeNull();
+  expect(screen.queryByText("1 produse valide")).toBeNull();
+
+  const comparisonHeaders = within(
+    screen.getByRole("table", { name: "Comparația perioadelor" }),
+  ).getAllByRole("columnheader");
+  expect(comparisonHeaders.map((header) => header.textContent)).toContain("Volum vanzari");
+  expect(comparisonHeaders.map((header) => header.textContent)).toContain("Nr. vanzari");
+
+  cleanup();
+  const pluralReport = createReport({
+    products: [
+      product("loss-one", "LOSS_MAKER", {
+        cost: 200,
+        conversionValue: 100,
+        conversions: 1,
+      }),
+      product("loss-two", "LOSS_MAKER", {
+        cost: 300,
+        conversionValue: 100,
+        conversions: 1,
+      }),
+    ],
+  });
+  render(<ReportingDashboard report={pluralReport} />);
+  expect(
+    screen.getByTestId("conclusion-MEASURED_PRODUCT_LOSS").textContent,
+  ).toContain("2 produse");
+  expect(screen.getByText("2 produse valide")).toBeTruthy();
 });

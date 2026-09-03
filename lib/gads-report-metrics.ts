@@ -25,6 +25,11 @@ export type ReportProductInputV2 = ReportProductInput & {
 export type ProductPopulationStatus = "COMPLETE" | "PARTIAL";
 export type PeriodKey = "SELECTED" | "PREVIOUS" | "PREVIOUS_YEAR";
 export type EvidenceLabel = "MEASURED" | "SIMULATED" | "UNAVAILABLE";
+export type TargetPresentationStatus =
+  | "warning"
+  | "positive"
+  | "neutral"
+  | "unavailable";
 
 export type PeriodFormulaResult = {
   roas: number | null;
@@ -107,6 +112,7 @@ export type GoogleAdsReportV2Group = {
   quarantinedRows: GoogleAdsReportV2ProductRow[];
   totals: ReportGroupTotals;
   benchmark: ReportMetric<number>;
+  benchmarkApplies: boolean;
   totalScope: ProductPopulationStatus;
 };
 
@@ -146,6 +152,12 @@ export type GoogleAdsReportV2ViewModel = {
     currentCpa: ReportMetric<number>;
     maximumCpa: ReportMetric<number>;
   };
+  targetPresentation: {
+    currentRoas: TargetPresentationStatus;
+    minimumRoas: TargetPresentationStatus;
+    currentCpa: TargetPresentationStatus;
+    maximumCpa: TargetPresentationStatus;
+  };
   accountHeadline: string;
   averageClicksPerSale: ReportMetric<number>;
   conclusions: GoogleAdsReportV2Conclusion[];
@@ -176,6 +188,19 @@ function roundedDisplayAmount(value: number): number {
 
 function positiveTarget(value: number | null | undefined): number | null {
   return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
+}
+
+function currentTargetPresentation(
+  current: ReportMetric<number>,
+  target: ReportMetric<number>,
+  direction: "minimum" | "maximum",
+): TargetPresentationStatus {
+  if (current.status === "UNAVAILABLE") return "unavailable";
+  if (target.status === "UNAVAILABLE") return "neutral";
+  const missesTarget = direction === "minimum"
+    ? current.value < target.value
+    : current.value > target.value;
+  return missesTarget ? "warning" : "positive";
 }
 
 function requireMeasuredNumber(value: number, field: string): void {
@@ -369,7 +394,7 @@ function productRow(
     ...product,
     groupKey,
     classificationStatus: reason === null ? "VALID" : "QUARANTINED",
-    classificationText: reason === null ? "Clasificare valida" : "Clasificare indisponibilă",
+    classificationText: reason === null ? "Clasificare validă" : "Clasificare indisponibilă",
     roas: result.roas === null ? unavailable("ROAS is unavailable when spend is zero") : available(result.roas),
     cpa: result.cpa === null ? unavailable("CPA is unavailable when the number of sales is zero") : available(result.cpa),
     clicksPerSale: clicksPerSale === null
@@ -387,24 +412,24 @@ function productRow(
 
 const GROUP_CONTENT: Record<V2ProductLabel, Pick<GoogleAdsReportV2Group, "title" | "explanation" | "emptyState">> = {
   LOSS_MAKER: {
-    title: "Produse care consuma buget",
-    explanation: "Aceste produse au cheltuiala masurata si un rezultat financiar sub pragul minim.",
-    emptyState: "Niciun produs valid nu consuma buget peste rezultatul permis de tinta.",
+    title: "Produse care consumă buget",
+    explanation: "Aceste produse au cheltuială măsurată și un rezultat financiar sub pragul minim.",
+    emptyState: "Niciun produs valid nu consumă buget peste rezultatul permis de țintă.",
   },
   NOT_PROMOTED: {
-    title: "Produse care nu au primit suficienta promovare",
-    explanation: "Aceste produse nu au vanzari si au mai putine clicuri decat media necesara unei vanzari.",
-    emptyState: "Niciun produs valid nu se afla sub pragul de trafic necesar unei vanzari.",
+    title: "Produse care nu au primit suficientă promovare",
+    explanation: "Aceste produse nu au vânzări și au mai puține clicuri decât media necesară unei vânzări.",
+    emptyState: "Niciun produs valid nu se află sub pragul de trafic necesar unei vânzări.",
   },
   UNDERPROMOTED_POTENTIAL: {
-    title: "Produse cu potential",
-    explanation: "Aceste produse au vanzari si un ROAS cel putin egal cu tinta.",
-    emptyState: "Niciun produs valid cu potential nu este disponibil in perioada selectata.",
+    title: "Produse cu potențial",
+    explanation: "Aceste produse au vânzări și un ROAS cel puțin egal cu ținta.",
+    emptyState: "Niciun produs valid cu potențial nu este disponibil în perioada selectată.",
   },
   PERFORMER: {
     title: "Produse profitabile",
-    explanation: "Aceste produse au suficiente date si un rezultat financiar cel putin egal cu zero.",
-    emptyState: "Niciun produs valid nu a depasit pragul minim de profitabilitate.",
+    explanation: "Aceste produse au suficiente date și un rezultat financiar cel puțin egal cu zero.",
+    emptyState: "Niciun produs valid nu a depășit pragul minim de profitabilitate.",
   },
 };
 
@@ -447,15 +472,15 @@ function groupTotals(
 
 function headline(selected: ReportPeriodRow): string {
   if (selected.status === "UNAVAILABLE" || selected.profitOrLoss.status === "UNAVAILABLE") {
-    return "Rezultatul de profitabilitate este indisponibil fara tinta minima ROAS.";
+    return "Rezultatul de profitabilitate este indisponibil fără ținta minimă ROAS.";
   }
   if (selected.profitOrLoss.value.outcome === "LOSS") {
-    return "Contul este sub pragul minim de profitabilitate in perioada selectata.";
+    return "Contul este sub pragul minim de profitabilitate în perioada selectată.";
   }
   if (selected.profitOrLoss.value.outcome === "PROFIT") {
-    return "Contul este peste pragul minim de profitabilitate in perioada selectata.";
+    return "Contul este peste pragul minim de profitabilitate în perioada selectată.";
   }
-  return "Contul este exact la pragul minim de profitabilitate in perioada selectata.";
+  return "Contul este exact la pragul minim de profitabilitate în perioada selectată.";
 }
 
 export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAdsReportV2ViewModel {
@@ -508,6 +533,7 @@ export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAds
       benchmark: key === "NOT_PROMOTED" || key === "UNDERPROMOTED_POTENTIAL"
         ? benchmark
         : unavailable("Clicks-per-sale benchmark does not apply to this group"),
+      benchmarkApplies: key === "NOT_PROMOTED" || key === "UNDERPROMOTED_POTENTIAL",
       totalScope: input.productPopulationStatus,
     };
   });
@@ -532,8 +558,8 @@ export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAds
     {
       key: "MEASURED_PRODUCT_LOSS",
       groupKey: "LOSS_MAKER",
-      title: "Pierdere masurata pe produse",
-      explanation: "Suma pierderilor produselor valide sub tinta minima ROAS.",
+      title: "Pierdere măsurată pe produse",
+      explanation: "Suma pierderilor produselor valide sub ținta minimă ROAS.",
       metric: lossGroup.totals.productLoss,
       evidenceLabel: lossGroup.totals.productLoss.status === "AVAILABLE" ? "MEASURED" : "UNAVAILABLE",
       totalScope: input.productPopulationStatus,
@@ -541,8 +567,8 @@ export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAds
     {
       key: "SIMULATED_MISSED_SALES",
       groupKey: "UNDERPROMOTED_POTENTIAL",
-      title: "Volum de vanzari ratat",
-      explanation: "Simulare bazata pe bugetul produselor in pierdere si ROAS-ul ponderat al oportunitatilor.",
+      title: "Volum de vânzări ratat",
+      explanation: "Simulare bazată pe bugetul produselor în pierdere și ROAS-ul ponderat al oportunităților.",
       metric: opportunityGroup.totals.missedSalesVolume,
       evidenceLabel: opportunityGroup.totals.missedSalesVolume.status === "AVAILABLE" ? "SIMULATED" : "UNAVAILABLE",
       totalScope: input.productPopulationStatus,
@@ -550,13 +576,28 @@ export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAds
     {
       key: "NOT_PROMOTED_PRODUCTS",
       groupKey: "NOT_PROMOTED",
-      title: "Produse fara suficienta promovare",
-      explanation: "Numarul produselor valide fara vanzari si sub benchmark-ul de trafic al contului.",
+      title: "Produse fără suficientă promovare",
+      explanation: "Numărul produselor valide fără vânzări și sub media de trafic a contului.",
       metric: notPromotedGroup.totals.productCount,
       evidenceLabel: "MEASURED",
       totalScope: input.productPopulationStatus,
     },
   ];
+
+  const targets = {
+    currentRoas: selectedFormula.roas === null
+      ? unavailable<number>("Current ROAS is unavailable when spend is zero")
+      : available(selectedFormula.roas),
+    minimumRoas: minimumRoasTarget === null
+      ? unavailable<number>("Minimum ROAS target is unavailable")
+      : available(minimumRoasTarget),
+    currentCpa: selectedFormula.cpa === null
+      ? unavailable<number>("Current CPA is unavailable when the number of sales is zero")
+      : available(selectedFormula.cpa),
+    maximumCpa: maximumCpaTarget === null
+      ? unavailable<number>("Maximum CPA target is unavailable")
+      : available(maximumCpaTarget),
+  };
 
   return {
     currencyCode: input.currencyCode ? available(input.currencyCode) : unavailable("Account currency is unavailable"),
@@ -569,19 +610,12 @@ export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAds
         ? availablePeriodRow("PREVIOUS_YEAR", input.periods.previousYear, minimumRoasTarget)
         : unavailablePeriodRow("PREVIOUS_YEAR"),
     },
-    targets: {
-      currentRoas: selectedFormula.roas === null
-        ? unavailable("Current ROAS is unavailable when spend is zero")
-        : available(selectedFormula.roas),
-      minimumRoas: minimumRoasTarget === null
-        ? unavailable("Minimum ROAS target is unavailable")
-        : available(minimumRoasTarget),
-      currentCpa: selectedFormula.cpa === null
-        ? unavailable("Current CPA is unavailable when the number of sales is zero")
-        : available(selectedFormula.cpa),
-      maximumCpa: maximumCpaTarget === null
-        ? unavailable("Maximum CPA target is unavailable")
-        : available(maximumCpaTarget),
+    targets,
+    targetPresentation: {
+      currentRoas: currentTargetPresentation(targets.currentRoas, targets.minimumRoas, "minimum"),
+      minimumRoas: targets.minimumRoas.status === "AVAILABLE" ? "positive" : "unavailable",
+      currentCpa: currentTargetPresentation(targets.currentCpa, targets.maximumCpa, "maximum"),
+      maximumCpa: targets.maximumCpa.status === "AVAILABLE" ? "positive" : "unavailable",
     },
     accountHeadline: headline(selected),
     averageClicksPerSale: benchmark,

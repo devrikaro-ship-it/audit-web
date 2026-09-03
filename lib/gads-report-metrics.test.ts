@@ -157,6 +157,91 @@ describe("Google Ads V2 report view model", () => {
     expect(report.accountHeadline).toContain("sub pragul minim");
   });
 
+  it("supplies every target presentation status instead of leaving threshold decisions to renderers", () => {
+    const belowTarget = buildGoogleAdsReportV2(approvedInput());
+    const missingTargets = buildGoogleAdsReportV2(approvedInput({
+      minimumRoasTarget: null,
+      maximumCpaTarget: null,
+    }));
+    const missingCurrentValues = buildGoogleAdsReportV2(approvedInput({
+      periods: {
+        selected: { range, spend: 0, salesVolume: 0, numberOfSales: 0 },
+        previous: null,
+        previousYear: null,
+      },
+    }));
+
+    expect(belowTarget.targetPresentation).toEqual({
+      currentRoas: "warning",
+      minimumRoas: "positive",
+      currentCpa: "warning",
+      maximumCpa: "positive",
+    });
+    expect(missingTargets.targetPresentation).toEqual({
+      currentRoas: "neutral",
+      minimumRoas: "unavailable",
+      currentCpa: "neutral",
+      maximumCpa: "unavailable",
+    });
+    expect(missingCurrentValues.targetPresentation).toEqual({
+      currentRoas: "unavailable",
+      minimumRoas: "positive",
+      currentCpa: "unavailable",
+      maximumCpa: "positive",
+    });
+  });
+
+  it("owns the customer-facing Romanian copy with correct diacritics", () => {
+    const report = buildGoogleAdsReportV2(approvedInput());
+
+    expect(report.accountHeadline).toBe(
+      "Contul este sub pragul minim de profitabilitate în perioada selectată.",
+    );
+    expect(report.groups.map(({ title, explanation, emptyState }) => ({
+      title,
+      explanation,
+      emptyState,
+    }))).toEqual([
+      {
+        title: "Produse care consumă buget",
+        explanation: "Aceste produse au cheltuială măsurată și un rezultat financiar sub pragul minim.",
+        emptyState: "Niciun produs valid nu consumă buget peste rezultatul permis de țintă.",
+      },
+      {
+        title: "Produse care nu au primit suficientă promovare",
+        explanation: "Aceste produse nu au vânzări și au mai puține clicuri decât media necesară unei vânzări.",
+        emptyState: "Niciun produs valid nu se află sub pragul de trafic necesar unei vânzări.",
+      },
+      {
+        title: "Produse cu potențial",
+        explanation: "Aceste produse au vânzări și un ROAS cel puțin egal cu ținta.",
+        emptyState: "Niciun produs valid cu potențial nu este disponibil în perioada selectată.",
+      },
+      {
+        title: "Produse profitabile",
+        explanation: "Aceste produse au suficiente date și un rezultat financiar cel puțin egal cu zero.",
+        emptyState: "Niciun produs valid nu a depășit pragul minim de profitabilitate.",
+      },
+    ]);
+    expect(report.conclusions.map(({ title, explanation }) => ({ title, explanation }))).toEqual([
+      {
+        title: "Pierdere măsurată pe produse",
+        explanation: "Suma pierderilor produselor valide sub ținta minimă ROAS.",
+      },
+      {
+        title: "Volum de vânzări ratat",
+        explanation: "Simulare bazată pe bugetul produselor în pierdere și ROAS-ul ponderat al oportunităților.",
+      },
+      {
+        title: "Produse fără suficientă promovare",
+        explanation: "Numărul produselor valide fără vânzări și sub media de trafic a contului.",
+      },
+    ]);
+    expect(
+      report.groups.flatMap((group) => group.validRows)[0].classificationText,
+    ).toBe("Clasificare validă");
+  });
+
   it("uses the account population for clicks per sale and keeps exactly four exclusive groups", () => {
     const report = buildGoogleAdsReportV2(approvedInput());
     const allRows = report.groups.flatMap((group) => group.rows);
