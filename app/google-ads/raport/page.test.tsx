@@ -2,7 +2,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
-import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 import type { ReportDateRange } from "@/lib/gads-report-periods";
 import { openReportSnapshot } from "@/lib/gads-report-delivery";
 import { normalizePublicOutput } from "@/app/public-output-goldens";
@@ -253,10 +252,10 @@ describe("pagina de raport, randata", () => {
 
   it("keeps the measured 365-day window in the live dashboard", async () => {
     const h = await html();
-    expect(h).toContain('data-report-surface="headline-summary"');
+    expect(h).toContain('data-report-section="brand-header"');
     const visibleText = h.replace(/<[^>]*>/g, " ");
-    expect(h).toContain(AUDIT_WINDOW_LABEL);
-    expect(visibleText).toContain(`Read-only audit · 12-month average · source: ${AUDIT_WINDOW_LABEL}`);
+    expect(visibleText).toContain("28 august 2025 – 27 august 2026");
+    expect(visibleText).toContain("Audit doar în citire");
   });
 
   it("stores exact selected, previous, and prior-year ranges with complete labeled products", async () => {
@@ -304,6 +303,33 @@ describe("pagina de raport, randata", () => {
       salesVolume: 1_000,
       numberOfSales: 2,
     });
+  });
+
+  it("renders the shared V2 hierarchy and reconciles the visible loss conclusion with its tab", async () => {
+    const h = await html();
+    const sectionOrder = Array.from(
+      h.matchAll(/data-report-section="([^"]+)"/g),
+      (match) => match[1],
+    );
+    const lossConclusion = h.match(
+      /data-testid="conclusion-MEASURED_PRODUCT_LOSS"[^>]*data-raw-value="([^"]+)"/,
+    );
+    const lossGroup = h.match(
+      /data-testid="group-claim-LOSS_MAKER"[^>]*data-raw-value="([^"]+)"/,
+    );
+
+    expect(h).toContain('data-report-dashboard="v2"');
+    expect(sectionOrder).toEqual([
+      "brand-header",
+      "account-summary",
+      "primary-conclusions",
+      "period-comparison",
+      "product-actions",
+    ]);
+    expect(h).toContain("EUR");
+    expect(h).toContain("28 august 2025 – 27 august 2026");
+    expect(lossConclusion?.[1]).toBe(lossGroup?.[1]);
+    expect(h).not.toContain('data-legacy-permanent-labels');
   });
 
   it("marks demo output visibly and stores it through the same V2 snapshot contract", async () => {
@@ -425,12 +451,12 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain('data-report-surface="honesty-and-caveats"');
   });
 
-  it("renders the live measured dashboard with the complete product table", async () => {
+  it("renders the V2 dashboard with the complete product action groups", async () => {
     const h = await html();
-    expect(h).toContain('data-report-dashboard="live"');
-    expect(h).toContain('aria-label="All product performance"');
-    expect(h).toContain("Loss maker");
-    expect(h).toContain("Not promoted");
+    expect(h).toContain('data-report-dashboard="v2"');
+    expect(h).toContain('aria-label="Produse: Consumă buget"');
+    expect(h).toContain("Consumă buget");
+    expect(h).toContain("Insuficient promovate");
     expect(h).not.toContain("Profit after advertising");
     expect(h).toContain('data-report-version="profitability-v3-original"');
   });
@@ -464,10 +490,11 @@ describe("pagina de raport, randata", () => {
     expect(normalizedDemo).toContain("MOD DEMO");
   });
 
-  it("renders the familiar reporting KPI strip", async () => {
+  it("renders the V2 account targets instead of the legacy KPI strip", async () => {
     const h = await html();
-    expect(h).toContain('data-report-dashboard="live"');
-    expect(h).toContain('class="kpis"');
+    expect(h).toContain('data-report-dashboard="v2"');
+    expect(h).toContain('aria-label="Țintele contului"');
+    expect(h).not.toContain('class="kpis"');
     expect(h).not.toContain("Current report");
   });
 

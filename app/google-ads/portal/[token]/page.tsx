@@ -1,16 +1,78 @@
 import { notFound } from "next/navigation";
-import { C, brandGradient, inter, sora } from "@/lib/theme";
 import { listPortalReports } from "@/lib/gads-leads";
-import { openReportSnapshot, productAnalysisFromSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
+import { openReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
 import { readStoredReportSnapshot } from "@/lib/gads-report-snapshot";
 import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
 import ReportingDashboard from "@/app/google-ads/raport/ReportingDashboard";
+import {
+  buildGoogleAdsReportV2,
+  type GoogleAdsReportV2ViewModel,
+  type ReportProductInputV2,
+} from "@/lib/gads-report-metrics";
 
 export const dynamic = "force-dynamic";
 
-const money = (value: number) => `${Math.round(value).toLocaleString("ro-RO")} RON`;
-const metric = (value: number | null, suffix = "") => value === null ? "—" : `${Math.round(value).toLocaleString("ro-RO")}${suffix}`;
 const reportTimestamp = (snapshot: GadsReportSnapshot, legacyCreatedAt: number) => snapshot.generatedAt ?? new Date(legacyCreatedAt).toISOString();
+
+function legacyProducts(snapshot: GadsReportSnapshot): ReportProductInputV2[] {
+  const lossIds = new Set(snapshot.losses.map((product) => product.productId));
+  const opportunityIds = new Set(snapshot.opportunities.map((product) => product.productId));
+  return (snapshot.reportProducts ?? []).map((product) => ({
+    ...product,
+    sourceLabel: lossIds.has(product.productId)
+      ? "LOSS_MAKER"
+      : opportunityIds.has(product.productId)
+        ? "UNDERPROMOTED_POTENTIAL"
+        : undefined,
+  }));
+}
+
+function reportViewFromSnapshot(
+  snapshot: GadsReportSnapshot,
+  legacyCreatedAt: number,
+): GoogleAdsReportV2ViewModel {
+  if (snapshot.reportV2) {
+    return buildGoogleAdsReportV2({
+      currencyCode: snapshot.reportV2.currencyCode,
+      minimumRoasTarget: snapshot.breakEvenRoas,
+      maximumCpaTarget: snapshot.breakEvenCpa,
+      periods: snapshot.reportV2.periods,
+      products: snapshot.reportV2.products,
+      productPopulationStatus: snapshot.reportV2.productPopulationStatus,
+    });
+  }
+
+  const unavailableDate = reportTimestamp(snapshot, legacyCreatedAt).slice(0, 10);
+  const report = buildGoogleAdsReportV2({
+    minimumRoasTarget: snapshot.breakEvenRoas,
+    maximumCpaTarget: snapshot.breakEvenCpa,
+    periods: {
+      selected: {
+        range: { from: unavailableDate, to: unavailableDate },
+        spend: snapshot.current.spend,
+        salesVolume: snapshot.current.revenue,
+        numberOfSales: snapshot.current.orders,
+      },
+      previous: null,
+      previousYear: null,
+    },
+    products: legacyProducts(snapshot),
+    productPopulationStatus: "PARTIAL",
+  });
+
+  return {
+    ...report,
+    periods: {
+      selected: {
+        status: "UNAVAILABLE",
+        key: "SELECTED",
+        reason: "Exact selected-period boundaries are unavailable in this legacy report",
+      },
+      previous: report.periods.previous,
+      previousYear: report.periods.previousYear,
+    },
+  };
+}
 
 export default async function ClientReportPortal({ params, searchParams }: { params: Promise<{ token: string }>; searchParams: Promise<{ report?: string }> }) {
   const { token } = await params;
@@ -31,49 +93,21 @@ export default async function ClientReportPortal({ params, searchParams }: { par
   const latest = reports[0];
   if (!latest) notFound();
   const selected = reports.find(({ lead }) => lead.reportId === requestedReportId) ?? latest;
-  const selectedTimestamp = reportTimestamp(selected.snapshot, selected.lead.createdAt);
-  const selectedAnalysis = productAnalysisFromSnapshot(selected.snapshot);
-  const evidenceMonths = selected.snapshot.evidenceMonths ?? selectedAnalysis.months;
+  const report = reportViewFromSnapshot(selected.snapshot, selected.lead.createdAt);
 
-  return <main {...publicOAuthAttributes("client-portal")} style={{ minHeight: "100vh", background: C.slate, color: C.navy, fontFamily: inter }}>
-    <section style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.indigo})`, color: C.white }}>
-      <div style={{ maxWidth: 1120, margin: "0 auto", padding: "48px 24px" }}>
-        <p style={{ margin: 0, color: C.cyan, fontFamily: sora, fontWeight: 800, letterSpacing: "0.14em", fontSize: 13 }}>DEVRIKA · GOOGLE ADS</p>
-        <h1 style={{ margin: "12px 0 8px", fontFamily: sora, fontSize: "clamp(30px,5vw,52px)", lineHeight: 1.05 }}>Profitability dashboard</h1>
-        <p style={{ margin: 0, color: "#D8E1F2", fontSize: 17 }}>{selected.snapshot.accountName} · updated {new Date(selectedTimestamp).toLocaleDateString("ro-RO")}</p>
-      </div>
-    </section>
-
-    <div style={{ maxWidth: 1120, margin: "0 auto", padding: "28px 24px 64px" }}>
-      <section style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 18, overflow: "hidden" }}>
-        <div style={{ padding: "22px 24px", borderBottom: `1px solid ${C.border}` }}>
-          <h2 style={{ margin: 0, fontFamily: sora, fontSize: 22 }}>Monthly reports</h2>
-        </div>
-        {reports.map(({ lead, snapshot }) => <a key={lead.id} href={`/google-ads/portal/${encodeURIComponent(token)}?report=${encodeURIComponent(lead.reportId!)}`} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18, padding: "18px 24px", borderBottom: `1px solid ${C.border}`, flexWrap: "wrap", textDecoration: "none", color: C.navy, background: lead.reportId === selected.lead.reportId ? "#F5F6FF" : C.white }}>
-          <div>
-            <strong style={{ fontFamily: sora }}>{new Date(reportTimestamp(snapshot, lead.createdAt)).toLocaleDateString("ro-RO", { month: "long", year: "numeric" })}</strong>
-            <div style={{ marginTop: 5, color: C.gray500, fontSize: 14 }}>{money(snapshot.current.spend)} cost · {money(snapshot.current.revenue)} sales · ROAS {metric(snapshot.current.roas, "×")}</div>
-          </div>
-          <span style={{ background: lead.reportId === selected.lead.reportId ? brandGradient : C.slate, color: lead.reportId === selected.lead.reportId ? C.white : C.indigo, padding: "11px 16px", borderRadius: 11, fontFamily: sora, fontWeight: 700 }}>{lead.reportId === selected.lead.reportId ? "Current live report" : "View live report"}</span>
-        </a>)}
-      </section>
-
-      <section style={{ marginTop: 28 }}>
-        <ReportingDashboard
-          snapshot={selected.snapshot}
-          analysis={selectedAnalysis}
-          updatedAt={selectedTimestamp}
-          periodLabel={`${evidenceMonths}-month average · evidence window ending ${new Date(selectedTimestamp).toLocaleDateString("en-GB", { month: "long", year: "numeric" })}`}
-          periodSelector={{
-            action: `/google-ads/portal/${encodeURIComponent(token)}`,
-            selected: selected.lead.reportId!,
-            options: reports.map(({ lead, snapshot }) => ({
-              value: lead.reportId!,
-              label: `Report generated ${new Date(reportTimestamp(snapshot, lead.createdAt)).toLocaleDateString("en-GB", { month: "long", year: "numeric" })}`,
-            })),
-          }}
-        />
-      </section>
-    </div>
-  </main>;
+  return (
+    <main {...publicOAuthAttributes("client-portal")}>
+      <ReportingDashboard
+        report={report}
+        periodSelector={{
+          action: `/google-ads/portal/${encodeURIComponent(token)}`,
+          selected: selected.lead.reportId!,
+          options: reports.map(({ lead, snapshot }) => ({
+            value: lead.reportId!,
+            label: `Raport generat la ${new Date(reportTimestamp(snapshot, lead.createdAt)).toLocaleDateString("ro-RO", { month: "long", year: "numeric" })}`,
+          })),
+        }}
+      />
+    </main>
+  );
 }

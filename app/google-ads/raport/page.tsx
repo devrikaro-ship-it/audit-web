@@ -729,10 +729,7 @@ export default async function Raport() {
           className="contents"
         >
           <ReportingDashboard
-            snapshot={snapshot}
-            analysis={profitability}
-            updatedAt={snapshot.generatedAt}
-            periodLabel={`${snapshot.evidenceMonths}-month average · source: ${AUDIT_WINDOW_LABEL}`}
+            report={snapshotViewV2}
             demo={demo}
           />
         </ReportSurface>

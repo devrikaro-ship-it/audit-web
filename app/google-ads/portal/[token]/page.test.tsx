@@ -40,30 +40,141 @@ const snapshot = {
   productAnalysis,
 };
 
+const v2Snapshot = {
+  ...snapshot,
+  accountName: "Current V2 Store",
+  reportV2: {
+    version: 2 as const,
+    currencyCode: "EUR",
+    periods: {
+      selected: {
+        range: { from: "2026-08-01", to: "2026-08-31" },
+        spend: 1_200,
+        salesVolume: 3_600,
+        numberOfSales: 8,
+      },
+      previous: {
+        range: { from: "2026-07-01", to: "2026-07-31" },
+        spend: 900,
+        salesVolume: 4_500,
+        numberOfSales: 10,
+      },
+      previousYear: null,
+    },
+    products: [{
+      productId: "loss-product",
+      title: "Current loss product",
+      cost: 1_200,
+      conversionValue: 3_600,
+      conversions: 8,
+      clicks: 120,
+      impressions: 2_000,
+      catalogEligible: true,
+      sourceLabel: "LOSS_MAKER" as const,
+    }],
+    productPopulationStatus: "COMPLETE" as const,
+    classificationDiagnostics: [],
+  },
+};
+
+const olderV2Snapshot = {
+  ...v2Snapshot,
+  generatedAt: "2026-07-27T08:00:00.000Z",
+  accountName: "Older allowed V2 Store",
+  reportV2: {
+    ...v2Snapshot.reportV2,
+    products: [{
+      ...v2Snapshot.reportV2.products[0],
+      title: "Older allowed product",
+    }],
+    periods: {
+      selected: {
+        range: { from: "2026-07-01", to: "2026-07-31" },
+        spend: 900,
+        salesVolume: 4_500,
+        numberOfSales: 10,
+      },
+      previous: null,
+      previousYear: null,
+    },
+  },
+};
+
+const portalReports = [
+  { id: "lead-1", createdAt: Date.parse(v2Snapshot.generatedAt), reportId: "report-1", reportToken: "report-token-1", snapshotPath: "/data/current.snapshot" },
+  { id: "lead-2", createdAt: Date.parse(olderV2Snapshot.generatedAt), reportId: "report-2", reportToken: "report-token-2", snapshotPath: "/data/older.snapshot" },
+];
+
 beforeEach(() => {
   vi.clearAllMocks();
-  listPortalReports.mockResolvedValue([{ id: "lead-1", createdAt: 1, reportId: "report-1", reportToken: "report-token", snapshotPath: "/data/report.snapshot" }]);
-  readStoredReportSnapshot.mockResolvedValue("signed-report");
-  openReportSnapshot.mockReturnValue(snapshot);
+  listPortalReports.mockResolvedValue(portalReports);
+  readStoredReportSnapshot.mockImplementation(async (path: string) => path);
+  openReportSnapshot.mockImplementation((raw: string) => {
+    if (raw === "/data/current.snapshot") return v2Snapshot;
+    if (raw === "/data/older.snapshot") return olderV2Snapshot;
+    return null;
+  });
 });
 
-it("renders the complete selected report inside the client portal without a PDF link", async () => {
+it("renders the selected signed report through the shared five-section V2 renderer without export output", async () => {
   const html = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({}) }));
-  expect(html).toContain('data-report-dashboard="live"');
-  expect(html).toContain('aria-label="All product performance"');
-  expect(html).toContain("Current live report");
-  expect(html).toContain("August 2026");
-  expect(html).toContain("12-month average");
-  expect(html).not.toContain("1-month average");
-  expect(html).not.toContain("January 1970");
+  expect(html).toContain('data-report-dashboard="v2"');
+  expect(Array.from(html.matchAll(/data-report-section="([^"]+)"/g), (match) => match[1])).toEqual([
+    "brand-header",
+    "account-summary",
+    "primary-conclusions",
+    "period-comparison",
+    "product-actions",
+  ]);
+  expect(html).toContain("Current loss product");
+  expect(html).toContain("1–31 august 2026");
+  expect(html).toContain("EUR");
+  expect(html).not.toContain("Profitability dashboard");
+  expect(html).not.toContain("Monthly reports");
   expect(html).not.toContain("Open PDF");
   expect(html).not.toContain("application/pdf");
   expect(html).not.toContain("<iframe");
+  expect(html).not.toContain('data-legacy-permanent-labels');
 });
 
-it("cannot select a report outside the token-scoped portal population", async () => {
+it("selects another report only when it belongs to the token-scoped portal population", async () => {
+  const allowed = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({ report: "report-2" }) }));
+  expect(allowed).toContain("Older allowed product");
+  expect(allowed).toContain("1–31 iulie 2026");
+
   const html = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({ report: "foreign-report" }) }));
   expect(listPortalReports).toHaveBeenCalledWith("portal-token");
-  expect(html).toContain("Example Store");
+  expect(html).toContain("Current loss product");
+  expect(html).not.toContain("Older allowed product");
   expect(html).not.toContain("foreign-report");
+});
+
+it("renders a legacy signed report with unavailable currency and comparison rows instead of zero values", async () => {
+  const legacySnapshot = {
+    ...snapshot,
+    losses: [{
+      productId: "legacy-excerpt",
+      title: "Legacy excerpt without full metrics",
+      cost: 400,
+      revenue: 100,
+      orders: 1,
+    }],
+  };
+  listPortalReports.mockResolvedValue([{ ...portalReports[0], snapshotPath: "/data/legacy.snapshot" }]);
+  openReportSnapshot.mockImplementation((raw: string) => raw === "/data/legacy.snapshot" ? legacySnapshot : null);
+
+  const html = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({}) }));
+  const comparisonRows = html.match(/<tr>.*?<\/tr>/g) ?? [];
+  const previousRow = comparisonRows.find((row) => row.includes("Perioada anterioară")) ?? "";
+  const previousYearRow = comparisonRows.find((row) => row.includes("Aceeași perioadă anul trecut")) ?? "";
+
+  expect(html).toContain('data-report-dashboard="v2"');
+  expect(html).toContain("Monedă indisponibilă");
+  expect(previousRow.match(/Indisponibil/g)).toHaveLength(7);
+  expect(previousYearRow.match(/Indisponibil/g)).toHaveLength(7);
+  expect(previousRow).not.toMatch(/>0(?:[,.]0+)?</);
+  expect(previousYearRow).not.toMatch(/>0(?:[,.]0+)?</);
+  expect(html).not.toContain("RON");
+  expect(html).not.toContain("Legacy excerpt without full metrics");
+  expect(html).toContain("Date parțiale");
 });
