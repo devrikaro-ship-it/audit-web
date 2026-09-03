@@ -1,6 +1,15 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import type { ProductAnalysis, ProductAnalysisRow } from "@/lib/gads-product-simulation";
-import type { ReportProductInput } from "@/lib/gads-product-classification";
+import type { ProductPerformanceLabel, ReportProductInput } from "@/lib/gads-product-classification";
+import type {
+  ClassificationDiagnostic,
+  ProductPopulationStatus,
+  ReportPeriodInput,
+  ReportProductInputV2,
+  V2ProductLabel,
+} from "@/lib/gads-report-metrics";
+import { comparisonRanges, type ReportDateRange } from "@/lib/gads-report-periods";
+import { validateCurrencyCode } from "@/lib/gads-session";
 
 export type DeliveryProduct = {
   productId: string;
@@ -24,6 +33,19 @@ export type DeliveryCampaign = {
   status: string;
 };
 
+export type GadsReportSnapshotV2 = {
+  version: 2;
+  currencyCode: string;
+  periods: {
+    selected: ReportPeriodInput;
+    previous: ReportPeriodInput | null;
+    previousYear: ReportPeriodInput | null;
+  };
+  products: ReportProductInputV2[];
+  productPopulationStatus: ProductPopulationStatus;
+  classificationDiagnostics: ClassificationDiagnostic[];
+};
+
 export type GadsReportSnapshot = {
   generatedAt?: string;
   evidenceMonths?: number;
@@ -40,6 +62,7 @@ export type GadsReportSnapshot = {
   campaigns?: DeliveryCampaign[];
   productAnalysis?: ProductAnalysis;
   reportProducts?: ReportProductInput[];
+  reportV2?: GadsReportSnapshotV2;
 };
 
 export function normalizeReportProductsToPeriod(products: ReportProductInput[], periodCount: number): ReportProductInput[] {
@@ -92,6 +115,7 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
   const reportProductsValid = item.reportProducts === undefined || (Array.isArray(item.reportProducts) && item.reportProducts.length <= 10000 && item.reportProducts.every(validReportProduct));
   const generatedAtValid = item.generatedAt === undefined || (typeof item.generatedAt === "string" && Number.isFinite(Date.parse(item.generatedAt)));
   const evidenceMonthsValid = item.evidenceMonths === undefined || (typeof item.evidenceMonths === "number" && Number.isInteger(item.evidenceMonths) && item.evidenceMonths > 0);
+  const reportV2Valid = item.reportV2 === undefined || validReportV2(item.reportV2);
   return (
     typeof item.website === "string" &&
     typeof item.accountName === "string" &&
@@ -100,8 +124,79 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
     Array.isArray(item.losses) && item.losses.length <= 20 &&
     Array.isArray(item.opportunities) && item.opportunities.length <= 20 &&
     campaignsValid &&
-    productAnalysisValid && reportProductsValid && generatedAtValid && evidenceMonthsValid
+    productAnalysisValid && reportProductsValid && generatedAtValid && evidenceMonthsValid && reportV2Valid
   );
+}
+
+const V2_PRODUCT_LABELS = new Set<V2ProductLabel>([
+  "LOSS_MAKER",
+  "NOT_PROMOTED",
+  "UNDERPROMOTED_POTENTIAL",
+  "PERFORMER",
+]);
+const SOURCE_PRODUCT_LABELS = new Set<ProductPerformanceLabel>([
+  ...V2_PRODUCT_LABELS,
+  "INSUFFICIENT_DATA",
+]);
+
+function validDateRange(value: unknown): value is ReportDateRange {
+  if (!value || typeof value !== "object") return false;
+  const range = value as Partial<ReportDateRange>;
+  if (typeof range.from !== "string" || typeof range.to !== "string") return false;
+  try {
+    const selected = comparisonRanges({ from: range.from, to: range.to }).selected;
+    return selected.from === range.from && selected.to === range.to;
+  } catch {
+    return false;
+  }
+}
+
+function validPeriodInput(value: unknown): value is ReportPeriodInput {
+  if (!value || typeof value !== "object") return false;
+  const period = value as Partial<ReportPeriodInput>;
+  return validDateRange(period.range)
+    && [period.spend, period.salesVolume, period.numberOfSales]
+      .every((metric) => Number.isFinite(metric) && Number(metric) >= 0);
+}
+
+function validReportV2Product(value: unknown): value is ReportProductInputV2 {
+  if (!validReportProduct(value)) return false;
+  const product = value as ReportProductInputV2;
+  return product.sourceLabel === undefined || SOURCE_PRODUCT_LABELS.has(product.sourceLabel);
+}
+
+function validClassificationDiagnostic(value: unknown): value is ClassificationDiagnostic {
+  if (!value || typeof value !== "object") return false;
+  const diagnostic = value as Partial<ClassificationDiagnostic>;
+  return typeof diagnostic.productId === "string"
+    && (diagnostic.sourceLabel === null || (
+      typeof diagnostic.sourceLabel === "string"
+      && SOURCE_PRODUCT_LABELS.has(diagnostic.sourceLabel as ProductPerformanceLabel)
+    ))
+    && typeof diagnostic.assignedGroupKey === "string"
+    && V2_PRODUCT_LABELS.has(diagnostic.assignedGroupKey as V2ProductLabel)
+    && typeof diagnostic.reason === "string";
+}
+
+function validReportV2(value: unknown): value is GadsReportSnapshotV2 {
+  if (!value || typeof value !== "object") return false;
+  const report = value as Partial<GadsReportSnapshotV2>;
+  let currencyValid = false;
+  try {
+    currencyValid = validateCurrencyCode(report.currencyCode) === report.currencyCode;
+  } catch {
+    currencyValid = false;
+  }
+  if (!currencyValid || report.version !== 2 || !report.periods || typeof report.periods !== "object") return false;
+  if (!validPeriodInput(report.periods.selected)) return false;
+  if (report.periods.previous !== null && !validPeriodInput(report.periods.previous)) return false;
+  if (report.periods.previousYear !== null && !validPeriodInput(report.periods.previousYear)) return false;
+  if (!Array.isArray(report.products) || report.products.length > 10_000 || !report.products.every(validReportV2Product)) return false;
+  if (new Set(report.products.map((product) => product.productId)).size !== report.products.length) return false;
+  if (report.productPopulationStatus !== "COMPLETE" && report.productPopulationStatus !== "PARTIAL") return false;
+  return Array.isArray(report.classificationDiagnostics)
+    && report.classificationDiagnostics.length <= 10_000
+    && report.classificationDiagnostics.every(validClassificationDiagnostic);
 }
 
 function validReportProduct(value: unknown): value is ReportProductInput {

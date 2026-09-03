@@ -42,6 +42,10 @@ export function demoAccounts(): AccessibleAccount[] {
 
 export type DemoData = {
   products: Product[];
+  reportComparisonProducts: {
+    previous: Product[];
+    previousYear: Product[];
+  };
   /**
    * Acelasi catalog, dat ca "ferestre" de timp, ca demonstratia sa aiba si comutatorul de
    * perioada. Cifrele nu se schimba intre ferestre — sunt simulate, si a le inventa diferite
@@ -152,6 +156,10 @@ export function demoData(): DemoData {
 
   return {
     products,
+    reportComparisonProducts: {
+      previous: products,
+      previousYear: products,
+    },
     ferestre: FERESTRE.map((w) => ({ zile: w.zile, eticheta: w.eticheta, products })),
     catalogComplete: true,
     tracking: {

@@ -3,6 +3,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
 import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
+import type { ReportDateRange } from "@/lib/gads-report-periods";
+import { openReportSnapshot } from "@/lib/gads-report-delivery";
 import { normalizePublicOutput } from "@/app/public-output-goldens";
 
 let sessionMargin: unknown = 25;
@@ -15,6 +17,9 @@ let returnImprovementAvailable = true;
 let expandedCatalog = false;
 let demoWithoutWindows = false;
 let emptyCatalog = false;
+let capturedReportSnapshot = "";
+let exactRangeReads: ReportDateRange[] = [];
+let failedExactRead: "selected" | "previous" | "previousYear" | null = null;
 
 // Randam PAGINA REALA, nu o copie a ei. Verificarea la nivel de date spune ca cifrele sunt
 // corecte; asta spune ca ajung pe ecran — tabelul de produse chiar apare, sectiunile chiar
@@ -29,7 +34,12 @@ vi.mock("next/navigation", () => ({
 vi.mock("next/link", () => ({
   default: ({ children }: { children: React.ReactNode }) => <a>{children}</a>,
 }));
-vi.mock("./ContactForm", () => ({ default: () => <form data-test="contact" /> }));
+vi.mock("./ContactForm", () => ({
+  default: ({ reportSnapshot }: { reportSnapshot: string }) => {
+    capturedReportSnapshot = reportSnapshot;
+    return <form data-test="contact" />;
+  },
+}));
 vi.mock("./actions", () => ({ salveazaContact: async () => {} }));
 
 vi.mock("@/lib/gads-session", async (original) => ({
@@ -38,7 +48,7 @@ vi.mock("@/lib/gads-session", async (original) => ({
   unseal: () => sessionVariant === "missing" ? null : ({
     refreshToken: "r", customerId: sessionVariant === "account" ? undefined : "123", customerName: sessionCustomerName,
     customerTimeZone: sessionVariant === "timezone" ? undefined : "Europe/Bucharest", loginCustomerId: "999", marginPct: sessionMargin, marginStatus: sessionMarginStatus,
-    averageOrderValue: 500, goodsCost: 250, breakEvenCpa: 150, breakEvenRoas: 500 / 150, exp: 9e12,
+    currencyCode: "EUR", averageOrderValue: 500, goodsCost: 250, breakEvenCpa: 150, breakEvenRoas: 500 / 150, exp: 9e12,
   }),
 }));
 vi.mock("@/lib/gads-oauth", () => ({
@@ -64,8 +74,19 @@ vi.mock("@/lib/gads-intake", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
   fetchShoppingProducts: async () => {
     catalogReadCount += 1;
-    if (sourceState.primaryCatalogFails && catalogReadCount === 1) throw new Error("Google Ads API 401");
-    if (catalogReadCount > sourceState.secondaryCatalogSuccessCount + 1) throw new Error("Google Ads API 503");
+    if (catalogReadCount > sourceState.secondaryCatalogSuccessCount) throw new Error("Google Ads API 503");
+    return {
+      products: emptyCatalog ? [] : [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0, 0), P("D", 50, 900, 300), ...(expandedCatalog ? Array.from({ length: 20 }, (_, index) => P(`X${index}`, 100, 0, 100)) : [])],
+      catalogComplete: true,
+    };
+  },
+  fetchShoppingProductsForRange: async (_customerId: string, _auth: unknown, _timeZone: string, range: ReportDateRange) => {
+    const readIndex = exactRangeReads.length;
+    exactRangeReads.push(range);
+    const key = (["selected", "previous", "previousYear"] as const)[readIndex];
+    if ((sourceState.primaryCatalogFails && key === "selected") || failedExactRead === key) {
+      throw new Error("Google Ads API unavailable");
+    }
     return {
       products: emptyCatalog ? [] : [P("A", 900, 100, 500), P("B", 300, 0, 200), P("C", 0, 0, 0, 0), P("D", 50, 900, 300), ...(expandedCatalog ? Array.from({ length: 20 }, (_, index) => P(`X${index}`, 100, 0, 100)) : [])],
       catalogComplete: true,
@@ -160,6 +181,9 @@ describe("pagina de raport, randata", () => {
     demoWithoutWindows = false;
     emptyCatalog = false;
     catalogReadCount = 0;
+    capturedReportSnapshot = "";
+    exactRangeReads = [];
+    failedExactRead = null;
   });
 
   afterEach(() => vi.useRealTimers());
@@ -233,6 +257,67 @@ describe("pagina de raport, randata", () => {
     const visibleText = h.replace(/<[^>]*>/g, " ");
     expect(h).toContain(AUDIT_WINDOW_LABEL);
     expect(visibleText).toContain(`Read-only audit · 12-month average · source: ${AUDIT_WINDOW_LABEL}`);
+  });
+
+  it("stores exact selected, previous, and prior-year ranges with complete labeled products", async () => {
+    vi.setSystemTime(new Date("2024-08-27T08:00:00Z"));
+    await html();
+
+    expect(exactRangeReads).toEqual([
+      { from: "2023-08-29", to: "2024-08-27" },
+      { from: "2022-08-29", to: "2023-08-28" },
+      { from: "2022-08-29", to: "2023-08-27" },
+    ]);
+    const stored = openReportSnapshot(capturedReportSnapshot);
+    expect(stored?.reportV2).toMatchObject({
+      version: 2,
+      currencyCode: "EUR",
+      productPopulationStatus: "COMPLETE",
+      periods: {
+        selected: {
+          range: { from: "2023-08-29", to: "2024-08-27" },
+          spend: 1_250,
+          salesVolume: 1_000,
+          numberOfSales: 2,
+        },
+        previous: { range: { from: "2022-08-29", to: "2023-08-28" } },
+        previousYear: { range: { from: "2022-08-29", to: "2023-08-27" } },
+      },
+    });
+    expect(stored?.reportV2?.products.map(({ productId, sourceLabel }) => [productId, sourceLabel])).toEqual([
+      ["A", "LOSS_MAKER"],
+      ["B", "LOSS_MAKER"],
+      ["C", "NOT_PROMOTED"],
+      ["D", "UNDERPROMOTED_POTENTIAL"],
+    ]);
+    expect(new Set(stored?.reportV2?.products.map(({ productId }) => productId)).size).toBe(4);
+  });
+
+  it("stores a failed comparison read as unavailable instead of a zero period", async () => {
+    failedExactRead = "previous";
+    await html();
+
+    const stored = openReportSnapshot(capturedReportSnapshot);
+    expect(stored?.reportV2?.periods.previous).toBeNull();
+    expect(stored?.reportV2?.periods.selected).toMatchObject({
+      spend: 1_250,
+      salesVolume: 1_000,
+      numberOfSales: 2,
+    });
+  });
+
+  it("marks demo output visibly and stores it through the same V2 snapshot contract", async () => {
+    demoState.enabled = true;
+    await html();
+
+    const stored = openReportSnapshot(capturedReportSnapshot);
+    expect(stored?.reportV2).toMatchObject({
+      version: 2,
+      currencyCode: "EUR",
+      productPopulationStatus: "COMPLETE",
+    });
+    expect(stored?.reportV2?.periods.previous).not.toBeNull();
+    expect(stored?.reportV2?.periods.previousYear).not.toBeNull();
   });
 
   it("are amandoua sectiunile, si banda de sumar deasupra lor", async () => {

@@ -1,5 +1,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { normalizeReportProductsToPeriod, openReportSnapshot, renderReportHtml, sealReportSnapshot, type GadsReportSnapshot } from "./gads-report-delivery";
+import {
+  normalizeReportProductsToPeriod,
+  openReportSnapshot,
+  renderReportHtml,
+  sealReportSnapshot,
+  type GadsReportSnapshot,
+  type GadsReportSnapshotV2,
+} from "./gads-report-delivery";
 
 const snapshot: GadsReportSnapshot = {
   website: "https://fitn4ss.ro/",
@@ -13,6 +20,39 @@ const snapshot: GadsReportSnapshot = {
   losses: [{ productId: "loss", title: "Loss product", cost: 700, revenue: 700, orders: 1, cpa: 700, roas: 1, amount: 560 }],
   opportunities: [{ productId: "win", title: "Winning product", cost: 100, revenue: 1200, orders: 3, cpa: 33.33, roas: 12, amount: 1680 }],
   campaigns: [{ name: "PMax All Products", channel: "PERFORMANCE_MAX", spend: 900, revenue: 2700, roas: 3, status: "ENABLED" }],
+};
+
+const reportV2: GadsReportSnapshotV2 = {
+  version: 2,
+  currencyCode: "EUR",
+  periods: {
+    selected: {
+      range: { from: "2026-08-01", to: "2026-08-31" },
+      spend: 1_000,
+      salesVolume: 3_200,
+      numberOfSales: 8,
+    },
+    previous: {
+      range: { from: "2026-07-01", to: "2026-07-31" },
+      spend: 900,
+      salesVolume: 3_000,
+      numberOfSales: 7,
+    },
+    previousYear: null,
+  },
+  products: [{
+    productId: "loss",
+    title: "Loss product",
+    cost: 700,
+    conversionValue: 700,
+    conversions: 1,
+    clicks: 80,
+    impressions: 2_000,
+    catalogEligible: true,
+    sourceLabel: "LOSS_MAKER",
+  }],
+  productPopulationStatus: "COMPLETE",
+  classificationDiagnostics: [],
 };
 
 describe("stored Google Ads report delivery", () => {
@@ -44,6 +84,63 @@ describe("stored Google Ads report delivery", () => {
       reportProducts: [{ productId: "all", title: "All product", cost: 120, conversionValue: 600, conversions: 2, clicks: 50, impressions: 1000, catalogEligible: true }],
     };
     expect(openReportSnapshot(sealReportSnapshot(expanded))).toEqual(expanded);
+  });
+
+  it("round-trips a complete V2 payload without changing the V1 snapshot shape", () => {
+    const expanded = { ...snapshot, reportV2 };
+    expect(openReportSnapshot(sealReportSnapshot(expanded))).toEqual(expanded);
+
+    const legacySnapshot = { ...snapshot };
+    expect(openReportSnapshot(sealReportSnapshot(legacySnapshot))).toEqual(legacySnapshot);
+    expect(legacySnapshot).not.toHaveProperty("reportV2");
+  });
+
+  it("refuses malformed V2 ranges, currency, totals, duplicate products, and oversized populations", () => {
+    const invalidDateOrder = structuredClone(reportV2);
+    invalidDateOrder.periods.selected.range = { from: "2026-09-01", to: "2026-08-31" };
+
+    const invalidCurrency = structuredClone(reportV2);
+    invalidCurrency.currencyCode = "eur";
+
+    const nonFiniteTotals = structuredClone(reportV2);
+    nonFiniteTotals.periods.selected.spend = Number.NaN;
+
+    const duplicateProducts = structuredClone(reportV2);
+    duplicateProducts.products = [
+      duplicateProducts.products[0],
+      { ...duplicateProducts.products[0] },
+    ];
+
+    const oversizedPopulation = structuredClone(reportV2);
+    oversizedPopulation.products = Array.from({ length: 10_001 }, (_, index) => ({
+      ...reportV2.products[0],
+      productId: `product-${index}`,
+    }));
+
+    for (const invalid of [
+      invalidDateOrder,
+      invalidCurrency,
+      nonFiniteTotals,
+      duplicateProducts,
+      oversizedPopulation,
+    ]) {
+      expect(openReportSnapshot(sealReportSnapshot({ ...snapshot, reportV2: invalid }))).toBeNull();
+    }
+  });
+
+  it("rejects signatures after either V1 or V2 payload bytes change", () => {
+    const expanded = { ...snapshot, reportV2 };
+    const signed = sealReportSnapshot(expanded);
+    const signature = signed.slice(signed.lastIndexOf(".") + 1);
+
+    const changedV1 = Buffer.from(JSON.stringify({ ...expanded, breakEvenRoas: 1 })).toString("base64url");
+    const changedV2 = Buffer.from(JSON.stringify({
+      ...expanded,
+      reportV2: { ...reportV2, currencyCode: "USD" },
+    })).toString("base64url");
+
+    expect(openReportSnapshot(`${changedV1}.${signature}`)).toBeNull();
+    expect(openReportSnapshot(`${changedV2}.${signature}`)).toBeNull();
   });
 
   it("normalizes every product metric to the same reporting period", () => {

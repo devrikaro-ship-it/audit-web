@@ -6,8 +6,11 @@ import { parseGrossMargin, unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import {
   AUDIT_WINDOW_LABEL,
+  dateRange,
   fetchShoppingProducts,
+  fetchShoppingProductsForRange,
   FERESTRE,
+  WINDOW_DAYS,
 } from "@/lib/gads-intake";
 import { fetchTracking } from "@/lib/gads-tracking";
 import { audit, breakEvenRoas } from "@/lib/gads-audit";
@@ -37,6 +40,13 @@ import type { PmaxData } from "@/lib/gads-pmax";
 import type { ShoppingData } from "@/lib/gads-shopping";
 import type { SearchData } from "@/lib/gads-search";
 import type { TermenBrut } from "@/lib/gads-keywords";
+import { comparisonRanges, type ReportPeriodRanges } from "@/lib/gads-report-periods";
+import { classifyReportProducts, type ReportProductInput } from "@/lib/gads-product-classification";
+import {
+  buildGoogleAdsReportV2,
+  type ReportPeriodInput,
+  type ReportProductInputV2,
+} from "@/lib/gads-report-metrics";
 import { ReportSurface, reportGuards, runReportStep } from "./report-contract";
 import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 import {
@@ -72,6 +82,11 @@ const lei = (n: number) => `${n.toLocaleString("ro-RO")} RON`;
 type SurseAudit = {
   products: Product[];
   catalogComplete: boolean;
+  reportPeriods: {
+    ranges: ReportPeriodRanges;
+    previous: { products: Product[]; catalogComplete: boolean } | null;
+    previousYear: { products: Product[]; catalogComplete: boolean } | null;
+  };
   tracking: TrackingState;
   structura?: StructuraAudit;
   an?: TotaluriAn | null;
@@ -98,7 +113,25 @@ const TRACKING_NECUNOSCUT: TrackingState = {
  * -> null, adica pagina de indisponibilitate. Restul analizelor sunt optionale prin natura lor.
  */
 async function surse(session: GadsSession): Promise<SurseAudit | null> {
-  if (demoOn()) return demoData();
+  const customerTimeZone = session.customerTimeZone as string;
+  const ranges = comparisonRanges(dateRange(new Date(), WINDOW_DAYS, customerTimeZone));
+  if (demoOn()) {
+    const data = demoData();
+    return {
+      ...data,
+      reportPeriods: {
+        ranges,
+        previous: {
+          products: data.reportComparisonProducts?.previous ?? data.products,
+          catalogComplete: data.catalogComplete,
+        },
+        previousYear: {
+          products: data.reportComparisonProducts?.previousYear ?? data.products,
+          catalogComplete: data.catalogComplete,
+        },
+      },
+    };
+  }
 
   const cfg = oauthConfig();
   // Un refresh token revocat sau expirat nu e o eroare de server, ci o sesiune care trebuie
@@ -113,12 +146,13 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
     loginCustomerId: session.loginCustomerId,
   };
   const customerId = session.customerId as string;
-  const customerTimeZone = session.customerTimeZone as string;
 
   // Tot ce se poate cere in acelasi timp se cere in acelasi timp — pagina asta e ce asteapta
   // omul dupa ce si-a conectat contul. O analiza cazuta nu are voie sa doboare raportul.
   const [
     catalog,
+    previousCatalog,
+    previousYearCatalog,
     tracking,
     structura,
     brutCuvinte,
@@ -129,7 +163,17 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
     ferestre,
   ] = await Promise.all([
     runGoogleAdsRead("fetchShoppingProducts", () =>
-      fetchShoppingProducts(customerId, auth, customerTimeZone).catch(
+      fetchShoppingProductsForRange(customerId, auth, customerTimeZone, ranges.selected).catch(
+        () => null,
+      ),
+    ),
+    runGoogleAdsRead("fetchShoppingProducts", () =>
+      fetchShoppingProductsForRange(customerId, auth, customerTimeZone, ranges.previous).catch(
+        () => null,
+      ),
+    ),
+    runGoogleAdsRead("fetchShoppingProducts", () =>
+      fetchShoppingProductsForRange(customerId, auth, customerTimeZone, ranges.previousYear).catch(
         () => null,
       ),
     ),
@@ -182,6 +226,11 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
   if (!catalog) return null;
   return {
     ...catalog,
+    reportPeriods: {
+      ranges,
+      previous: previousCatalog,
+      previousYear: previousYearCatalog,
+    },
     tracking,
     structura,
     brutCuvinte,
@@ -193,12 +242,49 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
   };
 }
 
+function reportPeriodInput(
+  range: ReportPeriodInput["range"],
+  products: Product[],
+): ReportPeriodInput {
+  return {
+    range,
+    spend: products.reduce((total, product) => total + product.cost, 0),
+    salesVolume: products.reduce((total, product) => total + product.conversionValue, 0),
+    numberOfSales: products.reduce((total, product) => total + product.conversions, 0),
+  };
+}
+
+function reportProductsV2(
+  products: Product[],
+  catalogComplete: boolean,
+  minimumRoasTarget: number,
+): ReportProductInputV2[] {
+  const inputs: ReportProductInput[] = products.map((product) => ({
+    productId: product.productId,
+    title: product.title,
+    cost: product.cost,
+    conversionValue: product.conversionValue,
+    conversions: product.conversions,
+    clicks: product.clicks,
+    impressions: product.impressions,
+    catalogEligible: catalogComplete,
+  }));
+  const sourceLabels = new Map(
+    classifyReportProducts(inputs, minimumRoasTarget).map((product) => [product.productId, product.label]),
+  );
+  return inputs.map((product) => ({
+    ...product,
+    sourceLabel: sourceLabels.get(product.productId),
+  }));
+}
+
 export default async function Raport() {
   const jar = await cookies();
   const session = unseal(jar.get(SESSION_COOKIE)?.value);
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.customerTimeZone) redirect("/google-ads/conturi");
+  if (!session.currencyCode) redirect("/google-ads/conturi");
   const marginPct = parseGrossMargin(session.marginPct);
   if (marginPct === null)
     redirect(
@@ -242,6 +328,24 @@ export default async function Raport() {
   const minRoas =
     session.breakEvenRoas ??
     runReportStep("breakEvenRoas", () => breakEvenRoas(marginPct));
+  const snapshotProductsV2 = reportProductsV2(products, catalogComplete, minRoas);
+  const snapshotPeriodsV2 = {
+    selected: reportPeriodInput(s.reportPeriods.ranges.selected, products),
+    previous: s.reportPeriods.previous
+      ? reportPeriodInput(s.reportPeriods.ranges.previous, s.reportPeriods.previous.products)
+      : null,
+    previousYear: s.reportPeriods.previousYear
+      ? reportPeriodInput(s.reportPeriods.ranges.previousYear, s.reportPeriods.previousYear.products)
+      : null,
+  };
+  const snapshotViewV2 = buildGoogleAdsReportV2({
+    currencyCode: session.currencyCode,
+    minimumRoasTarget: minRoas,
+    maximumCpaTarget: session.breakEvenCpa,
+    periods: snapshotPeriodsV2,
+    products: snapshotProductsV2,
+    productPopulationStatus: catalogComplete ? "COMPLETE" : "PARTIAL",
+  });
   const rep = runReportStep("buildReport", () =>
     buildReport(
       runReportStep("audit", () => audit(products, minRoas)),
@@ -385,6 +489,14 @@ export default async function Raport() {
       })),
       12,
     ),
+    reportV2: {
+      version: 2,
+      currencyCode: session.currencyCode,
+      periods: snapshotPeriodsV2,
+      products: snapshotProductsV2,
+      productPopulationStatus: catalogComplete ? "COMPLETE" : "PARTIAL",
+      classificationDiagnostics: snapshotViewV2.classificationDiagnostics,
+    },
   };
   const signedReportSnapshot = sealReportSnapshot(snapshot);
 
