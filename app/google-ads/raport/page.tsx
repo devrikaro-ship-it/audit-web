@@ -56,6 +56,7 @@ import {
 import ReportingDashboard from "./ReportingDashboard";
 import {
   normalizeReportProductsToPeriod,
+  openReportSnapshot,
   sealReportSnapshot,
   type GadsReportSnapshot,
 } from "@/lib/gads-report-delivery";
@@ -338,14 +339,6 @@ export default async function Raport() {
       ? reportPeriodInput(s.reportPeriods.ranges.previousYear, s.reportPeriods.previousYear.products)
       : null,
   };
-  const snapshotViewV2 = buildGoogleAdsReportV2({
-    currencyCode: session.currencyCode,
-    minimumRoasTarget: minRoas,
-    maximumCpaTarget: session.breakEvenCpa,
-    periods: snapshotPeriodsV2,
-    products: snapshotProductsV2,
-    productPopulationStatus: catalogComplete ? "COMPLETE" : "PARTIAL",
-  });
   const rep = runReportStep("buildReport", () =>
     buildReport(
       runReportStep("audit", () => audit(products, minRoas)),
@@ -495,10 +488,29 @@ export default async function Raport() {
       periods: snapshotPeriodsV2,
       products: snapshotProductsV2,
       productPopulationStatus: catalogComplete ? "COMPLETE" : "PARTIAL",
-      classificationDiagnostics: snapshotViewV2.classificationDiagnostics,
+      classificationDiagnostics: buildGoogleAdsReportV2({
+        currencyCode: session.currencyCode,
+        minimumRoasTarget: minRoas,
+        maximumCpaTarget: session.breakEvenCpa,
+        periods: snapshotPeriodsV2,
+        products: snapshotProductsV2,
+        productPopulationStatus: catalogComplete ? "COMPLETE" : "PARTIAL",
+      }).classificationDiagnostics,
     },
   };
   const signedReportSnapshot = sealReportSnapshot(snapshot);
+  const openedReportSnapshot = openReportSnapshot(signedReportSnapshot);
+  if (!openedReportSnapshot?.reportV2) {
+    throw new Error("Signed V2 report snapshot validation failed");
+  }
+  const snapshotViewV2 = buildGoogleAdsReportV2({
+    currencyCode: openedReportSnapshot.reportV2.currencyCode,
+    minimumRoasTarget: openedReportSnapshot.breakEvenRoas,
+    maximumCpaTarget: openedReportSnapshot.breakEvenCpa,
+    periods: openedReportSnapshot.reportV2.periods,
+    products: openedReportSnapshot.reportV2.products,
+    productPopulationStatus: openedReportSnapshot.reportV2.productPopulationStatus,
+  });
 
   return (
     <div

@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
 import type { ReportDateRange } from "@/lib/gads-report-periods";
-import { openReportSnapshot } from "@/lib/gads-report-delivery";
+import { openReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
 import { normalizePublicOutput } from "@/app/public-output-goldens";
 
 let sessionMargin: unknown = 25;
@@ -19,6 +19,7 @@ let emptyCatalog = false;
 let capturedReportSnapshot = "";
 let exactRangeReads: ReportDateRange[] = [];
 let failedExactRead: "selected" | "previous" | "previousYear" | null = null;
+let mutateSnapshotBeforeSeal: ((snapshot: GadsReportSnapshot) => GadsReportSnapshot) | null = null;
 
 // Randam PAGINA REALA, nu o copie a ei. Verificarea la nivel de date spune ca cifrele sunt
 // corecte; asta spune ca ajung pe ecran — tabelul de produse chiar apare, sectiunile chiar
@@ -40,6 +41,14 @@ vi.mock("./ContactForm", () => ({
   },
 }));
 vi.mock("./actions", () => ({ salveazaContact: async () => {} }));
+vi.mock("@/lib/gads-report-delivery", async (original) => {
+  const actual = await original<typeof import("@/lib/gads-report-delivery")>();
+  return {
+    ...actual,
+    sealReportSnapshot: (snapshot: GadsReportSnapshot) =>
+      actual.sealReportSnapshot(mutateSnapshotBeforeSeal?.(snapshot) ?? snapshot),
+  };
+});
 
 vi.mock("@/lib/gads-session", async (original) => ({
   ...(await original<Record<string, unknown>>()),
@@ -183,6 +192,7 @@ describe("pagina de raport, randata", () => {
     capturedReportSnapshot = "";
     exactRangeReads = [];
     failedExactRead = null;
+    mutateSnapshotBeforeSeal = null;
   });
 
   afterEach(() => vi.useRealTimers());
@@ -330,6 +340,59 @@ describe("pagina de raport, randata", () => {
     expect(h).toContain("28 august 2025 – 27 august 2026");
     expect(lossConclusion?.[1]).toBe(lossGroup?.[1]);
     expect(h).not.toContain('data-legacy-permanent-labels');
+  });
+
+  it("renders every immediate V2 decision from the opened signed snapshot sent to contact", async () => {
+    mutateSnapshotBeforeSeal = (snapshot) => ({
+      ...snapshot,
+      breakEvenCpa: 777,
+      breakEvenRoas: 10,
+      reportV2: snapshot.reportV2 ? {
+        ...snapshot.reportV2,
+        currencyCode: "GBP",
+        periods: {
+          ...snapshot.reportV2.periods,
+          selected: {
+            range: { from: "2026-07-01", to: "2026-07-31" },
+            spend: 2_000,
+            salesVolume: 4_000,
+            numberOfSales: 4,
+          },
+        },
+        products: snapshot.reportV2.products.map((product, index) =>
+          index === 0
+            ? { ...product, title: "Signed snapshot product", cost: 1_111 }
+            : product,
+        ),
+      } : undefined,
+    });
+
+    const h = await html();
+    const stored = openReportSnapshot(capturedReportSnapshot);
+
+    expect(stored?.reportV2).toMatchObject({
+      currencyCode: "GBP",
+      periods: {
+        selected: {
+          range: { from: "2026-07-01", to: "2026-07-31" },
+          spend: 2_000,
+          salesVolume: 4_000,
+          numberOfSales: 4,
+        },
+      },
+    });
+    expect(stored?.reportV2?.products[0]).toMatchObject({
+      title: "Signed snapshot product",
+      cost: 1_111,
+    });
+    expect(stored?.breakEvenRoas).toBe(10);
+    expect(stored?.breakEvenCpa).toBe(777);
+    expect(h).toContain("Signed snapshot product");
+    expect(h).toContain("1–31 iulie 2026");
+    expect(h).toContain("GBP");
+    expect(h).toContain('data-testid="conclusion-MEASURED_PRODUCT_LOSS" data-raw-value="1401"');
+    expect(h).toContain("10×");
+    expect(h).toContain("777");
   });
 
   it("marks demo output visibly and stores it through the same V2 snapshot contract", async () => {
