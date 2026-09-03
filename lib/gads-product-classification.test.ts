@@ -34,10 +34,10 @@ describe("product reporting classifications", () => {
       financialImpact: 400,
       financialImpactKind: "MEASURED_RISK",
     });
-    expect(rows.find((row) => row.productId === "potential")).toMatchObject({
-      financialImpact: 375,
-      financialImpactKind: "ESTIMATED_OPPORTUNITY",
-    });
+    expect(rows.find((row) => row.productId === "potential")?.financialImpactKind)
+      .toBe("ESTIMATED_OPPORTUNITY");
+    expect(rows.find((row) => row.productId === "potential")?.financialImpact)
+      .toBeCloseTo(425.93, 2);
   });
 
   it("uses the full evidence window when displayed values are period averages", () => {
@@ -45,5 +45,15 @@ describe("product reporting classifications", () => {
       product({ productId: "benchmark", impressions: 100, clicks: 20, conversions: 1, cost: 50, conversionValue: 500 }),
       product({ productId: "potential", impressions: 100, clicks: 5, conversions: 0.5, cost: 20, conversionValue: 250 }),
     ], 5, 12).find((row) => row.productId === "potential")?.label).toBe("UNDERPROMOTED_POTENTIAL");
+  });
+
+  it("uses the account-wide average clicks per sale instead of a profitable-product median", () => {
+    const rows = classifyReportProducts([
+      product({ productId: "fast", clicks: 100, conversions: 10, cost: 100, conversionValue: 1_000 }),
+      product({ productId: "slow", clicks: 100, conversions: 2, cost: 100, conversionValue: 1_000 }),
+      product({ productId: "candidate", clicks: 25, conversions: 1, cost: 20, conversionValue: 500 }),
+    ], 5);
+
+    expect(rows.find((row) => row.productId === "candidate")?.label).toBe("PERFORMER");
   });
 });

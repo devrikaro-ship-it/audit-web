@@ -22,18 +22,12 @@ export type ClassifiedReportProduct = ReportProductInput & {
   financialImpactKind: "MEASURED_RISK" | "ESTIMATED_OPPORTUNITY" | null;
 };
 
-const median = (values: number[]) => {
-  const sorted = [...values].sort((left, right) => left - right);
-  if (!sorted.length) return null;
-  const middle = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
-};
-
-export function classifyReportProducts(products: ReportProductInput[], breakEvenRoas: number, evidenceScale = 1): ClassifiedReportProduct[] {
-  const clicksPerSaleBenchmark = median(products
-    .filter((row) => row.cost > 0 && row.conversions * evidenceScale >= 2 && row.conversionValue / row.cost >= breakEvenRoas)
-    .map((row) => row.clicks / row.conversions)
-    .filter(Number.isFinite));
+export function classifyReportProducts(products: ReportProductInput[], breakEvenRoas: number, _evidenceScale = 1): ClassifiedReportProduct[] {
+  void _evidenceScale;
+  const clicksPerSaleBenchmark = averageClicksPerSale({
+    clicks: products.reduce((total, row) => total + row.clicks, 0),
+    numberOfSales: products.reduce((total, row) => total + row.conversions, 0),
+  });
 
   const priority: Record<ProductPerformanceLabel, number> = { LOSS_MAKER: 0, NOT_PROMOTED: 1, UNDERPROMOTED_POTENTIAL: 2, PERFORMER: 3, INSUFFICIENT_DATA: 4 };
   return products.map((row) => {
@@ -41,7 +35,7 @@ export function classifyReportProducts(products: ReportProductInput[], breakEven
     const clicksPerSale = row.conversions > 0 ? row.clicks / row.conversions : null;
     let label: ProductPerformanceLabel;
     if (row.cost > 0 && roas < breakEvenRoas) label = "LOSS_MAKER";
-    else if (row.catalogEligible === true && row.impressions === 0) label = "NOT_PROMOTED";
+    else if (row.catalogEligible === true && row.conversions === 0 && clicksPerSaleBenchmark !== null && row.clicks < clicksPerSaleBenchmark) label = "NOT_PROMOTED";
     else if (row.cost > 0 && roas >= breakEvenRoas && clicksPerSaleBenchmark !== null && row.clicks < clicksPerSaleBenchmark) label = "UNDERPROMOTED_POTENTIAL";
     else if (row.cost > 0 && roas >= breakEvenRoas) label = "PERFORMER";
     else label = "INSUFFICIENT_DATA";
@@ -63,3 +57,4 @@ export function classifyReportProducts(products: ReportProductInput[], breakEven
     };
   }).sort((left, right) => priority[left.label] - priority[right.label] || right.cost - left.cost);
 }
+import { averageClicksPerSale } from "./gads-report-metrics";
