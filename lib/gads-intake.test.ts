@@ -1,6 +1,11 @@
 // LANG: pending full translation to EN
-import { describe, it, expect } from "vitest";
+import { beforeEach, describe, it, expect, vi } from "vitest";
 import { readFileSync } from "node:fs";
+
+const search = vi.hoisted(() => vi.fn());
+
+vi.mock("./net", () => ({ googleAdsSearch: search }));
+
 import {
   AUDIT_WINDOW_LABEL,
   FERESTRE,
@@ -9,6 +14,7 @@ import {
   formatAuditWindowLabel,
   perfQuery,
   catalogQuery,
+  fetchShoppingProductsForRange,
   type PerfRow,
   type CatalogRow,
 } from "./gads-intake";
@@ -69,6 +75,8 @@ describe("join catalog <-> performanta", () => {
 });
 
 describe("interogari", () => {
+  beforeEach(() => search.mockReset());
+
   it("formats the 365-day label independently of neighboring window order and copy", () => {
     const adversarialNeighbors = [...FERESTRE]
       .reverse()
@@ -143,6 +151,45 @@ describe("interogari", () => {
     expect(q).toMatch(/metrics\.impressions/);
     expect(q).toMatch(/metrics\.cost_micros/);
     expect(q).toMatch(/metrics\.conversions_value/);
+  });
+
+  it("reads Shopping performance with the supplied exact inclusive boundaries", async () => {
+    search
+      .mockResolvedValueOnce([{
+        shoppingProduct: { itemId: "A", title: "Alpha" },
+        metrics: { costMicros: "1000000", conversionsValue: "5", impressions: "10", clicks: "2", conversions: "1" },
+      }])
+      .mockResolvedValueOnce([{ shoppingProduct: { itemId: "A", categoryLevel1: "category" } }]);
+
+    await expect(fetchShoppingProductsForRange(
+      "123",
+      { accessToken: "access", developerToken: "developer" },
+      "Europe/Bucharest",
+      { from: "2026-07-01", to: "2026-07-31" },
+    )).resolves.toMatchObject({
+      catalogComplete: true,
+      products: [expect.objectContaining({ productId: "A", category: "category" })],
+    });
+
+    expect(search.mock.calls[0][1]).toContain(
+      "segments.date BETWEEN '2026-07-01' AND '2026-07-31'",
+    );
+    expect(search.mock.calls[1][1]).not.toContain("segments.date");
+  });
+
+  it.each([
+    { from: "2026-07-01' OR segments.date > '1900-01-01", to: "2026-07-31" },
+    { from: "2026-02-30", to: "2026-03-01" },
+    { from: "2026-08-31", to: "2026-08-01" },
+  ])("refuses an unsafe exact range before constructing GAQL", async (range) => {
+    search.mockResolvedValue([]);
+    await expect(fetchShoppingProductsForRange(
+      "123",
+      { accessToken: "access", developerToken: "developer" },
+      "Europe/Bucharest",
+      range,
+    )).rejects.toThrow(/date range/i);
+    expect(search).not.toHaveBeenCalled();
   });
 });
 

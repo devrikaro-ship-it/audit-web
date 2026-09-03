@@ -37,6 +37,7 @@ it.each(["oauth-refresh", DEMO_REFRESH_TOKEN])("keeps the %s pre-margin account 
     website: "https://shop.example/",
     customerId: "1234567890",
     customerTimeZone: "UTC",
+    currencyCode: "RON",
   });
   expect(unseal(state.cookie)?.marginPct).toBeUndefined();
 

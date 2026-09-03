@@ -140,6 +140,18 @@ export function perfQuery(from: string, to: string): string {
           WHERE segments.date BETWEEN '${from}' AND '${to}'`;
 }
 
+function validIsoDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+
+function requireExactRange(range: { from: string; to: string }): void {
+  if (!validIsoDate(range.from) || !validIsoDate(range.to) || range.from > range.to) {
+    throw new RangeError("Invalid report date range");
+  }
+}
+
 // Raspunsul REST vine camelCase si cu numerele mari ca string — de aici normalizarea.
 type RawRow = {
   shoppingProduct?: { itemId?: string; title?: string; categoryLevel1?: string };
@@ -164,7 +176,19 @@ export async function fetchShoppingProducts(
   today = new Date(),
   zile = WINDOW_DAYS
 ): Promise<{ products: Product[]; catalogComplete: boolean }> {
-  const { from, to } = dateRange(today, zile, customerTimeZone);
+  const range = dateRange(today, zile, customerTimeZone);
+  return fetchShoppingProductsForRange(customerId, auth, customerTimeZone, range);
+}
+
+export async function fetchShoppingProductsForRange(
+  customerId: string,
+  auth: GoogleAdsAuth,
+  customerTimeZone: string,
+  range: { from: string; to: string },
+): Promise<{ products: Product[]; catalogComplete: boolean }> {
+  new Intl.DateTimeFormat("en-US", { timeZone: customerTimeZone }).format();
+  requireExactRange(range);
+  const { from, to } = range;
 
   const perfRaw = (await googleAdsSearch(customerId, perfQuery(from, to), auth)) as RawRow[];
   const perfRows: PerfRow[] = perfRaw.map((r) => ({

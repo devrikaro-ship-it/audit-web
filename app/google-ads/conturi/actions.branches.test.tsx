@@ -4,7 +4,7 @@ const state = vi.hoisted(() => ({
   session: null as null | { refreshToken: string; marginPct?: number; marginStatus?: "invalid" },
   cookieSet: vi.fn(),
   redirect: vi.fn((url: string) => { throw new Error(`REDIRECT ${url}`); }),
-  fetchCustomerTimeZone: vi.fn(),
+  fetchCustomerReportMetadata: vi.fn(),
 }));
 
 vi.mock("next/headers", () => ({
@@ -20,7 +20,7 @@ vi.mock("@/lib/gads-session", () => ({
 vi.mock("@/lib/gads-demo", () => ({ demoOn: () => false }));
 vi.mock("@/lib/gads-oauth", () => ({
   accessTokenFrom: async () => "access",
-  fetchCustomerTimeZone: state.fetchCustomerTimeZone,
+  fetchCustomerReportMetadata: state.fetchCustomerReportMetadata,
   oauthConfig: () => ({ developerToken: "developer" }),
 }));
 
@@ -37,7 +37,10 @@ const form = (customerId?: string, loginCustomerId?: string, name?: string) => {
 beforeEach(() => {
   vi.clearAllMocks();
   state.session = { refreshToken: "refresh" };
-  state.fetchCustomerTimeZone.mockResolvedValue("Europe/Bucharest");
+  state.fetchCustomerReportMetadata.mockResolvedValue({
+    timeZone: "Europe/Bucharest",
+    currencyCode: "EUR",
+  });
 });
 
 it("redirects missing sessions and account identifiers", async () => {
@@ -48,10 +51,14 @@ it("redirects missing sessions and account identifiers", async () => {
   await expect(alegeCont(form("letters"))).rejects.toThrow("REDIRECT /google-ads/conturi");
 });
 
-it("persists normalized optional account fields through the real time-zone path", async () => {
+it("persists normalized optional account fields through the authoritative metadata path", async () => {
   await expect(alegeCont(form("123-456", "999-000", ""))).rejects.toThrow("REDIRECT /google-ads/marja");
-  expect(state.fetchCustomerTimeZone).toHaveBeenCalledWith("123456", expect.objectContaining({ loginCustomerId: "999000" }));
-  expect(JSON.parse(state.cookieSet.mock.calls[0][1])).toMatchObject({ customerId: "123456", customerTimeZone: "Europe/Bucharest" });
+  expect(state.fetchCustomerReportMetadata).toHaveBeenCalledWith("123456", expect.objectContaining({ loginCustomerId: "999000" }));
+  expect(JSON.parse(state.cookieSet.mock.calls[0][1])).toMatchObject({
+    customerId: "123456",
+    customerTimeZone: "Europe/Bucharest",
+    currencyCode: "EUR",
+  });
   expect(JSON.parse(state.cookieSet.mock.calls[0][1]).customerName).toBeUndefined();
 
   state.cookieSet.mockClear();
@@ -60,7 +67,7 @@ it("persists normalized optional account fields through the real time-zone path"
 });
 
 it("renders a recoverable account error when selected-account data is unavailable", async () => {
-  state.fetchCustomerTimeZone.mockRejectedValue(new Error("unavailable"));
+  state.fetchCustomerReportMetadata.mockRejectedValue(new Error("unavailable"));
   await expect(alegeCont(form("123"))).rejects.toThrow("REDIRECT /google-ads/conturi?eroare=cont");
   expect(state.cookieSet).not.toHaveBeenCalled();
 });

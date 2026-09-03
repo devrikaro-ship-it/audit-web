@@ -12,6 +12,7 @@
 import { googleAdsSearch, type GoogleAdsAuth } from "./net";
 import { demoOn } from "./gads-demo";
 import { gadsApiUrl } from "./gads-api";
+import { validateCurrencyCode } from "./gads-session";
 
 export const SCOPE = "https://www.googleapis.com/auth/adwords";
 const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -123,6 +124,27 @@ export async function fetchCustomerTimeZone(
     auth
   )) as Row[];
   return validateCustomerTimeZone(rows[0]?.customer?.timeZone);
+}
+
+export type CustomerReportMetadata = {
+  timeZone: string;
+  currencyCode: string;
+};
+
+export async function fetchCustomerReportMetadata(
+  customerId: string,
+  auth: GoogleAdsAuth,
+): Promise<CustomerReportMetadata> {
+  type Row = { customer?: { timeZone?: string; currencyCode?: string } };
+  const rows = (await googleAdsSearch(
+    customerId,
+    "SELECT customer.time_zone, customer.currency_code FROM customer LIMIT 1",
+    auth,
+  )) as Row[];
+  return {
+    timeZone: validateCustomerTimeZone(rows[0]?.customer?.timeZone),
+    currencyCode: validateCurrencyCode(rows[0]?.customer?.currencyCode),
+  };
 }
 
 /**

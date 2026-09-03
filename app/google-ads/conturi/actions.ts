@@ -3,9 +3,19 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { unseal, seal, SESSION_COOKIE, cookieOptions } from "@/lib/gads-session";
-import { accessTokenFrom, fetchCustomerTimeZone, oauthConfig } from "@/lib/gads-oauth";
-import { demoOn } from "@/lib/gads-demo";
+import {
+  unseal,
+  seal,
+  SESSION_COOKIE,
+  cookieOptions,
+  validateCurrencyCode,
+} from "@/lib/gads-session";
+import {
+  accessTokenFrom,
+  fetchCustomerReportMetadata as fetchCustomerTimeZoneAndCurrency,
+  oauthConfig,
+} from "@/lib/gads-oauth";
+import { demoAccounts, demoOn } from "@/lib/gads-demo";
 import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 
 /** Salveaza contul ales in sesiune si trece la pasul urmator (marja). */
@@ -17,9 +27,14 @@ export async function alegeCont(formData: FormData) {
   const customerId = String(formData.get("customerId") ?? "").replace(/\D/g, "");
   if (!customerId) redirect("/google-ads/conturi");
   const loginCustomerId = String(formData.get("loginCustomerId") ?? "").replace(/\D/g, "") || undefined;
-  const customerTimeZone = demoOn()
-    ? "UTC"
-    : await runGoogleAdsRead("fetchCustomerTimeZone", async () => fetchCustomerTimeZone(customerId, {
+  const customerReportMetadata = demoOn()
+    ? {
+        timeZone: "UTC",
+        currencyCode: validateCurrencyCode(
+          demoAccounts().find((account) => account.customerId === customerId)?.currency,
+        ),
+      }
+    : await runGoogleAdsRead("fetchCustomerTimeZone", async () => fetchCustomerTimeZoneAndCurrency(customerId, {
         accessToken: await accessTokenFrom(session.refreshToken),
         developerToken: oauthConfig().developerToken,
         loginCustomerId,
@@ -32,7 +47,8 @@ export async function alegeCont(formData: FormData) {
       website: session.website,
       customerId,
       customerName: String(formData.get("name") ?? "") || undefined,
-      customerTimeZone,
+      customerTimeZone: customerReportMetadata.timeZone,
+      currencyCode: customerReportMetadata.currencyCode,
       loginCustomerId,
       marginPct: session.marginPct,
       marginStatus: session.marginStatus,

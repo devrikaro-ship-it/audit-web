@@ -18,6 +18,14 @@ export { GROSS_MARGIN_ERROR, parseGrossMargin, requireGrossMargin } from "./gads
 export const SESSION_COOKIE = "gads_session";
 /** O ora: destul pentru un audit, nu destul cat sa devina un token uitat prin browser. */
 export const SESSION_MAX_AGE = 60 * 60;
+const ISO_CURRENCY_CODE = /^[A-Z]{3}$/;
+
+export function validateCurrencyCode(value: string | undefined): string {
+  if (!value || !ISO_CURRENCY_CODE.test(value)) {
+    throw new Error("Google Ads account currency is unavailable or invalid");
+  }
+  return value;
+}
 
 export type GadsSession = {
   refreshToken: string;
@@ -28,6 +36,8 @@ export type GadsSession = {
   customerName?: string;
   /** IANA time zone reported by Google Ads for account-calendar date boundaries. */
   customerTimeZone?: string;
+  /** ISO currency code reported by the selected Google Ads account. */
+  currencyCode?: string;
   /** Managerul prin care contul e accesibil (login-customer-id la interogari). */
   loginCustomerId?: string;
   /** Marja confirmata de om (procent). Lipsa = inca n-a raspuns. */
@@ -61,6 +71,8 @@ function sign(payload: string): string {
 export function seal(session: GadsSessionInput): string {
   const hasMargin = session.marginPct !== undefined;
   const normalized = { ...session } as Record<string, unknown>;
+  if (session.currencyCode === undefined) delete normalized.currencyCode;
+  else normalized.currencyCode = validateCurrencyCode(session.currencyCode);
   if (hasMargin) {
     normalized.marginPct = requireGrossMargin(session.marginPct);
     delete normalized.marginStatus;
@@ -96,6 +108,13 @@ export function unseal(raw: string | undefined): GadsSession | null {
   try {
     const s = JSON.parse(Buffer.from(payload, "base64url").toString()) as GadsSession;
     if (!s.refreshToken || s.exp * 1000 < Date.now()) return null;
+    if (s.currencyCode !== undefined) {
+      try {
+        s.currencyCode = validateCurrencyCode(s.currencyCode);
+      } catch {
+        delete s.currencyCode;
+      }
+    }
     const hasMargin = Object.prototype.hasOwnProperty.call(s, "marginPct");
     const carriedInvalid = s.marginStatus === "invalid";
     delete s.marginStatus;

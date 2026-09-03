@@ -22,6 +22,7 @@ describe("sesiunea prospectului", () => {
       refreshToken: "rt-123",
       customerId: "999",
       customerTimeZone: "Europe/Bucharest",
+      currencyCode: "EUR",
       marginPct: 50,
       averageOrderValue: 500,
       goodsCost: 250,
@@ -31,11 +32,24 @@ describe("sesiunea prospectului", () => {
     expect(s?.refreshToken).toBe("rt-123");
     expect(s?.customerId).toBe("999");
     expect(s?.customerTimeZone).toBe("Europe/Bucharest");
+    expect(s?.currencyCode).toBe("EUR");
     expect(s?.marginPct).toBe(50);
     expect(s?.averageOrderValue).toBe(500);
     expect(s?.goodsCost).toBe(250);
     expect(s?.breakEvenCpa).toBe(150);
     expect(s?.breakEvenRoas).toBe(500 / 150);
+  });
+
+  it("refuses invalid currencies before signing and never substitutes RON", () => {
+    for (const currencyCode of ["", "ron", "EURO", "12A"]) {
+      expect(() => seal({ refreshToken: "rt-123", currencyCode })).toThrow(/currency/i);
+    }
+  });
+
+  it("keeps legacy sessions without currency readable and removes invalid stored currency", () => {
+    expect(unseal(signedSession({ refreshToken: "rt-123", exp: 9e9 }))?.currencyCode).toBeUndefined();
+    expect(unseal(signedSession({ refreshToken: "rt-123", currencyCode: "ron", exp: 9e9 }))?.currencyCode)
+      .toBeUndefined();
   });
 
   it("refuses invalid stored financial inputs before signing", () => {
