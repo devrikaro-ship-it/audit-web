@@ -5,6 +5,53 @@ and `docs/ads-research/`) — this is what broke in the code, how it was caught,
 this file is user-facing Romanian by design; where quoted below it is TRANSLATED, with the exact source location
 given so the literal string can be read directly in the file.
 
+## 2026-09-04 — The production Google Ads OAuth client displays Google's unverified-app warning
+
+**Symptom.** A real production OAuth run in standard Google Chrome passed the automated-browser check but then
+displayed Google's warning that the application has not been verified. A developer can continue through the
+advanced option, but a prospect sees a high-risk warning before granting read-only Google Ads access.
+
+**Cause.** The OAuth client requests Google's sensitive Ads scope, while the public OAuth application
+verification has not been completed for the production consent screen. The application routes, verified domain,
+privacy page, and terms page can all exist while Google still treats the client as unverified until the consent
+screen and requested scope complete Google's review.
+
+**How to recognise it.** The redirect reaches `accounts.google.com` in a supported browser and displays the
+unverified-application warning with an advanced bypass. This is distinct from the earlier unsupported-browser
+screen: changing browsers removes the first screen but cannot remove this one.
+
+**Fix.** Complete Google's OAuth application verification for the production client and sensitive Ads scope,
+including the consent-screen identity, verified production domain, policy links, scope justification, and the
+required demonstration. Keep the manual advanced bypass limited to internal verification until Google approves
+the application. The customer launch is not friction-free while this warning remains.
+
+**Class.** A successful OAuth callback proves the integration, not the public trust path. Production acceptance
+for a customer-facing OAuth flow must begin in a clean supported browser and include every provider-owned screen
+shown before consent; a warning outside the application's own domain can still block the product outcome.
+
+## 2026-09-04 — Lock release raced stale-lock inspection and made the full suite alternate between pass and failure
+
+**Symptom.** A fresh final verification run reported `553/554` tests with `ENOENT` while inspecting the Google
+Ads lead-storage lock. The immediate rerun passed `554/554`, and repeated isolated runs also passed. The same
+revision therefore alternated between success and failure without any source change.
+
+**Cause.** After lock acquisition returned `EEXIST`, the waiter inspected the lock directory to decide whether
+it was stale. The holder could remove that directory between those two filesystem operations. The resulting
+`ENOENT` came from normal lock contention, but the waiter treated it as an unexpected storage failure.
+
+**How to recognise it.** A lock implemented as a directory first reports that the directory exists and then
+fails to inspect the same path because it no longer exists. A rerun often passes because the failure requires
+the releasing process to land inside the small gap between the acquisition attempt and metadata read.
+
+**Fix.** Treat disappearance during stale-lock inspection as successful release by another contender and retry
+acquisition immediately. Preserve stale-lock cleanup when metadata still exists and continue propagating every
+filesystem error other than the expected disappearance. Prove the ordering deterministically, then restore the
+old behavior and observe the test fail as the negative control.
+
+**Class.** A multi-step observation of shared filesystem state is not atomic. Every intermediate absence that
+another valid participant can create must be modeled as a state transition, not as corruption; unexpected
+errors still fail closed.
+
 ## 2026-08-26 — A deploy was incorrectly treated as a browser task even though Coolify API access already existed
 
 **Symptom.** After the application changes were tested and pushed, delivery was reported as blocked because
