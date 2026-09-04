@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
@@ -48,6 +49,39 @@ describe("salvarea lead-ului din auditul de Google Ads", () => {
     expect(reports).toHaveLength(1);
     expect(reports[0].reportId).toBe("report-one");
     await expect(listPortalReports("unknown-portal")).resolves.toEqual([]);
+  });
+
+  it("retries only when an existing lock disappears before inspection", async () => {
+    const file = process.env.GADS_LEADS_FILE!;
+    const lock = `${file}.lock`;
+    await fs.mkdir(lock, { recursive: true });
+    const actualStat = fs.stat.bind(fs);
+    const inspectionError = Object.assign(new Error("lock inspection denied"), { code: "EACCES" });
+    let releaseBeforeInspection = true;
+    const statSpy = vi.spyOn(fs, "stat").mockImplementation((async (target: Parameters<typeof fs.stat>[0]) => {
+      if (target === lock) {
+        if (releaseBeforeInspection) {
+          releaseBeforeInspection = false;
+          await fs.rm(lock, { recursive: true, force: true });
+          return actualStat(target);
+        }
+        throw inspectionError;
+      }
+      return actualStat(target);
+    }) as typeof fs.stat);
+
+    try {
+      const { saveLead } = await import("./gads-leads");
+      await expect(saveLead({ ...rec, email: "race@example.com" }))
+        .resolves.toMatchObject({ email: "race@example.com" });
+
+      await fs.mkdir(lock, { recursive: true });
+      await expect(saveLead({ ...rec, email: "denied@example.com" }))
+        .rejects.toBe(inspectionError);
+    } finally {
+      statSpy.mockRestore();
+      await fs.rm(lock, { recursive: true, force: true });
+    }
   });
 
   it("creates one stable report lead across isolated concurrent module contexts", async () => {

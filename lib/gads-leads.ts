@@ -69,7 +69,14 @@ async function acquireLock(): Promise<void> {
       return;
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-      const age = Date.now() - (await fs.stat(LOCK)).mtimeMs;
+      let lockStats;
+      try {
+        lockStats = await fs.stat(LOCK);
+      } catch (inspectionError) {
+        if ((inspectionError as NodeJS.ErrnoException).code === "ENOENT") continue;
+        throw inspectionError;
+      }
+      const age = Date.now() - lockStats.mtimeMs;
       if (age > 30_000) {
         await fs.rm(LOCK, { recursive: true, force: true });
         continue;
