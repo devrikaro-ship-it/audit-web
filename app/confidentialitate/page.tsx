@@ -39,7 +39,7 @@ export default function Confidentialitate() {
           Politica de confidentialitate
         </h1>
         <p className="mb-8 text-[14px]" style={{ color: C.gray400 }}>
-          Aplicatia <b>Audit Devrika</b> — analiza contului de Google Ads. Ultima actualizare: august 2026.
+          <b>Audit Devrika</b> — Google Ads account analysis. Last updated: September 7, 2026.
         </p>
 
         <P>
@@ -90,6 +90,26 @@ export default function Confidentialitate() {
           support the requested audit and monthly reports about the connected campaigns while Devrika
           has access to the campaign data. We do not use this agreement for newsletters or general
           promotional messages. You may request its deletion at any time.
+        </P>
+
+        <H2>How we protect Google user data</H2>
+        <P>
+          We use HTTPS to encrypt data in transit between your browser, our application, and Google.
+          Your Google authorization is held in a signed session cookie that expires after one hour.
+          In production, the cookie is sent only over HTTPS, cannot be read by page JavaScript,
+          and uses SameSite protection to limit cross-site requests.
+        </P>
+        <P>
+          Google API requests and application secrets are handled on the server. We do not store
+          your Google authorization token with your contact record. Pending reports are stored
+          in private server directories, and report snapshot files have restricted filesystem
+          permissions. We verify signed report snapshots before using them and check that saved
+          reports belong to the portal link used to open them.
+        </P>
+        <P>
+          Access to Google user data is limited to providing and supporting the requested audit
+          and report delivery, as described in this policy. You can revoke Google access or
+          request deletion using the instructions below.
         </P>
 
         <H2>Conformarea cu politicile Google</H2>
