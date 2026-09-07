@@ -33,7 +33,7 @@ The domain publication is complete. Coolify deployment `h11bcju1m9j7u29zrogqdto9
 4. The internal dashboard refuses unauthenticated requests with 401. Account selection returns users without a session to connection. A fabricated callback state is rejected; cancellation and missing-website cases return to the correct `.io` origin. A known nonexistent route returns 404.
 5. OAuth entry redirects to Google with `https://audit.devrika.io/api/google-ads/callback`, the unchanged `adwords` scope, and a Secure/HttpOnly state cookie. Google Cloud persisted the new callback while retaining all previous callbacks. No secrets were changed.
 6. The legacy hostname redirects to the new hostname with HTTP 308 while preserving path and query. New-domain HTTP upgrades to HTTPS. Production `PUBLIC_URL` and `GADS_REDIRECT_URI` use `.io`; preview environment values remain unchanged.
-7. The new container has nine startup log lines and zero matches for uncaught, unhandled, fatal, or application error patterns since activation.
+7. The initial observation contained nine startup log lines and zero error matches. A later final observation contained three `Failed to find Server Action` rejections for identifiers `035e076d`, `02393cf0`, and `y`. The running server-action manifest contains four legitimate identifiers, all 42 characters long; none of the rejected identifiers exists. These are invalid-action requests, not evidence of a failed valid application action. Their caller was not identified. Public HTTPS still returned 200 after the events. No code repair or rollback was justified by these malformed requests.
 
 ### Verification limits and remaining Launch work
 
