@@ -39,7 +39,7 @@ export default function Confidentialitate() {
           Politica de confidentialitate
         </h1>
         <p className="mb-8 text-[14px]" style={{ color: C.gray400 }}>
-          <b>Audit Devrika</b> — Google Ads account analysis. Last updated: September 7, 2026.
+          Aplicatia <b>Audit Devrika</b> — analiza contului de Google Ads. Ultima actualizare: august 2026.
         </p>
 
         <P>
