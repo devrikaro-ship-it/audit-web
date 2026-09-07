@@ -1862,10 +1862,9 @@ root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/h1[0]
 root/div[0]/div[0]/h1[0]/text "Politica de confidentialitate"
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia"
 root/div[0]/div[0]/p[0]/b[0]
 root/div[0]/div[0]/p[0]/b[0]/text "Audit Devrika"
-root/div[0]/div[0]/p[0]/text "— analiza contului de Google Ads. Ultima actualizare: august 2026."
+root/div[0]/div[0]/p[0]/text "— Google Ads account analysis. Last updated: September 7, 2026."
 root/div[0]/div[0]/p[1]
 root/div[0]/div[0]/p[1]/text "Aceasta politica descrie cum aplicatia Audit Devrika trateaza datele la care ii dai acces atunci cand iti conectezi contul de Google Ads. E scrisa in limbaj obisnuit, pentru ca ai dreptul sa intelegi ce se intampla cu datele afacerii tale."
 root/div[0]/div[0]/h2[0]
@@ -1903,40 +1902,48 @@ root/div[0]/div[0]/p[5]/text "Le folosim intr-un singur scop: sa generam raportu
 root/div[0]/div[0]/p[6]
 root/div[0]/div[0]/p[6]/text "Your Google authorization remains in a secure cookie for one hour and is not stored with the lead. If you request the PDF, we store your name, email, phone number, store website, selected account identity, confirmed financial inputs, calculated break-even values, the report PDF, and its delivery status. We use this record only to generate, deliver, and support the requested audit and monthly reports about the connected campaigns while Devrika has access to the campaign data. We do not use this agreement for newsletters or general promotional messages. You may request its deletion at any time."
 root/div[0]/div[0]/h2[3]
-root/div[0]/div[0]/h2[3]/text "Conformarea cu politicile Google"
+root/div[0]/div[0]/h2[3]/text "How we protect Google user data"
 root/div[0]/div[0]/p[7]
-root/div[0]/div[0]/p[7]/text "Folosirea si transferul catre orice alta aplicatie a informatiilor primite de la Google API-uri respecta"
-root/div[0]/div[0]/p[7]/a[0] href="https://developers.google.com/terms/api-services-user-data-policy"
-root/div[0]/div[0]/p[7]/a[0]/text "Google API Services User Data Policy"
-root/div[0]/div[0]/p[7]/text ", inclusiv cerintele privind"
-root/div[0]/div[0]/p[7]/i[0]
-root/div[0]/div[0]/p[7]/i[0]/text "Limited Use"
-root/div[0]/div[0]/p[7]/text ". Concret: nu folosim datele pentru publicitate, nu le vindem, nu le transferam si nu permitem oamenilor sa le citeasca, in afara cazurilor strict necesare pentru operarea aplicatiei sau impuse de lege."
-root/div[0]/div[0]/h2[4]
-root/div[0]/div[0]/h2[4]/text "Cu cine le impartim"
+root/div[0]/div[0]/p[7]/text "We use HTTPS to encrypt data in transit between your browser, our application, and Google. Your Google authorization is held in a signed session cookie that expires after one hour. In production, the cookie is sent only over HTTPS, cannot be read by page JavaScript, and uses SameSite protection to limit cross-site requests."
 root/div[0]/div[0]/p[8]
-root/div[0]/div[0]/p[8]/text "We do not sell, rent, or use this data for third-party advertising. When email delivery is configured, Resend processes the recipient address, message, and attached PDF solely to deliver the report. Infrastructure providers may process data only as required to operate the application."
-root/div[0]/div[0]/h2[5]
-root/div[0]/div[0]/h2[5]/text "Cum retragi accesul"
+root/div[0]/div[0]/p[8]/text "Google API requests and application secrets are handled on the server. We do not store your Google authorization token with your contact record. Pending reports are stored in private server directories, and report snapshot files have restricted filesystem permissions. We verify signed report snapshots before using them and check that saved reports belong to the portal link used to open them."
 root/div[0]/div[0]/p[9]
-root/div[0]/div[0]/p[9]/text "Oricand, dintr-un singur loc si fara sa ne intrebi pe noi: intra la"
-root/div[0]/div[0]/p[9]/a[0] href="https://myaccount.google.com/permissions"
-root/div[0]/div[0]/p[9]/a[0]/text "myaccount.google.com/permissions"
-root/div[0]/div[0]/p[9]/text ", gaseste"
-root/div[0]/div[0]/p[9]/b[0]
-root/div[0]/div[0]/p[9]/b[0]/text "Audit Devrika"
-root/div[0]/div[0]/p[9]/text "in lista si apasa «Remove access». Din acel moment aplicatia nu mai poate citi nimic din contul tau."
-root/div[0]/div[0]/h2[6]
-root/div[0]/div[0]/h2[6]/text "Drepturile tale"
+root/div[0]/div[0]/p[9]/text "Access to Google user data is limited to providing and supporting the requested audit and report delivery, as described in this policy. You can revoke Google access or request deletion using the instructions below."
+root/div[0]/div[0]/h2[4]
+root/div[0]/div[0]/h2[4]/text "Conformarea cu politicile Google"
 root/div[0]/div[0]/p[10]
-root/div[0]/div[0]/p[10]/text "Conform GDPR, ai dreptul sa ceri o copie a datelor pe care le detinem despre tine, rectificarea sau stergerea lor, si sa te opui prelucrarii. Scrie-ne la"
-root/div[0]/div[0]/p[10]/a[0] href="mailto:hello@devrika.ro"
-root/div[0]/div[0]/p[10]/a[0]/text "hello@devrika.ro"
-root/div[0]/div[0]/p[10]/text "si raspundem in cel mult 30 de zile."
-root/div[0]/div[0]/h2[7]
-root/div[0]/div[0]/h2[7]/text "Modificari"
+root/div[0]/div[0]/p[10]/text "Folosirea si transferul catre orice alta aplicatie a informatiilor primite de la Google API-uri respecta"
+root/div[0]/div[0]/p[10]/a[0] href="https://developers.google.com/terms/api-services-user-data-policy"
+root/div[0]/div[0]/p[10]/a[0]/text "Google API Services User Data Policy"
+root/div[0]/div[0]/p[10]/text ", inclusiv cerintele privind"
+root/div[0]/div[0]/p[10]/i[0]
+root/div[0]/div[0]/p[10]/i[0]/text "Limited Use"
+root/div[0]/div[0]/p[10]/text ". Concret: nu folosim datele pentru publicitate, nu le vindem, nu le transferam si nu permitem oamenilor sa le citeasca, in afara cazurilor strict necesare pentru operarea aplicatiei sau impuse de lege."
+root/div[0]/div[0]/h2[5]
+root/div[0]/div[0]/h2[5]/text "Cu cine le impartim"
 root/div[0]/div[0]/p[11]
-root/div[0]/div[0]/p[11]/text "Daca schimbam ceva important in modul in care tratam datele, actualizam aceasta pagina si data de la inceputul ei."
+root/div[0]/div[0]/p[11]/text "We do not sell, rent, or use this data for third-party advertising. When email delivery is configured, Resend processes the recipient address, message, and attached PDF solely to deliver the report. Infrastructure providers may process data only as required to operate the application."
+root/div[0]/div[0]/h2[6]
+root/div[0]/div[0]/h2[6]/text "Cum retragi accesul"
+root/div[0]/div[0]/p[12]
+root/div[0]/div[0]/p[12]/text "Oricand, dintr-un singur loc si fara sa ne intrebi pe noi: intra la"
+root/div[0]/div[0]/p[12]/a[0] href="https://myaccount.google.com/permissions"
+root/div[0]/div[0]/p[12]/a[0]/text "myaccount.google.com/permissions"
+root/div[0]/div[0]/p[12]/text ", gaseste"
+root/div[0]/div[0]/p[12]/b[0]
+root/div[0]/div[0]/p[12]/b[0]/text "Audit Devrika"
+root/div[0]/div[0]/p[12]/text "in lista si apasa «Remove access». Din acel moment aplicatia nu mai poate citi nimic din contul tau."
+root/div[0]/div[0]/h2[7]
+root/div[0]/div[0]/h2[7]/text "Drepturile tale"
+root/div[0]/div[0]/p[13]
+root/div[0]/div[0]/p[13]/text "Conform GDPR, ai dreptul sa ceri o copie a datelor pe care le detinem despre tine, rectificarea sau stergerea lor, si sa te opui prelucrarii. Scrie-ne la"
+root/div[0]/div[0]/p[13]/a[0] href="mailto:hello@devrika.ro"
+root/div[0]/div[0]/p[13]/a[0]/text "hello@devrika.ro"
+root/div[0]/div[0]/p[13]/text "si raspundem in cel mult 30 de zile."
+root/div[0]/div[0]/h2[8]
+root/div[0]/div[0]/h2[8]/text "Modificari"
+root/div[0]/div[0]/p[14]
+root/div[0]/div[0]/p[14]/text "Daca schimbam ceva important in modul in care tratam datele, actualizam aceasta pagina si data de la inceputul ei."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
 root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la aplicatie"

@@ -464,8 +464,8 @@ describe("public Google Ads access boundary", () => {
       "connect:normal", "hub:normal", "landing:normal", "privacy:normal", "terms:normal",
     ]);
     expect(publicOAuthOracle.version).toBe(publicOAuthOracle.transition.to);
-    expect(publicOAuthOracle.transition.operatorSource.quote).toBe("2");
-    expect(publicOAuthOracle.transition.operatorSource.scope).toContain("implementation");
+    expect(publicOAuthOracle.transition.operatorSource.quote).toBe("Da, hai sa terminam cu asta, te rog");
+    expect(publicOAuthOracle.transition.operatorSource.scope).toContain("measured protection mechanisms");
 
     const clauseStates = {
       "hub:normal": ["application-read-operations-only", "mutation-none"],
