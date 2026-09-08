@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "baseRevision": "2be28eef4fd1e544a3543a2746df80d4134a08b1",
+  "checkedRevision": "d8afc2392dce6a11f0c86a0a7726ef33ac57cc25",
+  "productionInputs": [
+    {
+      "path": "lib/gads-oauth.ts",
+      "baseBlob": "ebd2064aed74f34b68e1364677841400be205dac",
+      "checkedBlob": "ebd2064aed74f34b68e1364677841400be205dac",
+      "unchanged": true
+    },
+    {
+      "path": "lib/gads-demo.ts",
+      "baseBlob": "b669e031703f589052c7e31c6d046299770fbc64",
+      "checkedBlob": "b669e031703f589052c7e31c6d046299770fbc64",
+      "unchanged": true
+    },
+    {
+      "path": "lib/gads-session.ts",
+      "baseBlob": "b0c7926084b3eaa56fe267e08b81259fe357cf69",
+      "checkedBlob": "b0c7926084b3eaa56fe267e08b81259fe357cf69",
+      "unchanged": true
+    },
+    {
+      "path": "lib/gads-public-oauth-contract.ts",
+      "baseBlob": "80db9ecb2f85f710a79baff48181b330333dd953",
+      "checkedBlob": "80db9ecb2f85f710a79baff48181b330333dd953",
+      "unchanged": true
+    }
+  ],
+  "preservedFixtureInputs": [
+    {
+      "path": "app/google-ads/conturi/page.test.tsx",
+      "identity": "Account fixtures retain customer IDs 111, 222, and 333; names Fixture Store, Fixture Second Store, and Fixture Demo; currencies RON and EUR; and login customer IDs 999, 888, and 333.",
+      "representationChange": "Only the empty mock implementations gained the exported AccessibleAccount return type."
+    },
+    {
+      "path": "app/public-access-boundary.test.tsx",
+      "identity": "The rewrite input remains NODE_ENV=production and every localized branch still expects surface:state in data-public-oauth-surface.",
+      "representationChange": "Vitest now owns environment restoration and the custom attribute is asserted by object shape."
+    },
+    {
+      "path": "lib/gads-session.test.ts",
+      "identity": "The secret remains absent while NODE_ENV changes from development to production; the refresh token remains token; development still accepts sealing and production still refuses the missing secret.",
+      "representationChange": "Vitest now stubs the readonly-declared environment field and cleanup runs in finally."
+    }
+  ],
+  "forbiddenChanges": {
+    "productionTypesLoosened": false,
+    "malformedOrBoundaryInputsRemoved": false,
+    "runtimeExpectationsWeakened": false
+  }
+}

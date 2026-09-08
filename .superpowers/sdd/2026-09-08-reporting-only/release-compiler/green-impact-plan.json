@@ -1,0 +1,138 @@
+{
+  "base_revision": "2be28eef4fd1e544a3543a2746df80d4134a08b1",
+  "changes": [
+    {
+      "category": "documentation",
+      "checks": [
+        "strict_typecheck"
+      ],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-compiler/checkpoint-preflight.json",
+      "risk": "fast",
+      "rule_id": "release_compiler_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [
+        "strict_typecheck"
+      ],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-compiler/checks.json",
+      "risk": "fast",
+      "rule_id": "release_compiler_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [
+        "strict_typecheck"
+      ],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-compiler/red-typecheck-receipt.json",
+      "risk": "fast",
+      "rule_id": "release_compiler_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "test",
+      "checks": [
+        "strict_typecheck",
+        "compiler_fixture_behavior"
+      ],
+      "path": "app/google-ads/conturi/page.test.tsx",
+      "risk": "fast",
+      "rule_id": "compiler_fixture_sources",
+      "status": "M"
+    },
+    {
+      "category": "test",
+      "checks": [
+        "strict_typecheck",
+        "compiler_fixture_behavior"
+      ],
+      "path": "app/public-access-boundary.test.tsx",
+      "risk": "fast",
+      "rule_id": "compiler_fixture_sources",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "docs/dev/mistakes.md",
+      "risk": "fast",
+      "rule_id": "measured_incident_registry",
+      "status": "M"
+    },
+    {
+      "category": "test",
+      "checks": [
+        "strict_typecheck",
+        "compiler_fixture_behavior"
+      ],
+      "path": "lib/gads-session.test.ts",
+      "risk": "fast",
+      "rule_id": "compiler_fixture_sources",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/conturi/page.test.tsx",
+        "app/google-ads/raport/actions.test.tsx",
+        "app/google-ads/raport/read-disclosure.test.tsx",
+        "app/public-access-boundary.test.tsx",
+        "lib/gads-report-email.test.ts",
+        "lib/gads-session.test.ts"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "compiler_fixture_behavior",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "strict_typecheck",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/release-compiler/checks.json",
+  "declaration_sha256": "9273c5284893303080088c6466c91563784ab738f67a2176266dac7e7c3098cc",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "439d0b281326ae0dcb4f26e21b42c051da4e7819706f48c41d9eb3258252f99c",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "d8afc2392dce6a11f0c86a0a7726ef33ac57cc25",
+  "risk": "fast",
+  "schema_version": 1
+}

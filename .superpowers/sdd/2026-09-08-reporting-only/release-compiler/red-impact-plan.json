@@ -1,0 +1,70 @@
+{
+  "base_revision": "2be28eef4fd1e544a3543a2746df80d4134a08b1",
+  "changes": [
+    {
+      "category": "documentation",
+      "checks": [
+        "strict_typecheck"
+      ],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-compiler/checkpoint-preflight.json",
+      "risk": "fast",
+      "rule_id": "release_compiler_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [
+        "strict_typecheck"
+      ],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-compiler/checks.json",
+      "risk": "fast",
+      "rule_id": "release_compiler_artifacts",
+      "status": "A"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "strict_typecheck",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/release-compiler/checks.json",
+  "declaration_sha256": "9273c5284893303080088c6466c91563784ab738f67a2176266dac7e7c3098cc",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "e9567e70f9dd2b1e4d244bd5231de617c14df332fc41e9d6aa9387cb454e192c",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "0408541902bbb6566afc2286d518e420c27149a3",
+  "risk": "fast",
+  "schema_version": 1
+}
