@@ -84,7 +84,7 @@ const createReport = (
   overrides: Partial<GoogleAdsReportV2Input> = {},
 ): GoogleAdsReportV2ViewModel => buildGoogleAdsReportV2(reportInput(overrides));
 
-it("renders the approved five-section Romanian hierarchy from supplied V2 values", () => {
+it("renders the approved five-section English hierarchy from supplied V2 values", () => {
   const report = createReport();
   const { container } = render(<ReportingDashboard report={report} demo />);
   const sections = Array.from(
@@ -99,17 +99,17 @@ it("renders the approved five-section Romanian hierarchy from supplied V2 values
     "product-actions",
   ]);
   expect(screen.getByText("DEVRIKA")).toBeTruthy();
-  expect(screen.getAllByText(/1–31 august 2026/i).length).toBeGreaterThan(0);
-  expect(screen.getByText(/audit doar în citire/i)).toBeTruthy();
-  expect(screen.getByText(/date simulate/i)).toBeTruthy();
+  expect(screen.getAllByText(/August 1–31, 2026/i).length).toBeGreaterThan(0);
+  expect(screen.getByText(/read-only audit/i)).toBeTruthy();
+  expect(screen.getByText(/simulated data/i)).toBeTruthy();
   expect(screen.getByRole("heading", { name: report.accountHeadline })).toBeTruthy();
 
-  const targets = screen.getByRole("region", { name: "Țintele contului" });
+  const targets = screen.getByRole("region", { name: "Account targets" });
   expect(
     Array.from(targets.querySelectorAll("[data-target-tile]")).map(
       (tile) => tile.querySelector("small")?.textContent,
     ),
-  ).toEqual(["ROAS actual", "ROAS minim", "CPA actual", "CPA maxim"]);
+  ).toEqual(["Current ROAS", "Minimum ROAS", "Current CPA", "Maximum CPA"]);
   expect(targets.querySelectorAll("[data-status='warning']")).toHaveLength(2);
   expect(targets.querySelectorAll("[data-status='positive']")).toHaveLength(2);
 

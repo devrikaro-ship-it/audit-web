@@ -154,7 +154,13 @@ describe("Google Ads V2 report view model", () => {
       currentCpa: { status: "AVAILABLE" },
       maximumCpa: { status: "AVAILABLE", value: 200 },
     });
-    expect(report.accountHeadline).toContain("sub pragul minim");
+    expect(report.accountHeadline).toContain("below the minimum profitability threshold");
+    expect(report.groups.map((group) => group.title)).toEqual([
+      "Products consuming budget",
+      "Products without enough promotion",
+      "Products with potential",
+      "Profitable products",
+    ]);
   });
 
   it("supplies every target presentation status instead of leaving threshold decisions to renderers", () => {
