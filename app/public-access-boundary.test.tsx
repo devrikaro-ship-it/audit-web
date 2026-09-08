@@ -782,13 +782,13 @@ describe("public Google Ads access boundary", () => {
       process.env.GADS_DEVELOPER_TOKEN = "developer";
       const html = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({}) }));
 
-      expect(html).toContain("Conecteaza contul si vezi performanta fiecarui produs");
-      expect(html).toContain("Site-ul magazinului");
-      expect(html).toContain("Folosim adresa doar ca sa identificam magazinul in raport");
-      expect(html).toContain("Continua in siguranta cu Google");
+      expect(html).toContain("Connect your account and see how every product performs");
+      expect(html).toContain("Store website");
+      expect(html).toContain("We use this address only to identify the store in your report");
+      expect(html).toContain("Continue securely with Google");
       expect(html).toContain('<details data-oauth-disclosure="progressive"');
       expect(html.match(/data-connect-assurance=/g) ?? []).toHaveLength(3);
-      expect(html).not.toContain("Store website");
+      expect(html).not.toContain("Site-ul magazinului");
     } finally {
       process.env = prior;
     }

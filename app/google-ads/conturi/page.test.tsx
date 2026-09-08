@@ -52,12 +52,14 @@ describe("account selection recovery", () => {
   it("renders a non-Error account-list failure", async () => {
     listAccountsMock.mockRejectedValue("failure");
     const Page = (await import("./page")).default;
-    expect(renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }))).toBeTruthy();
+    expect(renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }))).toContain("unknown");
   });
   it("renders the successful picker state through the canonical contract", async () => {
     const Page = (await import("./page")).default;
     const html = renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }));
     expect(html).toContain('data-public-oauth-surface="account-picker:success"');
+    expect(html).toContain("Which account should we analyze?");
+    expect(html).toContain("Try another Google account");
     expect(normalizePublicOutput(html)).toMatchSnapshot("account-picker:success-zero");
   });
 

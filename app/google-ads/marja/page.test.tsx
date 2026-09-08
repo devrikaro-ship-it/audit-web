@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { GROSS_MARGIN_ERROR } from "@/lib/gads-session";
 import { normalizePublicOutput } from "@/app/public-output-goldens";
 
-let sessionVariant: "valid" | "missing" | "account" | "timezone" = "valid";
+let sessionVariant: "valid" | "missing" | "account" | "timezone" | "currency" = "valid";
 let demoEnabled = false;
 let productCount = 0;
 let productCategory: string | undefined;
@@ -15,7 +15,7 @@ vi.mock("next/link", () => ({ default: ({ children }: { children: React.ReactNod
 vi.mock("@/lib/gads-session", async (original) => ({
   ...(await original<Record<string, unknown>>()),
   SESSION_COOKIE: "gads_session",
-  unseal: () => sessionVariant === "missing" ? null : ({ refreshToken: "token", customerId: sessionVariant === "account" ? undefined : "123", customerTimeZone: sessionVariant === "timezone" ? undefined : "Europe/Bucharest", exp: 9e12 }),
+  unseal: () => sessionVariant === "missing" ? null : ({ refreshToken: "token", customerId: sessionVariant === "account" ? undefined : "123", customerTimeZone: sessionVariant === "timezone" ? undefined : "Europe/Bucharest", currencyCode: sessionVariant === "currency" ? undefined : "EUR", exp: 9e12 }),
 }));
 vi.mock("@/lib/gads-oauth", () => ({ accessTokenFrom: async () => "access", oauthConfig: () => ({ developerToken: "dev" }) }));
 vi.mock("@/lib/gads-intake", () => ({ fetchShoppingProducts: async () => ({ products: Array.from({ length: productCount }, () => ({ title: "Product", category: productCategory })) }) }));
@@ -25,8 +25,8 @@ vi.mock("@/lib/gads-an", () => ({
 }));
 vi.mock("@/lib/gads-demo", () => ({ demoOn: () => demoEnabled, demoData: () => ({ products: Array.from({ length: productCount }, () => ({ title: "Product", category: productCategory })) }) }));
 vi.mock("./MarginForm", () => ({
-  default: ({ initialAverageOrderValue, measured }: { initialAverageOrderValue: number; measured: boolean }) => (
-    <form data-test="margin-retry" data-aov={initialAverageOrderValue} data-measured={String(measured)} />
+  default: ({ initialAverageOrderValue, measured, currencyCode }: { initialAverageOrderValue: number; measured: boolean; currencyCode: string }) => (
+    <form data-test="margin-retry" data-aov={initialAverageOrderValue} data-measured={String(measured)} data-currency={currencyCode} />
   ),
 }));
 
@@ -45,9 +45,10 @@ it("renders the normal margin state through the canonical contract", async () =>
   expect(html).toContain('data-public-oauth-surface="margin:normal"');
   expect(html).toContain('data-aov="500"');
   expect(html).toContain('data-measured="true"');
-  expect(html).toContain("cât te costă marfa din acea comandă");
-  expect(html).toContain("Hai să stabilim pragul de la care campaniile tale Google Ads fac sau pierd bani");
-  expect(html).toContain("Nu cerem facturi și nu avem acces la contabilitate");
+  expect(html).toContain('data-currency="EUR"');
+  expect(html).toContain("cost of goods in that order");
+  expect(html).toContain("Let's set the point where your Google Ads campaigns start making or losing money");
+  expect(html).toContain("We do not ask for invoices or access your accounting records");
   expect(normalizePublicOutput(html)).toMatchSnapshot("margin:normal");
 });
 
@@ -64,6 +65,7 @@ it.each([
   ["missing", "/google-ads/connect?eroare=sesiune"],
   ["account", "/google-ads/conturi"],
   ["timezone", "/google-ads/conturi"],
+  ["currency", "/google-ads/conturi"],
 ] as const)("refuses the %s margin session boundary", async (variant, destination) => {
   sessionVariant = variant;
   const MarginPage = (await import("./page")).default;
