@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "currency_narrowing": {
+    "temporary_defect": "One report callback read session.currencyCode again instead of the guarded local currencyCode.",
+    "command_id": "report_typecheck",
+    "command": ["npx", "tsc", "--noEmit", "--incremental", "false"],
+    "cwd": ".superpowers/sdd/2026-09-08-reporting-only/point-1",
+    "negative_result": {
+      "exit_code": 2,
+      "diagnostics": [
+        "app/google-ads/raport/page.tsx:702 TS2345",
+        "app/google-ads/raport/page.tsx:702 TS2345"
+      ]
+    },
+    "restoration": "The callback was restored to the guarded currencyCode local.",
+    "positive_result": {
+      "exit_code": 0,
+      "duration_seconds": 1.8
+    }
+  },
+  "signed_snapshot_currency_authority": {
+    "temporary_defect": "The active V2 dashboard was fed the guarded session currency instead of openedReportSnapshot.reportV2.currencyCode.",
+    "command_id": "report_snapshot_currency",
+    "test": "renders every immediate V2 decision from the opened signed snapshot sent to contact",
+    "negative_result": {
+      "exit_code": 1,
+      "failed_assertion": "Expected the GBP symbol from the opened signed snapshot; rendered EUR instead.",
+      "tests_failed": 1
+    },
+    "restoration": "The active dashboard currency source was restored to openedReportSnapshot.reportV2.currencyCode.",
+    "positive_result": {
+      "exit_code": 0,
+      "tests_passed": 1,
+      "tests_skipped": 37,
+      "duration_seconds": 0.5
+    }
+  },
+  "runner": "/Users/VladMoloso/.codex/skills/codex-delivery/scripts/run_bounded_command.py planned"
+}

@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-08 — Preserve optional-property narrowing across report callbacks
+
+Symptom: the report UI passed its Vitest checks, but strict TypeScript compilation reported six `string | undefined` arguments where currency formatting happened inside callbacks. Measured cause: the code guarded `session.currencyCode` as a mutable object property, and TypeScript did not retain that property narrowing across callback boundaries. Recognition signal: a required value is checked on an object and then read again from that object inside `map` or another closure. Repair: capture the property once in a stable local constant, guard the constant, and use the narrowed local throughout the report construction and legacy views. Keep the currency read from the opened signed snapshot authoritative for the active dashboard. Run strict TypeScript checking in addition to transpile-only UI tests.
+
 ## 2026-09-08 — Validate finite handoff and proof shapes before launch
 
 Symptom: point-two launch rejected a missing predecessor mapping, and later code-proof registration rejected an extra reference inside the reviewer verdict. Measured cause: document links do not substitute for `context.dependency_results`, and `reviewer_verdict` permits exactly `status`, `revision` and `repo_root`. Recognition signal: a dependent point without its exact point/result/reference entry, or an otherwise correct verdict object with extra keys. Repair: supply every declared predecessor once, and place optional provenance outside the exact verdict object. Both corrected records were accepted without changing their substantive evidence.

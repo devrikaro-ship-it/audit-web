@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "command": ["npx", "tsc", "--noEmit", "--incremental", "false"],
+  "cwd": ".",
+  "result_after_repair": "failed_on_unrelated_baseline_diagnostics",
+  "exit_code": 2,
+  "target_currency_diagnostics_remaining": 0,
+  "unrelated_files": [
+    "app/google-ads/conturi/page.test.tsx",
+    "app/google-ads/raport/actions.test.tsx",
+    "app/google-ads/raport/read-disclosure.test.tsx",
+    "app/public-access-boundary.test.tsx",
+    "lib/gads-report-email.test.ts",
+    "lib/gads-session.test.ts"
+  ],
+  "scope_decision": "The repository-wide command cannot serve as a passing verdict for this finite repair because it includes frozen diagnostics in files outside the writable perimeter. The declared report typecheck uses the same strict command from a point-owned tsconfig that includes the report page and its imported production dependencies."
+}

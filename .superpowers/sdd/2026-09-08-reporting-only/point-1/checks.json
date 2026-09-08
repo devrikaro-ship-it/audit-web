@@ -1,6 +1,18 @@
 {
   "schema_version": 1,
   "checks": {
+    "report_typecheck": {
+      "profile": "targeted_tests",
+      "command": ["npx", "tsc", "--noEmit", "--incremental", "false"],
+      "cwd": ".superpowers/sdd/2026-09-08-reporting-only/point-1",
+      "estimated_minutes": 4
+    },
+    "repository_typecheck_diagnostic": {
+      "profile": "targeted_tests",
+      "command": ["npx", "tsc", "--noEmit", "--incremental", "false"],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
     "report_ui": {
       "profile": "targeted_tests",
       "command": [
@@ -21,6 +33,19 @@
     "report_metrics": {
       "profile": "targeted_tests",
       "command": ["npx", "vitest", "run", "lib/gads-report-metrics.test.ts"],
+      "cwd": ".",
+      "estimated_minutes": 2
+    },
+    "report_snapshot_currency": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/page.test.tsx",
+        "-t",
+        "renders every immediate V2 decision from the opened signed snapshot sent to contact"
+      ],
       "cwd": ".",
       "estimated_minutes": 2
     },
@@ -49,7 +74,7 @@
       "statuses": ["A", "M"],
       "category": "frontend",
       "risk": "fast",
-      "checks": ["report_ui", "snapshot_update"]
+      "checks": ["report_typecheck", "report_snapshot_currency", "report_ui", "snapshot_update"]
     },
     {
       "id": "report_metrics",
@@ -57,7 +82,7 @@
       "statuses": ["A", "M"],
       "category": "runtime",
       "risk": "fast",
-      "checks": ["report_metrics", "report_ui"]
+      "checks": ["report_typecheck", "report_metrics", "report_ui"]
     },
     {
       "id": "point_artifacts",

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "phase": "red",
+  "revision": "d1031c0c3ee49f055ce738d36d13f6a2f4ca5efa",
+  "command_id": "report_typecheck",
+  "command": ["npx", "tsc", "--noEmit", "--incremental", "false"],
+  "runner": "/Users/VladMoloso/.codex/skills/codex-delivery/scripts/run_bounded_command.py planned",
+  "result": "failed_as_expected",
+  "exit_code": 2,
+  "duration_seconds": 3.9,
+  "target_diagnostics": [
+    "app/google-ads/raport/page.tsx:701 TS2345",
+    "app/google-ads/raport/page.tsx:701 TS2345",
+    "app/google-ads/raport/page.tsx:719 TS2345",
+    "app/google-ads/raport/page.tsx:737 TS2345",
+    "app/google-ads/raport/page.tsx:815 TS2345",
+    "app/google-ads/raport/page.tsx:886 TS2345"
+  ],
+  "baseline_diagnostics_outside_the_repair": [
+    "app/google-ads/conturi/page.test.tsx",
+    "app/google-ads/raport/actions.test.tsx",
+    "app/google-ads/raport/read-disclosure.test.tsx",
+    "app/public-access-boundary.test.tsx",
+    "lib/gads-report-email.test.ts",
+    "lib/gads-session.test.ts"
+  ],
+  "interpretation": "The bounded strict compiler check reproduced all six reviewed currency-narrowing failures. It also exposed unrelated diagnostics already present at the frozen starting revision; those diagnostics are recorded separately and are not treated as part of this finite repair."
+}

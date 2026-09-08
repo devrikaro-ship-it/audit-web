@@ -293,7 +293,8 @@ export default async function Raport() {
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.customerTimeZone) redirect("/google-ads/conturi");
-  if (!session.currencyCode) redirect("/google-ads/conturi");
+  const currencyCode = session.currencyCode;
+  if (!currencyCode) redirect("/google-ads/conturi");
   const marginPct = parseGrossMargin(session.marginPct);
   if (marginPct === null)
     redirect(
@@ -322,7 +323,7 @@ export default async function Raport() {
   const pmax =
     s.brutPmax && structura
       ? runReportStep("analizeazaPmax", () =>
-          analizeazaPmax(s.brutPmax!, structura.campanii, session.currencyCode),
+          analizeazaPmax(s.brutPmax!, structura.campanii, currencyCode),
         )
       : undefined;
   const shopping = s.brutShop
@@ -355,7 +356,7 @@ export default async function Raport() {
       minRoas,
       catalogComplete,
       { structura, cuvinte, pmax, shopping, cautari, an },
-      session.currencyCode,
+      currencyCode,
     ),
   );
 
@@ -493,12 +494,12 @@ export default async function Raport() {
     ),
     reportV2: {
       version: 2,
-      currencyCode: session.currencyCode,
+      currencyCode,
       periods: snapshotPeriodsV2,
       products: snapshotProductsV2,
       productPopulationStatus: catalogComplete ? "COMPLETE" : "PARTIAL",
       classificationDiagnostics: buildGoogleAdsReportV2({
-        currencyCode: session.currencyCode,
+        currencyCode,
         minimumRoasTarget: minRoas,
         maximumCpaTarget: session.breakEvenCpa,
         periods: snapshotPeriodsV2,
@@ -600,7 +601,7 @@ export default async function Raport() {
               className="mb-2 font-black leading-none tabular-nums"
               style={{ fontFamily: sora, fontSize: "clamp(38px,8vw,64px)" }}
             >
-              {money(rep.headline.ron, session.currencyCode)}
+              {money(rep.headline.ron, currencyCode)}
             </p>
             <p
               className="text-[15.5px]"
@@ -698,7 +699,7 @@ export default async function Raport() {
                                 : C.red,
                         }}
                       >
-                        {f.tier === "SIMULARE" ? `+${money(f.ron, session.currencyCode)}` : money(f.ron, session.currencyCode)}
+                        {f.tier === "SIMULARE" ? `+${money(f.ron, currencyCode)}` : money(f.ron, currencyCode)}
                       </p>
                     )}
                     <p
@@ -716,7 +717,7 @@ export default async function Raport() {
                         cheie: p.titlu,
                         celule: [
                           p.titlu,
-                          p.cost > 0 ? money(p.cost, session.currencyCode) : "—",
+                          p.cost > 0 ? money(p.cost, currencyCode) : "—",
                           p.roas === undefined ? "—" : `${Math.round(p.roas)}x`,
                         ],
                         alarma: p.roas !== undefined && p.roas < minRoas,
@@ -734,7 +735,7 @@ export default async function Raport() {
                         celule: [
                           t2.termen,
                           String(t2.clicuri),
-                          money(Math.round(t2.cost), session.currencyCode),
+                          money(Math.round(t2.cost), currencyCode),
                         ],
                         alarma: true,
                       }))}
@@ -767,7 +768,7 @@ export default async function Raport() {
           style={{ display: "none" }}
         >
           <SectionTitle nr="2" text="How your catalog performs" />
-          <CatalogPePerformanta harti={hartiCatalog} currencyCode={session.currencyCode} />
+          <CatalogPePerformanta harti={hartiCatalog} currencyCode={currencyCode} />
         </ReportSurface>
 
         {/* ── Setari gresite ── */}
@@ -812,7 +813,7 @@ export default async function Raport() {
                           className="text-[13px] font-bold tabular-nums"
                           style={{ color: C.gray600 }}
                         >
-                          {money(p.ron, session.currencyCode)} budget affected
+                          {money(p.ron, currencyCode)} budget affected
                         </span>
                       )}
                     </div>
@@ -883,7 +884,7 @@ export default async function Raport() {
                 capete={["Product", "Spent", "Return"]}
                 randuri={f.produse!.map((p) => ({
                   cheie: p.titlu,
-                  celule: [p.titlu, money(p.cost, session.currencyCode), "unknown"],
+                  celule: [p.titlu, money(p.cost, currencyCode), "unknown"],
                   alarma: false,
                 }))}
                 restante={f.produseRestante}
@@ -918,7 +919,7 @@ export default async function Raport() {
               className="mb-2 font-black leading-none tabular-nums"
               style={{ fontFamily: sora, fontSize: "clamp(32px,7vw,54px)" }}
             >
-              +{money(venitInPlusLunar, session.currencyCode)}
+              +{money(venitInPlusLunar, currencyCode)}
             </p>
             <p
               className="mx-auto mb-6 max-w-[520px] text-[15px] leading-relaxed"
