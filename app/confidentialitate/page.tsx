@@ -2,18 +2,12 @@ import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
 import { publicOAuthAttributes, publicOAuthProjection, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
-// LANG: pending full translation to EN
-
-// Politica de confidentialitate a APLICATIEI (nu a agentiei). Google o cere pe acelasi host
-// cu home page-ul declarat in consent screen si linkata DIN home page — cele doua tipare
-// clasice de respingere la brand verification.
-//
-// Continutul trebuie sa spuna concret ce date Google atingem si ce facem cu ele, inclusiv
-// conformarea cu "Google API Services User Data Policy" si cerinta Limited Use. O politica
-// generala de agentie nu acopera asta si pica verificarea.
+// This application policy is published on the same host as the home page declared in
+// Google's consent screen and is linked from that home page for brand verification.
+// It discloses the exact Google data used and the Limited Use protections that apply.
 
 export const metadata = {
-  title: "Politica de confidentialitate — Audit Devrika",
+  title: "Privacy Policy — Audit Devrika",
   description: publicOAuthProjection.privacyMetadata,
 };
 
@@ -36,29 +30,29 @@ export default function Confidentialitate() {
 
         <h1 className="mb-2 font-extrabold leading-[1.2] tracking-[-0.5px]"
           style={{ fontFamily: sora, fontSize: "clamp(26px,4vw,36px)", color: "#0f172a" }}>
-          Politica de confidentialitate
+          Privacy Policy
         </h1>
         <p className="mb-8 text-[14px]" style={{ color: C.gray400 }}>
-          Aplicatia <b>Audit Devrika</b> — analiza contului de Google Ads. Ultima actualizare: august 2026.
+          The <b>Audit Devrika</b> application — Google Ads account analysis. Last updated: August 2026.
         </p>
 
         <P>
-          Aceasta politica descrie cum aplicatia Audit Devrika trateaza datele la care ii dai acces
-          atunci cand iti conectezi contul de Google Ads. E scrisa in limbaj obisnuit, pentru ca
-          ai dreptul sa intelegi ce se intampla cu datele afacerii tale.
+          This policy explains how the Audit Devrika application handles data you authorize it to
+          access when you connect your Google Ads account. It uses plain language so you can
+          understand what happens to your business data.
         </P>
 
-        <H2>Cine suntem</H2>
+        <H2>Who we are</H2>
         <P>
-          Devrika este o agentie de marketing online din Romania. Aplicatia <b>Audit Devrika</b> descrisa aici ruleaza pe{" "}
-          <b>audit.devrika.ro</b> si apartine aceleiasi firme. Ne poti scrie oricand la{" "}
+          Devrika is a Romanian online marketing agency. The <b>Audit Devrika</b> application described
+          here runs on <b>audit.devrika.io</b> and is operated by the same company. You can contact us at{" "}
           <a href="mailto:hello@devrika.ro" style={{ color: C.indigo }}>hello@devrika.ro</a>.
         </P>
 
-        <H2>Ce date citim din contul tau Google</H2>
+        <H2>What data we read from your Google account</H2>
         <P>
           {publicOAuthStatement("oauth-is-not-read-only")}
-          Aplicatia citeste urmatoarele date din contul tau de Google Ads:
+          {" "}The application reads the following data from your Google Ads account:
         </P>
         <ul className="mb-3 flex flex-col gap-2">
           {[
@@ -72,24 +66,23 @@ export default function Confidentialitate() {
           ))}
         </ul>
         <P>
-          <b>Nu cerem si nu obtinem acces</b> la Gmail, Google Drive, contacte, calendar sau orice
-          alt serviciu Google. Nu putem face nicio modificare in contul tau de Google Ads: nu putem
-          porni sau opri campanii, nu putem schimba bugete si nu putem cheltui bani.
+          <b>We do not request or obtain access</b> to Gmail, Google Drive, contacts, calendars, or any
+          other Google service. {publicOAuthProjection.noCampaignMutations}
         </P>
 
-        <H2>Ce facem cu ele</H2>
+        <H2>What we do with the data</H2>
         <P>
-          Le folosim intr-un singur scop: sa generam raportul pe care il vezi pe ecran, folosind
-          categoriile de date enumerate mai sus. Analiza se face in momentul in care esti pe site.
+          We use these categories to generate the report you see on screen. The analysis runs when
+          you request it on the site.
         </P>
         <P>
           Your Google authorization remains in a secure cookie for one hour and is not stored with
           the lead. If you request the PDF, we store your name, email, phone number, store website,
           selected account identity, confirmed financial inputs, calculated break-even values, the
           report PDF, and its delivery status. We use this record only to generate, deliver, and
-          support the requested audit and monthly reports about the connected campaigns while Devrika
-          has access to the campaign data. We do not use this agreement for newsletters or general
-          promotional messages. You may request its deletion at any time.
+          support the requested audit. If optional monthly report delivery becomes available and you
+          request it separately, the same limited purpose applies. We do not use this agreement for
+          newsletters or general promotional messages. You may request deletion at any time.
         </P>
 
         <H2>How we protect Google user data</H2>
@@ -112,19 +105,18 @@ export default function Confidentialitate() {
           request deletion using the instructions below.
         </P>
 
-        <H2>Conformarea cu politicile Google</H2>
+        <H2>Compliance with Google policies</H2>
         <P>
-          Folosirea si transferul catre orice alta aplicatie a informatiilor primite de la Google
-          API-uri respecta{" "}
+          Our use and transfer to any other application of information received from Google APIs complies with the{" "}
           <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" style={{ color: C.indigo }}>
             Google API Services User Data Policy
           </a>
-          , inclusiv cerintele privind <i>Limited Use</i>. Concret: nu folosim datele pentru
-          publicitate, nu le vindem, nu le transferam si nu permitem oamenilor sa le citeasca, in
-          afara cazurilor strict necesare pentru operarea aplicatiei sau impuse de lege.
+          , including its <i>Limited Use</i> requirements. We do not use the data for advertising,
+          sell it, transfer it, or allow people to read it except where strictly necessary to operate
+          the application or comply with law.
         </P>
 
-        <H2>Cu cine le impartim</H2>
+        <H2>Who we share data with</H2>
         <P>
           We do not sell, rent, or use this data for third-party advertising. When email delivery is
           configured, Resend processes the recipient address, message, and attached PDF solely to
@@ -132,33 +124,32 @@ export default function Confidentialitate() {
           the application.
         </P>
 
-        <H2>Cum retragi accesul</H2>
+        <H2>How to revoke access</H2>
         <P>
-          Oricand, dintr-un singur loc si fara sa ne intrebi pe noi: intra la{" "}
+          You can revoke access at any time without contacting us. Open{" "}
           <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" style={{ color: C.indigo }}>
             myaccount.google.com/permissions
           </a>
-          , gaseste <b>Audit Devrika</b> in lista si apasa &laquo;Remove access&raquo;. Din acel moment
-          aplicatia nu mai poate citi nimic din contul tau.
+          , find <b>Audit Devrika</b> in the list, and select &ldquo;Remove access.&rdquo; The application
+          can no longer read your account after access is removed.
         </P>
 
-        <H2>Drepturile tale</H2>
+        <H2>Your rights</H2>
         <P>
-          Conform GDPR, ai dreptul sa ceri o copie a datelor pe care le detinem despre tine,
-          rectificarea sau stergerea lor, si sa te opui prelucrarii. Scrie-ne la{" "}
-          <a href="mailto:hello@devrika.ro" style={{ color: C.indigo }}>hello@devrika.ro</a> si
-          raspundem in cel mult 30 de zile.
+          Under the GDPR, you may request a copy of the personal data we hold about you, request its
+          correction or deletion, and object to processing. Email{" "}
+          <a href="mailto:hello@devrika.ro" style={{ color: C.indigo }}>hello@devrika.ro</a>; we will
+          respond within 30 days.
         </P>
 
-        <H2>Modificari</H2>
+        <H2>Changes to this policy</H2>
         <P>
-          Daca schimbam ceva important in modul in care tratam datele, actualizam aceasta pagina si
-          data de la inceputul ei.
+          If we materially change how we handle data, we will update this page and the date shown above.
         </P>
 
         <div className="mt-12 flex gap-5 border-t pt-6 text-[14px]" style={{ borderColor: "#e6ebf4" }}>
-          <Link href="/google-ads" style={{ color: C.indigo }}>← Inapoi la aplicatie</Link>
-          <Link href="/termeni" style={{ color: C.indigo }}>Termeni si conditii</Link>
+          <Link href="/google-ads" style={{ color: C.indigo }}>← Back to the application</Link>
+          <Link href="/termeni" style={{ color: C.indigo }}>Terms and Conditions</Link>
         </div>
       </div>
     </div>

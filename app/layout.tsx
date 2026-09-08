@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Fonturile raportului Devrika (identice cu PDF-ul): Sora pe titluri, Inter pe text.
+// Devrika report fonts (matching the PDF): Sora for headings, Inter for body text.
 const sora = Sora({
   variable: "--font-sora",
   subsets: ["latin"],
@@ -26,7 +26,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Audit gratuit pentru magazine online — Devrika",
+  title: "Free audit for online stores — Devrika",
   description: publicOAuthProjection.rootMetadata,
 };
 
@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="ro"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>

@@ -1,7 +1,6 @@
-// LANG: pending full translation to EN
 export const GADS_LOCALIZED_COPY = {
   accountListReadFailure:
-    "Nu am putut citi lista de conturi. Se intampla cand contul nu are inca acces la Google Ads API sau cand conectarea a expirat.",
-  selectedAccountDataReadFailure: "Nu am putut citi datele contului.",
-  accountDataRetention: "Nu pastram datele contului",
+    "We could not read the account list. This can happen when the account does not yet have Google Ads API access or when the connection has expired.",
+  selectedAccountDataReadFailure: "We could not read the selected account data.",
+  accountDataRetention: "Requested report data is retained only for delivery and support.",
 } as const;

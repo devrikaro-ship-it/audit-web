@@ -2,13 +2,10 @@ import Link from "next/link";
 import { C, sora, inter } from "@/lib/theme";
 import { publicOAuthAttributes, publicOAuthProjection, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
-// LANG: pending full translation to EN
-
-// Termenii APLICATIEI, pe acelasi host cu home page-ul declarat in consent screen.
-// Vezi nota din app/confidentialitate/page.tsx pentru motivul tehnic.
+// Application terms published on the same host as the home page declared in Google's consent screen.
 
 export const metadata = {
-  title: "Termeni si conditii — Audit Devrika",
+  title: "Terms and Conditions — Audit Devrika",
   description: publicOAuthProjection.termsMetadata,
 };
 
@@ -31,79 +28,77 @@ export default function Termeni() {
 
         <h1 className="mb-2 font-extrabold leading-[1.2] tracking-[-0.5px]"
           style={{ fontFamily: sora, fontSize: "clamp(26px,4vw,36px)", color: "#0f172a" }}>
-          Termeni si conditii
+          Terms and Conditions
         </h1>
         <p className="mb-8 text-[14px]" style={{ color: C.gray400 }}>
-          Aplicatia <b>Audit Devrika</b> — analiza contului de Google Ads. Ultima actualizare: august 2026.
+          The <b>Audit Devrika</b> application — Google Ads account analysis. Last updated: August 2026.
         </p>
 
-        <H2>Ce este acest serviciu</H2>
+        <H2>What this service is</H2>
         <P>
-          Audit Devrika este o aplicatie care analizeaza contul tau de Google Ads si iti arata unde se
-          duc banii din campaniile de Shopping: ce produse consuma buget fara sa vanda, ce produse
-          nu au fost afisate niciodata si daca masurarea conversiilor e configurata corect.
-          Serviciul e oferit gratuit, fara obligatia de a cumpara ceva.
+          Audit Devrika analyzes your Google Ads account and shows where Shopping campaign money goes:
+          which products spend budget without selling, which products have never been shown, and
+          whether conversion tracking is configured correctly. The service is free and creates no
+          obligation to purchase anything.
         </P>
 
-        <H2>Ce iti cerem</H2>
+        <H2>What we ask from you</H2>
         <P>
-          Sa ne dai acces la contul tau de Google Ads, prin mecanismul oficial de
-          autorizare Google, si sa ne spui aproximativ ce marja de profit ai — din ea calculam
-          pragul sub care un produs pierde bani. Nu iti cerem parole, date de card sau documente.
+          Authorize access to your Google Ads account through Google's official authorization
+          mechanism and provide an approximate profit margin so we can calculate the threshold below
+          which a product loses money. We do not ask for passwords, payment-card details, or documents.
         </P>
 
-        <H2>Ce garantam si ce nu</H2>
+        <H2>What we guarantee and what we do not</H2>
         <P>
-          Cifrele din raport sunt citite direct din contul tau si le marcam ca atare. Acolo unde
-          folosim un reper de piata in loc de o masuratoare — de exemplu diferenta tipica de cost
-          pe click intre magazinele cu si fara CSS — scrie explicit <b>ESTIMARE</b>. Nu prezentam
-          niciodata o estimare drept fapt masurat.
+          Report figures read directly from your account are marked as measured. When we use a market
+          benchmark instead of a measurement—for example, the typical cost-per-click difference
+          between stores with and without a CSS partner—we label it <b>ESTIMATE</b>. We never present
+          an estimate as a measured fact.
         </P>
         <P>
-          Raportul e o analiza, nu o garantie de rezultat. Deciziile pe care le iei in contul tau
-          iti apartin, iar Devrika nu raspunde pentru efectele lor comerciale. Daca masurarea
-          conversiilor din contul tau e configurata gresit, o spunem in raport — dar in acel caz
-          cifrele de performanta nu pot fi judecate pana nu e reparata.
-        </P>
-
-        <H2>Ce nu facem niciodata</H2>
-        <P>
-          {publicOAuthStatement("application-performs-no-mutations")} Accesul pe care ni-l dai il poti retrage oricand din
-          setarile contului tau Google.
+          The report is an analysis, not a guarantee of results. Decisions you make in your account
+          remain yours, and Devrika is not responsible for their commercial effects. If conversion
+          tracking is configured incorrectly, the report says so; performance figures cannot be
+          judged reliably until tracking is repaired.
         </P>
 
-        <H2>Datele tale</H2>
+        <H2>What we never do</H2>
         <P>
-          Modul in care tratam datele e descris pe larg in{" "}
-          <Link href="/confidentialitate" style={{ color: C.indigo }}>politica de confidentialitate</Link>.
-          In short: we read only what is needed for the audit. If you request the PDF, we store the
+          {publicOAuthStatement("application-performs-no-mutations")} You can revoke the access you grant at any time from your Google account settings.
+        </P>
+
+        <H2>Your data</H2>
+        <P>
+          Our handling of your data is described in the{" "}
+          <Link href="/confidentialitate" style={{ color: C.indigo }}>Privacy Policy</Link>.
+          In short, we read only what is needed for the audit. If you request the PDF, we store the
           report, your contact details, the store and selected-account context, the confirmed
           financial inputs, and delivery status so the report can be delivered and supported.
         </P>
 
-        <H2>Monthly campaign reports</H2>
+        <H2>Optional monthly campaign reports</H2>
         <P>
-          When you request the audit by accepting these terms, the email address you provide becomes
-          the delivery address for the audit and for monthly reports about the connected campaigns.
-          Monthly reporting continues only while Devrika has access to the campaign data. This service
-          does not include newsletters, general promotional materials, or third-party advertising.
+          If optional monthly report delivery becomes available, it will require a separate request.
+          The email address you provide for an audit is used to deliver and support that requested
+          audit only. We do not enroll you automatically in monthly reports, newsletters, general
+          promotional messages, or third-party advertising.
         </P>
 
-        <H2>Disponibilitate</H2>
+        <H2>Availability</H2>
         <P>
-          Fiind un serviciu gratuit, il oferim &laquo;asa cum este&raquo; si putem sa il oprim sau
-          sa il modificam oricand, fara notificare prealabila.
+          This free service is provided &ldquo;as is.&rdquo; We may modify or discontinue it without prior notice.
         </P>
 
         <H2>Contact</H2>
         <P>
-          Pentru orice intrebare legata de acesti termeni:{" "}
+          For questions about these terms, contact{" "}
           <a href="mailto:hello@devrika.ro" style={{ color: C.indigo }}>hello@devrika.ro</a>.
         </P>
 
         <div className="mt-12 flex gap-5 border-t pt-6 text-[14px]" style={{ borderColor: "#e6ebf4" }}>
-          <Link href="/google-ads" style={{ color: C.indigo }}>← Inapoi la aplicatie</Link>
-          <Link href="/confidentialitate" style={{ color: C.indigo }}>Politica de confidentialitate</Link>
+          <Link href="/google-ads" style={{ color: C.indigo }}>← Back to the application</Link>
+          <Link href="/confidentialitate" style={{ color: C.indigo }}>Privacy Policy</Link>
         </div>
       </div>
     </div>

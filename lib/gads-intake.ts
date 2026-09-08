@@ -1,18 +1,16 @@
-// LANG: pending full translation to EN
-// Intake: aduce catalogul de Shopping al contului conectat si il transforma in randurile
-// pe care le mananca motorul (`lib/gads-audit.ts`).
+// Intake converts the connected account's Shopping catalog into audit-engine rows.
 //
-// DE CE DOUA INTEROGARI, nu una: `shopping_product` cu metrici returneaza doar produsele care
-// au avut activitate — Google arunca randurile cu totul pe zero. Daca ne-am opri acolo,
-// produsele moarte (Zombies) ar fi structural invizibile si am raporta mereu zero. Deci:
-//   1. CATALOG      — fara segments.date, fara metrici -> lista COMPLETA, inclusiv nevandute
+// Two queries are required: `shopping_product` with metrics returns only products with
+// activity because Google omits all-zero rows. Without the catalog query, inactive products
+// would be structurally invisible and the report would always count zero Zombies.
+//   1. CATALOG      — no segments.date or metrics -> complete list, including unsold products
 //   2. PERFORMANCE  — metrics over the latest 365 days -> products with activity
-// Join pe item id; ce e in catalog dar lipseste din performanta = Zombie (0/0/0).
+// Join by item ID; catalog products absent from performance are Zombies (0/0/0).
 //
-// Verificat pe cont real (puria, 06-08-2026): ambele interogari raspund. Pentru industrie
-// luam `category_level1` (id-ul taxonomiei Google, ex productCategoryConstants/LEVEL1~1),
-// NU `product_type_level1` — acela e text liber scris de comerciant in limba lui
-// ("hrana uscata", "recompense si snackuri"), deci nu se poate potrivi de o regula generala.
+// Both queries were verified against a real account (puria, 2026-08-06). Industry uses
+// `category_level1` (Google taxonomy ID, for example productCategoryConstants/LEVEL1~1),
+// not `product_type_level1`, which is merchant-authored free text and cannot support a
+// language-independent general rule.
 
 import { googleAdsSearch, type GoogleAdsAuth } from "./net";
 import type { Product } from "./gads-audit";
@@ -21,7 +19,7 @@ import type { Product } from "./gads-audit";
 export const WINDOW_DAYS = 365;
 
 export function formatAuditWindowLabel(days: number): string {
-  return new Intl.NumberFormat("ro-RO", {
+  return new Intl.NumberFormat("en-US", {
     style: "unit",
     unit: "day",
     unitDisplay: "long",
@@ -31,9 +29,8 @@ export function formatAuditWindowLabel(days: number): string {
 export const AUDIT_WINDOW_LABEL = formatAuditWindowLabel(WINDOW_DAYS);
 
 /**
- * Ferestrele pe care se poate citi harta catalogului. Implicit prima: pe 30 de zile, "produsul
- * Short windows answer whether a product sold recently; the 365-day window serves the audit.
- * o vanzare si toate grupele se amesteca.
+ * Supported catalog-map windows. Short windows answer whether a product sold recently;
+ * the 365-day window serves the audit.
  */
 export const FERESTRE = [
   { zile: 30, eticheta: "30 de zile" },
@@ -48,21 +45,21 @@ export type PerfRow = {
   costMicros: number;
   conversionsValue: number;
   impressions: number;
-  /** Clicurile decid daca produsul a avut destul trafic cat sa poata fi judecat. */
+  /** Clicks determine whether a product received enough traffic to be evaluated. */
   clicks: number;
-  /** Numarul de vanzari, separat de valoarea lor: "a vandut ceva" si "a vandut destul"
-   *  sunt doua intrebari diferite, iar prima e cea care desparte Sidekicks de Zombies. */
+  /** Sale count is separate from value: "sold anything" and "sold enough" are different
+   * questions, and the first separates Sidekicks from Zombies. */
   conversions: number;
 };
 
 export type CatalogRow = { itemId: string; title?: string; category?: string };
 
 /**
- * Mapare PURA raspuns -> randuri de motor, plus join-ul catalog/performanta.
- * Fara retea aici, ca sa poata fi testata cu fixturi.
+ * Pure response-to-engine-row mapping plus the catalog/performance join.
+ * No network access so fixtures can test the transformation.
  *
- * @returns `products` + `catalogComplete` (false cand n-am putut citi catalogul, caz in care
- *          numarul de Zombies NU e de incredere si raportul trebuie sa taca despre el)
+ * @returns `products` and `catalogComplete`; false means the catalog could not be read,
+ *          so the Zombie count is unreliable and the report must omit it.
  */
 export function buildProducts(
   perfRows: PerfRow[],
@@ -152,7 +149,7 @@ function requireExactRange(range: { from: string; to: string }): void {
   }
 }
 
-// Raspunsul REST vine camelCase si cu numerele mari ca string — de aici normalizarea.
+// REST responses use camelCase and encode large numbers as strings, so normalize them here.
 type RawRow = {
   shoppingProduct?: { itemId?: string; title?: string; categoryLevel1?: string };
   metrics?: {
@@ -165,9 +162,9 @@ type RawRow = {
 };
 
 /**
- * Trage catalogul real al contului. Daca interogarea de catalog esueaza, NU aruncam:
- * intoarcem ce avem din performanta cu `catalogComplete=false`, ca raportul sa poata livra
- * Villains si sa taca onest despre Zombies, in loc sa cada de tot.
+ * Fetches the account's real catalog. If the catalog query fails, return the performance
+ * rows with `catalogComplete=false`, allowing the report to show Villains while honestly
+ * omitting Zombies instead of failing completely.
  */
 export async function fetchShoppingProducts(
   customerId: string,

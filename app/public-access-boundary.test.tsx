@@ -681,19 +681,19 @@ describe("public Google Ads access boundary", () => {
 
     expect(sectionOrder).toEqual(["hero", "problems", "evidence", "steps", "cta"]);
     expect(html.match(/<section/g) ?? []).toHaveLength(5);
-    expect(html).toContain("Stii ce produse din Google Shopping iti aduc bani si care iti consuma bugetul?");
-    expect(html).toContain("Vezi ce produse iti consuma bugetul fara sa aduca suficiente vanzari");
+    expect(html).toContain("Do you know which Google Shopping products make money and which consume your budget?");
+    expect(html).toContain("See which products consume budget without enough sales");
     expect(html).toContain('href="#report-preview"');
-    expect(html).toContain("Vezi un exemplu de raport");
+    expect(html).toContain("See a sample report");
     expect(html.match(/data-problem-example=/g) ?? []).toHaveLength(3);
     expect(html.match(/data-evidence-example=/g) ?? []).toHaveLength(2);
     expect(html).toContain("Direct Google");
-    expect(html).toContain("CSS partener");
-    expect(html).toContain("5.000 RON");
-    expect(html).toContain("5,00 → 6,25×");
-    expect(html).toContain("6.250 RON");
-    expect(html).toContain("Direct Google → CSS partener");
-    expect(html).toContain("+1.250 RON");
+    expect(html).toContain("CSS partner");
+    expect(html).toContain("5,000 RON");
+    expect(html).toContain("5.00 → 6.25×");
+    expect(html).toContain("6,250 RON");
+    expect(html).toContain("Direct Google → CSS partner");
+    expect(html).toContain("+1,250 RON");
     expect(html).toContain('<details data-oauth-disclosure="progressive"');
     expect(html.match(/data-process-step=/g) ?? []).toHaveLength(3);
   });
@@ -720,15 +720,15 @@ describe("public Google Ads access boundary", () => {
     const html = renderToStaticMarkup(<LandingPage />);
 
     expect(html.match(/data-product-economics-table=/g) ?? []).toHaveLength(6);
-    for (const header of ["Produs", "Clickuri", "Buget", "Comenzi", "CPA", "Vânzări", "ROAS"]) {
+    for (const header of ["Product", "Clicks", "Spend", "Orders", "CPA", "Sales", "ROAS"]) {
       expect(html).toContain(`>${header}<`);
     }
-    expect(html).toContain(">Pierdere<");
-    expect(html).toContain(">Potențial<");
-    expect(html).toContain("Pierdere = buget − vânzări ÷ ROAS minim");
-    expect(html).toContain("Potențial = vânzări × (ROAS ÷ ROAS minim − 1)");
-    expect(html).toContain("ROAS minim 5×");
-    expect(html).toContain("CPA maxim 60 RON");
+    expect(html).toContain(">Loss<");
+    expect(html).toContain(">Potential<");
+    expect(html).toContain("Loss = spend − sales ÷ minimum ROAS");
+    expect(html).toContain("Potential = sales × (ROAS ÷ minimum ROAS − 1)");
+    expect(html).toContain("Minimum ROAS 5×");
+    expect(html).toContain("Maximum CPA 60 RON");
   });
 
   it("shows every landing example vertically without horizontal table scrolling", () => {
@@ -743,22 +743,22 @@ describe("public Google Ads access boundary", () => {
     expect(source).toContain('className="grid gap-6"');
     expect(source).toContain('className="grid gap-7"');
     expect(source.match(/rows=\{losingProducts\}/g) ?? []).toHaveLength(4);
-    expect(html.match(/>Rochie office bleumarin</g) ?? []).toHaveLength(5);
-    expect(html.match(/>Set 3 tricouri bumbac</g) ?? []).toHaveLength(5);
-    expect(html.match(/>Geantă din piele ecologică</g) ?? []).toHaveLength(5);
+    expect(html.match(/>Navy office dress</g) ?? []).toHaveLength(5);
+    expect(html.match(/>Set of 3 cotton T-shirts</g) ?? []).toHaveLength(5);
+    expect(html.match(/>Faux leather bag</g) ?? []).toHaveLength(5);
   });
 
   it("derives internally consistent ROAS, CPA, loss and potential values", () => {
     const html = renderToStaticMarkup(<LandingPage />);
 
-    expect(html).toContain("4.820 RON");
-    expect(html).toContain("2.110 RON");
+    expect(html).toContain("4,820 RON");
+    expect(html).toContain("2,110 RON");
     expect(html).toContain("689 RON");
     expect(html).toContain("0×");
-    expect(html).toContain("−4.398 RON");
+    expect(html).toContain("−4,398 RON");
     expect(html).toContain("30 RON");
     expect(html).toContain("13×");
-    expect(html).toContain("+8.736 RON");
+    expect(html).toContain("+8,736 RON");
   });
 
   it("states the complete Google Ads data list once in the compact disclosure", () => {

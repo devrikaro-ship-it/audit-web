@@ -38,7 +38,7 @@ describe("Google Ads read disclosure", () => {
     expect(registeredGoogleAdsReadCategories.fetchCustomerTimeZone)
       .toEqual(["selected-account-time-zone"]);
     expect(projectGoogleAdsReadCategories(["search-terms"]))
-      .toBe("termenii de cautare");
+      .toBe("search terms");
     expect(() => projectGoogleAdsReadCategories(["unknown" as never]))
       .toThrow("Unknown Google Ads read category");
     expect(() => validateReportSourceReadCategories({ hiddenSource: ["search-terms"] }))

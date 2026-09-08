@@ -66,17 +66,17 @@ export const publicOAuthClauseFacts = {
 
 export type PublicOAuthClauseId = keyof typeof publicOAuthClauseFacts;
 
-// LANG: pending full translation to EN
 export const localizedOAuthGrammar = Object.freeze({
-  consent: "Cu acordul tau explicit",
-  application: "aplicatia",
-  requestsOneGooglePermission: "cere o singura permisiune Google",
-  oauthGoogleAdsPermission: "Permisiunea OAuth Google Ads",
-  isOperator: "este",
-  notOperator: "nu",
-  readOnlyCapability: "exclusiv de citire",
-  readOperation: "citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc",
-  mutateOperation: "modificam nimic in contul tau",
+  consent: "With your explicit consent",
+  application: "the application",
+  requestsOneGooglePermission: "requests one Google permission",
+  oauthGoogleAdsPermission: "The Google Ads OAuth permission",
+  isOperator: "is",
+  notOperator: "not",
+  readOnlyCapability: "read-only",
+  readOperation: "reads data, compares it with your business thresholds, and shows you the result immediately",
+  mutationSubject: "we do",
+  mutateOperation: "change anything in your account",
 });
 
 export function projectOAuthClause(clauseId: PublicOAuthClauseId): string {
@@ -86,44 +86,43 @@ export function projectOAuthClause(clauseId: PublicOAuthClauseId): string {
     return `${localizedOAuthGrammar.consent}, ${localizedOAuthGrammar.application} ${localizedOAuthGrammar.requestsOneGooglePermission} (${publicOAuthContract.providerScope}).`;
   }
   if (fact.property === "permissionCapability") {
-    return `${localizedOAuthGrammar.oauthGoogleAdsPermission} ${localizedOAuthGrammar.notOperator} ${localizedOAuthGrammar.isOperator} ${localizedOAuthGrammar.readOnlyCapability}.`;
+    return `${localizedOAuthGrammar.oauthGoogleAdsPermission} ${localizedOAuthGrammar.isOperator} ${localizedOAuthGrammar.notOperator} ${localizedOAuthGrammar.readOnlyCapability}.`;
   }
   if (fact.property === "applicationBehavior") {
     return `${localizedOAuthGrammar.application[0].toUpperCase()}${localizedOAuthGrammar.application.slice(1)} ${localizedOAuthGrammar.readOperation}.`;
   }
-  return `${localizedOAuthGrammar.notOperator[0].toUpperCase()}${localizedOAuthGrammar.notOperator.slice(1)} ${localizedOAuthGrammar.mutateOperation}.`;
+  return `${localizedOAuthGrammar.mutationSubject[0].toUpperCase()}${localizedOAuthGrammar.mutationSubject.slice(1)} ${localizedOAuthGrammar.notOperator} ${localizedOAuthGrammar.mutateOperation}.`;
 }
 
 export function projectOAuthClauses(...clauseIds: PublicOAuthClauseId[]): string {
   return clauseIds.map(projectOAuthClause).join(" ");
 }
 
-// LANG: pending full translation to EN
 export function projectPublicOAuth(contract: typeof publicOAuthContract) {
   if (contract.providerScope !== "adwords") throw new Error("Unsupported public OAuth provider scope");
   if (contract.permissionCapability !== "broad") throw new Error("Unsupported public OAuth permission capability");
   if (contract.applicationBehavior !== "read-operations-only") throw new Error("Unsupported public OAuth application behavior");
   if (contract.mutationBehavior !== "none") throw new Error("Unsupported public OAuth mutation behavior");
   const auditDataCategories = projectGoogleAdsReadCategories(googleAdsReadCategories);
-  const auditDataReadDisclosure = `Aplicatia citeste datele necesare auditului: ${auditDataCategories}.`;
+  const auditDataReadDisclosure = `The app reads the data required for the audit: ${auditDataCategories}.`;
   return Object.freeze({
-  readsOnlyLabel: "Doar citim",
-  applicationReadsData: "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc.",
-  noAccountChanges: "Nu modificam nimic in contul tau.",
-  noChangesBadge: "Nu modificam nimic",
-  noCampaignMutations: "Nu putem porni sau opri campanii si nu putem cheltui bani.",
-  googleAdsPermission: "Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive.",
-  officialAccessMechanism: "Cand un audit are nevoie de acces la un cont de publicitate, ti-l cerem prin mecanismul oficial al platformei.",
+  readsOnlyLabel: "The application only reads",
+  applicationReadsData: "The application reads data, compares it with your business thresholds, and shows you the result immediately.",
+  noAccountChanges: "We do not change anything in your account.",
+  noChangesBadge: "No account changes",
+  noCampaignMutations: "We cannot start or stop campaigns, change budgets, or spend money.",
+  googleAdsPermission: "We request one access permission, for Google Ads. Nothing from Gmail or Drive.",
+  officialAccessMechanism: "When an audit needs access to an advertising account, we request it through the platform's official authorization mechanism.",
   auditDataCategories,
   auditDataReadDisclosure,
-  auditDataReadAndNoMutation: `${auditDataReadDisclosure} Nu modificam nimic in contul tau.`,
-  auditDataReadNoMutationAndRevoke: `${auditDataReadDisclosure} Nu modificam nimic si poti retrage accesul oricand din contul tau Google.`,
-  connectNoMutations: "NU putem modifica nimic — nici bugete, nici campanii",
-  rootMetadata: "Afla in 2 minute de ce magazinul tau nu vinde cat ar putea: masurare, SEO, experienta si Google Ads/Shopping. Gratuit, fara cont.",
-  landingMetadata: (windowLabel: string) => `Audit Devrika analizeaza contul tau de Google Ads pe ultimele ${windowLabel}. ${auditDataReadDisclosure} Nu modificam nimic in cont.`,
-  hubMetadata: "Audit Devrika analizeaza magazinul si conturile tale de publicitate si iti arata unde pierzi bani: pe site, in Google Ads si in campaniile de Shopping.",
-  privacyMetadata: "Cum trateaza aplicatia Devrika datele contului tau Google Ads: ce citim, cat pastram, cu cine NU impartim si cum retragi accesul.",
-  termsMetadata: "Conditiile in care poti folosi aplicatia Devrika de audit Google Ads.",
+  auditDataReadAndNoMutation: `${auditDataReadDisclosure} We do not change anything in your account.`,
+  auditDataReadNoMutationAndRevoke: `${auditDataReadDisclosure} We do not change anything, and you can revoke access at any time from your Google account.`,
+  connectNoMutations: "We CANNOT change anything — including budgets or campaigns",
+  rootMetadata: "Find out in 2 minutes why your store is not selling as much as it could: tracking, SEO, user experience, and Google Ads/Shopping. Free, no account required.",
+  landingMetadata: (windowLabel: string) => `Audit Devrika analyzes your Google Ads account over the last ${windowLabel}. ${auditDataReadDisclosure} We do not change anything in your account.`,
+  hubMetadata: "A web application that analyzes your store and advertising accounts and shows where you are losing money: on your website, in Google Ads, and in Shopping campaigns.",
+  privacyMetadata: "How the Devrika application handles your Google Ads account data: what we read, what we retain, who we do not share it with, and how you revoke access.",
+  termsMetadata: "The terms under which you may use the Devrika Google Ads audit application.",
   });
 }
 

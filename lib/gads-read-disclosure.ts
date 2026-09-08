@@ -14,19 +14,18 @@ export const googleAdsReadCategories = [
 
 export type GoogleAdsReadCategory = typeof googleAdsReadCategories[number];
 
-// LANG: pending full translation to EN
 const localizedReadCategoryLabels: Readonly<Record<GoogleAdsReadCategory, string>> = Object.freeze({
-  "accessible-account-metadata": "conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda",
-  "selected-account-time-zone": "fusul orar al contului ales",
-  "shopping-product-performance": "produsele si performanta lor in Shopping",
-  "conversion-tracking": "configurarea conversiilor",
-  "campaign-structure": "structura campaniilor",
-  "performance-max": "campaniile Performance Max",
-  "shopping-campaigns": "campaniile Shopping",
-  "search-campaigns": "campaniile Search",
-  "negative-keywords": "cuvintele cheie negative",
-  "search-terms": "termenii de cautare",
-  "annual-account-totals": "totalurile contului din ultimele 365 de zile",
+  "accessible-account-metadata": "accessible Google Ads accounts, including their identifier, name, manager status, and currency",
+  "selected-account-time-zone": "the selected account time zone",
+  "shopping-product-performance": "products and their Shopping performance",
+  "conversion-tracking": "conversion tracking configuration",
+  "campaign-structure": "campaign structure",
+  "performance-max": "Performance Max campaigns",
+  "shopping-campaigns": "Shopping campaigns",
+  "search-campaigns": "Search campaigns",
+  "negative-keywords": "negative keywords",
+  "search-terms": "search terms",
+  "annual-account-totals": "account totals for the last 365 days",
 });
 
 export const googleAdsReadRegistry = {
@@ -58,7 +57,7 @@ export function projectGoogleAdsReadCategories(categories: readonly GoogleAdsRea
   const labels = categories.map((category) => localizedReadCategoryLabels[category]);
   if (labels.some((label) => !label)) throw new Error("Unknown Google Ads read category");
   if (labels.length === 1) return labels[0];
-  return `${labels.slice(0, -1).join(", ")} si ${labels.at(-1)}`;
+  return `${labels.slice(0, -1).join(", ")}, and ${labels.at(-1)}`;
 }
 
 export function validateGoogleAdsReadCoverage(sourceCategories: Readonly<Record<string, readonly GoogleAdsReadCategory[]>>): void {
