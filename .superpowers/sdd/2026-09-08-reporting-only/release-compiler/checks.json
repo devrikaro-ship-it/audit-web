@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "strict_typecheck": {
+      "profile": "targeted_tests",
+      "command": ["npx", "tsc", "--noEmit", "--incremental", "false"],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "compiler_fixture_behavior": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/conturi/page.test.tsx",
+        "app/google-ads/raport/actions.test.tsx",
+        "app/google-ads/raport/read-disclosure.test.tsx",
+        "app/public-access-boundary.test.tsx",
+        "lib/gads-report-email.test.ts",
+        "lib/gads-session.test.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 4
+    }
+  },
+  "rules": [
+    {
+      "id": "compiler_fixture_sources",
+      "patterns": [
+        "app/google-ads/conturi/page.test.tsx",
+        "app/google-ads/raport/actions.test.tsx",
+        "app/google-ads/raport/read-disclosure.test.tsx",
+        "app/public-access-boundary.test.tsx",
+        "lib/gads-report-email.test.ts",
+        "lib/gads-session.test.ts"
+      ],
+      "statuses": ["A", "M"],
+      "category": "test",
+      "risk": "fast",
+      "checks": ["strict_typecheck", "compiler_fixture_behavior"]
+    },
+    {
+      "id": "release_compiler_artifacts",
+      "patterns": [
+        ".superpowers/sdd/2026-09-08-reporting-only/release-compiler/**"
+      ],
+      "statuses": ["A", "M"],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": ["strict_typecheck"]
+    },
+    {
+      "id": "measured_incident_registry",
+      "patterns": ["docs/dev/mistakes.md"],
+      "statuses": ["M"],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": [],
+      "allow_no_checks": true
+    }
+  ]
+}
