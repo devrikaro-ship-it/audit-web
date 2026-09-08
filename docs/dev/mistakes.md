@@ -298,9 +298,10 @@ tracked application files. Enumerate every import before changing shared present
 failures by source ownership.
 
 **Fix.** Preserve the legacy export for the excluded consumer, add an explicit English export, and migrate only
-the authorized reporting consumers. Prove both labels independently, render the public consumers, and keep the
-excluded source unchanged. Exclude `.superpowers/**` from application lint while retaining focused lint coverage
-for the repaired application files.
+the authorized reporting consumers. Prove both labels independently, render the public consumers, and compare
+their visible text after removing markup so inline emphasis cannot split a valid phrase. Keep the excluded source
+unchanged. Exclude `.superpowers/**` from application lint while retaining focused lint coverage for the repaired
+application files.
 
 **Class.** Shared presentation constants do not imply a shared language contract. A scoped translation needs an
 explicit compatibility boundary, and generated release evidence needs a declared lint boundary that does not

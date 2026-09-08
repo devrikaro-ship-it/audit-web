@@ -1,0 +1,20 @@
+{
+  "candidate_revision": "0a7045b7e1826681bfec8c0eaadfd3c347910309",
+  "impact_plan_sha256": "17f4a41a9188761246cd885ce77dd5a0fb366d9b76a0a4a3d10ace7a4cf64378",
+  "checks": [
+    { "id": "application_lint", "exit_status": 0 },
+    { "id": "label_and_findings", "exit_status": 0, "test_files_passed": 2, "tests_passed": 68 },
+    { "id": "report_ui", "exit_status": 0, "test_files_passed": 3, "tests_passed": 59 },
+    { "id": "repository_lint", "exit_status": 0 },
+    { "id": "strict_typecheck", "exit_status": 0 },
+    {
+      "id": "transitive_public_output",
+      "exit_status": 1,
+      "test_files_failed": 1,
+      "tests_failed": 1,
+      "tests_passed": 6,
+      "finding": "The raw HTML assertion did not account for inline emphasis separating 365 days from of data; the rendered visible text was correct."
+    }
+  ],
+  "disposition": "Repair the introduced test representation, compile a new exact-revision impact plan, and rerun every selected check."
+}

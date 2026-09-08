@@ -1,0 +1,311 @@
+{
+  "base_revision": "117e105cdd25799cdda34322080d27a13f87059a",
+  "changes": [
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-gates/checkpoint-red.json",
+      "risk": "fast",
+      "rule_id": "repair_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-gates/checks.json",
+      "risk": "fast",
+      "rule_id": "repair_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-gates/initial-negative-controls.json",
+      "risk": "fast",
+      "rule_id": "repair_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-gates/red-impact-plan.json",
+      "risk": "fast",
+      "rule_id": "repair_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-gates/red-label-receipt.json",
+      "risk": "fast",
+      "rule_id": "repair_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "application_lint",
+        "repository_lint",
+        "strict_typecheck"
+      ],
+      "path": "app/google-ads/connect/page.tsx",
+      "risk": "fast",
+      "rule_id": "application_lint_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "transitive_public_output",
+        "repository_lint",
+        "strict_typecheck"
+      ],
+      "path": "app/google-ads/page.tsx",
+      "risk": "fast",
+      "rule_id": "public_label_surfaces",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "label_and_findings",
+        "report_ui",
+        "application_lint",
+        "repository_lint",
+        "strict_typecheck"
+      ],
+      "path": "app/google-ads/raport/ProfitabilitySimulator.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "label_and_findings",
+        "report_ui",
+        "application_lint",
+        "repository_lint",
+        "strict_typecheck"
+      ],
+      "path": "app/google-ads/raport/ReportingDashboard.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "label_and_findings",
+        "report_ui",
+        "application_lint",
+        "repository_lint",
+        "strict_typecheck"
+      ],
+      "path": "app/google-ads/raport/page.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "transitive_public_output",
+        "repository_lint",
+        "strict_typecheck"
+      ],
+      "path": "app/hub/page.tsx",
+      "risk": "fast",
+      "rule_id": "public_label_surfaces",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "application_lint",
+        "repository_lint",
+        "strict_typecheck"
+      ],
+      "path": "app/termeni/page.tsx",
+      "risk": "fast",
+      "rule_id": "application_lint_surface",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "docs/dev/mistakes.md",
+      "risk": "fast",
+      "rule_id": "repair_artifacts",
+      "status": "M"
+    },
+    {
+      "category": "build_config",
+      "checks": [
+        "application_lint",
+        "repository_lint"
+      ],
+      "path": "eslint.config.mjs",
+      "risk": "fast",
+      "rule_id": "lint_configuration",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "label_and_findings",
+        "transitive_public_output",
+        "strict_typecheck"
+      ],
+      "path": "lib/gads-findings.ts",
+      "risk": "fast",
+      "rule_id": "label_runtime",
+      "status": "M"
+    },
+    {
+      "category": "test",
+      "checks": [
+        "label_and_findings",
+        "transitive_public_output",
+        "strict_typecheck"
+      ],
+      "path": "lib/gads-intake.test.ts",
+      "risk": "fast",
+      "rule_id": "label_tests",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "label_and_findings",
+        "transitive_public_output",
+        "strict_typecheck"
+      ],
+      "path": "lib/gads-intake.ts",
+      "risk": "fast",
+      "rule_id": "label_runtime",
+      "status": "M"
+    },
+    {
+      "category": "test",
+      "checks": [
+        "label_and_findings",
+        "transitive_public_output",
+        "strict_typecheck"
+      ],
+      "path": "lib/public-output-transitive-coverage.test.ts",
+      "risk": "fast",
+      "rule_id": "label_tests",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "eslint",
+        "app/google-ads/connect/page.tsx",
+        "app/google-ads/raport/ProfitabilitySimulator.tsx",
+        "app/google-ads/raport/ReportingDashboard.tsx",
+        "app/termeni/page.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "application_lint",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-intake.test.ts",
+        "lib/gads-findings.test.ts"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "label_and_findings",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ProfitabilitySimulator.test.tsx",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/raport/page.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "report_ui",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 5,
+      "id": "repository_lint",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "strict_typecheck",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/public-output-transitive-coverage.test.ts"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "transitive_public_output",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/release-gates/checks.json",
+  "declaration_sha256": "9c8a2d059118c864a3ed860d9b01a77ce5c3c2eb542b4087b72fd0ae5350c723",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "a4cb932f08f4dfb472b12a7013002adcc81fad235e9aefb1e4db136a7094b18e",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "0a7045b7e1826681bfec8c0eaadfd3c347910309",
+  "risk": "fast",
+  "schema_version": 1
+}

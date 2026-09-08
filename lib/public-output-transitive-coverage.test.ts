@@ -48,10 +48,11 @@ describe("transitive public output helpers", () => {
       renderToStaticMarkup(HubPage()),
       renderToStaticMarkup(GoogleAdsLanding()),
     ].join("\n");
+    const visibleText = output.replace(/<[^>]*>/g, "");
 
-    expect(output).toContain("last 365 days");
-    expect(output).toContain("365 days of data");
-    expect(output).not.toContain("365 de zile");
+    expect(visibleText).toContain("last 365 days");
+    expect(visibleText).toContain("365 days of data");
+    expect(visibleText).not.toContain("365 de zile");
   });
 
   it("executes every OAuth configuration and token response outcome", async () => {
