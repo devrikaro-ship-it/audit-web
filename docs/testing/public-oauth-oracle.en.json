@@ -67,6 +67,7 @@
     "privacy:normal": {
       "required": [
         "Privacy Policy",
+        "With your explicit consent, the application requests one Google permission (adwords).",
         "The Google Ads OAuth permission is not read-only.",
         "Your Google authorization is held in a signed session cookie that expires after one hour.",
         "If you request the PDF, we store",

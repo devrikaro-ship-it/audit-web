@@ -5,20 +5,20 @@ exports[`public Google Ads access boundary > matches every emitted metadata obje
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:connect 1`] = `"title="Conecteaza contul Google Ads · Devrika""`;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:hub 1`] = `
-"description="Audit Devrika analizeaza magazinul si conturile tale de publicitate si iti arata unde pierzi bani: pe site, in Google Ads si in campaniile de Shopping."
-title="Audit Devrika — audit gratuit pentru magazine online""
+"description="A web application that analyzes your store and advertising accounts and shows where you are losing money: on your website, in Google Ads, and in Shopping campaigns."
+title="Audit Devrika — free audits for online stores""
 `;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:landing 1`] = `
-"description="Audit Devrika analizeaza contul tau de Google Ads pe ultimele 365 de zile. Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic in cont."
-title="Audit Google Ads gratuit — Devrika""
+"description="Audit Devrika analyzes your Google Ads account over the last 365 days. The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. We do not change anything in your account."
+title="Free Google Ads audit — Devrika""
 `;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:margin 1`] = `"title="Marja ta · Audit Google Ads Devrika""`;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:privacy 1`] = `
-"description="Cum trateaza aplicatia Devrika datele contului tau Google Ads: ce citim, cat pastram, cu cine NU impartim si cum retragi accesul."
-title="Politica de confidentialitate — Audit Devrika""
+"description="How the Devrika application handles your Google Ads account data: what we read, what we retain, who we do not share it with, and how you revoke access."
+title="Privacy Policy — Audit Devrika""
 `;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:report 1`] = `"title="Raportul tau · Audit Google Ads Devrika""`;
@@ -26,8 +26,8 @@ exports[`public Google Ads access boundary > matches every emitted metadata obje
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:simulator 1`] = `"title="Ce ar insemna cu Devrika · Audit Google Ads Devrika""`;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:terms 1`] = `
-"description="Conditiile in care poti folosi aplicatia Devrika de audit Google Ads."
-title="Termeni si conditii — Audit Devrika""
+"description="The terms under which you may use the Devrika Google Ads audit application."
+title="Terms and Conditions — Audit Devrika""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-anulat 1`] = `
@@ -118,11 +118,11 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden=
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ads OAuth permission is not read-only."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
 root/div[0]/div[0]/div[0]
@@ -220,11 +220,11 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden=
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ads OAuth permission is not read-only."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
 root/div[0]/div[0]/div[0]
@@ -322,11 +322,11 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden=
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ads OAuth permission is not read-only."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
 root/div[0]/div[0]/div[0]
@@ -424,11 +424,11 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden=
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ads OAuth permission is not read-only."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
 root/div[0]/div[0]/div[0]
@@ -526,11 +526,11 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden=
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ads OAuth permission is not read-only."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
 root/div[0]/div[0]/div[0]
@@ -628,11 +628,11 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden=
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ads OAuth permission is not read-only."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
 root/div[0]/div[0]/div[0]
@@ -730,11 +730,11 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden=
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ads OAuth permission is not read-only."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
 root/div[0]/div[0]/div[0]
@@ -832,11 +832,11 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden=
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ads OAuth permission is not read-only."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
 root/div[0]/div[0]/div[0]
@@ -932,11 +932,11 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden=
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "Permisiunea OAuth Google Ads nu este exclusiv de citire."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ads OAuth permission is not read-only."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "Nu modificam nimic in contul tau."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
 root/div[0]/div[0]/div[0]
@@ -1022,23 +1022,23 @@ root/div[0]/section[0]/h1[0]/text "Audit"
 root/div[0]/section[0]/h1[0]/em[0]
 root/div[0]/section[0]/h1[0]/em[0]/text "Devrika"
 root/div[0]/section[0]/p[0]
-root/div[0]/section[0]/p[0]/text "O aplicatie web care analizeaza magazinul si conturile tale de publicitate si iti arata, pe cifre, unde pierzi bani."
+root/div[0]/section[0]/p[0]/text "A web application that analyzes your store and advertising accounts and shows, using your numbers, where you are losing money."
 root/div[0]/section[0]/p[1]
-root/div[0]/section[0]/p[1]/text "Alegi ce vrei analizat, iar acolo unde e nevoie iti conectezi contul de publicitate.Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc. Nu modificam nimic in contul tau. Poti retrage accesul oricand."
+root/div[0]/section[0]/p[1]/text "Choose what you want analyzed and connect an advertising account only when the audit needs it. The application reads data, compares it with your business thresholds, and shows you the result immediately. We do not change anything in your account. You can revoke access at any time."
 root/div[0]/section[0]/div[1]
 root/div[0]/section[0]/div[1]/span[0]
-root/div[0]/section[0]/div[1]/span[0]/text "Gratuit"
+root/div[0]/section[0]/div[1]/span[0]/text "Free"
 root/div[0]/section[0]/div[1]/span[1]
-root/div[0]/section[0]/div[1]/span[1]/text "Fara card bancar"
+root/div[0]/section[0]/div[1]/span[1]/text "No payment card"
 root/div[0]/section[0]/div[1]/span[2]
-root/div[0]/section[0]/div[1]/span[2]/text "Nu modificam nimic"
+root/div[0]/section[0]/div[1]/span[2]/text "No account changes"
 root/div[0]/section[0]/div[1]/span[3]
-root/div[0]/section[0]/div[1]/span[3]/text "Rezultat pe loc"
+root/div[0]/section[0]/div[1]/span[3]/text "Immediate result"
 root/div[0]/section[1]
 root/div[0]/section[1]/h2[0]
-root/div[0]/section[1]/h2[0]/text "Ce poti analiza"
+root/div[0]/section[1]/h2[0]/text "What you can analyze"
 root/div[0]/section[1]/p[0]
-root/div[0]/section[1]/p[0]/text "Fiecare audit spune de ce date are nevoie inainte sa il pornesti."
+root/div[0]/section[1]/p[0]/text "Each audit tells you which data it needs before you start."
 root/div[0]/section[1]/div[0]
 root/div[0]/section[1]/div[0]/a[0] href="/google-ads"
 root/div[0]/section[1]/div[0]/a[0]/div[0]
@@ -1050,13 +1050,13 @@ root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]/svg[0]/circle[2]
 root/div[0]/section[1]/div[0]/a[0]/div[0]/h3[0]
 root/div[0]/section[1]/div[0]/a[0]/div[0]/h3[0]/text "Audit Google Ads"
 root/div[0]/section[1]/div[0]/a[0]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/a[0]/div[0]/span[0]/text "Disponibil"
+root/div[0]/section[1]/div[0]/a[0]/div[0]/span[0]/text "Available"
 root/div[0]/section[1]/div[0]/a[0]/p[0]
-root/div[0]/section[1]/div[0]/a[0]/p[0]/text "Iti conectezi contul de Google Ads si vezi pe cifrele tale reale din ultimele 365 de zile ce produse consuma buget fara sa vanda si cum functioneaza campaniile, masurarea si cautarile."
+root/div[0]/section[1]/div[0]/a[0]/p[0]/text "Connect your Google Ads account and use your real data from the last 365 days to see which products spend budget without selling and how your campaigns, tracking, and searches perform."
 root/div[0]/section[1]/div[0]/a[0]/p[1]
-root/div[0]/section[1]/div[0]/a[0]/p[1]/text "Se conecteaza la contul tau de Google Ads."
+root/div[0]/section[1]/div[0]/a[0]/p[1]/text "Connects to your Google Ads account."
 root/div[0]/section[1]/div[0]/a[0]/span[0]
-root/div[0]/section[1]/div[0]/a[0]/span[0]/text "Incepe auditul"
+root/div[0]/section[1]/div[0]/a[0]/span[0]/text "Start the audit"
 root/div[0]/section[1]/div[0]/a[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/section[1]/div[0]/a[0]/span[0]/svg[0]/path[0]
 root/div[0]/section[1]/div[0]/a[1] href="/audit-seo"
@@ -1067,15 +1067,15 @@ root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0]/path[0]
 root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0]/path[1]
 root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0]/path[2]
 root/div[0]/section[1]/div[0]/a[1]/div[0]/h3[0]
-root/div[0]/section[1]/div[0]/a[1]/div[0]/h3[0]/text "Audit magazin online"
+root/div[0]/section[1]/div[0]/a[1]/div[0]/h3[0]/text "Online store audit"
 root/div[0]/section[1]/div[0]/a[1]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/a[1]/div[0]/span[0]/text "Disponibil"
+root/div[0]/section[1]/div[0]/a[1]/div[0]/span[0]/text "Available"
 root/div[0]/section[1]/div[0]/a[1]/p[0]
-root/div[0]/section[1]/div[0]/a[1]/p[0]/text "Pornind doar de la adresa magazinului, iti aratam unde pierzi cumparatori: masurarea vanzarilor, vizibilitatea in Google, experienta de cumparare si felul in care arati in Google Shopping."
+root/div[0]/section[1]/div[0]/a[1]/p[0]/text "Starting only from your store address, we show where you lose buyers: sales tracking, Google visibility, the shopping experience, and how your products appear in Google Shopping."
 root/div[0]/section[1]/div[0]/a[1]/p[1]
-root/div[0]/section[1]/div[0]/a[1]/p[1]/text "Nu cere acces la niciun cont — analizeaza doar ce e public pe site."
+root/div[0]/section[1]/div[0]/a[1]/p[1]/text "Requires no account access — it analyzes only public website content."
 root/div[0]/section[1]/div[0]/a[1]/span[0]
-root/div[0]/section[1]/div[0]/a[1]/span[0]/text "Incepe auditul"
+root/div[0]/section[1]/div[0]/a[1]/span[0]/text "Start the audit"
 root/div[0]/section[1]/div[0]/a[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/section[1]/div[0]/a[1]/span[0]/svg[0]/path[0]
 root/div[0]/section[1]/div[0]/div[0]
@@ -1086,45 +1086,45 @@ root/div[0]/section[1]/div[0]/div[0]/div[0]/div[0]/svg[0]/path[0]
 root/div[0]/section[1]/div[0]/div[0]/div[0]/h3[0]
 root/div[0]/section[1]/div[0]/div[0]/div[0]/h3[0]/text "Audit Meta Ads"
 root/div[0]/section[1]/div[0]/div[0]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/div[0]/div[0]/span[0]/text "In pregatire"
+root/div[0]/section[1]/div[0]/div[0]/div[0]/span[0]/text "Coming soon"
 root/div[0]/section[1]/div[0]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[0]/p[0]/text "Aceeasi analiza pentru campaniile de Facebook si Instagram: ce reclame consuma buget fara sa aduca vanzari si cat de credibile sunt cifrele raportate de platforma."
+root/div[0]/section[1]/div[0]/div[0]/p[0]/text "The same analysis for Facebook and Instagram campaigns: which ads spend budget without generating sales and how reliable the platform&#x27;s reported figures are."
 root/div[0]/section[1]/div[0]/div[0]/p[1]
-root/div[0]/section[1]/div[0]/div[0]/p[1]/text "Se conecteaza la contul tau de reclame Meta."
+root/div[0]/section[1]/div[0]/div[0]/p[1]/text "Connects to your Meta advertising account."
 root/div[0]/section[2]
 root/div[0]/section[2]/div[0]
 root/div[0]/section[2]/div[0]/h2[0]
-root/div[0]/section[2]/div[0]/h2[0]/text "Ce facem cu datele tale"
+root/div[0]/section[2]/div[0]/h2[0]/text "How we handle your data"
 root/div[0]/section[2]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/p[0]/text "Cand un audit are nevoie de acces la un cont de publicitate, ti-l cerem prin mecanismul oficial al platformei."
+root/div[0]/section[2]/div[0]/p[0]/text "When an audit needs access to an advertising account, we request it through the platform&#x27;s official authorization mechanism."
 root/div[0]/section[2]/div[0]/div[0]
 root/div[0]/section[2]/div[0]/div[0]/div[0]
 root/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "Citim doar ce e necesar"
+root/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "We read only what is needed"
 root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nimic din Gmail, Drive sau alte servicii."
+root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. Nothing from Gmail, Drive, or other services."
 root/div[0]/section[2]/div[0]/div[0]/div[1]
 root/div[0]/section[2]/div[0]/div[0]/div[1]/p[0]
-root/div[0]/section[2]/div[0]/div[0]/div[1]/p[0]/text "Nu modificam nimic"
+root/div[0]/section[2]/div[0]/div[0]/div[1]/p[0]/text "No account changes"
 root/div[0]/section[2]/div[0]/div[0]/div[1]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/div[1]/p[1]/text "Nu putem porni sau opri campanii si nu putem cheltui bani."
+root/div[0]/section[2]/div[0]/div[0]/div[1]/p[1]/text "We cannot start or stop campaigns, change budgets, or spend money."
 root/div[0]/section[2]/div[0]/div[0]/div[2]
 root/div[0]/section[2]/div[0]/div[0]/div[2]/p[0]
-root/div[0]/section[2]/div[0]/div[0]/div[2]/p[0]/text "Nu pastram datele contului"
+root/div[0]/section[2]/div[0]/div[0]/div[2]/p[0]/text "Requested report data is retained only for delivery and support."
 root/div[0]/section[2]/div[0]/div[0]/div[2]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/div[2]/p[1]/text "Analiza se face cat esti pe site. Dupa raport, datele contului nu raman la noi."
+root/div[0]/section[2]/div[0]/div[0]/div[2]/p[1]/text "Your signed Google authorization expires after one hour and is not stored with your contact record. Requested PDFs and delivery context are retained so we can deliver and support them."
 root/div[0]/section[2]/div[0]/div[0]/div[3]
 root/div[0]/section[2]/div[0]/div[0]/div[3]/p[0]
-root/div[0]/section[2]/div[0]/div[0]/div[3]/p[0]/text "Retragi accesul cand vrei"
+root/div[0]/section[2]/div[0]/div[0]/div[3]/p[0]/text "Revoke access whenever you want"
 root/div[0]/section[2]/div[0]/div[0]/div[3]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/div[3]/p[1]/text "Dintr-un click, din setarile contului tau — fara sa ne intrebi pe noi."
+root/div[0]/section[2]/div[0]/div[0]/div[3]/p[1]/text "Use your Google account settings at any time; you do not need to contact us first."
 root/div[0]/section[2]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/p[1]/text "Detaliile complete:"
+root/div[0]/section[2]/div[0]/p[1]/text "Full details:"
 root/div[0]/section[2]/div[0]/p[1]/a[0] href="/confidentialitate"
-root/div[0]/section[2]/div[0]/p[1]/a[0]/text "politica de confidentialitate"
+root/div[0]/section[2]/div[0]/p[1]/a[0]/text "privacy policy"
 root/div[0]/section[2]/div[0]/p[1]/text "·"
 root/div[0]/section[2]/div[0]/p[1]/a[1] href="/termeni"
-root/div[0]/section[2]/div[0]/p[1]/a[1]/text "termeni si conditii"
+root/div[0]/section[2]/div[0]/p[1]/a[1]/text "terms and conditions"
 root/div[0]/footer[0]
 root/div[0]/footer[0]/div[0]
 root/div[0]/footer[0]/div[0]/img[0] alt="Audit Devrika"
@@ -1132,10 +1132,10 @@ root/div[0]/footer[0]/div[0]/span[0]
 root/div[0]/footer[0]/div[0]/span[0]/text "Audit Devrika"
 root/div[0]/footer[0]/p[0]
 root/div[0]/footer[0]/p[0]/a[0] href="/confidentialitate"
-root/div[0]/footer[0]/p[0]/a[0]/text "Politica de confidentialitate"
+root/div[0]/footer[0]/p[0]/a[0]/text "Privacy Policy"
 root/div[0]/footer[0]/p[0]/text "·"
 root/div[0]/footer[0]/p[0]/a[1] href="/termeni"
-root/div[0]/footer[0]/p[0]/a[1]/text "Termeni si conditii"
+root/div[0]/footer[0]/p[0]/a[1]/text "Terms and Conditions"
 root/div[0]/footer[0]/p[1]
 root/div[0]/footer[0]/p[1]/text "© 2026 Devrika ·"
 root/div[0]/footer[0]/p[1]/a[0] href="https://devrika.ro"
@@ -1152,119 +1152,119 @@ root/div[0]/nav[0]/div[0]/a[0]/img[0] alt="Audit Devrika"
 root/div[0]/nav[0]/div[0]/a[0]/span[0]
 root/div[0]/nav[0]/div[0]/a[0]/span[0]/text "Audit Devrika"
 root/div[0]/nav[0]/div[0]/a[1] href="/google-ads/connect"
-root/div[0]/nav[0]/div[0]/a[1]/text "Conecteaza contul →"
+root/div[0]/nav[0]/div[0]/a[1]/text "Connect account →"
 root/div[0]/section[0]
 root/div[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/section[0]/div[1]
 root/div[0]/section[0]/div[1]/div[0]
 root/div[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/section[0]/div[1]/div[0]/div[0]/span[0] aria-hidden="true"
-root/div[0]/section[0]/div[1]/div[0]/div[0]/text "Audit Google Ads · Gratuit"
+root/div[0]/section[0]/div[1]/div[0]/div[0]/text "Google Ads audit · Free"
 root/div[0]/section[0]/div[1]/div[0]/h1[0]
-root/div[0]/section[0]/div[1]/div[0]/h1[0]/text "Stii ce produse din Google Shopping iti aduc bani si care iti consuma bugetul?"
+root/div[0]/section[0]/div[1]/div[0]/h1[0]/text "Do you know which Google Shopping products make money and which consume your budget?"
 root/div[0]/section[0]/div[1]/div[0]/p[0]
-root/div[0]/section[0]/div[1]/div[0]/p[0]/text "Primesti o analiza produs cu produs. Vezi ce produse iti consuma bugetul fara sa aduca suficiente vanzari si ce produse au rezultate bune, dar sunt promovate prea putin. Astfel, stii ce produse trebuie limitate si in care merita sa investesti mai mult."
+root/div[0]/section[0]/div[1]/div[0]/p[0]/text "Get a product-by-product analysis. See which products consume budget without enough sales and which perform well but receive too little promotion. You will know what to limit and where to invest more."
 root/div[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/section[0]/div[1]/div[0]/div[1]/a[0] href="/google-ads/connect"
-root/div[0]/section[0]/div[1]/div[0]/div[1]/a[0]/text "Analizeaza contul meu"
+root/div[0]/section[0]/div[1]/div[0]/div[1]/a[0]/text "Analyze my account"
 root/div[0]/section[0]/div[1]/div[0]/div[1]/a[0]/svg[0] aria-hidden="true"
 root/div[0]/section[0]/div[1]/div[0]/div[1]/a[0]/svg[0]/path[0]
 root/div[0]/section[0]/div[1]/div[0]/div[1]/a[1] href="#report-preview"
-root/div[0]/section[0]/div[1]/div[0]/div[1]/a[1]/text "Vezi un exemplu de raport"
+root/div[0]/section[0]/div[1]/div[0]/div[1]/a[1]/text "See a sample report"
 root/div[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/section[0]/div[1]/div[0]/div[1]/span[0]/span[0] aria-hidden="true"
 root/div[0]/section[0]/div[1]/div[0]/div[1]/span[0]/span[0]/text "✓"
-root/div[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "Nu modificam nimic in contul tau."
+root/div[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "We do not change anything in your account."
 root/div[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/section[0]/div[1]/div[0]/div[2]/span[0]/b[0]
-root/div[0]/section[0]/div[1]/div[0]/div[2]/span[0]/b[0]/text "365 de zile"
-root/div[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "de date"
+root/div[0]/section[0]/div[1]/div[0]/div[2]/span[0]/b[0]/text "365 days"
+root/div[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "of data"
 root/div[0]/section[0]/div[1]/div[0]/div[2]/span[1]
 root/div[0]/section[0]/div[1]/div[0]/div[2]/span[1]/b[0]
-root/div[0]/section[0]/div[1]/div[0]/div[2]/span[1]/b[0]/text "Produs cu produs"
+root/div[0]/section[0]/div[1]/div[0]/div[2]/span[1]/b[0]/text "Product by product"
 root/div[0]/section[0]/div[1]/div[0]/div[2]/span[2]
+root/div[0]/section[0]/div[1]/div[0]/div[2]/span[2]/text "Saved"
 root/div[0]/section[0]/div[1]/div[0]/div[2]/span[2]/b[0]
 root/div[0]/section[0]/div[1]/div[0]/div[2]/span[2]/b[0]/text "PDF"
-root/div[0]/section[0]/div[1]/div[0]/div[2]/span[2]/text "salvat"
 root/div[0]/section[0]/div[1]/div[1]
 root/div[0]/section[0]/div[1]/div[1]/div[0] aria-hidden="true"
 root/div[0]/section[0]/div[1]/div[1]/div[1]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/div[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/div[0]/p[0]/text "Exemplu din raport"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/div[0]/p[0]/text "Sample from the report"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/div[0]/p[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/div[0]/p[1]/text "Produse care au consumat buget si au produs pierderi"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/div[0]/p[1]/text "Products that spent budget and generated losses"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/span[0]/text "Model de raport"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[0]/span[0]/text "Sample report"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Product"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clicks"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Spend"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Orders"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[4]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Sales"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[6]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Pierdere"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Loss"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Rochie office bleumarin"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Navy office dress"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "3.840"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "3,840"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[2]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "4.820 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "4,820 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[3]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[3]/text "7"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[4]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[4]/text "689 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "2.110 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "2,110 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[6]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[6]/text "0×"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4.398 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4,398 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set 3 tricouri bumbac"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set of 3 cotton T-shirts"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "2.460"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "2,460"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[2]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "3.140 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "3,140 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[3]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[3]/text "12"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[4]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[4]/text "262 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "2.760 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "2,760 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[6]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[6]/text "1×"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2.588 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2,588 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Geantă din piele ecologică"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Faux leather bag"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[1]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "1.930"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "1,930"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[2]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[2]/text "2.605 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[2]/text "2,605 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[3]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[3]/text "0"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[4]
@@ -1275,100 +1275,100 @@ root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[6]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[6]/text "0×"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2.605 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2,605 RON"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/b[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/b[0]/text "Pierdere = buget − vânzări ÷ ROAS minim"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/b[0]/text "Loss = spend − sales ÷ minimum ROAS"
 root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/span[0]
-root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
+root/div[0]/section[0]/div[1]/div[1]/div[1]/div[2]/span[0]/text "· Minimum ROAS 5× · Maximum CPA 60 RON"
 root/div[0]/section[0]/div[1]/div[1]/p[0]
-root/div[0]/section[0]/div[1]/div[1]/p[0]/text "Exemplu demonstrativ. Raportul tau foloseste datele reale din contul conectat."
+root/div[0]/section[0]/div[1]/div[1]/p[0]/text "Illustrative example. Your report uses real data from the connected account."
 root/div[0]/section[1]
 root/div[0]/section[1]/div[0]
 root/div[0]/section[1]/div[0]/div[0]
 root/div[0]/section[1]/div[0]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[0]/p[0]/text "Problema ascunsa de media contului"
+root/div[0]/section[1]/div[0]/div[0]/p[0]/text "The problem hidden by the account average"
 root/div[0]/section[1]/div[0]/div[0]/h2[0]
-root/div[0]/section[1]/div[0]/div[0]/h2[0]/text "De ce poti pierde bani chiar daca ROAS-ul contului pare bun"
+root/div[0]/section[1]/div[0]/div[0]/h2[0]/text "Why you can lose money even when account ROAS looks good"
 root/div[0]/section[1]/div[0]/div[0]/p[1]
-root/div[0]/section[1]/div[0]/div[0]/p[1]/text "Google optimizeaza pentru vanzari, dar nu stie automat cat profit iti ramane din fiecare produs."
+root/div[0]/section[1]/div[0]/div[0]/p[1]/text "Google optimizes for sales, but it does not automatically know the profit each product leaves you."
 root/div[0]/section[1]/div[0]/div[1]
 root/div[0]/section[1]/div[0]/div[1]/article[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/span[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/span[0]/text "01"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/h3[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/h3[0]/text "Toate produsele concureaza pentru acelasi buget"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/h3[0]/text "All products compete for the same budget"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/p[0]/text "Google distribuie bugetul dupa sansele de vanzare, nu dupa profitul real pe care ti-l lasa fiecare produs."
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[0]/p[0]/text "Google distributes budget by likelihood of a sale, not by the real profit each product leaves you."
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Product"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clicks"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Spend"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]/text "Orders"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[4]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]/text "Sales"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[6]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]/text "Pierdere"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]/text "Loss"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Rochie office bleumarin"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Navy office dress"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "3.840"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "3,840"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "4.820 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "4,820 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[3]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[3]/text "7"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[4]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[4]/text "689 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]/text "2.110 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]/text "2,110 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[6]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[6]/text "0×"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4.398 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4,398 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set 3 tricouri bumbac"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set of 3 cotton T-shirts"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "2.460"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "2,460"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "3.140 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "3,140 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[3]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[3]/text "12"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[4]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[4]/text "262 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[5]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[5]/text "2.760 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[5]/text "2,760 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[6]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[6]/text "1×"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[7]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[7]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2.588 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2,588 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Geantă din piele ecologică"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Faux leather bag"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]/text "1.930"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]/text "1,930"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]/text "2.605 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]/text "2,605 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[3]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[3]/text "0"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[4]
@@ -1379,88 +1379,88 @@ root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[6]/text "0×"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[7]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[7]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2.605 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2,605 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/b[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/b[0]/text "Pierdere = buget − vânzări ÷ ROAS minim"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/b[0]/text "Loss = spend − sales ÷ minimum ROAS"
 root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[0]/div[1]/div[1]/span[0]/text "· Minimum ROAS 5× · Maximum CPA 60 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/span[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/span[0]/text "02"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/h3[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/h3[0]/text "Traficul mare nu inseamna profit"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/h3[0]/text "High traffic does not mean profit"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/p[0]/text "Un produs poate primi foarte multe clickuri si poate consuma cea mai mare parte din buget, dar sa fie extrem de neprofitabil."
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[0]/p[0]/text "A product can receive many clicks and consume most of the budget while remaining deeply unprofitable."
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[0]/text "Product"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[1]/text "Clicks"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[2]/text "Spend"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[3]/text "Orders"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[4]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[5]/text "Sales"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[6]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]/text "Pierdere"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/thead[0]/tr[0]/th[7]/text "Loss"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Rochie office bleumarin"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Navy office dress"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "3.840"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[1]/text "3,840"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "4.820 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[2]/text "4,820 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[3]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[3]/text "7"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[4]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[4]/text "689 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]/text "2.110 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[5]/text "2,110 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[6]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[6]/text "0×"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4.398 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4,398 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set 3 tricouri bumbac"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set of 3 cotton T-shirts"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "2.460"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[1]/text "2,460"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "3.140 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[2]/text "3,140 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[3]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[3]/text "12"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[4]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[4]/text "262 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[5]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[5]/text "2.760 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[5]/text "2,760 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[6]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[6]/text "1×"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[7]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[7]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2.588 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2,588 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Geantă din piele ecologică"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Faux leather bag"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]/text "1.930"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[1]/text "1,930"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]/text "2.605 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[2]/text "2,605 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[3]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[3]/text "0"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[4]
@@ -1471,65 +1471,65 @@ root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[6]/text "0×"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[7]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[7]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2.605 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[0]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2,605 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/b[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/b[0]/text "Pierdere = buget − vânzări ÷ ROAS minim"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/b[0]/text "Loss = spend − sales ÷ minimum ROAS"
 root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/span[0]
-root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[1]/div[1]/div[1]/span[0]/text "· Minimum ROAS 5× · Maximum CPA 60 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/span[0]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/span[0]/text "03"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/h3[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/h3[0]/text "Fara un CSS partener, platesti cu aproximativ 20% mai mult per click"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/h3[0]/text "Without a CSS partner, you pay approximately 20% more per click"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/p[0]/text "Un cost per click mai mic inseamna mai mult trafic, mai multe vanzari si un ROAS mai mare din acelasi buget."
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[0]/p[0]/text "A lower cost per click means more traffic, more sales, and a higher ROAS from the same budget."
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[0]/text "Direct Google → CSS partener, la același buget"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[0]/text "Direct Google → CSS partner, with the same budget"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Product"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[1]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clicks"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[2]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Spend"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[3]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Orders"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[4]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[5]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Sales"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[6]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[7]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Câștig CSS"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "CSS gain"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/text "Rochie office bleumarin"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/text "Navy office dress"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "1.000 → 1.250"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "1,000 → 1,250"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[2]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "1.000 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "1,000 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[3]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[3]/text "20 → 25"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[4]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[4]/text "50 → 40 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[5]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "5.000 → 6.250 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "5,000 → 6,250 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[6]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[6]/text "5,00 → 6,25×"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[6]/text "5.00 → 6.25×"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[7]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/text "+1.250 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/text "+1,250 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/text "Set 3 tricouri bumbac"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/text "Set of 3 cotton T-shirts"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "800 → 1.000"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "800 → 1,000"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[2]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "800 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[3]
@@ -1537,14 +1537,14 @@ root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/t
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[4]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[4]/text "50 → 40 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[5]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "4.000 → 5.000 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "4,000 → 5,000 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[6]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[6]/text "5,00 → 6,25×"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[6]/text "5.00 → 6.25×"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[7]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/text "+1.000 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/text "+1,000 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[0]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/text "Geantă din piele ecologică"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/text "Faux leather bag"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[1]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "600 → 750"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[2]
@@ -1554,100 +1554,100 @@ root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/t
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[4]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[4]/text "50 → 40 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[5]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[5]/text "3.000 → 3.750 RON"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[5]/text "3,000 → 3,750 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[6]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[6]/text "5,00 → 6,25×"
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[6]/text "5.00 → 6.25×"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[7]
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/text "+750 RON"
 root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[1]
-root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[1]/text "Aceleași bugete și aceeași rată de conversie: CPC 1 RON → 0,80 RON. Fiecare produs primește cu 25% mai multe clickuri, comenzi și vânzări."
+root/div[0]/section[1]/div[0]/div[1]/article[2]/div[1]/p[1]/text "Same budgets and conversion rate: CPC 1 RON → 0.80 RON. Each product receives 25% more clicks, orders, and sales."
 root/div[0]/section[1]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/p[0]/text "Media contului ascunde problema. Auditul iti arata fiecare produs in parte."
+root/div[0]/section[1]/div[0]/p[0]/text "The account average hides the problem. The audit shows each product separately."
 root/div[0]/section[2]
 root/div[0]/section[2]/div[0]
 root/div[0]/section[2]/div[0]/div[0]
 root/div[0]/section[2]/div[0]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[0]/p[0]/text "Cifre reale, nu concluzii vagi"
+root/div[0]/section[2]/div[0]/div[0]/p[0]/text "Real figures, not vague conclusions"
 root/div[0]/section[2]/div[0]/div[0]/h2[0]
-root/div[0]/section[2]/div[0]/div[0]/h2[0]/text "Vezi cu ochii tai unde se duc banii"
+root/div[0]/section[2]/div[0]/div[0]/h2[0]/text "See exactly where the money goes"
 root/div[0]/section[2]/div[0]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/p[1]/text "Raportul foloseste datele din contul tau si separa clar produsele care consuma buget de cele in care merita sa investesti mai mult."
+root/div[0]/section[2]/div[0]/div[0]/p[1]/text "The report uses your account data and clearly separates products that consume budget from those that deserve more investment."
 root/div[0]/section[2]/div[0]/div[1]
 root/div[0]/section[2]/div[0]/div[1]/article[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[0]/text "Oprești risipa"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[0]/text "Stop wasted spend"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/h3[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/h3[0]/text "Produse care îți consumă bugetul"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/h3[0]/text "Products consuming your budget"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[1]/text "Au primit trafic și au cheltuit bani, dar nu au generat suficiente vânzări. Cea mai mare pierdere apare prima."
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[0]/p[1]/text "They received traffic and spent money without generating enough sales. The largest loss appears first."
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Product"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clicks"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Spend"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[3]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Orders"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[4]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[5]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Sales"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[6]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[7]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Pierdere"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Loss"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Rochie office bleumarin"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Navy office dress"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "3.840"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "3,840"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[2]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "4.820 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[2]/text "4,820 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[3]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[3]/text "7"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[4]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[4]/text "689 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[5]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "2.110 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "2,110 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[6]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[6]/text "0×"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[7]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4.398 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "−4,398 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set 3 tricouri bumbac"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Set of 3 cotton T-shirts"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "2.460"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "2,460"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[2]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "3.140 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[2]/text "3,140 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[3]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[3]/text "12"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[4]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[4]/text "262 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[5]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "2.760 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "2,760 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[6]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[6]/text "1×"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[7]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2.588 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "−2,588 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[0]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Geantă din piele ecologică"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Faux leather bag"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[1]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "1.930"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "1,930"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[2]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[2]/text "2.605 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[2]/text "2,605 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[3]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[3]/text "0"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[4]
@@ -1658,45 +1658,45 @@ root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/t
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[6]/text "0×"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[7]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2.605 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "−2,605 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/b[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/b[0]/text "Pierdere = buget − vânzări ÷ ROAS minim"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/b[0]/text "Loss = spend − sales ÷ minimum ROAS"
 root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[0]/div[2]/span[0]/text "· Minimum ROAS 5× · Maximum CPA 60 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[0]/text "Recuperezi creșterea"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[0]/text "Recover growth"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/h3[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/h3[0]/text "Produse care merită promovate mai mult"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/h3[0]/text "Products worth promoting more"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[1]/text "Au demonstrat că pot genera vânzări profitabile, dar primesc prea puțin trafic. Cea mai mare oportunitate apare prima."
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[0]/p[1]/text "They have demonstrated profitable sales but receive too little traffic. The largest opportunity appears first."
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Produs"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Product"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clickuri"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Clicks"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Buget"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Spend"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Comenzi"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[3]/text "Orders"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[4]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[4]/text "CPA"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Vânzări"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[5]/text "Sales"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[6]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[6]/text "ROAS"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Potențial"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/thead[0]/tr[0]/th[7]/text "Potential"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Pantofi sport bărbați"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/span[0]/text "Men&#x27;s sports shoes"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "420"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[2]
@@ -1706,16 +1706,16 @@ root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/t
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[4]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[4]/text "30 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "5.460 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[5]/text "5,460 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[6]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[6]/text "13×"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "+8.736 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[0]/td[7]/span[0]/text "+8,736 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Geacă damă impermeabilă"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/span[0]/text "Women&#x27;s waterproof jacket"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "310"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[2]
@@ -1725,16 +1725,16 @@ root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/t
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[4]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[4]/text "31 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "3.720 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[5]/text "3,720 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[6]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[6]/text "12×"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "+5.208 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[1]/td[7]/span[0]/text "+5,208 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Rucsac urban premium"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[0]/span[0]/text "Premium urban backpack"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[1]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[1]/text "190"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[2]
@@ -1744,94 +1744,94 @@ root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/t
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[4]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[4]/text "32 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[5]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[5]/text "2.090 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[5]/text "2,090 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[6]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[6]/text "11×"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "+2.508 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[1]/table[0]/tbody[0]/tr[2]/td[7]/span[0]/text "+2,508 RON"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/b[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/b[0]/text "Potențial = vânzări × (ROAS ÷ ROAS minim − 1)"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/b[0]/text "Potential = sales × (ROAS ÷ minimum ROAS − 1)"
 root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/span[0]
-root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/span[0]/text "· ROAS minim 5× · CPA maxim 60 RON"
+root/div[0]/section[2]/div[0]/div[1]/article[1]/div[2]/span[0]/text "· Minimum ROAS 5× · Maximum CPA 60 RON"
 root/div[0]/section[2]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/p[0]/text "Exemple demonstrative. In raport, valorile istorice sunt masurate din Google Ads, iar estimarile sunt etichetate separat."
+root/div[0]/section[2]/div[0]/p[0]/text "Illustrative examples. Historical values in the report are measured from Google Ads, and estimates are labeled separately."
 root/div[0]/section[3]
 root/div[0]/section[3]/div[0]
 root/div[0]/section[3]/div[0]/div[0]
 root/div[0]/section[3]/div[0]/div[0]/div[0]
 root/div[0]/section[3]/div[0]/div[0]/div[0]/p[0]
-root/div[0]/section[3]/div[0]/div[0]/div[0]/p[0]/text "Trei pasi simpli"
+root/div[0]/section[3]/div[0]/div[0]/div[0]/p[0]/text "Three simple steps"
 root/div[0]/section[3]/div[0]/div[0]/div[0]/h2[0]
-root/div[0]/section[3]/div[0]/div[0]/div[0]/h2[0]/text "De la conectare la raport"
+root/div[0]/section[3]/div[0]/div[0]/div[0]/h2[0]/text "From connection to report"
 root/div[0]/section[3]/div[0]/div[0]/div[0]/p[1]
-root/div[0]/section[3]/div[0]/div[0]/div[0]/p[1]/text "Nu exporti fisiere si nu trebuie sa cunosti termenii Google Ads."
+root/div[0]/section[3]/div[0]/div[0]/div[0]/p[1]/text "No file exports and no Google Ads expertise required."
 root/div[0]/section[3]/div[0]/div[0]/div[1]
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[0]
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[0]/span[0]
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[0]/span[0]/text "01"
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/section[3]/div[0]/div[0]/div[1]/div[0]/p[0]/text "Conectezi contul Google Ads"
+root/div[0]/section[3]/div[0]/div[0]/div[1]/div[0]/p[0]/text "Connect your Google Ads account"
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/section[3]/div[0]/div[0]/div[1]/div[0]/p[1]/text "Te autentifici direct la Google. Parola ta nu trece prin noi, iar aplicatia nu modifica reclame, campanii sau bugete."
+root/div[0]/section[3]/div[0]/div[0]/div[1]/div[0]/p[1]/text "Sign in directly with Google. Your password never passes through us, and the application does not change ads, campaigns, or budgets."
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[1]
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[1]/span[0]
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[1]/span[0]/text "02"
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[1]/p[0]
-root/div[0]/section[3]/div[0]/div[0]/div[1]/div[1]/p[0]/text "Stabilim pragul tau de rentabilitate"
+root/div[0]/section[3]/div[0]/div[0]/div[1]/div[1]/p[0]/text "Set your break-even threshold"
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[1]/p[1]
-root/div[0]/section[3]/div[0]/div[0]/div[1]/div[1]/p[1]/text "Confirmi valoarea medie a unei comenzi si costul marfii. Calculam automat CPA-ul maxim si ROAS-ul minim pentru magazinul tau."
+root/div[0]/section[3]/div[0]/div[0]/div[1]/div[1]/p[1]/text "Confirm your average order value and cost of goods. We automatically calculate your store&#x27;s maximum CPA and minimum ROAS."
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[2]
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[2]/span[0]
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[2]/span[0]/text "03"
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[2]/p[0]
-root/div[0]/section[3]/div[0]/div[0]/div[1]/div[2]/p[0]/text "Vezi performanta fiecarui produs"
+root/div[0]/section[3]/div[0]/div[0]/div[1]/div[2]/p[0]/text "See every product&#x27;s performance"
 root/div[0]/section[3]/div[0]/div[0]/div[1]/div[2]/p[1]
-root/div[0]/section[3]/div[0]/div[0]/div[1]/div[2]/p[1]/text "Analizam ultimele 365 de zile, ordonam pierderile si oportunitatile dupa bani si iti salvam raportul ca PDF."
+root/div[0]/section[3]/div[0]/div[0]/div[1]/div[2]/p[1]/text "We analyze the last 365 days, rank losses and opportunities by money at stake, and save your report as a PDF."
 root/div[0]/section[3]/div[0]/div[1]
 root/div[0]/section[3]/div[0]/div[1]/div[0]
 root/div[0]/section[3]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/section[3]/div[0]/div[1]/div[0]/p[0]/text "Controlul ramane la tine"
+root/div[0]/section[3]/div[0]/div[1]/div[0]/p[0]/text "You remain in control"
 root/div[0]/section[3]/div[0]/div[1]/div[0]/h3[0]
-root/div[0]/section[3]/div[0]/div[1]/div[0]/h3[0]/text "Iti citim cifrele. Nu atingem campaniile."
+root/div[0]/section[3]/div[0]/div[1]/div[0]/h3[0]/text "We read your figures. We do not touch campaigns."
 root/div[0]/section[3]/div[0]/div[1]/div[1]
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[0]
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[0]/p[0]/text "Doar citim"
+root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[0]/p[0]/text "The application only reads"
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[0]/p[1]
-root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[0]/p[1]/text "Nu modificam nimic in contul tau."
+root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[0]/p[1]/text "We do not change anything in your account."
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[1]
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[1]/p[0]
-root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[1]/p[0]/text "Acces revocabil"
+root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[1]/p[0]/text "Revocable access"
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[1]/p[1]
-root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[1]/p[1]/text "Il retragi oricand, direct din contul tau Google."
+root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[1]/p[1]/text "Revoke it at any time from your Google account."
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[2]
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[2]/p[0]
-root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[2]/p[0]/text "Fara card"
+root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[2]/p[0]/text "No payment card"
 root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[2]/p[1]
-root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[2]/p[1]/text "Raportul este gratuit si nu porneste niciun abonament."
+root/div[0]/section[3]/div[0]/div[1]/div[1]/div[0]/div[2]/p[1]/text "The report is free and starts no subscription."
 root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]
 root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/summary[0]
-root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/summary[0]/text "Exact ce date citim"
+root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/summary[0]/text "Exactly what we read"
 root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/p[0]
 root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/p[0]/b[0]
 root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/p[0]/b[0]/text "Audit Devrika"
-root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/p[0]/text "se conecteaza numai cu acordul tau. Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Cerem un singur drept de acces, cel pentru Google Ads. Nimic din Gmail sau Drive. Nu stocam datele contului tau si nu facem nicio modificare in el."
+root/div[0]/section[3]/div[0]/div[1]/div[1]/details[0]/p[0]/text "connects only with your consent. The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. We request one access permission, for Google Ads. Nothing from Gmail or Drive. Your signed Google authorization expires after one hour and is not stored with your contact record. Requested reports are retained only for delivery and support. We make no changes to your account."
 root/div[0]/section[4]
 root/div[0]/section[4]/div[0]
 root/div[0]/section[4]/div[0]/div[0]
 root/div[0]/section[4]/div[0]/div[0]/p[0]
-root/div[0]/section[4]/div[0]/div[0]/p[0]/text "Raport gratuit"
+root/div[0]/section[4]/div[0]/div[0]/p[0]/text "Free report"
 root/div[0]/section[4]/div[0]/div[0]/h2[0]
-root/div[0]/section[4]/div[0]/div[0]/h2[0]/text "Vezi ce produse trebuie limitate si in care merita sa investesti mai mult."
+root/div[0]/section[4]/div[0]/div[0]/h2[0]/text "See which products to limit and which deserve more investment."
 root/div[0]/section[4]/div[0]/div[0]/p[1]
-root/div[0]/section[4]/div[0]/div[0]/p[1]/text "Pe datele tale reale. Fara card. Fara modificari in Google Ads."
+root/div[0]/section[4]/div[0]/div[0]/p[1]/text "Your real data. No payment card. No Google Ads changes."
 root/div[0]/section[4]/div[0]/a[0] href="/google-ads/connect"
-root/div[0]/section[4]/div[0]/a[0]/text "Analizeaza contul meu"
+root/div[0]/section[4]/div[0]/a[0]/text "Analyze my account"
 root/div[0]/section[4]/div[0]/a[0]/svg[0] aria-hidden="true"
 root/div[0]/section[4]/div[0]/a[0]/svg[0]/path[0]
 root/div[0]/footer[0]
@@ -1841,10 +1841,10 @@ root/div[0]/footer[0]/div[0]/span[0]
 root/div[0]/footer[0]/div[0]/span[0]/text "Devrika"
 root/div[0]/footer[0]/p[0]
 root/div[0]/footer[0]/p[0]/a[0] href="/confidentialitate"
-root/div[0]/footer[0]/p[0]/a[0]/text "Politica de confidentialitate"
+root/div[0]/footer[0]/p[0]/a[0]/text "Privacy Policy"
 root/div[0]/footer[0]/p[0]/text "·"
 root/div[0]/footer[0]/p[0]/a[1] href="/termeni"
-root/div[0]/footer[0]/p[0]/a[1]/text "Termeni si conditii"
+root/div[0]/footer[0]/p[0]/a[1]/text "Terms and Conditions"
 root/div[0]/footer[0]/p[1]
 root/div[0]/footer[0]/p[1]/text "© 2026 Devrika ·"
 root/div[0]/footer[0]/p[1]/a[0] href="https://devrika.ro"
@@ -1860,48 +1860,48 @@ root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
 root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/h1[0]/text "Politica de confidentialitate"
+root/div[0]/div[0]/h1[0]/text "Privacy Policy"
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia"
+root/div[0]/div[0]/p[0]/text "The"
 root/div[0]/div[0]/p[0]/b[0]
 root/div[0]/div[0]/p[0]/b[0]/text "Audit Devrika"
-root/div[0]/div[0]/p[0]/text "— analiza contului de Google Ads. Ultima actualizare: august 2026."
+root/div[0]/div[0]/p[0]/text "application — Google Ads account analysis. Last updated: August 2026."
 root/div[0]/div[0]/p[1]
-root/div[0]/div[0]/p[1]/text "Aceasta politica descrie cum aplicatia Audit Devrika trateaza datele la care ii dai acces atunci cand iti conectezi contul de Google Ads. E scrisa in limbaj obisnuit, pentru ca ai dreptul sa intelegi ce se intampla cu datele afacerii tale."
+root/div[0]/div[0]/p[1]/text "This policy explains how the Audit Devrika application handles data you authorize it to access when you connect your Google Ads account. It uses plain language so you can understand what happens to your business data."
 root/div[0]/div[0]/h2[0]
-root/div[0]/div[0]/h2[0]/text "Cine suntem"
+root/div[0]/div[0]/h2[0]/text "Who we are"
 root/div[0]/div[0]/p[2]
-root/div[0]/div[0]/p[2]/text "Devrika este o agentie de marketing online din Romania. Aplicatia"
+root/div[0]/div[0]/p[2]/text "Devrika is a Romanian online marketing agency. The"
 root/div[0]/div[0]/p[2]/b[0]
 root/div[0]/div[0]/p[2]/b[0]/text "Audit Devrika"
-root/div[0]/div[0]/p[2]/text "descrisa aici ruleaza pe"
+root/div[0]/div[0]/p[2]/text "application described here runs on"
 root/div[0]/div[0]/p[2]/b[1]
-root/div[0]/div[0]/p[2]/b[1]/text "audit.devrika.ro"
-root/div[0]/div[0]/p[2]/text "si apartine aceleiasi firme. Ne poti scrie oricand la"
+root/div[0]/div[0]/p[2]/b[1]/text "audit.devrika.io"
+root/div[0]/div[0]/p[2]/text "and is operated by the same company. You can contact us at"
 root/div[0]/div[0]/p[2]/a[0] href="mailto:hello@devrika.ro"
 root/div[0]/div[0]/p[2]/a[0]/text "hello@devrika.ro"
 root/div[0]/div[0]/p[2]/text "."
 root/div[0]/div[0]/h2[1]
-root/div[0]/div[0]/h2[1]/text "Ce date citim din contul tau Google"
+root/div[0]/div[0]/h2[1]/text "What data we read from your Google account"
 root/div[0]/div[0]/p[3]
-root/div[0]/div[0]/p[3]/text "Cu acordul tau explicit, aplicatia cere o singura permisiune Google (adwords). Permisiunea OAuth Google Ads nu este exclusiv de citire.Aplicatia citeste urmatoarele date din contul tau de Google Ads:"
+root/div[0]/div[0]/p[3]/text "With your explicit consent, the application requests one Google permission (adwords). The Google Ads OAuth permission is not read-only. The application reads the following data from your Google Ads account:"
 root/div[0]/div[0]/ul[0]
 root/div[0]/div[0]/ul[0]/li[0]
 root/div[0]/div[0]/ul[0]/li[0]/span[0] aria-hidden="true"
-root/div[0]/div[0]/ul[0]/li[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile."
+root/div[0]/div[0]/ul[0]/li[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days."
 root/div[0]/div[0]/ul[0]/li[1]
 root/div[0]/div[0]/ul[0]/li[1]/span[0] aria-hidden="true"
-root/div[0]/div[0]/ul[0]/li[1]/text "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc."
+root/div[0]/div[0]/ul[0]/li[1]/text "The application reads data, compares it with your business thresholds, and shows you the result immediately."
 root/div[0]/div[0]/p[4]
 root/div[0]/div[0]/p[4]/b[0]
-root/div[0]/div[0]/p[4]/b[0]/text "Nu cerem si nu obtinem acces"
-root/div[0]/div[0]/p[4]/text "la Gmail, Google Drive, contacte, calendar sau orice alt serviciu Google. Nu putem face nicio modificare in contul tau de Google Ads: nu putem porni sau opri campanii, nu putem schimba bugete si nu putem cheltui bani."
+root/div[0]/div[0]/p[4]/b[0]/text "We do not request or obtain access"
+root/div[0]/div[0]/p[4]/text "to Gmail, Google Drive, contacts, calendars, or any other Google service. We cannot start or stop campaigns, change budgets, or spend money."
 root/div[0]/div[0]/h2[2]
-root/div[0]/div[0]/h2[2]/text "Ce facem cu ele"
+root/div[0]/div[0]/h2[2]/text "What we do with the data"
 root/div[0]/div[0]/p[5]
-root/div[0]/div[0]/p[5]/text "Le folosim intr-un singur scop: sa generam raportul pe care il vezi pe ecran, folosind categoriile de date enumerate mai sus. Analiza se face in momentul in care esti pe site."
+root/div[0]/div[0]/p[5]/text "We use these categories to generate the report you see on screen. The analysis runs when you request it on the site."
 root/div[0]/div[0]/p[6]
-root/div[0]/div[0]/p[6]/text "Your Google authorization remains in a secure cookie for one hour and is not stored with the lead. If you request the PDF, we store your name, email, phone number, store website, selected account identity, confirmed financial inputs, calculated break-even values, the report PDF, and its delivery status. We use this record only to generate, deliver, and support the requested audit and monthly reports about the connected campaigns while Devrika has access to the campaign data. We do not use this agreement for newsletters or general promotional messages. You may request its deletion at any time."
+root/div[0]/div[0]/p[6]/text "Your Google authorization remains in a secure cookie for one hour and is not stored with the lead. If you request the PDF, we store your name, email, phone number, store website, selected account identity, confirmed financial inputs, calculated break-even values, the report PDF, and its delivery status. We use this record only to generate, deliver, and support the requested audit. If optional monthly report delivery becomes available and you request it separately, the same limited purpose applies. We do not use this agreement for newsletters or general promotional messages. You may request deletion at any time."
 root/div[0]/div[0]/h2[3]
 root/div[0]/div[0]/h2[3]/text "How we protect Google user data"
 root/div[0]/div[0]/p[7]
@@ -1911,45 +1911,45 @@ root/div[0]/div[0]/p[8]/text "Google API requests and application secrets are ha
 root/div[0]/div[0]/p[9]
 root/div[0]/div[0]/p[9]/text "Access to Google user data is limited to providing and supporting the requested audit and report delivery, as described in this policy. You can revoke Google access or request deletion using the instructions below."
 root/div[0]/div[0]/h2[4]
-root/div[0]/div[0]/h2[4]/text "Conformarea cu politicile Google"
+root/div[0]/div[0]/h2[4]/text "Compliance with Google policies"
 root/div[0]/div[0]/p[10]
-root/div[0]/div[0]/p[10]/text "Folosirea si transferul catre orice alta aplicatie a informatiilor primite de la Google API-uri respecta"
+root/div[0]/div[0]/p[10]/text "Our use and transfer to any other application of information received from Google APIs complies with the"
 root/div[0]/div[0]/p[10]/a[0] href="https://developers.google.com/terms/api-services-user-data-policy"
 root/div[0]/div[0]/p[10]/a[0]/text "Google API Services User Data Policy"
-root/div[0]/div[0]/p[10]/text ", inclusiv cerintele privind"
+root/div[0]/div[0]/p[10]/text ", including its"
 root/div[0]/div[0]/p[10]/i[0]
 root/div[0]/div[0]/p[10]/i[0]/text "Limited Use"
-root/div[0]/div[0]/p[10]/text ". Concret: nu folosim datele pentru publicitate, nu le vindem, nu le transferam si nu permitem oamenilor sa le citeasca, in afara cazurilor strict necesare pentru operarea aplicatiei sau impuse de lege."
+root/div[0]/div[0]/p[10]/text "requirements. We do not use the data for advertising, sell it, transfer it, or allow people to read it except where strictly necessary to operate the application or comply with law."
 root/div[0]/div[0]/h2[5]
-root/div[0]/div[0]/h2[5]/text "Cu cine le impartim"
+root/div[0]/div[0]/h2[5]/text "Who we share data with"
 root/div[0]/div[0]/p[11]
 root/div[0]/div[0]/p[11]/text "We do not sell, rent, or use this data for third-party advertising. When email delivery is configured, Resend processes the recipient address, message, and attached PDF solely to deliver the report. Infrastructure providers may process data only as required to operate the application."
 root/div[0]/div[0]/h2[6]
-root/div[0]/div[0]/h2[6]/text "Cum retragi accesul"
+root/div[0]/div[0]/h2[6]/text "How to revoke access"
 root/div[0]/div[0]/p[12]
-root/div[0]/div[0]/p[12]/text "Oricand, dintr-un singur loc si fara sa ne intrebi pe noi: intra la"
+root/div[0]/div[0]/p[12]/text "You can revoke access at any time without contacting us. Open"
 root/div[0]/div[0]/p[12]/a[0] href="https://myaccount.google.com/permissions"
 root/div[0]/div[0]/p[12]/a[0]/text "myaccount.google.com/permissions"
-root/div[0]/div[0]/p[12]/text ", gaseste"
+root/div[0]/div[0]/p[12]/text ", find"
 root/div[0]/div[0]/p[12]/b[0]
 root/div[0]/div[0]/p[12]/b[0]/text "Audit Devrika"
-root/div[0]/div[0]/p[12]/text "in lista si apasa «Remove access». Din acel moment aplicatia nu mai poate citi nimic din contul tau."
+root/div[0]/div[0]/p[12]/text "in the list, and select “Remove access.” The application can no longer read your account after access is removed."
 root/div[0]/div[0]/h2[7]
-root/div[0]/div[0]/h2[7]/text "Drepturile tale"
+root/div[0]/div[0]/h2[7]/text "Your rights"
 root/div[0]/div[0]/p[13]
-root/div[0]/div[0]/p[13]/text "Conform GDPR, ai dreptul sa ceri o copie a datelor pe care le detinem despre tine, rectificarea sau stergerea lor, si sa te opui prelucrarii. Scrie-ne la"
+root/div[0]/div[0]/p[13]/text "Under the GDPR, you may request a copy of the personal data we hold about you, request its correction or deletion, and object to processing. Email"
 root/div[0]/div[0]/p[13]/a[0] href="mailto:hello@devrika.ro"
 root/div[0]/div[0]/p[13]/a[0]/text "hello@devrika.ro"
-root/div[0]/div[0]/p[13]/text "si raspundem in cel mult 30 de zile."
+root/div[0]/div[0]/p[13]/text "; we will respond within 30 days."
 root/div[0]/div[0]/h2[8]
-root/div[0]/div[0]/h2[8]/text "Modificari"
+root/div[0]/div[0]/h2[8]/text "Changes to this policy"
 root/div[0]/div[0]/p[14]
-root/div[0]/div[0]/p[14]/text "Daca schimbam ceva important in modul in care tratam datele, actualizam aceasta pagina si data de la inceputul ei."
+root/div[0]/div[0]/p[14]/text "If we materially change how we handle data, we will update this page and the date shown above."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la aplicatie"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the application"
 root/div[0]/div[0]/div[0]/a[1] href="/termeni"
-root/div[0]/div[0]/div[0]/a[1]/text "Termeni si conditii""
+root/div[0]/div[0]/div[0]/a[1]/text "Terms and Conditions""
 `;
 
 exports[`public Google Ads access boundary > renders the canonical contract on the terms surface > terms:normal 1`] = `
@@ -1961,58 +1961,58 @@ root/div[0]/div[0]/a[0]/img[0] alt="Devrika"
 root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/h1[0]/text "Termeni si conditii"
+root/div[0]/div[0]/h1[0]/text "Terms and Conditions"
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia"
+root/div[0]/div[0]/p[0]/text "The"
 root/div[0]/div[0]/p[0]/b[0]
 root/div[0]/div[0]/p[0]/b[0]/text "Audit Devrika"
-root/div[0]/div[0]/p[0]/text "— analiza contului de Google Ads. Ultima actualizare: august 2026."
+root/div[0]/div[0]/p[0]/text "application — Google Ads account analysis. Last updated: August 2026."
 root/div[0]/div[0]/h2[0]
-root/div[0]/div[0]/h2[0]/text "Ce este acest serviciu"
+root/div[0]/div[0]/h2[0]/text "What this service is"
 root/div[0]/div[0]/p[1]
-root/div[0]/div[0]/p[1]/text "Audit Devrika este o aplicatie care analizeaza contul tau de Google Ads si iti arata unde se duc banii din campaniile de Shopping: ce produse consuma buget fara sa vanda, ce produse nu au fost afisate niciodata si daca masurarea conversiilor e configurata corect. Serviciul e oferit gratuit, fara obligatia de a cumpara ceva."
+root/div[0]/div[0]/p[1]/text "Audit Devrika analyzes your Google Ads account and shows where Shopping campaign money goes: which products spend budget without selling, which products have never been shown, and whether conversion tracking is configured correctly. The service is free and creates no obligation to purchase anything."
 root/div[0]/div[0]/h2[1]
-root/div[0]/div[0]/h2[1]/text "Ce iti cerem"
+root/div[0]/div[0]/h2[1]/text "What we ask from you"
 root/div[0]/div[0]/p[2]
-root/div[0]/div[0]/p[2]/text "Sa ne dai acces la contul tau de Google Ads, prin mecanismul oficial de autorizare Google, si sa ne spui aproximativ ce marja de profit ai — din ea calculam pragul sub care un produs pierde bani. Nu iti cerem parole, date de card sau documente."
+root/div[0]/div[0]/p[2]/text "Authorize access to your Google Ads account through Google&#x27;s official authorization mechanism and provide an approximate profit margin so we can calculate the threshold below which a product loses money. We do not ask for passwords, payment-card details, or documents."
 root/div[0]/div[0]/h2[2]
-root/div[0]/div[0]/h2[2]/text "Ce garantam si ce nu"
+root/div[0]/div[0]/h2[2]/text "What we guarantee and what we do not"
 root/div[0]/div[0]/p[3]
-root/div[0]/div[0]/p[3]/text "Cifrele din raport sunt citite direct din contul tau si le marcam ca atare. Acolo unde folosim un reper de piata in loc de o masuratoare — de exemplu diferenta tipica de cost pe click intre magazinele cu si fara CSS — scrie explicit"
+root/div[0]/div[0]/p[3]/text "Report figures read directly from your account are marked as measured. When we use a market benchmark instead of a measurement—for example, the typical cost-per-click difference between stores with and without a CSS partner—we label it"
 root/div[0]/div[0]/p[3]/b[0]
-root/div[0]/div[0]/p[3]/b[0]/text "ESTIMARE"
-root/div[0]/div[0]/p[3]/text ". Nu prezentam niciodata o estimare drept fapt masurat."
+root/div[0]/div[0]/p[3]/b[0]/text "ESTIMATE"
+root/div[0]/div[0]/p[3]/text ". We never present an estimate as a measured fact."
 root/div[0]/div[0]/p[4]
-root/div[0]/div[0]/p[4]/text "Raportul e o analiza, nu o garantie de rezultat. Deciziile pe care le iei in contul tau iti apartin, iar Devrika nu raspunde pentru efectele lor comerciale. Daca masurarea conversiilor din contul tau e configurata gresit, o spunem in raport — dar in acel caz cifrele de performanta nu pot fi judecate pana nu e reparata."
+root/div[0]/div[0]/p[4]/text "The report is an analysis, not a guarantee of results. Decisions you make in your account remain yours, and Devrika is not responsible for their commercial effects. If conversion tracking is configured incorrectly, the report says so; performance figures cannot be judged reliably until tracking is repaired."
 root/div[0]/div[0]/h2[3]
-root/div[0]/div[0]/h2[3]/text "Ce nu facem niciodata"
+root/div[0]/div[0]/h2[3]/text "What we never do"
 root/div[0]/div[0]/p[5]
-root/div[0]/div[0]/p[5]/text "Aplicatia citeste datele, le compara cu pragurile afacerii tale si iti arata rezultatul pe loc. Nu modificam nimic in contul tau. Accesul pe care ni-l dai il poti retrage oricand din setarile contului tau Google."
+root/div[0]/div[0]/p[5]/text "The application reads data, compares it with your business thresholds, and shows you the result immediately. We do not change anything in your account. You can revoke the access you grant at any time from your Google account settings."
 root/div[0]/div[0]/h2[4]
-root/div[0]/div[0]/h2[4]/text "Datele tale"
+root/div[0]/div[0]/h2[4]/text "Your data"
 root/div[0]/div[0]/p[6]
-root/div[0]/div[0]/p[6]/text "Modul in care tratam datele e descris pe larg in"
+root/div[0]/div[0]/p[6]/text "Our handling of your data is described in the"
 root/div[0]/div[0]/p[6]/a[0] href="/confidentialitate"
-root/div[0]/div[0]/p[6]/a[0]/text "politica de confidentialitate"
-root/div[0]/div[0]/p[6]/text ". In short: we read only what is needed for the audit. If you request the PDF, we store the report, your contact details, the store and selected-account context, the confirmed financial inputs, and delivery status so the report can be delivered and supported."
+root/div[0]/div[0]/p[6]/a[0]/text "Privacy Policy"
+root/div[0]/div[0]/p[6]/text ". In short, we read only what is needed for the audit. If you request the PDF, we store the report, your contact details, the store and selected-account context, the confirmed financial inputs, and delivery status so the report can be delivered and supported."
 root/div[0]/div[0]/h2[5]
-root/div[0]/div[0]/h2[5]/text "Monthly campaign reports"
+root/div[0]/div[0]/h2[5]/text "Optional monthly campaign reports"
 root/div[0]/div[0]/p[7]
-root/div[0]/div[0]/p[7]/text "When you request the audit by accepting these terms, the email address you provide becomes the delivery address for the audit and for monthly reports about the connected campaigns. Monthly reporting continues only while Devrika has access to the campaign data. This service does not include newsletters, general promotional materials, or third-party advertising."
+root/div[0]/div[0]/p[7]/text "If optional monthly report delivery becomes available, it will require a separate request. The email address you provide for an audit is used to deliver and support that requested audit only. We do not enroll you automatically in monthly reports, newsletters, general promotional messages, or third-party advertising."
 root/div[0]/div[0]/h2[6]
-root/div[0]/div[0]/h2[6]/text "Disponibilitate"
+root/div[0]/div[0]/h2[6]/text "Availability"
 root/div[0]/div[0]/p[8]
-root/div[0]/div[0]/p[8]/text "Fiind un serviciu gratuit, il oferim «asa cum este» si putem sa il oprim sau sa il modificam oricand, fara notificare prealabila."
+root/div[0]/div[0]/p[8]/text "This free service is provided “as is.” We may modify or discontinue it without prior notice."
 root/div[0]/div[0]/h2[7]
 root/div[0]/div[0]/h2[7]/text "Contact"
 root/div[0]/div[0]/p[9]
-root/div[0]/div[0]/p[9]/text "Pentru orice intrebare legata de acesti termeni:"
+root/div[0]/div[0]/p[9]/text "For questions about these terms, contact"
 root/div[0]/div[0]/p[9]/a[0] href="mailto:hello@devrika.ro"
 root/div[0]/div[0]/p[9]/a[0]/text "hello@devrika.ro"
 root/div[0]/div[0]/p[9]/text "."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la aplicatie"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the application"
 root/div[0]/div[0]/div[0]/a[1] href="/confidentialitate"
-root/div[0]/div[0]/div[0]/a[1]/text "Politica de confidentialitate""
+root/div[0]/div[0]/div[0]/a[1]/text "Privacy Policy""
 `;
