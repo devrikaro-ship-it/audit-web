@@ -33,7 +33,7 @@
       "id": "report_analysis",
       "patterns": ["lib/gads-findings.ts", "lib/gads-findings.test.ts", "lib/gads-pmax.ts", "lib/gads-pmax.test.ts", "lib/gads-structure.ts", "lib/gads-structure.test.ts", "lib/gads-shopping.ts", "lib/gads-shopping.test.ts", "lib/gads-search.ts", "lib/gads-search.test.ts", "lib/gads-tracking.ts", "lib/gads-tracking.test.ts", "lib/gads-keywords.ts", "lib/gads-keywords.test.ts", "lib/gads-report-metrics.ts", "lib/gads-report-metrics.test.ts", "lib/gads-report-periods.ts", "lib/gads-report-periods.test.ts", "lib/gads-product-simulation.ts", "lib/gads-product-simulation.test.ts", "lib/gads-product-classification.ts", "lib/gads-product-classification.test.ts", "lib/gads-intake.ts", "lib/gads-intake.test.ts", "lib/gads-demo.ts", "lib/gads-demo.test.ts", "lib/gads-an.ts", "lib/gads-an.test.ts", "lib/gads-report-formatting.ts", "lib/gads-report-formatting.test.ts"],
       "statuses": ["A", "M"],
-      "category": "backend",
+      "category": "runtime",
       "risk": "fast",
       "checks": ["report_analysis", "report_ui"]
     },
