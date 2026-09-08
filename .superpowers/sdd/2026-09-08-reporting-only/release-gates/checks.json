@@ -112,7 +112,7 @@
       "id": "lint_configuration",
       "patterns": ["eslint.config.mjs"],
       "statuses": ["M"],
-      "category": "configuration",
+      "category": "build_config",
       "risk": "fast",
       "checks": ["application_lint", "repository_lint"]
     },
