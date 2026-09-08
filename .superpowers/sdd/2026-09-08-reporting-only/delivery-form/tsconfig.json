@@ -1,17 +1,17 @@
 {
-  "extends": "../../../../../tsconfig.json",
+  "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "incremental": false,
     "plugins": []
   },
   "include": [
-    "../../../../../next-env.d.ts",
-    "../../../../../app/google-ads/raport/ContactForm.tsx",
-    "../../../../../app/google-ads/raport/ContactForm.test.tsx",
-    "../../../../../app/google-ads/raport/actions.ts",
-    "../../../../../app/google-ads/raport/actions.test.tsx",
-    "../../../../../app/google-ads/raport/read-disclosure.test.tsx",
-    "../../../../../lib/gads-report-email.ts",
-    "../../../../../lib/gads-report-email.test.ts"
+    "../../../../next-env.d.ts",
+    "../../../../app/google-ads/raport/ContactForm.tsx",
+    "../../../../app/google-ads/raport/ContactForm.test.tsx",
+    "../../../../app/google-ads/raport/actions.ts",
+    "../../../../app/google-ads/raport/actions.test.tsx",
+    "../../../../app/google-ads/raport/read-disclosure.test.tsx",
+    "../../../../lib/gads-report-email.ts",
+    "../../../../lib/gads-report-email.test.ts"
   ]
 }
