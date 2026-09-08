@@ -1,0 +1,143 @@
+{
+  "base_revision": "38e29faa3e26db5d7f86917a98008616f83836d3",
+  "changes": [
+    {
+      "category": "runtime",
+      "checks": [
+        "contact_action_tests",
+        "email_payload_tests",
+        "read_disclosure_test",
+        "changed_typecheck",
+        "report_snapshots",
+        "snapshot_update",
+        "email_preview"
+      ],
+      "path": "lib/gads-report-email.ts",
+      "risk": "fast",
+      "rule_id": "delivery_form_surface",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "-p",
+        ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/tsconfig.json"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "changed_typecheck",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ContactForm.test.tsx",
+        "app/google-ads/raport/actions.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "contact_action_tests",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-report-email.test.ts"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 2,
+      "id": "email_payload_tests",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "node",
+        "--experimental-strip-types",
+        ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/generate-email-preview.mjs"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 2,
+      "id": "email_preview",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/read-disclosure.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 2,
+      "id": "read_disclosure_test",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/page.test.tsx",
+        "app/public-access-boundary.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "report_snapshots",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/page.test.tsx",
+        "app/public-access-boundary.test.tsx",
+        "--update"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "snapshot_update",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/delivery-form/checks.json",
+  "declaration_sha256": "32681330d44a6c1a4440002be1bfc5cb8356f5fc21acf032cb1cf985ea87c771",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "b5875f2e8a8db0da60164a2ec1790877fe2f31adebd06a9cae2dfe0b46a5e4a2",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "822042f96e98dbf7d3a13d88048a04b21ed9cd84",
+  "risk": "fast",
+  "schema_version": 1
+}

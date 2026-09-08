@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "control": "Former visible-name character deletion",
+  "baseRevision": "38e29faa3e26db5d7f86917a98008616f83836d3",
+  "mutatedRevision": "822042f96e98dbf7d3a13d88048a04b21ed9cd84",
+  "source": {
+    "path": "lib/gads-report-email.ts",
+    "correctSha256BeforeMutation": "7e5c8ecc2bbf7902c62113d0b3153ed0a3a64b68fbb21707b61aab46acf07852",
+    "mutatedSha256": "db4bdecdb599ec301132029c56f39fd52e64d9f39213ecb362cd82e2e4777688",
+    "mutation": "Replaced HTML entity escaping with deletion of ampersand, angle bracket, quote, and apostrophe characters."
+  },
+  "plannedCommand": {
+    "plan": "negative-name-impact-plan.json",
+    "commandId": "email_payload_tests",
+    "profile": "targeted_tests",
+    "argv": ["npx", "vitest", "run", "lib/gads-report-email.test.ts"]
+  },
+  "observed": {
+    "outcome": "COMMAND_FAILED",
+    "exitStatus": 1,
+    "testFiles": { "failed": 1, "total": 1 },
+    "tests": { "failed": 1, "passed": 3, "total": 4 },
+    "guardedFailure": "The exact payload assertion expected HTML entities for Mara <Owner> & \"Co\" O'Reilly but received Mara Owner  Co OReilly.",
+    "positiveControls": "The missing-configuration refusal, constructed-send behavior, and external-portal refusal tests remained passing while provider transport stayed stubbed."
+  },
+  "realEmailSent": false
+}

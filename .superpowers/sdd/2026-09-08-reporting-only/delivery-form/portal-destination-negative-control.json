@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "control": "Disabled portal destination refusal",
+  "baseRevision": "38e29faa3e26db5d7f86917a98008616f83836d3",
+  "mutatedRevision": "973553f7d28ade69857f9755ac62c2e57df59787",
+  "source": {
+    "path": "lib/gads-report-email.ts",
+    "correctSha256BeforeMutation": "7e5c8ecc2bbf7902c62113d0b3153ed0a3a64b68fbb21707b61aab46acf07852",
+    "mutatedSha256": "70b64ab6fab68d19641d922fbac12f4b82603324cc1406a71a61f831f8d235f5",
+    "mutation": "Removed the exact /google-ads/portal/{token} path allowlist so an absolute external destination reached the stubbed transport."
+  },
+  "plannedCommand": {
+    "plan": "negative-portal-impact-plan.json",
+    "commandId": "email_payload_tests",
+    "profile": "targeted_tests",
+    "argv": ["npx", "vitest", "run", "lib/gads-report-email.test.ts"]
+  },
+  "observed": {
+    "outcome": "COMMAND_FAILED",
+    "exitStatus": 1,
+    "testFiles": { "failed": 1, "total": 1 },
+    "tests": { "failed": 1, "passed": 3, "total": 4 },
+    "guardedFailure": "The external-portal refusal assertion expected INVALID_PORTAL_PATH but received EMAIL_PROVIDER_UNREACHABLE, proving the stubbed provider was reached after the guard was removed.",
+    "positiveControls": "The missing-configuration refusal, exact escaped payload, and valid constructed-send tests remained passing."
+  },
+  "realEmailSent": false
+}

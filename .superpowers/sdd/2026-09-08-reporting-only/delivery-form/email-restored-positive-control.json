@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": "lib/gads-report-email.ts",
+    "restoredSha256": "7e5c8ecc2bbf7902c62113d0b3153ed0a3a64b68fbb21707b61aab46acf07852",
+    "matchesPreMutationSha256": true,
+    "matchesBaseRevision": "38e29faa3e26db5d7f86917a98008616f83836d3"
+  },
+  "plannedCommand": {
+    "plan": "negative-portal-impact-plan.json",
+    "commandId": "email_payload_tests",
+    "profile": "targeted_tests",
+    "argv": ["npx", "vitest", "run", "lib/gads-report-email.test.ts"]
+  },
+  "observed": {
+    "outcome": "COMMAND_SUCCEEDED",
+    "exitStatus": 0,
+    "testFiles": { "passed": 1, "total": 1 },
+    "tests": { "passed": 4, "total": 4 }
+  },
+  "scopeControls": {
+    "providerTransportStubbed": true,
+    "realEmailSent": false,
+    "productionSourceChangedFromBase": false
+  }
+}
