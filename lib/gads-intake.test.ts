@@ -8,6 +8,7 @@ vi.mock("./net", () => ({ googleAdsSearch: search }));
 
 import {
   AUDIT_WINDOW_LABEL,
+  AUDIT_WINDOW_LABEL_ENGLISH,
   FERESTRE,
   buildProducts,
   dateRange,
@@ -86,17 +87,15 @@ describe("interogari", () => {
     ]);
   });
 
-  it("formats the 365-day label independently of neighboring window order and copy", () => {
+  it("keeps the excluded legacy label separate from the English reporting label", () => {
     const adversarialNeighbors = [...FERESTRE]
       .reverse()
       .map((window, index) => ({ ...window, eticheta: `neighbor-${index}` }));
     expect(adversarialNeighbors[0].eticheta).not.toBe(FERESTRE[0].eticheta);
-    expect(formatAuditWindowLabel(365)).toBe(AUDIT_WINDOW_LABEL);
+    expect(AUDIT_WINDOW_LABEL).toBe("365 de zile");
+    expect(AUDIT_WINDOW_LABEL_ENGLISH).toBe("365 days");
+    expect(formatAuditWindowLabel(365)).toBe(AUDIT_WINDOW_LABEL_ENGLISH);
     expect(formatAuditWindowLabel.toString()).not.toContain("FERESTRE");
-    const moduleSource = readFileSync("lib/gads-intake.ts", "utf8");
-    expect(moduleSource).toMatch(
-      /export const AUDIT_WINDOW_LABEL = formatAuditWindowLabel\(WINDOW_DAYS\)/
-    );
   });
 
   it("rejects standalone legacy period promises in the owned analytical emitters", () => {

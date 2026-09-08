@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
 
 const search = vi.hoisted(() => ({ implementation: vi.fn() }));
 
@@ -24,6 +25,8 @@ import { fetchPmaxData } from "./gads-pmax";
 import { fetchSearchData } from "./gads-search";
 import { fetchShoppingData } from "./gads-shopping";
 import { fetchTracking } from "./gads-tracking";
+import HubPage from "@/app/hub/page";
+import GoogleAdsLanding from "@/app/google-ads/page";
 
 const auth = { accessToken: "access", developerToken: "developer", loginCustomerId: "root" };
 
@@ -39,6 +42,17 @@ describe("transitive public output helpers", () => {
   });
 
   afterEach(() => vi.unstubAllGlobals());
+
+  it("renders the reporting window in English on public reporting entry points", () => {
+    const output = [
+      renderToStaticMarkup(HubPage()),
+      renderToStaticMarkup(GoogleAdsLanding()),
+    ].join("\n");
+
+    expect(output).toContain("last 365 days");
+    expect(output).toContain("365 days of data");
+    expect(output).not.toContain("365 de zile");
+  });
 
   it("executes every OAuth configuration and token response outcome", async () => {
     expect(oauthConfig()).toEqual({
@@ -210,7 +224,7 @@ describe("transitive public output helpers", () => {
       .mockResolvedValueOnce([{ assetGroupSignal: { assetGroup: "customers/123/assetGroups/1" } }, {}])
       .mockResolvedValueOnce([{ campaign: { name: "PMax" }, campaignCriterion: { keyword: { text: "brand" } } }, {}]);
     await expect(fetchPmaxData("123", auth)).resolves.toMatchObject({
-      campanii: [expect.objectContaining({ nume: "PMax", negativeBrand: 1 }), expect.objectContaining({ nume: "(fara nume)" })],
+      campanii: [expect.objectContaining({ nume: "PMax", negativeBrand: 1 }), expect.objectContaining({ nume: "(unnamed)" })],
       grupuri: [expect.objectContaining({ id: "1", titluri: 1, descrieri: 1, semnale: 1 }), expect.objectContaining({ id: "" })],
     });
 
@@ -219,7 +233,7 @@ describe("transitive public output helpers", () => {
       .mockResolvedValueOnce([{ campaign: { name: "Search", status: "ENABLED", advertisingChannelType: "SEARCH" }, adGroup: { name: "Group", status: "ENABLED" }, adGroupAd: { status: "ENABLED", ad: { type: "RESPONSIVE_SEARCH_AD" } } }, {}])
       .mockResolvedValueOnce([{ campaign: { name: "Search" }, adGroupCriterion: { keyword: { matchType: "BROAD" }, status: "ENABLED" } }, { adGroupCriterion: { keyword: { matchType: "BROAD" }, status: "ENABLED" } }, {}]);
     await expect(fetchSearchData("123", auth)).resolves.toMatchObject({
-      campanii: [expect.objectContaining({ nume: "Search", aiMax: true, potrivireLarga: true }), expect.objectContaining({ nume: "(fara nume)" })],
+      campanii: [expect.objectContaining({ nume: "Search", aiMax: true, potrivireLarga: true }), expect.objectContaining({ nume: "(unnamed)" })],
       reclame: [expect.objectContaining({ tip: "RESPONSIVE_SEARCH_AD" }), expect.objectContaining({ tip: "UNKNOWN" })],
     });
     search.implementation.mockRejectedValueOnce(new Error()).mockRejectedValueOnce(new Error()).mockRejectedValueOnce(new Error());
@@ -240,6 +254,6 @@ describe("transitive public output helpers", () => {
       { conversionAction: { name: "Purchase", category: "PURCHASE", primaryForGoal: true } },
       { conversionAction: {} },
     ]);
-    await expect(fetchTracking("123", auth)).resolves.toMatchObject({ conversions: [expect.objectContaining({ name: "Purchase" }), expect.objectContaining({ name: "(fara nume)", category: "UNKNOWN", primary: false })] });
+    await expect(fetchTracking("123", auth)).resolves.toMatchObject({ conversions: [expect.objectContaining({ name: "Purchase" }), expect.objectContaining({ name: "(unnamed)", category: "UNKNOWN", primary: false })] });
   });
 });

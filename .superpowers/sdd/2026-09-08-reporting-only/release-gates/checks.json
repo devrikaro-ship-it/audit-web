@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "label_and_findings": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-intake.test.ts",
+        "lib/gads-findings.test.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "transitive_public_output": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/public-output-transitive-coverage.test.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "report_ui": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ProfitabilitySimulator.test.tsx",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/raport/page.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "application_lint": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "eslint",
+        "app/google-ads/connect/page.tsx",
+        "app/google-ads/raport/ProfitabilitySimulator.tsx",
+        "app/google-ads/raport/ReportingDashboard.tsx",
+        "app/termeni/page.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "repository_lint": {
+      "profile": "targeted_tests",
+      "command": ["npm", "run", "lint"],
+      "cwd": ".",
+      "estimated_minutes": 5
+    },
+    "strict_typecheck": {
+      "profile": "targeted_tests",
+      "command": ["npx", "tsc", "--noEmit", "--incremental", "false"],
+      "cwd": ".",
+      "estimated_minutes": 4
+    }
+  },
+  "rules": [
+    {
+      "id": "label_runtime",
+      "patterns": ["lib/gads-intake.ts", "lib/gads-findings.ts"],
+      "statuses": ["M"],
+      "category": "runtime",
+      "risk": "fast",
+      "checks": ["label_and_findings", "transitive_public_output", "strict_typecheck"]
+    },
+    {
+      "id": "label_tests",
+      "patterns": ["lib/gads-intake.test.ts", "lib/public-output-transitive-coverage.test.ts"],
+      "statuses": ["M"],
+      "category": "test",
+      "risk": "fast",
+      "checks": ["label_and_findings", "transitive_public_output", "strict_typecheck"]
+    },
+    {
+      "id": "public_label_surfaces",
+      "patterns": ["app/hub/page.tsx", "app/google-ads/page.tsx"],
+      "statuses": ["M"],
+      "category": "frontend",
+      "risk": "fast",
+      "checks": ["transitive_public_output", "repository_lint", "strict_typecheck"]
+    },
+    {
+      "id": "report_surface",
+      "patterns": [
+        "app/google-ads/raport/page.tsx",
+        "app/google-ads/raport/ProfitabilitySimulator.tsx",
+        "app/google-ads/raport/ReportingDashboard.tsx"
+      ],
+      "statuses": ["M"],
+      "category": "frontend",
+      "risk": "fast",
+      "checks": ["label_and_findings", "report_ui", "application_lint", "repository_lint", "strict_typecheck"]
+    },
+    {
+      "id": "application_lint_surface",
+      "patterns": ["app/google-ads/connect/page.tsx", "app/termeni/page.tsx"],
+      "statuses": ["M"],
+      "category": "frontend",
+      "risk": "fast",
+      "checks": ["application_lint", "repository_lint", "strict_typecheck"]
+    },
+    {
+      "id": "lint_configuration",
+      "patterns": ["eslint.config.mjs"],
+      "statuses": ["M"],
+      "category": "configuration",
+      "risk": "fast",
+      "checks": ["application_lint", "repository_lint"]
+    },
+    {
+      "id": "repair_artifacts",
+      "patterns": [
+        ".superpowers/sdd/2026-09-08-reporting-only/release-gates/**",
+        "docs/dev/mistakes.md"
+      ],
+      "statuses": ["A", "M"],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": [],
+      "allow_no_checks": true
+    }
+  ]
+}
