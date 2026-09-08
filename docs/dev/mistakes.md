@@ -1,5 +1,13 @@
 # seo-audit — dev mistakes
 
+## 2026-09-08 — Result proof requires the verifying state
+
+Symptom: recording valid local result proof failed with `result proof requires point state verifying`. Measured cause: the coordinator left the point at `local_ready` while the independent verifier ran. Recognition signal: a finished verifier receipt with the ledger still at `local_ready`. Repair: use the supported transition to `verifying`, then record the unchanged proof. The first rejected command did not change state. Future dispatches must set the declared role state before recording its result.
+
+## 2026-09-08 — Consume finalized role artifacts
+
+Symptom: an early draft evidence identifier no longer matched the implementation owner's final receipt. Measured cause: the coordinator prepared a mapping before the role process completed. Recognition signal: an active role alongside intermediate receipt files. Repair: wait for the bounded task's terminal result, then derive mappings from the finalized artifact's actual identifiers. File existence alone does not establish a completed handoff.
+
 Code-level defects in this repo, one entry per incident. Not domain doctrine (that lives in `docs/AUDIT-SPEC.md`
 and `docs/ads-research/`) — this is what broke in the code, how it was caught, and what fixes it. Report copy in
 this file is user-facing Romanian by design; where quoted below it is TRANSLATED, with the exact source location

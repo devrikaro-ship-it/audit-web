@@ -38,3 +38,11 @@ Delivery run: `.superpowers/sdd/2026-09-07-launch-english/delivery/`.
 Root checkpoint: `01a07b70-49c2-7040-94d4-cd5333cab54b`.
 Baseline application revision: `4b4dfc758137d49ee5e171aa467fd5ce3570489d`.
 Baseline local documentation revision: `cf6b871` plus this session's pending product clarification documents.
+
+## Point-one local acceptance — 2026-09-08
+
+Public entry, legal pages, document language and shared OAuth disclosures passed independent code review and real local verification at `2b0c613a40bf6b4576fe65e82d1143b710e40652`. The four public pages returned HTTP 200 with English copy. Privacy revocation instructions preserve visible spacing. Invalid report access returned 404, invalid OAuth state returned a safe 307 without an authenticated session, and a missing route returned 404. The contract ledger records point one as passed.
+
+Evidence is under `.superpowers/sdd/2026-09-07-launch-english/point-1-verification-public/` and `point-1-verification-access/`; the exact-candidate browser receipt is `root-browser-2b0c613.md` in the same run. Two incomplete whole-point verifier attempts were followed by finite public-page and access-refusal verification tasks. Their incomplete attempts are not acceptance evidence.
+
+Points two through six remain pending. Production has not changed. The next point translates connection/account/financial UI and carries the selected account currency into the form, whose existing display currently hardcodes RON. Formulas and submitted numeric values remain unchanged.
