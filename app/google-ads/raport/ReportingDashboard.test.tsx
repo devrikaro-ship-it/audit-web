@@ -146,11 +146,12 @@ it("renders the approved comparison rows, columns, measured values, and unavaila
   ]);
 
   const selectedRow = within(table).getAllByRole("row")[1];
-  expect(selectedRow.textContent).toContain("500");
-  expect(selectedRow.textContent).toContain("1,500");
+  expect(selectedRow.textContent).toContain("€500");
+  expect(selectedRow.textContent).toContain("€1,500");
   expect(selectedRow.textContent).toContain("5");
   expect(selectedRow.textContent).toContain("Loss");
-  expect(selectedRow.textContent).toContain("200");
+  expect(selectedRow.textContent).toContain("€200");
+  expect(selectedRow.textContent).not.toContain("RON");
 
   const unavailableRow = within(table).getAllByRole("row")[3];
   expect(within(unavailableRow).getAllByText("Unavailable")).toHaveLength(7);

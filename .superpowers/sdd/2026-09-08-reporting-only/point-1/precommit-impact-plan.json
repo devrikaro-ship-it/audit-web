@@ -1,0 +1,244 @@
+{
+  "base_revision": "2a6116c4fc795c4b70c09db9276a07d1500311c5",
+  "changes": [
+    {
+      "category": "frontend",
+      "checks": [
+        "report_ui",
+        "snapshot_update"
+      ],
+      "path": "app/google-ads/raport/CatalogPePerformanta.test.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "report_ui",
+        "snapshot_update"
+      ],
+      "path": "app/google-ads/raport/CatalogPePerformanta.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "report_ui",
+        "snapshot_update"
+      ],
+      "path": "app/google-ads/raport/ProfitabilitySimulator.test.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "report_ui",
+        "snapshot_update"
+      ],
+      "path": "app/google-ads/raport/ProfitabilitySimulator.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "report_ui",
+        "snapshot_update"
+      ],
+      "path": "app/google-ads/raport/ReportingDashboard.test.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "report_ui",
+        "snapshot_update"
+      ],
+      "path": "app/google-ads/raport/ReportingDashboard.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "report_ui",
+        "snapshot_update"
+      ],
+      "path": "app/google-ads/raport/page.test.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "report_ui",
+        "snapshot_update"
+      ],
+      "path": "app/google-ads/raport/page.tsx",
+      "risk": "fast",
+      "rule_id": "report_surface",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "lib/gads-demo.ts",
+      "risk": "fast",
+      "rule_id": "verified_analytics_prerequisite",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "lib/gads-findings.ts",
+      "risk": "fast",
+      "rule_id": "verified_analytics_prerequisite",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "lib/gads-intake.ts",
+      "risk": "fast",
+      "rule_id": "verified_analytics_prerequisite",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "lib/gads-pmax.ts",
+      "risk": "fast",
+      "rule_id": "verified_analytics_prerequisite",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "report_metrics",
+        "report_ui"
+      ],
+      "path": "lib/gads-report-metrics.ts",
+      "risk": "fast",
+      "rule_id": "report_metrics",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "lib/gads-search.ts",
+      "risk": "fast",
+      "rule_id": "verified_analytics_prerequisite",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "lib/gads-shopping.ts",
+      "risk": "fast",
+      "rule_id": "verified_analytics_prerequisite",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "lib/gads-structure.ts",
+      "risk": "fast",
+      "rule_id": "verified_analytics_prerequisite",
+      "status": "M"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": "lib/gads-tracking.ts",
+      "risk": "fast",
+      "rule_id": "verified_analytics_prerequisite",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-report-metrics.test.ts"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 2,
+      "id": "report_metrics",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/raport/CatalogPePerformanta.test.tsx",
+        "app/google-ads/raport/ProfitabilitySimulator.test.tsx",
+        "app/google-ads/raport/page.test.tsx",
+        "app/google-ads/raport/report-contract.test.tsx",
+        "app/google-ads/raport/read-disclosure.test.tsx",
+        "app/public-access-boundary.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "report_ui",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/page.test.tsx",
+        "app/public-access-boundary.test.tsx",
+        "--update"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "snapshot_update",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/point-1/checks.json",
+  "declaration_sha256": "a35f26a2c5da268215102980bba70172096acfc6d82fac04e82710c54a69be9b",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "3e228c4805299fa531afb76c70fb0f9c34029de1c996f7ca15355b0ab963c014",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "d0e5b746731513b8400aad0fcf5f38b3cb3d2d94",
+  "risk": "fast",
+  "schema_version": 1
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "report_ui": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/raport/CatalogPePerformanta.test.tsx",
+        "app/google-ads/raport/ProfitabilitySimulator.test.tsx",
+        "app/google-ads/raport/page.test.tsx",
+        "app/google-ads/raport/report-contract.test.tsx",
+        "app/google-ads/raport/read-disclosure.test.tsx",
+        "app/public-access-boundary.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "report_metrics": {
+      "profile": "targeted_tests",
+      "command": ["npx", "vitest", "run", "lib/gads-report-metrics.test.ts"],
+      "cwd": ".",
+      "estimated_minutes": 2
+    },
+    "snapshot_update": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/page.test.tsx",
+        "app/public-access-boundary.test.tsx",
+        "--update"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    }
+  },
+  "rules": [
+    {
+      "id": "report_surface",
+      "patterns": [
+        "app/google-ads/raport/**",
+        "app/public-access-boundary.test.tsx",
+        "app/__snapshots__/public-access-boundary.test.tsx.snap"
+      ],
+      "statuses": ["A", "M"],
+      "category": "frontend",
+      "risk": "fast",
+      "checks": ["report_ui", "snapshot_update"]
+    },
+    {
+      "id": "report_metrics",
+      "patterns": ["lib/gads-report-metrics.ts", "lib/gads-report-metrics.test.ts"],
+      "statuses": ["A", "M"],
+      "category": "runtime",
+      "risk": "fast",
+      "checks": ["report_metrics", "report_ui"]
+    },
+    {
+      "id": "point_artifacts",
+      "patterns": [
+        ".superpowers/sdd/2026-09-08-reporting-only/point-1/**",
+        "docs/testing/**",
+        "docs/dev/mistakes.md",
+        "docs/dev/REPORTING-ONLY-SCOPE-2026-09-08.md"
+      ],
+      "statuses": ["A", "M"],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": [],
+      "allow_no_checks": true
+    },
+    {
+      "id": "verified_analytics_prerequisite",
+      "patterns": [
+        "lib/gads-demo.ts",
+        "lib/gads-findings.ts",
+        "lib/gads-intake.ts",
+        "lib/gads-pmax.ts",
+        "lib/gads-search.ts",
+        "lib/gads-shopping.ts",
+        "lib/gads-structure.ts",
+        "lib/gads-tracking.ts"
+      ],
+      "statuses": ["A", "M"],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": [],
+      "allow_no_checks": true
+    }
+  ]
+}

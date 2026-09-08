@@ -21,7 +21,7 @@ exports[`public Google Ads access boundary > matches every emitted metadata obje
 title="Privacy Policy — Audit Devrika""
 `;
 
-exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:report 1`] = `"title="Raportul tau · Audit Google Ads Devrika""`;
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:report 1`] = `"title="Your report · Devrika Google Ads Audit""`;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:simulator 1`] = `"title="Ce ar insemna cu Devrika · Audit Google Ads Devrika""`;
 

@@ -197,11 +197,11 @@ describe("Google Ads V2 report view model", () => {
     });
   });
 
-  it("owns the customer-facing Romanian copy with correct diacritics", () => {
+  it("owns the customer-facing English copy", () => {
     const report = buildGoogleAdsReportV2(approvedInput());
 
     expect(report.accountHeadline).toBe(
-      "Contul este sub pragul minim de profitabilitate în perioada selectată.",
+      "The account is below the minimum profitability threshold in the selected period.",
     );
     expect(report.groups.map(({ title, explanation, emptyState }) => ({
       title,
@@ -209,43 +209,43 @@ describe("Google Ads V2 report view model", () => {
       emptyState,
     }))).toEqual([
       {
-        title: "Produse care consumă buget",
-        explanation: "Aceste produse au cheltuială măsurată și un rezultat financiar sub pragul minim.",
-        emptyState: "Niciun produs valid nu consumă buget peste rezultatul permis de țintă.",
+        title: "Products consuming budget",
+        explanation: "These products have measured spend and a financial result below the minimum threshold.",
+        emptyState: "No valid product is consuming budget beyond the result allowed by the target.",
       },
       {
-        title: "Produse care nu au primit suficientă promovare",
-        explanation: "Aceste produse nu au vânzări și au mai puține clicuri decât media necesară unei vânzări.",
-        emptyState: "Niciun produs valid nu se află sub pragul de trafic necesar unei vânzări.",
+        title: "Products without enough promotion",
+        explanation: "These products have no sales and fewer clicks than the average needed for one sale.",
+        emptyState: "No valid product is below the traffic threshold needed for one sale.",
       },
       {
-        title: "Produse cu potențial",
-        explanation: "Aceste produse au vânzări și un ROAS cel puțin egal cu ținta.",
-        emptyState: "Niciun produs valid cu potențial nu este disponibil în perioada selectată.",
+        title: "Products with potential",
+        explanation: "These products have sales and ROAS at least equal to the target.",
+        emptyState: "No valid product with potential is available in the selected period.",
       },
       {
-        title: "Produse profitabile",
-        explanation: "Aceste produse au suficiente date și un rezultat financiar cel puțin egal cu zero.",
-        emptyState: "Niciun produs valid nu a depășit pragul minim de profitabilitate.",
+        title: "Profitable products",
+        explanation: "These products have enough data and a financial result at least equal to zero.",
+        emptyState: "No valid product exceeded the minimum profitability threshold.",
       },
     ]);
     expect(report.conclusions.map(({ title, explanation }) => ({ title, explanation }))).toEqual([
       {
-        title: "Pierdere măsurată pe produse",
-        explanation: "Suma pierderilor produselor valide sub ținta minimă ROAS.",
+        title: "Measured product loss",
+        explanation: "The sum of losses from valid products below the minimum ROAS target.",
       },
       {
-        title: "Volum de vânzări ratat",
-        explanation: "Simulare bazată pe bugetul produselor în pierdere și ROAS-ul ponderat al oportunităților.",
+        title: "Missed sales volume",
+        explanation: "Simulation based on loss-making product budget and the weighted ROAS of opportunities.",
       },
       {
-        title: "Produse fără suficientă promovare",
-        explanation: "Numărul produselor valide fără vânzări și sub media de trafic a contului.",
+        title: "Products without enough promotion",
+        explanation: "The number of valid products without sales and below the account's average traffic.",
       },
     ]);
     expect(
       report.groups.flatMap((group) => group.validRows)[0].classificationText,
-    ).toBe("Clasificare validă");
+    ).toBe("Valid classification");
   });
 
   it("uses the account population for clicks per sale and keeps exactly four exclusive groups", () => {
@@ -272,7 +272,7 @@ describe("Google Ads V2 report view model", () => {
 
     expect(opportunity.validRows.map((row) => row.productId)).toEqual(["opportunity"]);
     expect(opportunity.quarantinedRows).toMatchObject([
-      { productId: "contradictory-opportunity", classificationText: "Clasificare indisponibilă" },
+      { productId: "contradictory-opportunity", classificationText: "Classification unavailable" },
     ]);
     expect(loss.validRows.map((row) => row.productId)).toEqual([
       "loss-with-sales",
@@ -360,7 +360,7 @@ describe("Google Ads V2 report view model", () => {
     });
     expect(report.targets.minimumRoas.status).toBe("UNAVAILABLE");
     expect(report.targets.maximumCpa.status).toBe("UNAVAILABLE");
-    expect(report.accountHeadline).toContain("indisponibil");
+    expect(report.accountHeadline).toContain("unavailable");
     expect(report.classificationDiagnostics).toHaveLength(1);
   });
 });

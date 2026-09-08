@@ -230,3 +230,23 @@ strings and a witnessed non-RON negative control.
 
 **Class.** When provenance is part of a displayed value's meaning, a human-friendly formatter must not erase
 the provenance token. Preserve the authoritative identifier explicitly and treat its absence as unavailable.
+
+## 2026-09-08 — Reporting verification omitted the metric emitter and left a split language contract
+
+**Symptom.** The report metric emitter returned English account, classification, and unavailable-state copy,
+while three expectations in `lib/gads-report-metrics.test.ts` still asserted Romanian text. The previously
+reported UI verification remained green because its declared command did not execute the metric test file.
+
+**Cause.** The reporting surface and its metric emitter were verified as separate change fragments without one
+impact plan mapping the emitter to both the focused metric contract and the rendered report suite. That allowed
+production and test language contracts to diverge while each partial handoff appeared complete.
+
+**How to recognise it.** A reporting-language change has one green UI command but no explicit emitter check, or
+the change-impact plan maps a report metric module to only its unit test and not its consuming UI. Searching the
+focused expectations for the retired language exposes the split immediately.
+
+**Fix.** Map `lib/gads-report-metrics.ts` to both `report_metrics` and `report_ui`, repair the stale expectations,
+and require witnessed negative controls plus restored positive runs for both commands before handoff.
+
+**Class.** A cross-layer user-visible contract is complete only when the producer and every declared consumer
+share one impact plan. Separate green receipts do not prove the seam between them.

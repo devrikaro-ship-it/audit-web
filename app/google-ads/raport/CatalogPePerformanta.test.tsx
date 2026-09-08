@@ -41,6 +41,18 @@ function circleGeometry(svg: string): { drawn: number; remainder: number; offset
 }
 
 describe("catalog performance rings", () => {
+  it("renders English group guidance and the account currency", () => {
+    const html = renderSegment(segment([1, 2, 3, 4, 5]));
+
+    expect(html).toContain("The same products viewed three ways");
+    expect(html).toContain("Products");
+    expect(html).toContain("Budget used");
+    expect(html).toContain("Sales generated");
+    expect(html).toContain("€1 spent");
+    expect(html).toContain("€1 generated");
+    expect(html).not.toContain("RON");
+  });
+
   it("renders mixed arcs with a two-pixel gap and cumulative raw-length offsets", () => {
     const geometry = circleGeometry(firstRing(renderSegment(segment([1, 2, 3, 4, 5]))));
     const circumference = 2 * Math.PI * 52;

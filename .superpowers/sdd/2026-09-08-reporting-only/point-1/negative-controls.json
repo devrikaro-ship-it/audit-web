@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "task_id": "reporting-only-point1-20260908",
+  "status": "PASS",
+  "summary": "All six focused mutations caused the expected bounded failure and every restored implementation passed its declared positive control.",
+  "controls": [
+    {
+      "id": "metric-copy-contract",
+      "surface": "lib/gads-report-metrics.test.ts",
+      "mutation": "Run the inherited test contract against the already-English metric emitter before repairing its stale Romanian expectations.",
+      "expected_failure": "The focused metric suite rejects the stale copy contract.",
+      "observed_failure": "Three assertions failed: the account headline, unavailable classification, and unavailable account fallback still expected Romanian copy; 9 tests passed.",
+      "restored_positive": "The repaired focused metric suite passed 12/12.",
+      "status": "PASS"
+    },
+    {
+      "id": "dashboard-account-currency",
+      "surface": "app/google-ads/raport/ReportingDashboard.test.tsx",
+      "mutation": "Force the dashboard money formatter to render RON instead of the report currency.",
+      "expected_failure": "The dashboard currency assertion and report snapshots reject the wrong unit.",
+      "observed_failure": "The bounded UI suite failed 6 tests, including the direct EUR row assertion and report snapshots showing RON instead of EUR; 91 tests passed.",
+      "restored_positive": "After restoring report.currencyCode, the bounded UI suite passed 97/97.",
+      "status": "PASS"
+    },
+    {
+      "id": "catalog-account-currency",
+      "surface": "app/google-ads/raport/CatalogPePerformanta.test.tsx",
+      "mutation": "Force the catalog money formatter to render RON instead of its currencyCode prop.",
+      "expected_failure": "The catalog's direct currency assertion and report snapshots reject the wrong unit.",
+      "observed_failure": "The bounded UI suite failed 5 tests, including the direct catalog assertion and report snapshots showing RON instead of EUR; 92 tests passed.",
+      "restored_positive": "After restoring currencyCode, the bounded UI suite passed 97/97.",
+      "status": "PASS"
+    },
+    {
+      "id": "profitability-account-currency",
+      "surface": "app/google-ads/raport/ProfitabilitySimulator.test.tsx",
+      "mutation": "Force the profitability simulator money formatter to render RON instead of its currencyCode prop.",
+      "expected_failure": "The simulator's direct money assertions reject the wrong unit.",
+      "observed_failure": "The bounded UI suite failed 4 simulator tests on visible EUR amounts while 93 tests passed.",
+      "restored_positive": "After restoring currencyCode, the bounded UI suite passed 97/97.",
+      "status": "PASS"
+    },
+    {
+      "id": "signed-snapshot-currency-transport",
+      "surface": "app/google-ads/raport/page.test.tsx",
+      "mutation": "Build the immediate V2 view from the stale session currency instead of the opened signed snapshot currency.",
+      "expected_failure": "The signed snapshot transport test rejects stale session currency.",
+      "observed_failure": "Exactly 1 test failed because the report rendered EUR instead of the GBP value carried by the opened signed snapshot; 96 tests passed.",
+      "restored_positive": "After restoring openedReportSnapshot.reportV2.currencyCode, the bounded UI suite passed 97/97.",
+      "status": "PASS"
+    },
+    {
+      "id": "public-report-metadata-snapshot",
+      "surface": "app/public-access-boundary.test.tsx",
+      "mutation": "Replace the English report metadata title with a Romanian title.",
+      "expected_failure": "The independent public metadata snapshot rejects the visible language regression.",
+      "observed_failure": "Exactly 1 public boundary test failed on metadata:report while 96 tests passed.",
+      "restored_positive": "After restoring the English title, the bounded UI suite passed 97/97.",
+      "status": "PASS"
+    }
+  ]
+}

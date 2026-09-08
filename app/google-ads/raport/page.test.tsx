@@ -356,7 +356,8 @@ describe("pagina de raport, randata", () => {
       "period-comparison",
       "product-actions",
     ]);
-    expect(h).toContain("EUR");
+    expect(h).toContain("€");
+    expect(h).not.toContain("RON");
     expect(h).toContain("August 28, 2025 – August 27, 2026");
     expect(lossConclusion?.[1]).toBe(lossGroup?.[1]);
     expect(h).not.toContain('data-legacy-permanent-labels');
@@ -409,7 +410,8 @@ describe("pagina de raport, randata", () => {
     expect(stored?.breakEvenCpa).toBe(777);
     expect(h).toContain("Signed snapshot product");
     expect(h).toContain("July 1–31, 2026");
-    expect(h).toContain("GBP");
+    expect(h).toContain("£");
+    expect(h).not.toContain("€1,111");
     expect(h).toContain('data-testid="conclusion-MEASURED_PRODUCT_LOSS" data-raw-value="1401"');
     expect(h).toContain("10×");
     expect(h).toContain("777");
