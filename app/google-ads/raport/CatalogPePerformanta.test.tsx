@@ -20,7 +20,7 @@ function segment(values: [number, number, number, number, number]): Segmentare {
 
 function renderSegment(segmentare: Segmentare): string {
   return renderToStaticMarkup(
-    <CatalogPePerformanta harti={[{ eticheta: "365 days", segmentare }]} />
+    <CatalogPePerformanta harti={[{ eticheta: "365 days", segmentare }]} currencyCode="EUR" />
   );
 }
 

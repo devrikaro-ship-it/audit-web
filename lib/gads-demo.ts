@@ -136,17 +136,17 @@ export function demoData(): DemoData {
     probleme: [
       {
         cod: "bidding-fara-tinta",
-        titlu: "O campanie liciteaza fara nicio tinta de randament",
+        titlu: "One campaign bids without a return target",
         ron: 28800,
-        detaliu: "PMax — Catalog complet maximizeaza valoarea fara tROAS setat. Google nu stie sub ce prag nu merita sa liciteze, deci imparte bugetul si catre produse care nu se intorc.",
+        detaliu: "PMax — Catalog complet maximizes conversion value without a tROAS target. Google has no minimum-return boundary, so it can also allocate budget to products that do not earn it back.",
         grad: "costa",
         exemple: ["PMax — Catalog complet"],
       },
       {
         cod: "brand-in-search",
-        titlu: "Campania de brand plateste clicuri care veneau oricum",
+        titlu: "The brand campaign pays for clicks that may have arrived anyway",
         ron: 9600,
-        detaliu: "Search — Brand liciteaza pe numele magazinului, pe potrivire larga. O parte din clicurile platite sunt oameni care te cautau deja pe nume.",
+        detaliu: "Search — Brand bids broadly on the store name. Some paid clicks may come from people who were already searching for the brand by name.",
         grad: "reglaj",
         exemple: ["Search — Brand"],
       },

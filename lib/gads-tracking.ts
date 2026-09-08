@@ -47,15 +47,15 @@ export function assessTracking(conversions: ConversionAction[]): TrackingState {
   const reasons: string[] = [];
   if (junkPrimary.length) {
     reasons.push(
-      `${junkPrimary.length} actiuni marcate ca principale nu sunt vanzari: ` +
+      `${junkPrimary.length} primary actions are not sales: ` +
         junkPrimary.map((c) => `"${c.name}"`).join(", ")
     );
   }
   if (!hasSalePrimary) {
-    reasons.push("nicio vanzare (Purchase) nu e marcata ca actiune principala");
+    reasons.push("no Purchase conversion is marked as a primary action");
   }
   if (!conversions.length) {
-    reasons.push("contul nu are nicio conversie activa configurata");
+    reasons.push("the account has no active conversion actions configured");
   }
 
   return { ok: reasons.length === 0, conversions, junkPrimary, hasSalePrimary, reasons };
@@ -78,7 +78,7 @@ export async function fetchTracking(
 
   return assessTracking(
     rows.map((r) => ({
-      name: r.conversionAction?.name ?? "(fara nume)",
+      name: r.conversionAction?.name ?? "(unnamed)",
       category: r.conversionAction?.category ?? "UNKNOWN",
       // Google omite campurile false din raspunsul REST, deci lipsa === false.
       primary: r.conversionAction?.primaryForGoal === true,

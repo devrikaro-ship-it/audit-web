@@ -49,7 +49,9 @@ export type StructuraAudit = {
   probleme: ProblemaStructura[];
 };
 
-const lei = (n: number) => `${Math.round(n).toLocaleString("ro-RO")} RON`;
+const money = (n: number, currencyCode?: string) => currencyCode
+  ? new Intl.NumberFormat("en-US", { style: "currency", currency: currencyCode, maximumFractionDigits: 0 }).format(Math.round(n))
+  : `${Math.round(n).toLocaleString("en-US")} currency units`;
 const esteBrand = (nume: string) => /\[BP\]|brand/i.test(nume);
 
 /**
@@ -60,7 +62,7 @@ const esteBrand = (nume: string) => /\[BP\]|brand/i.test(nume);
  */
 const PRAG_COTA = 0.05;
 
-export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
+export function analizeazaStructura(campanii: Campanie[], currencyCode?: string): StructuraAudit {
   const live = campanii.filter((c) => c.status === "ENABLED");
   const cheltuialaTotala = campanii.reduce((s, c) => s + c.cost, 0);
   const valoareTotala = campanii.reduce((s, c) => s + c.valoare, 0);
@@ -78,13 +80,13 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
       probleme: [
         {
           cod: "cont-oprit",
-          titlu: "Contul nu a cheltuit nimic in ultimele 30 de zile",
+          titlu: "The account spent nothing over the last 30 days",
           ron: 0,
           grad: "critic",
           detaliu:
-            `Sunt ${campanii.length} campanii in cont, dar niciuna nu a livrat. ` +
-            `Pana nu porneste ceva, nu avem ce audita: orice concluzie despre structura sau ` +
-            `despre produse ar fi despre trecut, nu despre ce se intampla acum.`,
+            `The account contains ${campanii.length} campaigns, but none delivered. Until a campaign ` +
+            `starts, there is no current structure or product performance to assess; any conclusion ` +
+            `would describe the past rather than what is happening now.`,
         },
       ],
     };
@@ -100,14 +102,14 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
     const cota = Math.round((bani / cheltuialaTotala) * 100);
     probleme.push({
       cod: "bidding-fara-tinta",
-      titlu: `${faraTinta.length === 1 ? "O campanie liciteaza" : `${faraTinta.length} campanii liciteaza`} fara nicio tinta de randament`,
+      titlu: `${faraTinta.length === 1 ? "One campaign bids" : `${faraTinta.length} campaigns bid`} without a return target`,
       ron: bani,
       grad: "costa",
       detaliu:
-        `${faraTinta.map((c) => `"${c.nume}"`).join(", ")} ${faraTinta.length === 1 ? "e setata" : "sunt setate"} ` +
-        `sa maximizeze valoarea, dar fara sa i se spuna cat trebuie sa aduca la fiecare leu. ` +
-        `Practic cumpara volum fara frana: ia si clicurile scumpe care nu se acopera. ` +
-        `Prin ${faraTinta.length === 1 ? "ea" : "ele"} au trecut ${lei(bani)}, adica ${cota}% din bugetul contului.`,
+        `${faraTinta.map((c) => `"${c.nume}"`).join(", ")} ${faraTinta.length === 1 ? "is" : "are"} ` +
+        `set to maximize conversion value without a minimum return. It buys volume without a ` +
+        `profitability guardrail, including expensive clicks that do not break even. ` +
+        `${money(bani, currencyCode)} passed through ${faraTinta.length === 1 ? "this campaign" : "these campaigns"}, or ${cota}% of account spend.`,
     });
   }
 
@@ -122,23 +124,22 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
   if (!brand.length) {
     probleme.push({
       cod: "brand-lipsa",
-      titlu: "Nu ai nicio campanie care sa-ti apere numele",
+      titlu: "No campaign protects your brand name",
       ron: 0,
       grad: "costa",
       detaliu:
-        "Cand cineva cauta direct numele magazinului tau, e cel mai ieftin si cel mai sigur " +
-        "client pe care il poti avea. Fara o campanie dedicata, concurentii pot licita pe numele " +
-        "tau si iti iau clientul din fata usii.",
+        "People searching directly for your store name are usually the cheapest and most certain customers. " +
+        "Without a dedicated campaign, competitors can bid on that name and intercept those customers.",
     });
   } else if (!brandLive.length || brandCost === 0) {
     probleme.push({
       cod: "brand-inactiv",
-      titlu: "Campania pe numele tau exista, dar nu ruleaza",
+      titlu: "Your brand campaign exists but is not delivering",
       ron: 0,
       grad: "costa",
       detaliu:
-        `"${brand[0].nume}" e ${brandLive.length ? "pornita, dar nu a cheltuit nimic" : "oprita"}. ` +
-        `O campanie de brand care nu ruleaza nu apara nimic — e ca o alarma scoasa din priza.`,
+        `"${brand[0].nume}" is ${brandLive.length ? "enabled but has spent nothing" : "paused"}. ` +
+        `A brand campaign that does not deliver provides no protection.`,
     });
     // Pragul de ROAS se aplica DOAR pe o campanie care chiar cheltuie. Sub el, "ROAS 3" e
     // rezultatul a doua clicuri, nu un simptom — Granox avea 19 RON pe brand si iesea acuzat
@@ -146,13 +147,13 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
   } else if (brandCota > 10 || (brandCost >= prag && brandRoas < 10)) {
     probleme.push({
       cod: "brand-scurgere",
-      titlu: "Campania de brand aduna trafic care nu e pe numele tau",
+      titlu: "The brand campaign is collecting non-brand traffic",
       ron: brandCost,
       grad: "reglaj",
       detaliu:
-        `Consuma ${brandCota.toFixed(1)}% din bugetul contului si se intoarce de ${brandRoas.toFixed(1)} ori. ` +
-        `O campanie de brand sanatoasa sta la 1–5% din buget si aduce de peste 10 ori. ` +
-        `Cand depaseste, inseamna ca prinde cautari generice, nu pe cele cu numele tau.`,
+        `It consumes ${brandCota.toFixed(1)}% of account spend and returns ${brandRoas.toFixed(1)} times that spend. ` +
+        `A healthy brand campaign normally uses 1–5% of the budget and returns more than 10 times. ` +
+        `Exceeding those bounds suggests it is collecting generic searches rather than only your name.`,
     });
   }
 
@@ -165,13 +166,13 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
     const bani = baniInterzise;
     probleme.push({
       cod: "campanii-interzise",
-      titlu: `${interzise.length} campanii de tip care arde buget fara sa vanda`,
+      titlu: `${interzise.length} campaigns use formats that consume budget without capturing purchase intent`,
       ron: bani,
       grad: "costa",
       detaliu:
-        `${interzise.map((c) => `"${c.nume}"`).join(", ")} — campanii de afisare sau setate sa ` +
-        `cheltuie tot bugetul (nu sa aduca vanzari). Pe un magazin, banii astia stau mai bine in ` +
-        `campaniile care prind oameni care chiar cauta produsul.`,
+        `${interzise.map((c) => `"${c.nume}"`).join(", ")} use display formats or are configured ` +
+        `to spend the full budget rather than drive sales. For a store, that budget is better placed ` +
+        `in campaigns that reach people actively searching for the product.`,
     });
   }
 
@@ -181,15 +182,15 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
     const motiveClare = [...new Set(limitate.flatMap((c) => c.motive))].filter((m) => m && m !== "UNKNOWN");
     probleme.push({
       cod: "livrare-limitata",
-      titlu: `${limitate.length} ${limitate.length === 1 ? "campanie e franata" : "campanii sunt franate"} de Google`,
+      titlu: `${limitate.length} ${limitate.length === 1 ? "campaign is" : "campaigns are"} limited by Google`,
       ron: 0,
       grad: "reglaj",
       detaliu:
-        `${limitate.map((c) => `"${c.nume}"`).join(", ")} ruleaza, dar Google nu le arata cat ar putea. ` +
+        `${limitate.map((c) => `"${c.nume}"`).join(", ")} ${limitate.length === 1 ? "is" : "are"} enabled, but Google limits delivery. ` +
         (motiveClare.length
-          ? `Motivele raportate: ${motiveClare.map(traduMotiv).join("; ")}. `
+          ? `Reported reasons: ${motiveClare.map(traduMotiv).join("; ")}. `
           : "") +
-        `Asta nu apare in niciun raport de performanta — campania pare doar "mai slaba".`,
+        `This is not visible in a performance report; the campaign simply looks weaker.`,
     });
   }
 
@@ -201,12 +202,12 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
     if (bune.length) {
       probleme.push({
         cod: "castigatori-opriti",
-        titlu: `${bune.length} campanii oprite se descurcau mai bine decat media contului`,
+        titlu: `${bune.length} paused campaigns performed better than the account average`,
         ron: 0,
         grad: "reglaj",
         detaliu:
           `${bune.slice(0, 3).map((c) => `"${c.nume}" (${(c.valoare / c.cost).toFixed(1)}x)`).join(", ")} — ` +
-          `stau oprite in timp ce alte campanii cheltuie sub randamentul lor.`,
+          `remain paused while other campaigns spend at a lower return.`,
       });
     }
   }
@@ -219,14 +220,14 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
     if (live.length > maxCampanii) {
       probleme.push({
         cod: "prea-multe-campanii",
-        titlu: `Bugetul e imprastiat pe ${live.length} campanii`,
+        titlu: `The budget is spread across ${live.length} campaigns`,
         ron: 0,
         grad: "reglaj",
         detaliu:
-          `Google are nevoie de aproximativ 30 de vanzari pe luna intr-o campanie ca sa invete pe ` +
-          `cine sa liciteze. Cu ${lei(cheltuialaTotala)} si un cost mediu de ${lei(cpa)} pe vanzare, ` +
-          `bugetul tau poate hrani ${maxCampanii} ${maxCampanii === 1 ? "campanie" : "campanii"} ca lumea, ` +
-          `nu ${live.length}. Restul raman in invatare permanenta.`,
+          `Google needs about 30 sales per month in a campaign to learn whom to bid for. With ` +
+          `${money(cheltuialaTotala, currencyCode)} in spend and an average ${money(cpa, currencyCode)} cost per sale, ` +
+          `this budget can properly support ${maxCampanii} ${maxCampanii === 1 ? "campaign" : "campaigns"}, ` +
+          `not ${live.length}. The rest remain in a permanent learning state.`,
       });
     }
   }
@@ -241,18 +242,19 @@ export function analizeazaStructura(campanii: Campanie[]): StructuraAudit {
 
 function traduMotiv(m: string): string {
   const t: Record<string, string> = {
-    BUDGET_CONSTRAINED: "bugetul zilnic se termina prea repede",
-    BIDDING_STRATEGY_CONSTRAINED: "tinta de randament e prea sus pentru cat poate contul",
-    BIDDING_STRATEGY_LEARNING: "inca invata (normal in primele saptamani)",
-    HAS_ASSET_GROUPS_LIMITED_BY_POLICY: "materiale respinse de politicile Google",
-    SEARCH_VOLUME_LIMITED: "prea putine cautari pe ce ai ales",
+    BUDGET_CONSTRAINED: "the daily budget runs out too early",
+    BIDDING_STRATEGY_CONSTRAINED: "the return target is above what the account can support",
+    BIDDING_STRATEGY_LEARNING: "the strategy is still learning (normal in the first weeks)",
+    HAS_ASSET_GROUPS_LIMITED_BY_POLICY: "assets were rejected under Google policies",
+    SEARCH_VOLUME_LIMITED: "the selected scope has too little search volume",
   };
   return t[m] ?? m.toLowerCase().replace(/_/g, " ");
 }
 
 export async function fetchStructura(
   customerId: string,
-  auth: GoogleAdsAuth
+  auth: GoogleAdsAuth,
+  currencyCode?: string,
 ): Promise<StructuraAudit> {
   type Row = {
     campaign?: {
@@ -275,7 +277,7 @@ export async function fetchStructura(
   )) as Row[];
 
   const campanii: Campanie[] = rows.map((r) => ({
-    nume: r.campaign?.name ?? "(fara nume)",
+    nume: r.campaign?.name ?? "(unnamed)",
     status: r.campaign?.status ?? "UNKNOWN",
     stare: r.campaign?.primaryStatus ?? "UNKNOWN",
     motive: r.campaign?.primaryStatusReasons ?? [],
@@ -287,5 +289,5 @@ export async function fetchStructura(
     valoare: Number(r.metrics?.conversionsValue ?? 0),
   }));
 
-  return analizeazaStructura(campanii);
+  return analizeazaStructura(campanii, currencyCode);
 }

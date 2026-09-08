@@ -394,7 +394,7 @@ function productRow(
     ...product,
     groupKey,
     classificationStatus: reason === null ? "VALID" : "QUARANTINED",
-    classificationText: reason === null ? "Clasificare validă" : "Clasificare indisponibilă",
+    classificationText: reason === null ? "Valid classification" : "Classification unavailable",
     roas: result.roas === null ? unavailable("ROAS is unavailable when spend is zero") : available(result.roas),
     cpa: result.cpa === null ? unavailable("CPA is unavailable when the number of sales is zero") : available(result.cpa),
     clicksPerSale: clicksPerSale === null
@@ -412,24 +412,24 @@ function productRow(
 
 const GROUP_CONTENT: Record<V2ProductLabel, Pick<GoogleAdsReportV2Group, "title" | "explanation" | "emptyState">> = {
   LOSS_MAKER: {
-    title: "Produse care consumă buget",
-    explanation: "Aceste produse au cheltuială măsurată și un rezultat financiar sub pragul minim.",
-    emptyState: "Niciun produs valid nu consumă buget peste rezultatul permis de țintă.",
+    title: "Products consuming budget",
+    explanation: "These products have measured spend and a financial result below the minimum threshold.",
+    emptyState: "No valid product is consuming budget beyond the result allowed by the target.",
   },
   NOT_PROMOTED: {
-    title: "Produse care nu au primit suficientă promovare",
-    explanation: "Aceste produse nu au vânzări și au mai puține clicuri decât media necesară unei vânzări.",
-    emptyState: "Niciun produs valid nu se află sub pragul de trafic necesar unei vânzări.",
+    title: "Products without enough promotion",
+    explanation: "These products have no sales and fewer clicks than the average needed for one sale.",
+    emptyState: "No valid product is below the traffic threshold needed for one sale.",
   },
   UNDERPROMOTED_POTENTIAL: {
-    title: "Produse cu potențial",
-    explanation: "Aceste produse au vânzări și un ROAS cel puțin egal cu ținta.",
-    emptyState: "Niciun produs valid cu potențial nu este disponibil în perioada selectată.",
+    title: "Products with potential",
+    explanation: "These products have sales and ROAS at least equal to the target.",
+    emptyState: "No valid product with potential is available in the selected period.",
   },
   PERFORMER: {
-    title: "Produse profitabile",
-    explanation: "Aceste produse au suficiente date și un rezultat financiar cel puțin egal cu zero.",
-    emptyState: "Niciun produs valid nu a depășit pragul minim de profitabilitate.",
+    title: "Profitable products",
+    explanation: "These products have enough data and a financial result at least equal to zero.",
+    emptyState: "No valid product exceeded the minimum profitability threshold.",
   },
 };
 
@@ -472,15 +472,15 @@ function groupTotals(
 
 function headline(selected: ReportPeriodRow): string {
   if (selected.status === "UNAVAILABLE" || selected.profitOrLoss.status === "UNAVAILABLE") {
-    return "Rezultatul de profitabilitate este indisponibil fără ținta minimă ROAS.";
+    return "The profitability result is unavailable without a minimum ROAS target.";
   }
   if (selected.profitOrLoss.value.outcome === "LOSS") {
-    return "Contul este sub pragul minim de profitabilitate în perioada selectată.";
+    return "The account is below the minimum profitability threshold in the selected period.";
   }
   if (selected.profitOrLoss.value.outcome === "PROFIT") {
-    return "Contul este peste pragul minim de profitabilitate în perioada selectată.";
+    return "The account is above the minimum profitability threshold in the selected period.";
   }
-  return "Contul este exact la pragul minim de profitabilitate în perioada selectată.";
+  return "The account is exactly at the minimum profitability threshold in the selected period.";
 }
 
 export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAdsReportV2ViewModel {
@@ -558,8 +558,8 @@ export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAds
     {
       key: "MEASURED_PRODUCT_LOSS",
       groupKey: "LOSS_MAKER",
-      title: "Pierdere măsurată pe produse",
-      explanation: "Suma pierderilor produselor valide sub ținta minimă ROAS.",
+      title: "Measured product loss",
+      explanation: "The sum of losses from valid products below the minimum ROAS target.",
       metric: lossGroup.totals.productLoss,
       evidenceLabel: lossGroup.totals.productLoss.status === "AVAILABLE" ? "MEASURED" : "UNAVAILABLE",
       totalScope: input.productPopulationStatus,
@@ -567,8 +567,8 @@ export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAds
     {
       key: "SIMULATED_MISSED_SALES",
       groupKey: "UNDERPROMOTED_POTENTIAL",
-      title: "Volum de vânzări ratat",
-      explanation: "Simulare bazată pe bugetul produselor în pierdere și ROAS-ul ponderat al oportunităților.",
+      title: "Missed sales volume",
+      explanation: "Simulation based on loss-making product budget and the weighted ROAS of opportunities.",
       metric: opportunityGroup.totals.missedSalesVolume,
       evidenceLabel: opportunityGroup.totals.missedSalesVolume.status === "AVAILABLE" ? "SIMULATED" : "UNAVAILABLE",
       totalScope: input.productPopulationStatus,
@@ -576,8 +576,8 @@ export function buildGoogleAdsReportV2(input: GoogleAdsReportV2Input): GoogleAds
     {
       key: "NOT_PROMOTED_PRODUCTS",
       groupKey: "NOT_PROMOTED",
-      title: "Produse fără suficientă promovare",
-      explanation: "Numărul produselor valide fără vânzări și sub media de trafic a contului.",
+      title: "Products without enough promotion",
+      explanation: "The number of valid products without sales and below the account's average traffic.",
       metric: notPromotedGroup.totals.productCount,
       evidenceLabel: "MEASURED",
       totalScope: input.productPopulationStatus,

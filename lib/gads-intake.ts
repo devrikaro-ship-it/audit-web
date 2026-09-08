@@ -33,9 +33,9 @@ export const AUDIT_WINDOW_LABEL = formatAuditWindowLabel(WINDOW_DAYS);
  * the 365-day window serves the audit.
  */
 export const FERESTRE = [
-  { zile: 30, eticheta: "30 de zile" },
-  { zile: 90, eticheta: "3 luni" },
-  { zile: 180, eticheta: "6 luni" },
+  { zile: 30, eticheta: "30 days" },
+  { zile: 90, eticheta: "3 months" },
+  { zile: 180, eticheta: "6 months" },
   { zile: WINDOW_DAYS, eticheta: AUDIT_WINDOW_LABEL },
 ] as const;
 

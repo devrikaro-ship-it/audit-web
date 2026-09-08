@@ -64,23 +64,28 @@ import { stagePendingReportSnapshot } from "@/lib/gads-pending-report";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export const metadata = { title: "Raportul tau · Audit Google Ads Devrika" };
+export const metadata = { title: "Your report · Devrika Google Ads Audit" };
 
 const TIER_STYLE: Record<Tier, { bg: string; fg: string; label: string }> = {
-  MASURAT: { bg: C.greenBg, fg: C.green, label: "MASURAT" },
-  ESTIMARE: { bg: C.yellowBg, fg: C.yellow, label: "ESTIMARE" },
-  SIMULARE: { bg: "#eef0ff", fg: C.indigo, label: "SIMULARE" },
+  MASURAT: { bg: C.greenBg, fg: C.green, label: "MEASURED" },
+  ESTIMARE: { bg: C.yellowBg, fg: C.yellow, label: "ESTIMATE" },
+  SIMULARE: { bg: "#eef0ff", fg: C.indigo, label: "SIMULATION" },
 };
 
 // Culoarea de severitate e separata de accentul de brand: rosu/portocaliu/albastru inseamna
 // "cat de grav", nu "Devrika". Eticheta scrisa dubleaza culoarea, ca sa nu depinda de ea.
 const GRAD_STYLE = {
-  critic: { bg: C.redBg, fg: C.red, label: "opreste vanzari" },
-  costa: { bg: C.orangeBg, fg: C.orange, label: "costa bani" },
-  reglaj: { bg: "#eef0ff", fg: C.indigo, label: "de reglat" },
+  critic: { bg: C.redBg, fg: C.red, label: "blocks sales" },
+  costa: { bg: C.orangeBg, fg: C.orange, label: "costs money" },
+  reglaj: { bg: "#eef0ff", fg: C.indigo, label: "needs adjustment" },
 } as const;
 
-const lei = (n: number) => `${n.toLocaleString("ro-RO")} RON`;
+const money = (n: number, currencyCode: string) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currencyCode,
+    maximumFractionDigits: 0,
+  }).format(n);
 
 type SurseAudit = {
   products: Product[];
@@ -107,7 +112,7 @@ const TRACKING_NECUNOSCUT: TrackingState = {
   conversions: [],
   junkPrimary: [],
   hasSalePrimary: false,
-  reasons: ["nu am putut citi setarile de masurare din cont"],
+  reasons: ["the account measurement settings could not be read"],
 };
 
 /**
@@ -184,7 +189,7 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
       fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT),
     ),
     runGoogleAdsRead("fetchStructura", () =>
-      fetchStructura(customerId, auth).catch(() => undefined),
+      fetchStructura(customerId, auth, session.currencyCode).catch(() => undefined),
     ),
     runGoogleAdsRead("fetchKeywordData", () =>
       fetchKeywordData(customerId, auth).catch(() => undefined),
@@ -317,7 +322,7 @@ export default async function Raport() {
   const pmax =
     s.brutPmax && structura
       ? runReportStep("analizeazaPmax", () =>
-          analizeazaPmax(s.brutPmax!, structura.campanii),
+          analizeazaPmax(s.brutPmax!, structura.campanii, session.currencyCode),
         )
       : undefined;
   const shopping = s.brutShop
@@ -350,6 +355,7 @@ export default async function Raport() {
       minRoas,
       catalogComplete,
       { structura, cuvinte, pmax, shopping, cautari, an },
+      session.currencyCode,
     ),
   );
 
@@ -569,8 +575,7 @@ export default async function Raport() {
             className="mb-4 rounded-xl px-5 py-3.5 text-center text-[13.5px] font-bold"
             style={{ background: C.yellowBg, color: C.yellow }}
           >
-            MOD DEMO — cifrele de mai jos sunt simulate, nu vin din niciun cont
-            real
+            DEMO MODE — the figures below are simulated and do not come from a real account
           </div>
         </ReportSurface>
 
@@ -589,13 +594,13 @@ export default async function Raport() {
               className="mb-2 text-[13px] font-bold uppercase tracking-[2px]"
               style={{ color: "rgba(255,255,255,0.8)" }}
             >
-              {session.customerName || "Contul tau"} · {AUDIT_WINDOW_LABEL}
+              {session.customerName || "Your account"} · {AUDIT_WINDOW_LABEL}
             </p>
             <p
               className="mb-2 font-black leading-none tabular-nums"
               style={{ fontFamily: sora, fontSize: "clamp(38px,8vw,64px)" }}
             >
-              {lei(rep.headline.ron)}
+              {money(rep.headline.ron, session.currencyCode)}
             </p>
             <p
               className="text-[15.5px]"
@@ -618,10 +623,10 @@ export default async function Raport() {
               // the sign of the money to be a declared property of a Finding rather than a guess made
               // in three places. That is a change with a contract, not a one-line filter, so this
               // stays as it was until then and the mismatch it carries is a known open point.
-              { k: "Constatari care costa bani", v: String(bani.length) },
-              { k: "Setari de reparat", v: String(rep.puncte.length) },
-              { k: "Produse analizate", v: String(products.length) },
-              { k: "Pragul tau minim", v: `ROAS ${Math.round(minRoas)}x` },
+              { k: "Findings that cost money", v: String(bani.length) },
+              { k: "Settings to fix", v: String(rep.puncte.length) },
+              { k: "Products analyzed", v: String(products.length) },
+              { k: "Your minimum threshold", v: `ROAS ${Math.round(minRoas)}x` },
             ].map((x) => (
               <div key={x.k} className="bg-white px-4 py-4 text-center">
                 <p
@@ -647,7 +652,7 @@ export default async function Raport() {
           aria-hidden="true"
           style={{ display: "none" }}
         >
-          <SectionTitle nr="1" text="Unde pierzi bani" />
+          <SectionTitle nr="1" text="Where you lose money" />
           <div className="mb-9 flex flex-col gap-3.5">
             {bani.map((f, i) => {
               const t = TIER_STYLE[f.tier];
@@ -693,7 +698,7 @@ export default async function Raport() {
                                 : C.red,
                         }}
                       >
-                        {f.tier === "SIMULARE" ? `+${lei(f.ron)}` : lei(f.ron)}
+                        {f.tier === "SIMULARE" ? `+${money(f.ron, session.currencyCode)}` : money(f.ron, session.currencyCode)}
                       </p>
                     )}
                     <p
@@ -706,35 +711,35 @@ export default async function Raport() {
 
                   {f.produse?.length ? (
                     <Tabel
-                      capete={["Produs", "Cheltuit", "Se intoarce"]}
+                      capete={["Product", "Spent", "Return"]}
                       randuri={f.produse.map((p) => ({
                         cheie: p.titlu,
                         celule: [
                           p.titlu,
-                          p.cost > 0 ? lei(p.cost) : "—",
+                          p.cost > 0 ? money(p.cost, session.currencyCode) : "—",
                           p.roas === undefined ? "—" : `${Math.round(p.roas)}x`,
                         ],
                         alarma: p.roas !== undefined && p.roas < minRoas,
                       }))}
                       restante={f.produseRestante}
-                      numeRestante="produse"
+                      numeRestante="products"
                     />
                   ) : null}
 
                   {f.termeni?.length ? (
                     <Tabel
-                      capete={["Ce a cautat omul", "Clicuri", "Cheltuit"]}
+                      capete={["Search query", "Clicks", "Spent"]}
                       randuri={f.termeni.map((t2) => ({
                         cheie: t2.termen,
                         celule: [
                           t2.termen,
                           String(t2.clicuri),
-                          lei(Math.round(t2.cost)),
+                          money(Math.round(t2.cost), session.currencyCode),
                         ],
                         alarma: true,
                       }))}
                       restante={f.termeniRestanti}
-                      numeRestante="cautari"
+                      numeRestante="searches"
                     />
                   ) : null}
                 </article>
@@ -761,8 +766,8 @@ export default async function Raport() {
           aria-hidden="true"
           style={{ display: "none" }}
         >
-          <SectionTitle nr="2" text="Cum sta catalogul tau" />
-          <CatalogPePerformanta harti={hartiCatalog} />
+          <SectionTitle nr="2" text="How your catalog performs" />
+          <CatalogPePerformanta harti={hartiCatalog} currencyCode={session.currencyCode} />
         </ReportSurface>
 
         {/* ── Setari gresite ── */}
@@ -772,13 +777,13 @@ export default async function Raport() {
           aria-hidden="true"
           style={{ display: "none" }}
         >
-          <SectionTitle nr="3" text="Ce e setat gresit in cont" />
+          <SectionTitle nr="3" text="What is configured incorrectly" />
           <p
             className="mb-4 text-[14px] leading-relaxed"
             style={{ color: C.gray500 }}
           >
-            Astea nu sunt bani deja pierduti, ci robinete deschise gresit.
-            Sumele arata cat buget trece prin fiecare — nu cat s-a irosit.
+            These amounts are not confirmed losses. They show how much budget passes through each
+            misconfigured setting, not how much was wasted.
           </p>
           <div className="mb-9 flex flex-col gap-3">
             {rep.puncte.map((p) => {
@@ -807,7 +812,7 @@ export default async function Raport() {
                           className="text-[13px] font-bold tabular-nums"
                           style={{ color: C.gray600 }}
                         >
-                          {lei(p.ron)} buget afectat
+                          {money(p.ron, session.currencyCode)} budget affected
                         </span>
                       )}
                     </div>
@@ -860,7 +865,7 @@ export default async function Raport() {
                 className="mb-3 inline-block rounded-full px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide"
                 style={{ background: "#f1f5f9", color: C.gray600 }}
               >
-                nu se poate judeca inca
+                cannot be assessed yet
               </span>
               <h3
                 className="mb-2 text-[17px] font-bold leading-snug"
@@ -875,14 +880,14 @@ export default async function Raport() {
                 {f.body}
               </p>
               <Tabel
-                capete={["Produs", "Cheltuit", "Se intoarce"]}
+                capete={["Product", "Spent", "Return"]}
                 randuri={f.produse!.map((p) => ({
                   cheie: p.titlu,
-                  celule: [p.titlu, lei(p.cost), "necunoscut"],
+                  celule: [p.titlu, money(p.cost, session.currencyCode), "unknown"],
                   alarma: false,
                 }))}
                 restante={f.produseRestante}
-                numeRestante="produse"
+                numeRestante="products"
                 incastrat
               />
             </article>
@@ -907,29 +912,28 @@ export default async function Raport() {
               className="mb-2 text-[12.5px] font-bold uppercase tracking-[2px]"
               style={{ color: "rgba(255,255,255,0.75)" }}
             >
-              Simulare · cu Devrika, la acelasi buget
+              Simulation · with Devrika, at the same budget
             </p>
             <p
               className="mb-2 font-black leading-none tabular-nums"
               style={{ fontFamily: sora, fontSize: "clamp(32px,7vw,54px)" }}
             >
-              +{lei(venitInPlusLunar)}
+              +{money(venitInPlusLunar, session.currencyCode)}
             </p>
             <p
               className="mx-auto mb-6 max-w-[520px] text-[15px] leading-relaxed"
               style={{ color: "rgba(255,255,255,0.92)" }}
             >
-              Atat ar insemna in plus pe luna din reclame daca clicurile ajung
-              cu 20% mai ieftine si conversia creste cu 20% — cele doua lucruri
-              la care lucram efectiv. Nu e o promisiune: intra si misca tu
-              ipoteza, pana la zero daca vrei.
+              This is the additional monthly sales the ads could generate if clicks become 20%
+              cheaper and conversion improves by 20%. It is not a promise: open the calculation
+              and adjust the assumptions yourself, including down to zero.
             </p>
             <Link
               href="/google-ads/impreuna"
               className="inline-flex min-h-11 items-center gap-2.5 rounded-[14px] bg-white px-7 py-[14px] text-[15.5px] font-bold no-underline transition-all hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               style={{ color: "#1e1b4b", fontFamily: sora }}
             >
-              Vezi calculul pe cifrele tale
+              See the calculation with your figures
               <svg
                 aria-hidden="true"
                 width="18"
@@ -956,14 +960,14 @@ export default async function Raport() {
             className="mb-2 text-[19px] font-bold"
             style={{ fontFamily: sora, color: "#0f172a" }}
           >
-            Vrei sa iti aratam si cum se repara?
+            Would you like us to show you how to fix it?
           </h2>
           <p
             className="mb-5 text-[14.5px] leading-relaxed"
             style={{ color: C.gray500 }}
           >
-            Lasa-ne un contact si iti trimitem raportul complet, cu toate
-            produsele pe nume si ordinea in care merita atacate. Fara obligatii.
+            Leave your contact details and we will send the complete report, with every product
+            named and the recommended order of action. No obligation.
           </p>
           <ContactForm
             action={salveazaContact}
@@ -985,7 +989,7 @@ export default async function Raport() {
             className="mb-3 text-[15px] font-bold"
             style={{ fontFamily: sora, color: "#0f172a" }}
           >
-            Ce nu am putut verifica
+            What we could not verify
           </h2>
           <ul className="mb-4 flex flex-col gap-2">
             {rep.caveats.map((c) => (
@@ -1007,11 +1011,10 @@ export default async function Raport() {
             className="text-[12.5px] leading-relaxed"
             style={{ color: C.gray400 }}
           >
-            <b>MASURAT</b> = citit direct din contul tau. <b>ESTIMARE</b> =
-            cifra reala inmultita cu un reper de piata, marcata ca atare.{" "}
-            <b>SIMULARE</b> = o proiectie sub ipoteze scrise, plafon optimist si
-            incasari, niciodata profit. Nu prezentam niciodata o estimare sau o
-            simulare drept fapt.
+            <b>MEASURED</b> = read directly from your account. <b>ESTIMATE</b> = a measured figure
+            combined with a market benchmark and labeled accordingly. <b>SIMULATION</b> = a
+            projection under stated assumptions, with an optimistic cap, expressed as sales and
+            never profit. Estimates and simulations are never presented as facts.
           </p>
         </ReportSurface>
       </main>
@@ -1049,15 +1052,14 @@ function Indisponibil() {
             color: "#0f172a",
           }}
         >
-          Nu am putut citi catalogul de Shopping
+          We could not read the Shopping catalog
         </h1>
         <p
           className="mb-7 text-[15px] leading-relaxed"
           style={{ color: C.gray500 }}
         >
-          Se intampla cand contul nu are inca produse in Shopping, cand accesul
-          prin API tocmai a fost retras sau cand Google raspunde greu. Nu s-a
-          modificat nimic in contul tau.
+          This can happen when the account has no Shopping products yet, API access was recently
+          withdrawn, or Google is responding slowly. Nothing was changed in your account.
         </p>
         <div className="flex flex-col items-center gap-3">
           <Link
@@ -1065,14 +1067,14 @@ function Indisponibil() {
             className="inline-flex min-h-11 items-center rounded-[14px] px-7 text-[15.5px] font-bold text-white"
             style={{ background: brandGradient, fontFamily: sora }}
           >
-            Incearca din nou
+            Try again
           </Link>
           <a
             href="mailto:hello@devrika.ro?subject=Audit%20Google%20Ads%20-%20raportul%20nu%20s-a%20generat"
             className="text-[13.5px] font-semibold hover:underline"
             style={{ color: C.indigo }}
           >
-            Scrie-ne si il facem noi manual
+            Contact us and we will prepare it manually
           </a>
         </div>
       </div>
@@ -1180,8 +1182,8 @@ function Tabel({
           className="px-5 py-2.5 text-[12.5px]"
           style={{ background: C.slate, color: C.gray500 }}
         >
-          … si inca {restante} {numeRestante}. Lista completa vine cu raportul
-          detaliat.
+          … and {restante} more {numeRestante}. The complete list is included in the detailed
+          report.
         </p>
       ) : null}
     </div>

@@ -69,14 +69,13 @@ export function analizeazaSearch(date: SearchData): SearchAudit {
   if (faraRsa.length) {
     probleme.push({
       cod: "grup-fara-rsa",
-      titlu: `${faraRsa.length === 1 ? "Un grup de reclame nu are" : `${faraRsa.length} grupuri de reclame nu au`} nicio reclama moderna`,
+      titlu: `${faraRsa.length === 1 ? "One ad group has" : `${faraRsa.length} ad groups have`} no responsive search ad`,
       ron: 0,
       grad: "costa",
       detaliu:
-        `Reclamele responsive sunt singurul format pe care Google il mai construieste pentru ` +
-        `cautari: le combina titlurile si descrierile dupa ce cauta omul. Un grup fara asa ceva ` +
-        `fie nu se afiseaza deloc, fie se afiseaza cu un text fix care pierde in fata ` +
-        `concurentilor, la orice suma ai licita.`,
+        `Responsive search ads are the current format Google assembles for search by combining ` +
+        `headlines and descriptions for each query. Without one, an ad group may not show or may ` +
+        `rely on fixed copy that performs poorly against competitors regardless of the bid.`,
       exemple: faraRsa.map(([cheie]) => cheie),
     });
   }
@@ -86,12 +85,12 @@ export function analizeazaSearch(date: SearchData): SearchAudit {
   if (vechi.length) {
     probleme.push({
       cod: "reclame-vechi",
-      titlu: `${vechi.length === 1 ? "O reclama de tip vechi e inca" : `${vechi.length} reclame de tip vechi sunt inca`} pornita in cont`,
+      titlu: `${vechi.length === 1 ? "One retired ad format is" : `${vechi.length} retired ad formats are`} still enabled`,
       ron: 0,
       grad: "reglaj",
       detaliu:
-        `Google a scos din uz formatul asta de reclama. Ramase pornite, nu aduc trafic, dar dau ` +
-        `impresia ca grupul are reclame — asa ca nimeni nu observa ca de fapt nu mai are.`,
+        `Google has retired this ad format. Leaving it enabled does not generate traffic, but makes ` +
+        `the group appear to contain ads and can hide the absence of a current responsive ad.`,
       exemple: [...new Set(vechi.map((r) => `${r.campanie} › ${r.grup}`))],
     });
   }
@@ -105,15 +104,14 @@ export function analizeazaSearch(date: SearchData): SearchAudit {
       cod: "ai-max-expunere",
       titlu:
         expuse.length === 1
-          ? `O campanie urmeaza sa fie mutata automat de Google pe alt mod de functionare`
-          : `${expuse.length} campanii urmeaza sa fie mutate automat de Google pe alt mod de functionare`,
+          ? `One campaign is scheduled for Google's automatic AI Max migration`
+          : `${expuse.length} campaigns are scheduled for Google's automatic AI Max migration`,
       ron: 0,
       grad: "reglaj",
       detaliu:
-        `Google muta in cursul lui 2026 campaniile dinamice si pe cele pe potrivire larga catre ` +
-        `noul mod AI Max, in care alege singur pentru ce cautari si pe ce pagini se afiseaza. ` +
-        `Pe un cont nepregatit — fara o lista solida de cuvinte blocate — asta inseamna ca incepe ` +
-        `sa cumpere trafic pe care azi nu il cumpara, fara ca cineva sa fi decis asta.`,
+        `During 2026 Google is moving dynamic and broad-match campaigns to AI Max, where it chooses ` +
+        `which searches and landing pages to use. In an account without a strong negative-keyword ` +
+        `list, that can purchase traffic the account does not buy today without an explicit decision.`,
       exemple: expuse.map((c) => c.nume),
     });
   }
@@ -177,7 +175,7 @@ export async function fetchSearchData(
 
   return {
     campanii: camp.map((r) => ({
-      nume: r.campaign?.name ?? "(fara nume)",
+      nume: r.campaign?.name ?? "(unnamed)",
       activa: r.campaign?.status === "ENABLED",
       subtip: r.campaign?.advertisingChannelSubType ?? null,
       aiMax: r.campaign?.aiMaxSetting?.enableAiMax === true,

@@ -135,7 +135,14 @@ export type ExtraAudit = {
   an?: TotaluriAn | null;
 };
 
-const ron = (n: number) => `${Math.round(n).toLocaleString("ro-RO")} RON`;
+const formatMoney = (n: number, currencyCode?: string) =>
+  currencyCode
+    ? new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: currencyCode,
+        maximumFractionDigits: 0,
+      }).format(Math.round(n))
+    : `${Math.round(n).toLocaleString("en-US")} currency units`;
 const pct = (n: number) => `${Math.round(n * 100)}%`;
 
 /**
@@ -149,7 +156,8 @@ export function buildReport(
   marginPct: number,
   minRoas: number,
   catalogComplete = true,
-  extra: ExtraAudit = {}
+  extra: ExtraAudit = {},
+  currencyCode?: string,
 ): ReportModel {
   const findings: Finding[] = [];
   const caveats: string[] = [];
@@ -166,22 +174,22 @@ export function buildReport(
   if (!tracking.ok) {
     findings.push({
       key: "tracking",
-      title: "Cheltuiesti fara sa stii ce aduce bani",
+      title: "You are spending without knowing what generates revenue",
       ron: costCont,
       tier: "MASURAT",
       body:
-        `In ultimele ${AUDIT_WINDOW_LABEL} au trecut ${ron(costCont)} prin cont, iar Google nu a stiut ` +
-        `care dintre ei au adus vanzari. ` +
+        `Over the last ${AUDIT_WINDOW_LABEL}, ${formatMoney(costCont, currencyCode)} passed through the account, and Google could not tell ` +
+        `which spend generated sales. ` +
         (areSearchPeLangaShopping
-          ? `Din ei, ${ron(t.totalCost)} s-au dus pe produsele din Shopping — despre acelea ` +
-            `e restul raportului; diferenta e pe campanii fara produs in spate. `
+          ? `Of that amount, ${formatMoney(t.totalCost, currencyCode)} went to Shopping products — the rest of the report ` +
+            `covers those; the difference belongs to campaigns without an underlying product. `
           : "") +
         (tracking.junkPrimary.length
-          ? `Motivul: ${tracking.reasons[0]}. Licitarea automata cumpara clicuri de la oamenii ` +
-            `care fac acele actiuni, nu de la cei care cumpara. `
-          : `Motivul: ${tracking.reasons[0]}. `) +
-        `Practic, tot bugetul de mai sus s-a cheltuit pe orb: nu a putut fi optimizat catre ` +
-        `vanzare, pentru ca sistemul nu stia ce inseamna o vanzare.`,
+          ? `Reason: ${tracking.reasons[0]}. Automated bidding buys clicks from people who complete ` +
+            `those actions, not from people who purchase. `
+          : `Reason: ${tracking.reasons[0]}. `) +
+        `In practice, all of the budget above was spent without a reliable signal: it could not be ` +
+        `optimized toward sales because the system did not know what a sale meant.`,
     });
   }
 
@@ -192,17 +200,17 @@ export function buildReport(
         key: "villains",
         title:
           result.villains.length === 1
-            ? `Un produs consuma buget fara sa se acopere`
-            : `${result.villains.length} produse consuma buget fara sa se acopere`,
+            ? `One product consumes budget without breaking even`
+            : `${result.villains.length} products consume budget without breaking even`,
         ron: result.villainsTotalCost,
         tier: "MASURAT",
         body:
-          `La marja ta de ${marginPct}%, un produs trebuie sa aduca cel putin ` +
-          `${minRoas.toFixed(2)} lei la fiecare leu cheltuit ca sa iasa pe zero. ` +
+          `At your ${marginPct}% margin, a product must generate at least ` +
+          `${minRoas.toFixed(2)} for every currency unit spent to break even. ` +
           (result.villains.length === 1
-            ? `Un produs sta sub pragul asta si a consumat ${ron(result.villainsTotalCost)}.`
-            : `${result.villains.length} produse stau sub pragul asta si au consumat impreuna ` +
-              `${ron(result.villainsTotalCost)}.`),
+            ? `One product is below that threshold and consumed ${formatMoney(result.villainsTotalCost, currencyCode)}.`
+            : `${result.villains.length} products are below that threshold and consumed ` +
+              `${formatMoney(result.villainsTotalCost, currencyCode)}.`),
         // Cele mai scumpe primele: alea sunt produsele pe care le opresti luni dimineata.
         produse: result.villains.slice(0, MAX_PRODUSE).map((v) => ({
           titlu: v.title,
@@ -216,15 +224,15 @@ export function buildReport(
         key: "villains-quarantined",
         title:
           result.villains.length === 1
-            ? `Un produs nu poate fi judecat pana nu repari masurarea`
-            : `${result.villains.length} produse nu pot fi judecate pana nu repari masurarea`,
+            ? `One product cannot be assessed until measurement is fixed`
+            : `${result.villains.length} products cannot be assessed until measurement is fixed`,
         ron: 0,
         tier: "MASURAT",
         quarantined: true,
         body:
-          `Aceste produse au consumat ${ron(result.villainsTotalCost)} si apar cu zero vanzari. ` +
-          `Nu spunem ca sunt slabe: pe un cont in care vanzarile nu se masoara, cifra asta nu ` +
-          `dovedeste nimic. Se pot judeca corect dupa ce masurarea e reparata si trec 30 de zile.`,
+          `These products consumed ${formatMoney(result.villainsTotalCost, currencyCode)} and show zero sales. ` +
+          `We are not calling them weak: in an account where sales are not measured, that figure ` +
+          `proves nothing. They can be assessed correctly after measurement is fixed and 30 days pass.`,
         // Fara ROAS: pe masurare stricata, cifra aia n-ar insemna nimic si ar arata ca o acuzatie.
         produse: result.villains.slice(0, MAX_PRODUSE).map((v) => ({
           titlu: v.title,
@@ -233,7 +241,7 @@ export function buildReport(
         produseRestante: Math.max(0, result.villains.length - MAX_PRODUSE),
       });
       caveats.push(
-        "Care produse chiar pierd bani — imposibil de spus pana la repararea masurarii."
+        "Which products are actually losing money — impossible to determine until measurement is fixed."
       );
     }
   }
@@ -244,15 +252,15 @@ export function buildReport(
       key: "zombies",
       title:
         result.zeroZombies.count === 1
-          ? `Un produs nu a fost vazut de niciun client`
-          : `${result.zeroZombies.count} produse nu au fost vazute de niciun client`,
+          ? `One product was not seen by any customer`
+          : `${result.zeroZombies.count} products were not seen by any customer`,
       // Fapt, fara suma inventata: nu stim cat ar fi adus, deci nu punem cifra in bani.
       ron: 0,
       tier: "MASURAT",
       body:
-        `Sunt ${pct(result.zeroZombies.pctOfCatalog)} din catalogul tau — produse care nu au avut ` +
-        `nicio afisare in ${AUDIT_WINDOW_LABEL}. Nu au costat nimic, dar nici nu exista pentru cumparatori: ` +
-        `stau in magazin fara sa ajunga vreodata in fata cuiva.`,
+        `They represent ${pct(result.zeroZombies.pctOfCatalog)} of your catalog — products with no ` +
+        `impressions over ${AUDIT_WINDOW_LABEL}. They cost nothing, but buyers cannot discover them: ` +
+        `they remain in the store without ever reaching an audience.`,
       produse: result.zeroZombies.list.slice(0, MAX_PRODUSE).map((p) => ({
         titlu: p.title,
         cost: 0,
@@ -261,21 +269,21 @@ export function buildReport(
     });
   }
   if (!catalogComplete) {
-    caveats.push("Cate produse nu au fost afisate niciodata — nu am putut citi catalogul complet.");
+    caveats.push("How many products were never shown — the complete catalog could not be read.");
   }
 
   // ── 4. CSS: estimare etichetata ───────────────────────────────────────────
   if (result.cssOverpaid && result.cssOverpaid > 0) {
     findings.push({
       key: "css",
-      title: "Platesti mai mult decat trebuie pe fiecare click",
+      title: "You pay more than necessary for each click",
       ron: result.cssOverpaid,
       tier: "ESTIMARE",
       body:
-        `Magazinele care ruleaza Shopping direct prin Google platesc pana la ~20% in plus pe ` +
-        `click fata de cele care merg printr-un partener CSS. Aplicat pe cei ${ron(t.totalCost)} ` +
-        `cheltuiti de tine, inseamna aproximativ ${ron(result.cssOverpaid)}. ` +
-        `Cheltuiala e reala, procentul e un reper de piata — de aceea il marcam ca estimare.`,
+        `Stores running Shopping directly through Google can pay up to about 20% more per click ` +
+        `than stores using a CSS partner. Applied to your ${formatMoney(t.totalCost, currencyCode)} spend, that is approximately ` +
+        `${formatMoney(result.cssOverpaid, currencyCode)}. The spend is measured and the percentage is a market benchmark, ` +
+        `which is why this is labeled as an estimate.`,
     });
   }
 
@@ -286,16 +294,15 @@ export function buildReport(
   if (cuv?.risipa.length && cuv.risipaTotal > 0) {
     findings.push({
       key: "termeni-risipa",
-      title: `${cuv.risipa.length} cautari au consumat buget fara nicio vanzare`,
+      title: `${cuv.risipa.length} searches consumed budget without a sale`,
       ron: cuv.risipaTotal,
       tier: "MASURAT",
       exclusDinTotal: true,
       body:
-        `In ultimele 30 de zile, reclamele tale au aparut la cautari care au adus clicuri ` +
-        `platite si zero comenzi — ${ron(cuv.risipaTotal)} in total. ` +
-        `Sunt oameni care cautau altceva decat vinzi tu. ` +
-        `Cifra e pe 30 de zile, nu pe ${AUDIT_WINDOW_LABEL} ca restul raportului, si de asta nu am adunat-o ` +
-        `in totalul de sus.`,
+        `Over the last 30 days, your ads appeared for searches that generated paid clicks ` +
+        `and zero orders — ${formatMoney(cuv.risipaTotal, currencyCode)} in total. These people were looking for something ` +
+        `you do not sell. This figure covers 30 days, not ${AUDIT_WINDOW_LABEL} like the rest of the report, ` +
+        `so it is not included in the total above.`,
       termeni: cuv.risipa.slice(0, MAX_PRODUSE),
       termeniRestanti: Math.max(0, cuv.risipa.length - MAX_PRODUSE),
     });
@@ -305,8 +312,8 @@ export function buildReport(
   const shoppingLipsa = (extra.shopping?.probleme ?? []).some((p) => p.cod === "shopping-lipsa");
   if (cuv && !cuv.areVizibilitateTermeni && !shoppingLipsa) {
     caveats.push(
-      "Pe ce cuvinte se duc banii — contul nu ruleaza Shopping standard, iar Performance Max " +
-        "nu raporteaza costul pe termen de cautare."
+      "Which search terms consume budget — the account does not run Standard Shopping, and Performance Max " +
+        "does not report cost by search term."
     );
   }
 
@@ -333,20 +340,20 @@ export function buildReport(
 
     findings.push({
       key: "simulare",
-      title: "Cat ar aduce acelasi buget, mutat pe produsele care vand",
+      title: "What the same budget could generate when moved to products that sell",
       ron: castigDinMutare,
       tier: "SIMULARE",
       body:
-        `Produsele care chiar vand la tine se intorc de ${t.survivorsRoas.toFixed(2)} ori si aduc ` +
-        `acum ${ron(sim.current)}. Daca opresti produsele slabe si muti acei ${ron(result.villainsTotalCost)} ` +
-        `catre ele — fara sa adaugi niciun leu in plus — ar putea ajunge la ${ron(dupaMutare)}. ` +
+        `Products that actually sell return ${t.survivorsRoas.toFixed(2)} times their spend and currently generate ` +
+        `${formatMoney(sim.current, currencyCode)}. If weak products are stopped and that ${formatMoney(result.villainsTotalCost, currencyCode)} is moved ` +
+        `to them — without adding budget — they could reach ${formatMoney(dupaMutare, currencyCode)}. ` +
         (plafonat
-          ? `Am oprit calculul la dublarea incasarilor actuale, desi inmultirea seaca ar da mai ` +
-            `mult: produsele bune au un volum limitat de cautari si nu absorb oricat buget la ` +
-            `acelasi randament. `
+          ? `The calculation is capped at twice current sales, even though a simple multiplication would give ` +
+            `more: strong products have limited search volume and cannot absorb unlimited budget at ` +
+            `the same return. `
           : "") +
-        `E un plafon optimist, nu o promisiune: la buget mai mare randamentul scade de obicei. ` +
-        `Si sunt incasari, nu profit — profitul depinde de marja ta.`,
+        `This is an optimistic ceiling, not a promise: returns usually decline as budget increases. ` +
+        `These are sales, not profit — profit depends on your margin.`,
     });
   }
 
@@ -370,16 +377,15 @@ export function buildReport(
   for (const tox of (cuv?.toxice ?? []).filter((t2) => t2.eBrand)) {
     puncte.push({
       cod: "negativ-brand",
-      titlu: `Iti blochezi singur numele: "${tox.cuvant}"`,
+      titlu: `You are blocking your own name: "${tox.cuvant}"`,
       ron: 0,
       grad: "critic",
       detaliu:
-        `Ai pus "${tox.cuvant}" pe lista de cuvinte blocate. Cand cineva cauta exact numele ` +
-        `magazinului tau — cel mai ieftin si cel mai sigur client pe care il poti avea — ` +
-        `reclama ta nu apare. ` +
+        `You added "${tox.cuvant}" to the blocked-keyword list. When someone searches for your ` +
+        `store name — usually the cheapest and most certain customer — your ad does not appear. ` +
         (tox.produseBlocate === 1
-          ? `Este un produs afectat.`
-          : `Sunt ${tox.produseBlocate} produse afectate.`),
+          ? `One product is affected.`
+          : `${tox.produseBlocate} products are affected.`),
       exemple: tox.exemple,
     });
   }
@@ -393,18 +399,18 @@ export function buildReport(
       cod: "negative-toxice",
       titlu:
         altele.length === 1
-          ? `Un cuvant blocat opreste produse pe care le vinzi`
-          : `${altele.length} cuvinte blocate opresc produse pe care le vinzi`,
+          ? `One blocked keyword prevents products you sell from appearing`
+          : `${altele.length} blocked keywords prevent products you sell from appearing`,
       ron: 0,
       grad: "costa",
       detaliu:
-        `Lista ta de cuvinte blocate contine termeni care apar in titlurile unor produse aflate ` +
-        `la vanzare. Reclamele pentru ele nu au voie sa se afiseze — ` +
+        `Your blocked-keyword list contains terms that appear in the titles of products currently ` +
+        `for sale. Ads for them cannot appear — ` +
         (produseBlocate === 1
-          ? `un produs e oprit asa, fara sa se vada nicaieri in rapoarte.`
-          : `${produseBlocate} produse sunt oprite asa, fara sa se vada nicaieri in rapoarte.`),
+          ? `one product is blocked this way without appearing anywhere in reports.`
+          : `${produseBlocate} products are blocked this way without appearing anywhere in reports.`),
       exemple: altele.map(
-        (t2) => `${t2.cuvant} — ${t2.produseBlocate} ${t2.produseBlocate === 1 ? "produs" : "produse"}`
+        (t2) => `${t2.cuvant} — ${t2.produseBlocate} ${t2.produseBlocate === 1 ? "product" : "products"}`
       ),
     });
   }
@@ -422,10 +428,10 @@ export function buildReport(
   findings.sort((a, b) => rang(a) - rang(b) || b.ron - a.ron);
 
   caveats.push(
-    "Marja pe produs — folosim valoarea data de tine, deci vorbim despre incasari, nu despre profit."
+    "Product margin — we use the value you provided, so these figures describe sales, not profit."
   );
   if (result.cssOverpaid) {
-    caveats.push("Daca folosesti deja un partener CSS — de confirmat in cont.");
+    caveats.push("Whether you already use a CSS partner — this must be confirmed in the account.");
   }
 
   const headlineRon = findings
@@ -438,8 +444,8 @@ export function buildReport(
     headline: {
       ron: Math.round(headlineRon),
       label: tracking.ok
-        ? `cheltuiti fara sa se acopere in ultimele ${AUDIT_WINDOW_LABEL}`
-        : `cheltuiti fara sa stii ce au adus, in ultimele ${AUDIT_WINDOW_LABEL}`,
+        ? `spent without breaking even over the last ${AUDIT_WINDOW_LABEL}`
+        : `spent without knowing what it generated over the last ${AUDIT_WINDOW_LABEL}`,
     },
     trackingBroken: !tracking.ok,
     findings,

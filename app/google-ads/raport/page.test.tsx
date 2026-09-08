@@ -1,4 +1,4 @@
-// LANG: pending full translation to EN
+// LANG: inherited Romanian test descriptions and comments remain translation debt.
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
@@ -122,7 +122,7 @@ vi.mock("@/lib/gads-structure", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
   fetchStructura: async () => sourceState.structureAvailable ? ({
     campanii: [], cheltuialaTotala: 3000, roasCont: 4,
-    probleme: [{ cod: "bidding-fara-tinta", titlu: "O campanie liciteaza fara nicio tinta", ron: 2977, detaliu: "Detaliu.", grad: "costa" }],
+    probleme: [{ cod: "bidding-fara-tinta", titlu: "One campaign bids without a target", ron: 2977, detaliu: "The campaign needs a return target.", grad: "costa" }],
   }) : undefined,
 }));
 vi.mock("@/lib/gads-pmax", async (orig) => ({
@@ -260,23 +260,23 @@ describe("pagina de raport, randata", () => {
     expect(normalizePublicOutput(h, reportPlaceholders())).toMatchSnapshot("report:success");
     expect(h).toContain('data-public-oauth-surface="report:success"');
     expect(h).toContain('data-report-surface="honesty-and-caveats"');
-    expect(h).toContain("MASURAT");
-    expect(h).toContain("ESTIMARE");
-    expect(h).toMatch(/<b>SIMULARE<\/b>/);
+    expect(h).toContain("MEASURED");
+    expect(h).toContain("ESTIMATE");
+    expect(h).toMatch(/<b>SIMULATION<\/b>/);
   });
 
   it("arata produsele pe nume, nu doar numarul lor", async () => {
     const h = await html();
     expect(h).toContain("Canapea extensibila model A");
-    expect(h).toContain("900 RON");
+    expect(h).toContain("€900");
   });
 
   it("keeps the measured 365-day window in the live dashboard", async () => {
     const h = await html();
     expect(h).toContain('data-report-section="brand-header"');
     const visibleText = h.replace(/<[^>]*>/g, " ");
-    expect(visibleText).toContain("28 august 2025 – 27 august 2026");
-    expect(visibleText).toContain("Audit doar în citire");
+    expect(visibleText).toContain("August 28, 2025 – August 27, 2026");
+    expect(visibleText).toContain("Read-only audit");
   });
 
   it("stores exact selected, previous, and prior-year ranges with complete labeled products", async () => {
@@ -357,7 +357,7 @@ describe("pagina de raport, randata", () => {
       "product-actions",
     ]);
     expect(h).toContain("EUR");
-    expect(h).toContain("28 august 2025 – 27 august 2026");
+    expect(h).toContain("August 28, 2025 – August 27, 2026");
     expect(lossConclusion?.[1]).toBe(lossGroup?.[1]);
     expect(h).not.toContain('data-legacy-permanent-labels');
   });
@@ -408,7 +408,7 @@ describe("pagina de raport, randata", () => {
     expect(stored?.breakEvenRoas).toBe(10);
     expect(stored?.breakEvenCpa).toBe(777);
     expect(h).toContain("Signed snapshot product");
-    expect(h).toContain("1–31 iulie 2026");
+    expect(h).toContain("July 1–31, 2026");
     expect(h).toContain("GBP");
     expect(h).toContain('data-testid="conclusion-MEASURED_PRODUCT_LOSS" data-raw-value="1401"');
     expect(h).toContain("10×");
@@ -431,21 +431,21 @@ describe("pagina de raport, randata", () => {
 
   it("are amandoua sectiunile, si banda de sumar deasupra lor", async () => {
     const h = await html();
-    expect(h).toContain("Unde pierzi bani");
-    expect(h).toContain("Ce e setat gresit in cont");
-    expect(h).toContain("Produse analizate");
+    expect(h).toContain("Where you lose money");
+    expect(h).toContain("What is configured incorrectly");
+    expect(h).toContain("Products analyzed");
   });
 
   it("arata harta catalogului pe cele cinci grupe, cu perioada comutabila", async () => {
     const h = await html();
-    expect(h).toContain("Cum sta catalogul tau");
+    expect(h).toContain("How your catalog performs");
     for (const grupa of ["Heroes", "Sidekicks", "Villains", "Zombies", "0 Zombies"]) {
       expect(h).toContain(grupa);
     }
     // Cele trei lentile peste aceleasi grupe — ele fac argumentul, nu grupele singure.
-    expect(h).toContain("Cat mananca");
-    expect(h).toContain("Cat aduc");
-    expect(h).toContain("30 de zile");
+    expect(h).toContain("Budget used");
+    expect(h).toContain("Sales generated");
+    expect(h).toContain("30 days");
   });
 
   it("nu scapa in raportul clientului mecanica din spatele clasificarii", async () => {
@@ -463,20 +463,20 @@ describe("pagina de raport, randata", () => {
 
   it("pune eticheta de onestitate pe fiecare constatare", async () => {
     const h = await html();
-    expect(h).toContain("MASURAT");
-    expect(h).toContain("SIMULARE");
+    expect(h).toContain("MEASURED");
+    expect(h).toContain("SIMULATION");
   });
 
   it("are sectiunea 'cu Devrika' la final, inaintea formularului de contact", async () => {
     const h = await html();
-    expect(h).toContain("Vezi calculul pe cifrele tale");
-    expect(h).toContain("Simulare");
-    expect(h.indexOf("Vezi calculul pe cifrele tale")).toBeLessThan(h.indexOf('data-test="contact"'));
+    expect(h).toContain("See the calculation with your figures");
+    expect(h).toContain("Simulation");
+    expect(h.indexOf("See the calculation with your figures")).toBeLessThan(h.indexOf('data-test="contact"'));
   });
 
   it("formularul de contact vine dupa constatari, nu inaintea lor", async () => {
     const h = await html();
-    expect(h.indexOf("Unde pierzi bani")).toBeLessThan(h.indexOf('data-test="contact"'));
+    expect(h.indexOf("Where you lose money")).toBeLessThan(h.indexOf('data-test="contact"'));
   });
 
   it("keeps the report contact form target available", async () => {
@@ -489,8 +489,8 @@ describe("pagina de raport, randata", () => {
     const h = await html();
     expect(h).toContain('data-report-surface="catalog-unavailable-recovery"');
     expect(h).toContain('data-public-oauth-surface="report:catalog-unavailable"');
-    expect(h).toContain("Nu am putut citi catalogul de Shopping");
-    expect(h).toContain("Incearca din nou");
+    expect(h).toContain("We could not read the Shopping catalog");
+    expect(h).toContain("Try again");
     expect(normalizePublicOutput(h)).toMatchSnapshot("report:catalog-unavailable");
   });
 
@@ -498,8 +498,8 @@ describe("pagina de raport, randata", () => {
     stareTracking.ok = false;
     stareTracking.reasons = ["nicio actiune de vanzare configurata"];
     const h = await html();
-    expect(h).toContain("nu se poate judeca inca");
-    expect(h).toContain("necunoscut");
+    expect(h).toContain("cannot be assessed yet");
+    expect(h).toContain("unknown");
   });
 
   it("renders an unsupported conclusion without product rows", async () => {
@@ -537,9 +537,9 @@ describe("pagina de raport, randata", () => {
   it("renders the V2 dashboard with the complete product action groups", async () => {
     const h = await html();
     expect(h).toContain('data-report-dashboard="v2"');
-    expect(h).toContain('aria-label="Produse: Consumă buget"');
-    expect(h).toContain("Consumă buget");
-    expect(h).toContain("Insuficient promovate");
+    expect(h).toContain('aria-label="Products: Consumes budget"');
+    expect(h).toContain("Consumes budget");
+    expect(h).toContain("Underpromoted");
     expect(h).not.toContain("Profit after advertising");
     expect(h).toContain('data-report-version="profitability-v3-original"');
   });
@@ -557,9 +557,9 @@ describe("pagina de raport, randata", () => {
     const start = h.indexOf('data-report-surface="money-findings"');
     const end = h.indexOf('data-report-surface="catalog-map"', start);
     const moneySurface = h.slice(start, end);
-    expect(moneySurface).toContain("MASURAT");
-    expect(moneySurface).toContain("ESTIMARE");
-    expect(moneySurface).toContain("SIMULARE");
+    expect(moneySurface).toContain("MEASURED");
+    expect(moneySurface).toContain("ESTIMATE");
+    expect(moneySurface).toContain("SIMULATION");
   });
 
   it("renders the demo banner only in demo mode", async () => {
@@ -570,13 +570,13 @@ describe("pagina de raport, randata", () => {
     expect(demo).toContain('data-report-surface="demo-banner"');
     const normalizedDemo = normalizePublicOutput(demo, [{ kind: "account", value: "DeHome", locations: ["root/div[0]/main[0]/div[2]/div[0]/p[0]/text"] }]);
     expect(normalizedDemo).toMatchSnapshot("report:demo");
-    expect(normalizedDemo).toContain("MOD DEMO");
+    expect(normalizedDemo).toContain("DEMO MODE");
   });
 
   it("renders the V2 account targets instead of the legacy KPI strip", async () => {
     const h = await html();
     expect(h).toContain('data-report-dashboard="v2"');
-    expect(h).toContain('aria-label="Țintele contului"');
+    expect(h).toContain('aria-label="Account targets"');
     expect(h).not.toContain('class="kpis"');
     expect(h).not.toContain("Current report");
   });

@@ -50,7 +50,7 @@ export type ProblemaShopping = {
 
 export type ShoppingAudit = { probleme: ProblemaShopping[]; diluare: number | null };
 
-const nr = (n: number) => Math.round(n).toLocaleString("ro-RO");
+const nr = (n: number) => Math.round(n).toLocaleString("en-US");
 
 /** Peste atat, doctrina spune ca mai mult de jumatate din buget e structural pierdut. */
 const DILUARE_GRAVA = 8;
@@ -78,18 +78,16 @@ export function analizeazaShopping(date: ShoppingData, trackingOk: boolean): Sho
     const potDuce = Math.max(1, Math.round(capacitate * DILUARE_TINTA));
     probleme.push({
       cod: "diluare",
-      titlu: `Bugetul tau e intins pe de ${Math.round(diluare / DILUARE_TINTA)} de ori mai multe produse decat poate duce`,
+      titlu: `Your budget is spread across ${Math.round(diluare / DILUARE_TINTA)} times more products than it can support`,
       ron: 0,
       grad: diluare > DILUARE_GRAVA ? "critic" : "costa",
       detaliu:
-        `In ultimele 30 de zile ai avut ${nr(capacitate)} ${capacitate === 1 ? "vanzare" : "vanzari"}, ` +
-        `iar reclamele s-au afisat pentru ${nr(date.produseCuAfisari)} de produse. ` +
-        `Ca sa invete pe ce sa liciteze, Google are nevoie ca fiecare produs sa ajunga la ` +
-        `aproximativ o vanzare pe luna — bugetul tau poate duce asa in jur de ${nr(potDuce)} de ` +
-        `produse. Restul primesc cate cateva clicuri, prea putine ca sistemul sa invete ceva ` +
-        `din ele, si banii aia se pierd. ` +
-        `Solutia nu e buget mai mare, ci set mai mic: alegi produsele care chiar vand si opresti ` +
-        `restul. Taierea setului nu costa nimic, cresterea bugetului cat sa duca tot catalogul, da.`,
+        `Over the last 30 days you recorded ${nr(capacitate)} ${capacitate === 1 ? "sale" : "sales"}, ` +
+        `while ads appeared for ${nr(date.produseCuAfisari)} products. Google needs each product to ` +
+        `reach about one sale per month to learn how to bid, so this budget can support roughly ` +
+        `${nr(potDuce)} products. The rest receive too few clicks for the system to learn from them. ` +
+        `The solution is a smaller product set, not automatically a larger budget: keep products ` +
+        `that sell and pause the rest. Reducing the set costs nothing; funding the entire catalog does.`,
     });
   }
 
@@ -97,14 +95,13 @@ export function analizeazaShopping(date: ShoppingData, trackingOk: boolean): Sho
   if (!shopping.length) {
     probleme.push({
       cod: "shopping-lipsa",
-      titlu: "Nu poti vedea pe ce cautari se duc banii",
+      titlu: "You cannot see which searches consume the budget",
       ron: 0,
       grad: "reglaj",
       detaliu:
-        `Contul nu are nicio campanie Shopping standard activa. Performance Max raporteaza ` +
-        `categorii de cautari, dar nu si cat a costat fiecare — asa ca nu exista nicaieri ` +
-        `raspunsul la "pe ce cuvinte mi s-au dus banii". O campanie Shopping standard, chiar si ` +
-        `mica, aduce inapoi datele astea si face vizibile scurgerile.`,
+        `The account has no active Standard Shopping campaign. Performance Max reports search ` +
+        `categories but not the cost of each query, so the account cannot show which words consumed ` +
+        `the budget. Even a small Standard Shopping campaign restores that data and exposes leakage.`,
     });
   }
 
@@ -113,12 +110,12 @@ export function analizeazaShopping(date: ShoppingData, trackingOk: boolean): Sho
   if (faraTinta.length) {
     probleme.push({
       cod: "shopping-bidding",
-      titlu: `${faraTinta.length === 1 ? "O campanie Shopping nu liciteaza" : `${faraTinta.length} campanii Shopping nu liciteaza`} pe randament`,
+      titlu: `${faraTinta.length === 1 ? "One Shopping campaign does" : `${faraTinta.length} Shopping campaigns do`} not bid to a return target`,
       ron: faraTinta.reduce((s, c) => s + c.bugetZilnic * 30, 0),
       grad: "costa",
       detaliu:
-        `Pe un magazin, campania trebuie sa urmareasca cati lei aduce la fiecare leu cheltuit. ` +
-        `Fara tinta asta, cumpara clicuri dupa alte criterii si le ia si pe cele care nu se acopera.`,
+        `For a store, the campaign should optimize how much revenue each currency unit of spend returns. ` +
+        `Without that target it buys clicks using other criteria, including clicks that do not break even.`,
       exemple: faraTinta.map((c) => c.nume),
     });
   }
@@ -129,15 +126,14 @@ export function analizeazaShopping(date: ShoppingData, trackingOk: boolean): Sho
     if (prioritati.size === 1) {
       probleme.push({
         cod: "shopping-prioritate",
-        titlu: `${shopping.length} campanii Shopping se bat pe aceleasi produse`,
+        titlu: `${shopping.length} Shopping campaigns compete for the same products`,
         ron: 0,
         grad: "reglaj",
         detaliu:
-          `Cand acelasi produs apare in doua campanii Shopping, cea cu prioritatea mai mare ` +
-          `liciteaza — indiferent cat licita cealalta. Toate campaniile tale au aceeasi ` +
-          `prioritate, deci nu s-a stabilit cine are intaietate: se pot suprascrie una pe alta, ` +
-          `iar sumele pe care le-ai setat intr-una pot sa nu conteze deloc.`,
-        exemple: shopping.map((c) => `${c.nume} — prioritate ${c.prioritate}`),
+          `When the same product appears in two Shopping campaigns, the higher-priority campaign ` +
+          `bids regardless of the other bid. All these campaigns have the same priority, so precedence ` +
+          `is undefined: they can override one another and make configured bids ineffective.`,
+        exemple: shopping.map((c) => `${c.nume} — priority ${c.prioritate}`),
       });
     }
   }
@@ -184,7 +180,7 @@ export async function fetchShoppingData(
   ]);
 
   const campanii: CampanieShopping[] = camp.map((r) => ({
-    nume: r.campaign?.name ?? "(fara nume)",
+    nume: r.campaign?.name ?? "(unnamed)",
     status: r.campaign?.status ?? "UNKNOWN",
     bidding: r.campaign?.biddingStrategyType ?? "UNKNOWN",
     // Prioritatea exista doar pe Shopping standard; pe restul e semnalul ca nu e Shopping.

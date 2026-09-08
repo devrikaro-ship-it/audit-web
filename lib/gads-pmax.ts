@@ -58,12 +58,14 @@ export type ProblemaPmax = {
 export type PmaxData = { campanii: CampaniePmax[]; grupuri: GrupAnunturi[] };
 export type PmaxAudit = { probleme: ProblemaPmax[] };
 
-const lei = (n: number) => `${Math.round(n).toLocaleString("ro-RO")} RON`;
+const money = (n: number, currencyCode?: string) => currencyCode
+  ? new Intl.NumberFormat("en-US", { style: "currency", currency: currencyCode, maximumFractionDigits: 0 }).format(Math.round(n))
+  : `${Math.round(n).toLocaleString("en-US")} currency units`;
 
 /** Sub atatea materiale, un grup nu e nici doar-feed, nici construit — e abandonat la jumatate. */
 const PRAG_SCHELET = 5;
 
-export function analizeazaPmax(date: PmaxData, campanii: Campanie[]): PmaxAudit {
+export function analizeazaPmax(date: PmaxData, campanii: Campanie[], currencyCode?: string): PmaxAudit {
   const probleme: ProblemaPmax[] = [];
   const cost = new Map(campanii.map((c) => [c.nume, c.cost]));
   const eLive = new Set(campanii.filter((c) => c.status === "ENABLED").map((c) => c.nume));
@@ -76,15 +78,14 @@ export function analizeazaPmax(date: PmaxData, campanii: Campanie[]): PmaxAudit 
     const bani = cuExtindere.reduce((s, c) => s + cost.get(c.nume)!, 0);
     probleme.push({
       cod: "extindere-url",
-      titlu: `${cuExtindere.length === 1 ? "O campanie trimite" : `${cuExtindere.length} campanii trimit`} clientii pe pagini alese de Google`,
+      titlu: `${cuExtindere.length === 1 ? "One campaign sends" : `${cuExtindere.length} campaigns send`} customers to pages selected by Google`,
       ron: bani,
       grad: "costa",
       detaliu:
-        `Cand extinderea automata a paginilor e pornita, Google nu se mai limiteaza la produsele ` +
-        `din feed-ul tau: alege singur ce pagina de pe site arata, inclusiv pagini care nu vand ` +
-        `nimic — articole, categorii goale, pagini de contact. Platesti clicuri catre ele exact ` +
-        `ca pentru un produs.` +
-        (bani > 0 ? ` Prin ${cuExtindere.length === 1 ? "campania" : "campaniile"} in cauza au trecut ${lei(bani)}.` : ""),
+        `When final URL expansion is enabled, Google is not limited to products in your feed. ` +
+        `It selects which site page to show, including pages that sell nothing, such as articles, ` +
+        `empty categories, or contact pages. You pay for those clicks just as you would for a product.` +
+        (bani > 0 ? ` The affected ${cuExtindere.length === 1 ? "campaign handled" : "campaigns handled"} ${money(bani, currencyCode)}.` : ""),
       exemple: cuExtindere.map((c) => c.nume),
     });
   }
@@ -94,14 +95,14 @@ export function analizeazaPmax(date: PmaxData, campanii: Campanie[]): PmaxAudit 
   if (faraBrand.length) {
     probleme.push({
       cod: "pmax-fara-brand",
-      titlu: `${faraBrand.length === 1 ? "O campanie" : `${faraBrand.length} campanii`} Performance Max cumpara traficul pe numele tau`,
+      titlu: `${faraBrand.length === 1 ? "One" : faraBrand.length} Performance Max ${faraBrand.length === 1 ? "campaign buys" : "campaigns buy"} traffic for your own name`,
       ron: faraBrand.reduce((s, c) => s + cost.get(c.nume)!, 0),
       grad: "costa",
       detaliu:
-        `Oamenii care cauta direct numele magazinului tau te-ar gasi oricum, pe cel mai ieftin ` +
-        `click din cont. Fara protectie de brand, Performance Max liciteaza si pe ei — cu bani ` +
-        `care ar fi trebuit sa aduca clienti noi. In rapoarte pare ca merge excelent, pentru ca ` +
-        `raporteaza vanzarile unor oameni care veneau oricum.`,
+        `People who search directly for your store name would usually find you through the cheapest ` +
+        `clicks in the account. Without brand protection, Performance Max also bids for them using ` +
+        `budget intended to acquire new customers. Performance then looks stronger because it includes ` +
+        `sales from people who were already looking for you.`,
       exemple: faraBrand.map((c) => c.nume),
     });
   }
@@ -114,15 +115,15 @@ export function analizeazaPmax(date: PmaxData, campanii: Campanie[]): PmaxAudit 
   if (schelet.length) {
     probleme.push({
       cod: "grup-schelet",
-      titlu: `${schelet.length === 1 ? "Un grup de anunturi e ramas" : `${schelet.length} grupuri de anunturi sunt ramase`} la jumatate`,
+      titlu: `${schelet.length === 1 ? "One asset group is" : `${schelet.length} asset groups are`} only partially built`,
       ron: 0,
       grad: "costa",
       detaliu:
-        `Un grup fie nu are deloc materiale — si atunci Google promoveaza doar produsele din feed, ` +
-        `ceea ce e o alegere valida — fie le are pe toate. Intre cele doua, Google nu are din ce ` +
-        `construi reclama si ii reduce livrarea. Grupurile de mai jos au cateva materiale si atat.`,
+        `An asset group can intentionally contain no assets and promote only feed products, or it can ` +
+        `contain a complete asset set. Between those states, Google has too little material to build ` +
+        `the ad and reduces delivery. The groups below contain only a few assets.`,
       exemple: schelet.map(
-        (g) => `${g.campanie} › ${g.nume} — ${g.total} ${g.total === 1 ? "material" : "materiale"}`
+        (g) => `${g.campanie} › ${g.nume} — ${g.total} ${g.total === 1 ? "asset" : "assets"}`
       ),
     });
   }
@@ -137,13 +138,12 @@ export function analizeazaPmax(date: PmaxData, campanii: Campanie[]): PmaxAudit 
   if (franate.length) {
     probleme.push({
       cod: "grup-franat",
-      titlu: `${franate.length === 1 ? "Un grup de anunturi e franat" : `${franate.length} grupuri de anunturi sunt franate`} de Google`,
+      titlu: `${franate.length === 1 ? "One asset group is" : `${franate.length} asset groups are`} limited by Google`,
       ron: 0,
       grad: "reglaj",
       detaliu:
-        `Google le limiteaza livrarea, de obicei pentru ca niste materiale au fost respinse. ` +
-        `Nu apare nicaieri intr-un raport de performanta — campania arata doar "mai slaba" ` +
-        `si nimeni nu stie de ce.`,
+        `Google limits their delivery, usually because some assets were rejected. This does not appear ` +
+        `in a performance report: the campaign simply looks weaker without showing why.`,
       exemple: franate.map((g) => `${g.campanie} › ${g.nume} — ${traduMotivGrup(g.motive)}`),
     });
   }
@@ -155,11 +155,11 @@ export function analizeazaPmax(date: PmaxData, campanii: Campanie[]): PmaxAudit 
 
 function traduMotivGrup(motive: string[]): string {
   const t: Record<string, string> = {
-    ASSET_GROUP_LIMITED: "materiale respinse de politicile Google",
-    ASSET_GROUP_DISAPPROVED: "grup respins",
-    ASSET_GROUP_PARTIALLY_LIMITED: "o parte din materiale, respinse",
-    CAMPAIGN_PENDING: "campania nu a inceput inca",
-    CAMPAIGN_ENDED: "campania s-a incheiat",
+    ASSET_GROUP_LIMITED: "assets rejected under Google policies",
+    ASSET_GROUP_DISAPPROVED: "asset group disapproved",
+    ASSET_GROUP_PARTIALLY_LIMITED: "some assets were rejected",
+    CAMPAIGN_PENDING: "campaign has not started yet",
+    CAMPAIGN_ENDED: "campaign has ended",
   };
   const curate = motive.filter((m) => m && m !== "CAMPAIGN_PAUSED");
   return curate.map((m) => t[m] ?? m.toLowerCase().replace(/_/g, " ")).join("; ");
@@ -221,7 +221,7 @@ export async function fetchPmaxData(customerId: string, auth: GoogleAdsAuth): Pr
   }
 
   const campanii: CampaniePmax[] = camp.map((r) => ({
-    nume: r.campaign?.name ?? "(fara nume)",
+    nume: r.campaign?.name ?? "(unnamed)",
     areListaBrand: r.campaign?.brandGuidelinesEnabled === true,
     negativeBrand: negPeCampanie.get(r.campaign?.name ?? "") ?? 0,
     extindereUrl: (r.campaign?.assetAutomationSettings ?? []).some(
@@ -251,7 +251,7 @@ export async function fetchPmaxData(customerId: string, auth: GoogleAdsAuth): Pr
     const nr = (...t: string[]) => tipuri.filter((x) => t.includes(x)).length;
     return {
       id,
-      nume: r.assetGroup?.name ?? "(fara nume)",
+      nume: r.assetGroup?.name ?? "(unnamed)",
       campanie: r.campaign?.name ?? "",
       stare: r.assetGroup?.status ?? "UNKNOWN",
       motive: r.assetGroup?.primaryStatusReasons ?? [],

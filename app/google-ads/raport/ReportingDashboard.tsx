@@ -34,26 +34,26 @@ type GroupPresentation = {
 
 const GROUP_PRESENTATION: Record<V2ProductLabel, GroupPresentation> = {
   LOSS_MAKER: {
-    tabLabel: "Consumă buget",
-    metricLabel: "Pierdere totală",
-    resultHeader: "Pierdere",
+    tabLabel: "Consumes budget",
+    metricLabel: "Total loss",
+    resultHeader: "Loss",
     tone: "loss",
   },
   NOT_PROMOTED: {
-    tabLabel: "Insuficient promovate",
-    metricLabel: "Produse valide",
-    resultHeader: "Stare",
+    tabLabel: "Underpromoted",
+    metricLabel: "Valid products",
+    resultHeader: "Status",
     tone: "neutral",
   },
   UNDERPROMOTED_POTENTIAL: {
-    tabLabel: "Au potențial",
-    metricLabel: "Volum de vânzări ratat",
-    resultHeader: "Potențial",
+    tabLabel: "Have potential",
+    metricLabel: "Missed sales volume",
+    resultHeader: "Potential",
     tone: "opportunity",
   },
   PERFORMER: {
-    tabLabel: "Profitabile",
-    metricLabel: "Profit total",
+    tabLabel: "Profitable",
+    metricLabel: "Total profit",
     resultHeader: "Profit",
     tone: "profit",
   },
@@ -63,25 +63,25 @@ const CONCLUSION_PRESENTATION: Record<
   GoogleAdsReportV2Conclusion["key"],
   { label: string; tone: GroupPresentation["tone"] }
 > = {
-  MEASURED_PRODUCT_LOSS: { label: "Pierdere măsurată", tone: "loss" },
-  SIMULATED_MISSED_SALES: { label: "Vânzări ratate", tone: "opportunity" },
+  MEASURED_PRODUCT_LOSS: { label: "Measured loss", tone: "loss" },
+  SIMULATED_MISSED_SALES: { label: "Missed sales", tone: "opportunity" },
   NOT_PROMOTED_PRODUCTS: {
-    label: "Produse insuficient promovate",
+    label: "Underpromoted products",
     tone: "neutral",
   },
 };
 
 const PERIOD_PRESENTATION = {
-  SELECTED: { label: "Perioada selectată", unavailableLabel: "Perioada selectată" },
-  PREVIOUS: { label: "Perioada anterioară", unavailableLabel: "Perioada anterioară" },
+  SELECTED: { label: "Selected period", unavailableLabel: "Selected period" },
+  PREVIOUS: { label: "Previous period", unavailableLabel: "Previous period" },
   PREVIOUS_YEAR: {
-    label: "Aceeași perioadă anul trecut",
-    unavailableLabel: "Aceeași perioadă anul trecut",
+    label: "Same period last year",
+    unavailableLabel: "Same period last year",
   },
 } as const;
 
 const formatNumber = (value: number, maximumFractionDigits = 0): string =>
-  new Intl.NumberFormat("ro-RO", { maximumFractionDigits }).format(value);
+  new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(value);
 
 const formatRatio = (value: number): string =>
   `${formatNumber(value, 2)}×`;
@@ -91,9 +91,9 @@ const formatMoney = (
   currency: ReportMetric<string>,
 ): string => {
   if (currency.status === "UNAVAILABLE") {
-    return `${formatNumber(value)} · Monedă indisponibilă`;
+    return `${formatNumber(value)} · Currency unavailable`;
   }
-  return new Intl.NumberFormat("ro-RO", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: currency.value,
     maximumFractionDigits: 0,
@@ -104,13 +104,13 @@ const metricRawValue = (metric: ReportMetric<number>): string =>
   metric.status === "AVAILABLE" ? String(metric.value) : "unavailable";
 
 const formatProductCount = (count: number, valid = false): string => {
-  const noun = count === 1 ? "produs" : "produse";
-  const qualifier = valid ? (count === 1 ? " valid" : " valide") : "";
-  return `${formatNumber(count)} ${noun}${qualifier}`;
+  const noun = count === 1 ? "product" : "products";
+  const qualifier = valid ? "valid " : "";
+  return `${formatNumber(count)} ${qualifier}${noun}`;
 };
 
 const formatUnavailableCount = (count: number): string =>
-  `${formatNumber(count)} ${count === 1 ? "indisponibil" : "indisponibile"}`;
+  `${formatNumber(count)} unavailable`;
 
 const formatDateRange = (from: string, to: string): string => {
   const date = (value: string) => new Date(`${value}T12:00:00Z`);
@@ -119,23 +119,22 @@ const formatDateRange = (from: string, to: string): string => {
   const sameMonth =
     start.getUTCMonth() === end.getUTCMonth() &&
     start.getUTCFullYear() === end.getUTCFullYear();
-  const day = new Intl.DateTimeFormat("ro-RO", {
+  const day = new Intl.DateTimeFormat("en-US", {
     day: "numeric",
     timeZone: "UTC",
   });
-  const monthYear = new Intl.DateTimeFormat("ro-RO", {
+  const month = new Intl.DateTimeFormat("en-US", {
     month: "long",
-    year: "numeric",
     timeZone: "UTC",
   });
-  const full = new Intl.DateTimeFormat("ro-RO", {
+  const full = new Intl.DateTimeFormat("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
     timeZone: "UTC",
   });
   return sameMonth
-    ? `${day.format(start)}–${day.format(end)} ${monthYear.format(end)}`
+    ? `${month.format(end)} ${day.format(start)}–${day.format(end)}, ${end.getUTCFullYear()}`
     : `${full.format(start)} – ${full.format(end)}`;
 };
 
@@ -155,7 +154,7 @@ export default function ReportingDashboard({
   const selectedPeriodLabel =
     selectedPeriod.status === "AVAILABLE"
       ? formatDateRange(selectedPeriod.range.from, selectedPeriod.range.to)
-      : "Perioadă indisponibilă";
+      : "Period unavailable";
 
   const selectTabFromKeyboard = (
     event: KeyboardEvent<HTMLButtonElement>,
@@ -189,12 +188,12 @@ export default function ReportingDashboard({
           <strong>DEVRIKA</strong>
         </div>
         <div className="reportPeriod">
-          <span>Audit doar în citire</span>
+          <span>Read-only audit</span>
           <b>{selectedPeriodLabel}</b>
         </div>
         {periodSelector ? (
           <form action={periodSelector.action} method="get" className="periodForm">
-            <label htmlFor="report-period">Raport salvat</label>
+            <label htmlFor="report-period">Saved report</label>
             <select
               id="report-period"
               name="report"
@@ -206,47 +205,47 @@ export default function ReportingDashboard({
                 </option>
               ))}
             </select>
-            <button type="submit">Arată perioada</button>
+            <button type="submit">Show period</button>
           </form>
         ) : null}
-        {demo ? <span className="demoBadge">MOD DEMO · Date simulate</span> : null}
+        {demo ? <span className="demoBadge">DEMO MODE · Simulated data</span> : null}
       </header>
 
       <section className="accountSummary" data-report-section="account-summary">
         <div className="heroCopy">
-          <span>Raport Google Ads · Produse și profitabilitate</span>
+          <span>Google Ads report · Products and profitability</span>
           <h1>{report.accountHeadline}</h1>
           <p>
-            Rezultatul compară vânzările măsurate cu țintele configurate pentru
-            publicitate. Nu reprezintă profit contabil net.
+            The result compares measured sales with the configured advertising
+            targets. It does not represent net accounting profit.
           </p>
         </div>
         <div
           className="targetGrid"
           role="region"
-          aria-label="Țintele contului"
+          aria-label="Account targets"
           data-mobile-target-columns="2"
         >
           <TargetTile
-            label="ROAS actual"
+            label="Current ROAS"
             metric={report.targets.currentRoas}
             format={formatRatio}
             status={report.targetPresentation.currentRoas}
           />
           <TargetTile
-            label="ROAS minim"
+            label="Minimum ROAS"
             metric={report.targets.minimumRoas}
             format={formatRatio}
             status={report.targetPresentation.minimumRoas}
           />
           <TargetTile
-            label="CPA actual"
+            label="Current CPA"
             metric={report.targets.currentCpa}
             format={(value) => formatMoney(value, report.currencyCode)}
             status={report.targetPresentation.currentCpa}
           />
           <TargetTile
-            label="CPA maxim"
+            label="Maximum CPA"
             metric={report.targets.maximumCpa}
             format={(value) => formatMoney(value, report.currencyCode)}
             status={report.targetPresentation.maximumCpa}
@@ -257,7 +256,7 @@ export default function ReportingDashboard({
       <main className="reportContent">
         <section
           className="conclusionGrid"
-          aria-label="Concluziile principale"
+          aria-label="Main conclusions"
           data-report-section="primary-conclusions"
           data-mobile-conclusions="stack"
         >
@@ -273,21 +272,21 @@ export default function ReportingDashboard({
 
         <section className="comparisonSection" data-report-section="period-comparison">
           <SectionHeading
-            title="Cifrele importante, comparate"
-            description="Perioada aleasă este comparată cu perioada anterioară și cu aceeași perioadă din anul trecut."
+            title="Key figures compared"
+            description="The selected period is compared with the previous period and the same period last year."
           />
           <div className="comparisonScroll" data-horizontal-scroll="comparison" tabIndex={0}>
-            <table aria-label="Comparația perioadelor" className="comparisonTable">
+            <table aria-label="Period comparison" className="comparisonTable">
               <thead>
                 <tr>
                   {[
-                    "Perioadă",
-                    "Buget",
-                    "Volum vanzari",
-                    "Nr. vanzari",
+                    "Period",
+                    "Budget",
+                    "Sales volume",
+                    "Number of sales",
                     "CPA",
                     "ROAS",
-                    "Profit / Pierdere",
+                    "Profit / Loss",
                   ].map((label) => (
                     <th key={label} scope="col">{label}</th>
                   ))}
@@ -304,19 +303,19 @@ export default function ReportingDashboard({
 
         <section className="productActions" data-report-section="product-actions">
           <SectionHeading
-            title="Produsele, grupate după ce trebuie să faci"
-            description="Fiecare produs apare o singură dată, în categoria indicată de datele perioadei selectate."
+            title="Products grouped by required action"
+            description="Each product appears once, in the category indicated by the selected period's data."
           />
           {report.productPopulationStatus === "PARTIAL" ? (
             <p className="partialNotice" role="status">
-              Date parțiale: sumele de mai jos descriu numai produsele măsurate,
-              nu întregul cont.
+              Partial data: the amounts below describe only measured products,
+              not the entire account.
             </p>
           ) : null}
           <div
             className="actionTabs"
             role="tablist"
-            aria-label="Acțiuni pentru produse"
+            aria-label="Product actions"
             data-horizontal-scroll="tabs"
           >
             {report.groups.map((group, index) => {
@@ -344,7 +343,7 @@ export default function ReportingDashboard({
                   <span>{GROUP_PRESENTATION[group.key].tabLabel}</span>
                   <b>{validCount}</b>
                   {quarantinedCount === null ? (
-                    <small>Număr indisponibil</small>
+                    <small>Count unavailable</small>
                   ) : quarantinedCount > 0 ? (
                     <small>{formatUnavailableCount(quarantinedCount)}</small>
                   ) : null}
@@ -375,16 +374,16 @@ function TargetTile({
     <div className="targetTile" data-target-tile data-status={status}>
       <small>{label}</small>
       <strong>
-        {metric.status === "AVAILABLE" ? format(metric.value) : "Indisponibil"}
+        {metric.status === "AVAILABLE" ? format(metric.value) : "Unavailable"}
       </strong>
       <span>
         {status === "warning"
-          ? "În afara țintei"
+          ? "Outside target"
           : status === "positive"
-            ? "În țintă"
+            ? "Within target"
             : status === "unavailable"
-              ? "Indisponibil"
-              : "Ținta nu este disponibilă"}
+              ? "Unavailable"
+              : "Target unavailable"}
       </span>
     </div>
   );
@@ -410,7 +409,7 @@ function ConclusionCard({
       ? isCount
         ? formatProductCount(conclusion.metric.value)
         : formatMoney(conclusion.metric.value, currency)
-      : "Indisponibil";
+      : "Unavailable";
   return (
     <article
       className={`conclusionCard ${presentation.tone}`}
@@ -419,19 +418,19 @@ function ConclusionCard({
     >
       <span className="evidenceLabel">
         {conclusion.evidenceLabel === "SIMULATED"
-          ? "Simulare"
+          ? "Simulation"
           : conclusion.evidenceLabel === "MEASURED"
-            ? "Măsurat"
-            : "Indisponibil"}
+            ? "Measured"
+            : "Unavailable"}
       </span>
       <h2>{presentation.label}</h2>
       <strong className="conclusionValue">{metric}</strong>
       <p>
-        {count === null ? "Număr indisponibil" : formatProductCount(count)} ·{" "}
+        {count === null ? "Count unavailable" : formatProductCount(count)} ·{" "}
         {conclusion.explanation}
       </p>
       {conclusion.totalScope === "PARTIAL" ? (
-        <small>Date parțiale, numai pentru produsele măsurate.</small>
+        <small>Partial data, measured products only.</small>
       ) : null}
     </article>
   );
@@ -457,9 +456,9 @@ function PeriodRow({
   if (row.status === "UNAVAILABLE") {
     return (
       <tr>
-        <td><strong>{presentation.unavailableLabel}</strong><span>Indisponibil</span></td>
+        <td><strong>{presentation.unavailableLabel}</strong><span>Unavailable</span></td>
         {Array.from({ length: 6 }, (_, index) => (
-          <td key={index}><span>Indisponibil</span></td>
+          <td key={index}><span>Unavailable</span></td>
         ))}
       </tr>
     );
@@ -484,20 +483,20 @@ function formatMetric(
   metric: ReportMetric<number>,
   format: (value: number) => string,
 ): string {
-  return metric.status === "AVAILABLE" ? format(metric.value) : "Indisponibil";
+  return metric.status === "AVAILABLE" ? format(metric.value) : "Unavailable";
 }
 
 function formatProfitOrLoss(
   metric: ReportMetric<ProfitOrLossValue>,
   currency: ReportMetric<string>,
 ): ReactElement | string {
-  if (metric.status === "UNAVAILABLE") return "Indisponibil";
+  if (metric.status === "UNAVAILABLE") return "Unavailable";
   const label =
     metric.value.outcome === "LOSS"
-      ? "Pierdere"
+      ? "Loss"
       : metric.value.outcome === "PROFIT"
         ? "Profit"
-        : "La prag";
+        : "At threshold";
   const tone = metric.value.outcome === "LOSS" ? "lossText" : "profitText";
   return (
     <span className={tone}>
@@ -539,21 +538,21 @@ function GroupPanel({
           <div className="supportFacts">
             <span>{formatProductCount(count, true)}</span>
             <span>
-              Buget măsurat: {formatMetric(group.totals.spend, (value) =>
+              Measured budget: {formatMetric(group.totals.spend, (value) =>
                 formatMoney(value, report.currencyCode),
               )}
             </span>
             {group.benchmarkApplies ? (
               <span>
-                Media contului: {group.benchmark.status === "AVAILABLE"
-                  ? `${formatNumber(group.benchmark.value, 1)} clickuri pentru o vânzare`
-                  : "Indisponibil"}
+                Account average: {group.benchmark.status === "AVAILABLE"
+                  ? `${formatNumber(group.benchmark.value, 1)} clicks per sale`
+                  : "Unavailable"}
               </span>
             ) : null}
             {quarantinedCount === null ? (
-              <span>Număr de clasificări indisponibil</span>
+              <span>Unavailable classification count</span>
             ) : quarantinedCount > 0 ? (
-              <span>{formatProductCount(quarantinedCount)} cu clasificare indisponibilă</span>
+              <span>{formatProductCount(quarantinedCount)} with unavailable classification</span>
             ) : null}
           </div>
         </div>
@@ -566,17 +565,17 @@ function GroupPanel({
           <strong>{formatGroupClaim(claim.metric, claim.kind, report.currencyCode)}</strong>
           <span>
             {claim.metric.status === "UNAVAILABLE"
-              ? "Indisponibil"
+              ? "Unavailable"
               : claim.kind === "simulation"
-                ? "Simulare"
-                : "Măsurat"}
+                ? "Simulation"
+                : "Measured"}
           </span>
         </div>
       </div>
       {claim.kind === "simulation" ? (
         <p className="simulationNotice">
-          Simularea folosește datele măsurate ale perioadei și nu este o garanție
-          pentru vânzări viitoare.
+          The simulation uses the period's measured data and is not a guarantee
+          of future sales.
         </p>
       ) : null}
       <div
@@ -584,17 +583,17 @@ function GroupPanel({
         data-horizontal-scroll="products"
         tabIndex={0}
       >
-        <table aria-label={`Produse: ${presentation.tabLabel}`} className="productTable">
+        <table aria-label={`Products: ${presentation.tabLabel}`} className="productTable">
           <thead>
             <tr>
               {[
-                "Produs",
-                "Clickuri",
+                "Product",
+                "Clicks",
                 "Cost",
-                "Nr. vanzari",
-                "Clickuri / vânzare",
+                "Number of sales",
+                "Clicks / sale",
                 "CPA",
-                "Volum vanzari",
+                "Sales volume",
                 "ROAS",
                 presentation.resultHeader,
               ].map((label) => (
@@ -615,13 +614,13 @@ function GroupPanel({
         {group.rows.length === 0 ? (
           <div className="emptyState">
             <strong>{group.emptyState}</strong>
-            <span>Categoria rămâne vizibilă și va primi produse când există date.</span>
+            <span>The category remains visible and will receive products when data is available.</span>
           </div>
         ) : null}
       </div>
       <footer className="groupFooter">
-        Toate valorile sunt pentru perioada selectată.
-        {group.totalScope === "PARTIAL" ? " Totalurile folosesc date parțiale." : ""}
+        All values are for the selected period.
+        {group.totalScope === "PARTIAL" ? " Totals use partial data." : ""}
       </footer>
     </div>
   );
@@ -648,7 +647,7 @@ function formatGroupClaim(
   kind: "money" | "count" | "simulation",
   currency: ReportMetric<string>,
 ): string {
-  if (metric.status === "UNAVAILABLE") return "Indisponibil";
+  if (metric.status === "UNAVAILABLE") return "Unavailable";
   if (kind === "count") return formatProductCount(metric.value);
   return formatMoney(Math.abs(metric.value), currency);
 }
@@ -670,7 +669,7 @@ function ProductRow({
       <td data-product-id={row.productId}>
         <div className="productIdentity">
           <span aria-hidden="true">{initials || "P"}</span>
-          <div><strong>{row.title}</strong><small>ID produs: {row.productId}</small></div>
+          <div><strong>{row.title}</strong><small>Product ID: {row.productId}</small></div>
         </div>
       </td>
       <td>{formatNumber(row.clicks, 2)}</td>
@@ -695,24 +694,24 @@ function ProductResult({
   if (row.classificationStatus === "QUARANTINED") {
     return (
       <span className="unavailableResult">
-        <strong>Indisponibil</strong>
+        <strong>Unavailable</strong>
         <small>{row.classificationText}</small>
       </span>
     );
   }
   if (row.groupKey === "NOT_PROMOTED") {
-    return <span className="neutralResult"><strong>Sub prag</strong><small>Măsurat</small></span>;
+    return <span className="neutralResult"><strong>Below threshold</strong><small>Measured</small></span>;
   }
   if (row.groupKey === "LOSS_MAKER") {
     return row.productLoss.status === "AVAILABLE" ? (
-      <span className="lossText"><strong>Pierdere</strong><small>{formatMoney(row.productLoss.value, currency)}</small></span>
-    ) : "Indisponibil";
+      <span className="lossText"><strong>Loss</strong><small>{formatMoney(row.productLoss.value, currency)}</small></span>
+    ) : "Unavailable";
   }
-  if (row.financialResult.status === "UNAVAILABLE") return "Indisponibil";
+  if (row.financialResult.status === "UNAVAILABLE") return "Unavailable";
   const isProfit = row.financialResult.value.outcome !== "LOSS";
   return (
     <span className={isProfit ? "profitText" : "lossText"}>
-      <strong>{isProfit ? "Profit" : "Pierdere"}</strong>
+      <strong>{isProfit ? "Profit" : "Loss"}</strong>
       <small>{formatMoney(Math.abs(row.financialResult.value.displayAmount), currency)}</small>
     </span>
   );

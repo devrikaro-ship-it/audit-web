@@ -15,7 +15,12 @@ import { useState } from "react";
 import { C, sora } from "@/lib/theme";
 import type { Segmentare } from "@/lib/gads-findings";
 
-const lei = (n: number) => `${Math.round(n).toLocaleString("ro-RO")} lei`;
+const money = (n: number, currencyCode: string) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currencyCode,
+    maximumFractionDigits: 0,
+  }).format(Math.round(n));
 
 /** Cele cinci etichete, intr-un singur loc: nume, culoare si ce faci cu grupa. */
 const ETICHETE = [
@@ -23,59 +28,61 @@ const ETICHETE = [
     cheie: "heroes" as const,
     nume: "Heroes",
     culoare: "#3F4EA8",
-    ce: "Au vandut destul cat sa nu mai fie discutie. Pe astea se sprijina contul, si tot aici merg banii in plus.",
+    ce: "They have sold enough to prove their value. They support the account and should receive additional budget.",
   },
   {
     cheie: "sidekicks" as const,
     nume: "Sidekicks",
     culoare: "#C98A00",
-    ce: "Au vandut, dar aproape nimeni nu le-a vazut. Cea mai ieftina crestere din cont: nu trebuie reparate, trebuie aratate.",
+    ce: "They have sold, but received very little exposure. They do not need fixing; they need more visibility.",
   },
   {
     cheie: "villains" as const,
     nume: "Villains",
     culoare: "#C0392B",
-    ce: "Au avut trafic serios si tot nu se acopera. Aici se taie, iar banii pleaca spre primele doua grupe.",
+    ce: "They received meaningful traffic but still failed to break even. Limit them and move budget to the first two groups.",
   },
   {
     cheie: "zombies" as const,
     nume: "Zombies",
     culoare: "#5F7391",
-    ce: "N-au strans destul trafic cat sa se poata spune ceva despre ele. Nu sunt produse proaste, sunt produse netestate.",
+    ce: "They have not received enough traffic for a reliable conclusion. They are untested, not necessarily weak products.",
   },
   {
     cheie: "zeroZombies" as const,
     nume: "0 Zombies",
     culoare: "#A8B4C9",
-    ce: "Nu au fost aratate niciodata. Nu e o problema de performanta, ci de feed sau de structura a campaniilor.",
+    ce: "They have never been shown. This points to the feed or campaign structure, not product performance.",
   },
 ];
 
 export default function CatalogPePerformanta({
   harti,
+  currencyCode,
 }: {
   harti: { eticheta: string; segmentare: Segmentare }[];
+  currencyCode: string;
 }) {
   const [ales, setAles] = useState(0);
   const h = harti[Math.min(ales, harti.length - 1)];
   const seg = h.segmentare;
 
   const lentile = [
-    { titlu: "Produse", val: (g: Segmentare["heroes"]) => g.count, cuZeroZombies: true },
-    { titlu: "Cat mananca", val: (g: Segmentare["heroes"]) => g.cost, cuZeroZombies: false },
-    { titlu: "Cat aduc", val: (g: Segmentare["heroes"]) => g.valoare, cuZeroZombies: false },
+    { titlu: "Products", val: (g: Segmentare["heroes"]) => g.count, cuZeroZombies: true },
+    { titlu: "Budget used", val: (g: Segmentare["heroes"]) => g.cost, cuZeroZombies: false },
+    { titlu: "Sales generated", val: (g: Segmentare["heroes"]) => g.valoare, cuZeroZombies: false },
   ];
 
   return (
     <>
       <p className="mb-4 text-[14px] leading-relaxed" style={{ color: C.gray500 }}>
-        Aceleasi produse, privite in trei feluri: cate sunt, cat buget mananca si cat aduc inapoi.
-        Cand o grupa ocupa mult mai mult din inelul din mijloc decat din cel din dreapta, acolo
-        pleaca banii.
+        The same products viewed three ways: how many there are, how much budget they use, and how
+        much they generate. When a group occupies much more of the middle ring than the right-hand
+        ring, that is where budget is being lost.
       </p>
 
       {harti.length > 1 && (
-        <div className="mb-5 flex flex-wrap gap-2" role="group" aria-label="Perioada analizata">
+        <div className="mb-5 flex flex-wrap gap-2" role="group" aria-label="Analysis period">
           {harti.map((x, i) => {
             const activ = i === Math.min(ales, harti.length - 1);
             return (
@@ -106,9 +113,9 @@ export default function CatalogPePerformanta({
           className="mb-5 rounded-xl border px-5 py-3.5 text-[13.5px] leading-relaxed"
           style={{ borderColor: C.border, background: C.yellowBg, color: C.yellow }}
         >
-          Masurarea contului e stricata, deci impartirea de mai jos e o <b>ipoteza</b>, nu un
-          verdict: se sprijina pe niste vanzari in care nu putem avea incredere. Prima reparatie e
-          masurarea; dupa ea, grupele astea devin o harta pe care se poate lucra.
+          Account measurement is unreliable, so the grouping below is a <b>hypothesis</b>, not a
+          verdict: it relies on sales data that cannot yet be trusted. Fix measurement first; the
+          groups will then become an actionable map.
         </div>
       )}
 
@@ -134,8 +141,8 @@ export default function CatalogPePerformanta({
       </div>
 
       <p className="mb-4 text-[12.5px] leading-relaxed" style={{ color: C.gray400 }}>
-        Produsele fara nicio afisare nu au cifre de cheltuiala sau de vanzari, deci apar doar in
-        primul inel.
+        Products with no impressions have no spend or sales data, so they appear only in the first
+        ring.
       </p>
 
       <div className="mb-9 overflow-hidden rounded-2xl border bg-white" style={{ borderColor: C.border }}>
@@ -157,9 +164,9 @@ export default function CatalogPePerformanta({
                   {e.nume}
                 </span>
                 <span className="text-[13px] font-semibold tabular-nums" style={{ color: C.gray600 }}>
-                  {g.count} {g.count === 1 ? "produs" : "produse"}
-                  {g.cost > 0 && ` · ${lei(g.cost)} cheltuiti`}
-                  {g.valoare > 0 && ` · ${lei(g.valoare)} adusi`}
+                  {g.count} {g.count === 1 ? "product" : "products"}
+                  {g.cost > 0 && ` · ${money(g.cost, currencyCode)} spent`}
+                  {g.valoare > 0 && ` · ${money(g.valoare, currencyCode)} generated`}
                 </span>
               </div>
               <p className="text-[13.5px] leading-relaxed" style={{ color: C.gray600 }}>
@@ -186,7 +193,7 @@ function Inel({ segmente }: { segmente: { nume: string; val: number; culoare: st
   if (total <= 0) {
     return (
       <div className="flex h-[132px] items-center justify-center text-[13px]" style={{ color: C.gray400 }}>
-        fara date
+        no data
       </div>
     );
   }
