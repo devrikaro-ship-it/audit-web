@@ -1,0 +1,25 @@
+{
+  "completed": [
+    "Read the repair brief and independent review for revision 9eefc2b48ea16c7c4b56e11ed423d244ab83ab73.",
+    "Confirmed the working tree starts clean at the reviewed revision.",
+    "Measured the accepted defect: campaign fields have no period metadata, but the campaign badge claims a monthly-normalized view."
+  ],
+  "findings": [
+    "Currency, stored values, English copy, literal names, layout, and immutable existing-PDF behavior were accepted and remain frozen.",
+    "Only current comparison and product values are genuinely monthly averages; campaign values require neutral provenance."
+  ],
+  "decisions": [
+    "Add an extracted actual-PDF assertion for a neutral campaign badge, unchanged campaign values, and absence of unsupported campaign period or normalization claims.",
+    "Use plain Monthly averages only for current and product sections."
+  ],
+  "files": [
+    "lib/gads-report-pdf.integration.test.ts",
+    ".superpowers/sdd/2026-09-08-reporting-only/pdf/repair-checkpoint-payload.json"
+  ],
+  "commands": [
+    "python3 /Users/VladMoloso/.codex/skills/codex-model-router/scripts/recommend_model.py standard",
+    "python3 /Users/VladMoloso/.codex/skills/codex-checkpoint/scripts/checkpoint_state.py resume --worker-id 01a08278-8c9e-7150-b281-b895f6ea554e"
+  ],
+  "blockers": [],
+  "next_action": "Commit the repair RED test, derive its exact impact plan, and run the planned bounded negative control against the reviewed defective generator."
+}

@@ -114,6 +114,18 @@ describe("real PDF generation", () => {
     expect(text).toContain("How campaigns are organized now");
     expect(text).toContain("How the account should be organized");
     expect(text).toContain("FUTURE SIMULATION - NOT A PROMISE");
+    const campaignPage = probe.pages.find(({ text: pageText }) => pageText.includes("PMax <UK> & Brand"));
+    expect(campaignPage).toBeDefined();
+    const campaignText = campaignPage!.text.replaceAll(/\s+/g, " ").trim();
+    expect(campaignText).toContain("CAMPAIGN PERFORMANCE");
+    expect(campaignText).toContain("PMax <UK> & Brand");
+    expect(campaignText).toContain("900 GBP");
+    expect(campaignText).toContain("2,700 GBP");
+    expect(campaignText).toContain("3x");
+    expect(campaignText).not.toMatch(/MONTHLY[- ]NORMALIZED|LAST 30 DAYS|30-DAY/i);
+    expect(text).toContain("MONTHLY AVERAGES - RANKED BY COST");
+    expect(text).toContain("MONTHLY AVERAGES - RANKED BY OPPORTUNITY");
+    expect(text).not.toContain("stored monthly-normalized");
     expect(text).not.toContain("RON");
     expect(text).not.toMatch(/CAMPANIE|VANZARI|Cum sunt|Masurat|Recomandare|Doar cautarile|Produsele/);
     expect(probe.pageCount).toBeGreaterThan(0);
