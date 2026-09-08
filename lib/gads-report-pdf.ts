@@ -12,8 +12,12 @@ const BORDER = "#DFE5EF";
 const RED = "#DC3F4E";
 const GREEN = "#148458";
 
-const money = (value: number) => `${Math.round(value).toLocaleString("en-US")} RON`;
-const metric = (value: number | null, suffix = "") => value === null ? "-" : `${Math.round(value).toLocaleString("ro-RO")}${suffix}`;
+const money = (value: number, currencyCode: string | null) =>
+  `${Math.round(value).toLocaleString("en-US")} ${currencyCode ?? "currency units"}`;
+const moneyMetric = (value: number | null, currencyCode: string | null) =>
+  value === null ? "-" : money(value, currencyCode);
+const metric = (value: number | null, suffix = "") =>
+  value === null ? "-" : `${Math.round(value).toLocaleString("en-US")}${suffix}`;
 
 function addPageTitle(doc: PDFKit.PDFDocument, title: string, badge: string): void {
   const y = doc.y;
@@ -33,12 +37,12 @@ function ensureSpace(doc: PDFKit.PDFDocument, height: number): void {
   if (doc.y + height > doc.page.height - 50) doc.addPage();
 }
 
-function comparisonTable(doc: PDFKit.PDFDocument, report: GadsReportSnapshot): void {
+function comparisonTable(doc: PDFKit.PDFDocument, report: GadsReportSnapshot, currencyCode: string | null): void {
   const rows = [
-    ["Advertising cost", money(report.current.spend), money(report.optimized.spend)],
-    ["Orders", Math.round(report.current.orders).toLocaleString("ro-RO"), Math.round(report.optimized.orders).toLocaleString("ro-RO")],
-    ["CPA", metric(report.current.cpa, " RON"), metric(report.optimized.cpa, " RON")],
-    ["Sales", money(report.current.revenue), money(report.optimized.revenue)],
+    ["Advertising cost", money(report.current.spend, currencyCode), money(report.optimized.spend, currencyCode)],
+    ["Orders", Math.round(report.current.orders).toLocaleString("en-US"), Math.round(report.optimized.orders).toLocaleString("en-US")],
+    ["CPA", moneyMetric(report.current.cpa, currencyCode), moneyMetric(report.optimized.cpa, currencyCode)],
+    ["Sales", money(report.current.revenue, currencyCode), money(report.optimized.revenue, currencyCode)],
     ["ROAS", metric(report.current.roas, "x"), metric(report.optimized.roas, "x")],
   ];
   const widths = [165, 165, 185];
@@ -61,7 +65,7 @@ function comparisonTable(doc: PDFKit.PDFDocument, report: GadsReportSnapshot): v
   doc.y = y + 10;
 }
 
-function productTable(doc: PDFKit.PDFDocument, rows: DeliveryProduct[], amountLabel: string, amountColor: string): void {
+function productTable(doc: PDFKit.PDFDocument, rows: DeliveryProduct[], amountLabel: string, amountColor: string, currencyCode: string | null): void {
   const headers = ["PRODUCT", "COST", "ORDERS", "CPA", "SALES", "ROAS", amountLabel];
   const widths = [170, 60, 45, 55, 65, 45, 75];
   const x = 40;
@@ -78,10 +82,11 @@ function productTable(doc: PDFKit.PDFDocument, rows: DeliveryProduct[], amountLa
       doc.addPage();
       y = 45;
     }
-    const values = [row.title, money(row.cost), Math.round(row.orders).toLocaleString("ro-RO"), metric(row.cpa, " RON"), money(row.revenue), metric(row.roas, "x"), money(row.amount)];
+    const values = [row.title, money(row.cost, currencyCode), Math.round(row.orders).toLocaleString("en-US"), moneyMetric(row.cpa, currencyCode), money(row.revenue, currencyCode), metric(row.roas, "x"), money(row.amount, currencyCode)];
     cellX = x;
     values.forEach((value, index) => {
-      doc.fillColor(index === 6 ? amountColor : NAVY).font(index === 0 || index === 6 ? "Helvetica-Bold" : "Helvetica").fontSize(index === 0 ? 8.5 : 7.5)
+      const valueFontSize = index === 0 ? 8.5 : currencyCode === null ? 6.5 : 7.5;
+      doc.fillColor(index === 6 ? amountColor : NAVY).font(index === 0 || index === 6 ? "Helvetica-Bold" : "Helvetica").fontSize(valueFontSize)
         .text(value, cellX + 5, y + 9, { width: widths[index] - 10, align: index === 0 ? "left" : "right", height: 18, ellipsis: true });
       cellX += widths[index];
     });
@@ -91,8 +96,8 @@ function productTable(doc: PDFKit.PDFDocument, rows: DeliveryProduct[], amountLa
   doc.y = y + 12;
 }
 
-function campaignTable(doc: PDFKit.PDFDocument, rows: DeliveryCampaign[]): void {
-  const headers = ["CAMPANIE", "TIP", "COST", "VANZARI", "ROAS"];
+function campaignTable(doc: PDFKit.PDFDocument, rows: DeliveryCampaign[], currencyCode: string | null): void {
+  const headers = ["CAMPAIGN", "TYPE", "COST", "SALES", "ROAS"];
   const widths = [205, 105, 70, 75, 60];
   const x = 40;
   let y = doc.y;
@@ -104,7 +109,7 @@ function campaignTable(doc: PDFKit.PDFDocument, rows: DeliveryCampaign[]): void 
   });
   y += 26;
   rows.forEach((row) => {
-    const values = [row.name, row.channel.replaceAll("_", " "), money(row.spend), money(row.revenue), metric(row.roas, "x")];
+    const values = [row.name, row.channel.replaceAll("_", " "), money(row.spend, currencyCode), money(row.revenue, currencyCode), metric(row.roas, "x")];
     cellX = x;
     values.forEach((value, index) => {
       doc.fillColor(NAVY).font(index === 0 ? "Helvetica-Bold" : "Helvetica").fontSize(index === 0 ? 8 : 7.5)
@@ -119,6 +124,7 @@ function campaignTable(doc: PDFKit.PDFDocument, rows: DeliveryCampaign[]): void 
 
 function buildPdf(report: GadsReportSnapshot): Promise<Buffer> {
   return new Promise((resolve, reject) => {
+    const currencyCode = report.reportV2?.currencyCode ?? null;
     const doc = new PDFDocument({ size: "A4", margin: 40, info: { Title: `Google Ads profitability audit - ${report.accountName}`, Author: "Devrika" } });
     const chunks: Buffer[] = [];
     doc.on("data", (chunk: Buffer) => chunks.push(chunk));
@@ -129,22 +135,22 @@ function buildPdf(report: GadsReportSnapshot): Promise<Buffer> {
     doc.fillColor(MUTED).font("Helvetica").fontSize(10).text(`${report.accountName}  |  ${report.website}`);
     doc.moveDown(1.2);
     const cardsY = doc.y;
-    metricCard(doc, 40, cardsY, 250, "Break-even CPA", money(report.breakEvenCpa));
+    metricCard(doc, 40, cardsY, 250, "Break-even CPA", money(report.breakEvenCpa, currencyCode));
     metricCard(doc, 305, cardsY, 250, "Break-even ROAS", metric(report.breakEvenRoas, "x"));
     doc.y = cardsY + 82;
 
     addPageTitle(doc, "Current account vs optimized + CSS", "Measured vs future simulation");
-    comparisonTable(doc, report);
-    doc.fillColor(MUTED).font("Helvetica").fontSize(8).text("The optimized scenario includes an estimated 20% CSS CPC reduction and diminishing returns as budget grows. It is a simulation, not a guarantee.", 40, doc.y, { width: 515 });
+    comparisonTable(doc, report, currencyCode);
+    doc.fillColor(MUTED).font("Helvetica").fontSize(8).text("Current figures are the stored monthly-normalized view. The optimized scenario includes an estimated 20% CSS CPC reduction and diminishing returns as budget grows. It is a simulation, not a guarantee.", 40, doc.y, { width: 515 });
     doc.moveDown(1.3);
 
     ensureSpace(doc, 120);
-    addPageTitle(doc, "Products consuming your budget", "Measured from Google Ads - ranked by cost");
-    productTable(doc, report.losses, "MONEY AT RISK", RED);
+    addPageTitle(doc, "Products consuming your budget", "Monthly-normalized report view - ranked by cost");
+    productTable(doc, report.losses, "MONEY AT RISK", RED, currencyCode);
 
     ensureSpace(doc, 120);
-    addPageTitle(doc, "Profitable products receiving too little traffic", "Measured from Google Ads - ranked by opportunity");
-    productTable(doc, report.opportunities, "OPPORTUNITY", GREEN);
+    addPageTitle(doc, "Profitable products receiving too little traffic", "Monthly-normalized report view - ranked by opportunity");
+    productTable(doc, report.opportunities, "OPPORTUNITY", GREEN, currencyCode);
 
     ensureSpace(doc, 130);
     addPageTitle(doc, "How the account could look after optimization", "Future simulation - not a promise");
@@ -154,22 +160,22 @@ function buildPdf(report: GadsReportSnapshot): Promise<Buffer> {
     doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Give controlled growth to products already proven profitable.");
     doc.moveDown(0.7).fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("3. Grow under control");
     doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Increase spend only while simulated ROAS remains above break-even.");
-    doc.moveDown(1.2).fontSize(8).text("Operating costs are modeled at a fixed 20% of sales. All current-account figures come from the connected Google Ads account; future figures are simulations.");
+    doc.moveDown(1.2).fontSize(8).text("Operating costs are modeled at a fixed 20% of sales. All current-account figures use the stored monthly-normalized report view; future figures are simulations.");
 
     if (report.campaigns?.length) {
       ensureSpace(doc, 150);
-      addPageTitle(doc, "Cum sunt organizate campaniile acum", "Masurat din Google Ads - ultimele 30 de zile");
-      campaignTable(doc, report.campaigns);
+      addPageTitle(doc, "How campaigns are organized now", "Monthly-normalized report view");
+      campaignTable(doc, report.campaigns, currencyCode);
     }
 
     ensureSpace(doc, 190);
-    addPageTitle(doc, "Cum trebuie organizat contul", "Recomandare Devrika");
-    doc.fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("1. Search - protectie brand");
-    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Doar cautarile dupa numele magazinului. Mereu activa, cu buget mic si controlat.");
-    doc.moveDown(0.7).fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("2. Performance Max - produse profitabile");
-    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Produsele dovedite peste ROAS-ul minim primesc bugetul principal de crestere.");
+    addPageTitle(doc, "How the account should be organized", "Devrika recommendation");
+    doc.fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("1. Search - brand protection");
+    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Only searches for the store name. Always on, with a small controlled budget.");
+    doc.moveDown(0.7).fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("2. Performance Max - profitable products");
+    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Products proven above the minimum ROAS receive the main growth budget.");
     doc.moveDown(0.7).fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("3. Standard Shopping - control");
-    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Produsele si cautarile sunt controlate separat; produsele sub prag sunt limitate.");
+    doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Products and searches are controlled separately; products below the threshold are limited.");
     doc.end();
   });
 }

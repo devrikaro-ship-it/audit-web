@@ -1,0 +1,76 @@
+{
+  "base_revision": "c5b3788cabcf94f348255596645762c2b02b5fc8",
+  "changes": [
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/pdf/checkpoint-payload.json",
+      "risk": "fast",
+      "rule_id": "pdf_handoff_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/pdf/checks.json",
+      "risk": "fast",
+      "rule_id": "pdf_handoff_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "pdf_integration"
+      ],
+      "path": "lib/gads-report-pdf.integration.test.ts",
+      "risk": "fast",
+      "rule_id": "pdf_generator_behavior",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-report-pdf.integration.test.ts",
+        "--reporter=verbose"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 5,
+      "id": "pdf_integration",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/pdf/checks.json",
+  "declaration_sha256": "0829395771527d41e2a0339fa2d8d1c88621e98ff0e349dd0eadf9ac3dd863a8",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "345b31382fd040f9fa3412359321da6775098f8258a0fc39f51e0a5673fd16eb",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "4e91bee37d5fae662db058ed8b1c12752b71407d",
+  "risk": "fast",
+  "schema_version": 1
+}

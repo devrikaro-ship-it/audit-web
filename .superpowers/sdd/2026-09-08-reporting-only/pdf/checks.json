@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "pdf_integration": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-report-pdf.integration.test.ts",
+        "--reporter=verbose"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 5
+    }
+  },
+  "rules": [
+    {
+      "id": "pdf_generator_behavior",
+      "patterns": [
+        "lib/gads-report-pdf.ts",
+        "lib/gads-report-pdf.integration.test.ts"
+      ],
+      "statuses": [
+        "A",
+        "M"
+      ],
+      "category": "runtime",
+      "risk": "fast",
+      "checks": [
+        "pdf_integration"
+      ]
+    },
+    {
+      "id": "pdf_handoff_artifacts",
+      "patterns": [
+        ".superpowers/sdd/2026-09-08-reporting-only/pdf/**"
+      ],
+      "statuses": [
+        "A",
+        "M"
+      ],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": [],
+      "allow_no_checks": true
+    }
+  ]
+}

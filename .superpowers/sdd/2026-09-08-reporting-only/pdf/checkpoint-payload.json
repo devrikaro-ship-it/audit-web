@@ -1,0 +1,33 @@
+{
+  "completed": [
+    "Read the frozen PDF brief, contract point, handoff, task specification, reporting-only scope, PDF skill, TDD guidance, and relevant report snapshot types.",
+    "Confirmed the repository starts clean at c5b3788cabcf94f348255596645762c2b02b5fc8.",
+    "Measured the defect in money, comparisonTable, productTable, campaignTable, and buildPdf: monetary values and CPA force RON, and campaign/recommendation copy remains Romanian.",
+    "Observed the expected RED result: account-currency and explicit legacy-currency assertions failed while the immutable existing-PDF control passed.",
+    "Updated the existing PDFKit generator to use reportV2.currencyCode, explicit currency units for legacy reports, English copy, and honest monthly-normalized provenance without replacing stored V1 values.",
+    "Ran the bounded targeted suite successfully with three passing tests.",
+    "Rendered and visually inspected every page of the GBP and legacy PDFs; repaired the one clipped legacy CPA cell and reinspected all four final pages successfully."
+  ],
+  "findings": [
+    "reportV2.currencyCode is the authoritative currency for V2 snapshots; legacy snapshots have no authoritative currency field.",
+    "The generator uses monthly-normalized current and optimized values; reportV2 selected-period totals must not replace them.",
+    "The existing integration test checks only the PDF header and size, so it cannot catch currency, language, provenance, or layout regressions."
+  ],
+  "decisions": [
+    "Use explicit ISO currency codes for V2 PDFs and the literal `currency units` for legacy PDFs with unavailable currency.",
+    "Exercise the production generator and use installed PyMuPDF for text extraction and page rendering.",
+    "Preserve the existing PDFKit design and immutable existing-file path."
+  ],
+  "files": [
+    "lib/gads-report-pdf.ts",
+    "lib/gads-report-pdf.integration.test.ts",
+    ".superpowers/sdd/2026-09-08-reporting-only/pdf"
+  ],
+  "commands": [
+    "python3 /Users/VladMoloso/.codex/skills/codex-model-router/scripts/recommend_model.py standard",
+    "python3 /Users/VladMoloso/.codex/skills/codex-checkpoint/scripts/checkpoint_state.py resume --worker-id 01a08278-8c9e-7150-b281-b895f6ea554e",
+    "python3 /Users/VladMoloso/.codex/skills/codex-delivery/scripts/run_bounded_command.py planned --plan .superpowers/sdd/2026-09-08-reporting-only/pdf/red-impact-plan.json --command-id pdf_integration --profile targeted_tests --cwd /Users/VladMoloso/seo-audit -- npx vitest run lib/gads-report-pdf.integration.test.ts --reporter=verbose"
+  ],
+  "blockers": [],
+  "next_action": "Commit the scoped candidate with generated PDF evidence, derive the exact final impact plan, and run the targeted check once against that frozen revision."
+}

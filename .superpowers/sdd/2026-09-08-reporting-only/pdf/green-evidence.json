@@ -1,0 +1,17 @@
+{
+  "command_id": "pdf_integration",
+  "command": "npx vitest run lib/gads-report-pdf.integration.test.ts --reporter=verbose",
+  "runner": "/Users/VladMoloso/.codex/skills/codex-delivery/scripts/run_bounded_command.py planned",
+  "profile": "targeted_tests",
+  "observed_outcome": "COMMAND_SUCCEEDED",
+  "test_counts": {
+    "files_passed": 1,
+    "tests_passed": 3,
+    "tests_failed": 0
+  },
+  "controls": [
+    "The actual GBP PDF preserved names, used GBP on monetary values, retained monthly-normalized V1 totals, and contained only English generator-owned copy.",
+    "The actual legacy PDF described unknown currency as currency units instead of inventing RON.",
+    "Generating the same report ID twice returned the original PDF bytes unchanged."
+  ]
+}

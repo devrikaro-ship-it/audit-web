@@ -1,0 +1,16 @@
+{
+  "revision": "4e91bee37d5fae662db058ed8b1c12752b71407d",
+  "command_id": "pdf_integration",
+  "command": "npx vitest run lib/gads-report-pdf.integration.test.ts --reporter=verbose",
+  "observed_outcome": "COMMAND_FAILED",
+  "production_defect": "The actual extracted PDF text used hard-coded RON and retained Romanian campaign and account-organization copy.",
+  "failing_arms": [
+    "The V2 fixture expected account currency GBP but extracted 1,000 RON.",
+    "The legacy fixture expected explicit unknown currency units but extracted 1,000 RON."
+  ],
+  "passing_control": "The immutable existing-PDF test passed and returned the original bytes when the same report ID was generated again.",
+  "test_counts": {
+    "failed": 2,
+    "passed": 1
+  }
+}
