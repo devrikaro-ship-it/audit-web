@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "phase": "RED",
+  "checkedRevision": "0408541902bbb6566afc2286d518e420c27149a3",
+  "baseRevision": "2be28eef4fd1e544a3543a2746df80d4134a08b1",
+  "impactPlan": {
+    "path": ".superpowers/sdd/2026-09-08-reporting-only/release-compiler/red-impact-plan.json",
+    "sha256": "e9567e70f9dd2b1e4d244bd5231de617c14df332fc41e9d6aa9387cb454e192c"
+  },
+  "commandId": "strict_typecheck",
+  "profile": "targeted_tests",
+  "command": "npx tsc --noEmit --incremental false",
+  "wrapper": "/Users/VladMoloso/.codex/skills/codex-delivery/scripts/run_bounded_command.py planned",
+  "cwd": "/Users/VladMoloso/seo-audit",
+  "result": "failed_as_expected",
+  "exitStatus": 2,
+  "wallTimeSeconds": 3.6678,
+  "diagnostics": [
+    {
+      "file": "app/google-ads/conturi/page.test.tsx",
+      "codes": ["TS2345", "TS2345"],
+      "cause": "Empty-array mock implementations inferred never[] return types."
+    },
+    {
+      "file": "app/public-access-boundary.test.tsx",
+      "codes": ["TS2540", "TS2540", "TS7053"],
+      "cause": "The fixture assigned to the readonly NODE_ENV declaration and indexed a React HTMLAttributes value with an undeclared data attribute."
+    },
+    {
+      "file": "lib/gads-session.test.ts",
+      "codes": ["TS2540", "TS2540", "TS2540"],
+      "cause": "The fixture assigned to the readonly NODE_ENV declaration."
+    }
+  ],
+  "scopeObservation": "The strict compiler reported eight diagnostics, all in three writable test fixtures; the other three declared fixture files compiled cleanly."
+}

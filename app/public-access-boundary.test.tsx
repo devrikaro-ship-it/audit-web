@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import path from "node:path";
 import ts from "typescript";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import HubPage, { metadata as hubMetadata } from "@/app/hub/page";
 import PrivacyPage, { metadata as privacyMetadata } from "@/app/confidentialitate/page";
 import TermsPage, { metadata as termsMetadata } from "@/app/termeni/page";
@@ -557,10 +557,14 @@ describe("public Google Ads access boundary", () => {
       .sort();
     expect(registeredApiSources).toEqual(apiSources);
 
-    const previousNodeEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = "production";
-    const rewrites = await nextConfig.rewrites?.();
-    process.env.NODE_ENV = previousNodeEnv;
+    const rewrites = await (async () => {
+      vi.stubEnv("NODE_ENV", "production");
+      try {
+        return await nextConfig.rewrites?.();
+      } finally {
+        vi.unstubAllEnvs();
+      }
+    })();
     expect(rewrites && !Array.isArray(rewrites) ? rewrites.beforeFiles : []).toContainEqual({ source: "/", destination: publicOAuthInfrastructureRegistry.rootRewrite.destination });
 
     const discoveredLayouts = sourceTree
@@ -647,8 +651,9 @@ describe("public Google Ads access boundary", () => {
     expect(Object.keys(publicLocalizedBranchRegistry).sort()).toEqual(Object.keys(GADS_LOCALIZED_COPY).sort());
     expect(Object.values(GADS_LOCALIZED_COPY).every((value) => value.trim().length > 0)).toBe(true);
     for (const branch of Object.values(publicLocalizedBranchRegistry)) {
-      expect(publicOAuthAttributes(branch.surface, branch.state)["data-public-oauth-surface"])
-        .toBe(`${branch.surface}:${branch.state}`);
+      expect(publicOAuthAttributes(branch.surface, branch.state)).toMatchObject({
+        "data-public-oauth-surface": `${branch.surface}:${branch.state}`,
+      });
     }
   });
 

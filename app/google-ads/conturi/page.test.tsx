@@ -2,11 +2,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
 import { normalizePublicOutput } from "@/app/public-output-goldens";
+import type { AccessibleAccount } from "@/lib/gads-oauth";
 
 const { listAccountsMock, demoOnMock, demoAccountsMock, sessionState } = vi.hoisted(() => ({
-  listAccountsMock: vi.fn(async () => []),
+  listAccountsMock: vi.fn(async (): Promise<AccessibleAccount[]> => []),
   demoOnMock: vi.fn(() => false),
-  demoAccountsMock: vi.fn(() => []),
+  demoAccountsMock: vi.fn((): AccessibleAccount[] => []),
   sessionState: { available: true },
 }));
 

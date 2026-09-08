@@ -254,3 +254,29 @@ and require witnessed negative controls plus restored positive runs for both com
 
 **Class.** A cross-layer user-visible contract is complete only when the producer and every declared consumer
 share one impact plan. Separate green receipts do not prove the seam between them.
+
+## 2026-09-09 — Test fixtures escaped focused checks but failed the strict repository compiler
+
+**Symptom.** The strict `tsc --noEmit --incremental false` control reported eight diagnostics in three test
+files even though their focused runtime tests had previously passed. Account-list mocks rejected valid account
+arrays, environment tests assigned directly to the readonly `NODE_ENV` declaration, and one OAuth assertion
+indexed a React `HTMLAttributes` value with a custom data-attribute key absent from that generic interface.
+
+**Cause.** Empty-array mock implementations inferred `never[]`, runtime-mutability assumptions bypassed the
+installed Node type declaration, and a valid runtime custom attribute was read through a narrower library type.
+Focused transpile-and-run checks did not type-check the complete test population, so these fixture-only defects
+remained invisible until the global strict compiler ran.
+
+**How to recognise it.** A mock initialized with an untyped empty array later receives structured fixtures; a
+test writes `process.env.NODE_ENV` directly; or an assertion indexes a library-owned generic object using a
+custom key. A focused test that passes without a repository-level strict compiler is not evidence that its
+fixture types are valid.
+
+**Fix.** Bind empty-array mocks to the exported production return type, use Vitest's environment stubbing with
+guaranteed cleanup, and assert custom attributes by object shape. Keep the supplied account objects, environment
+states, and expected OAuth attribute values unchanged, then require both strict compilation and the focused
+runtime suite in the same declared impact plan.
+
+**Class.** Runtime-green test code can still be compiler-invalid. Fixture repair must preserve the exercised
+inputs and behavior while replacing only the invalid test representation; production types must not be loosened
+to accommodate a mock.

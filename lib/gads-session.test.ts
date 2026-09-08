@@ -1,5 +1,5 @@
 // LANG: pending full translation to EN
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, vi } from "vitest";
 import { createHmac } from "node:crypto";
 import { cookieOptions, seal, unseal, SESSION_MAX_AGE } from "./gads-session";
 
@@ -147,14 +147,17 @@ describe("sesiunea prospectului", () => {
 
   it("uses a development fallback but refuses a missing production secret", () => {
     const priorSecret = process.env.GADS_SESSION_SECRET;
-    const priorNodeEnv = process.env.NODE_ENV;
     delete process.env.GADS_SESSION_SECRET;
-    process.env.NODE_ENV = "development";
-    expect(seal({ refreshToken: "token" })).toContain(".");
-    expect(cookieOptions().secure).toBe(false);
-    process.env.NODE_ENV = "production";
-    expect(() => seal({ refreshToken: "token" })).toThrow("GADS_SESSION_SECRET");
-    process.env.GADS_SESSION_SECRET = priorSecret;
-    process.env.NODE_ENV = priorNodeEnv;
+    try {
+      vi.stubEnv("NODE_ENV", "development");
+      expect(seal({ refreshToken: "token" })).toContain(".");
+      expect(cookieOptions().secure).toBe(false);
+      vi.stubEnv("NODE_ENV", "production");
+      expect(() => seal({ refreshToken: "token" })).toThrow("GADS_SESSION_SECRET");
+    } finally {
+      vi.unstubAllEnvs();
+      if (priorSecret === undefined) delete process.env.GADS_SESSION_SECRET;
+      else process.env.GADS_SESSION_SECRET = priorSecret;
+    }
   });
 });
