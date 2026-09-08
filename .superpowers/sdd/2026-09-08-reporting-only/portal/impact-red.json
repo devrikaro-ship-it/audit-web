@@ -1,0 +1,76 @@
+{
+  "base_revision": "3673c22769d9a27735989c47d00d6046020094ca",
+  "changes": [
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/portal/checkpoint-payload.json",
+      "risk": "fast",
+      "rule_id": "portal_handoff_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/portal/checks.json",
+      "risk": "fast",
+      "rule_id": "portal_handoff_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "portal_route"
+      ],
+      "path": "app/google-ads/portal/[token]/page.test.tsx",
+      "risk": "fast",
+      "rule_id": "portal_route_behavior",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/portal/[token]/page.test.tsx",
+        "--reporter=verbose"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "portal_route",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/portal/checks.json",
+  "declaration_sha256": "3b4a68b45a51773fa580323e777d7707ccdf925658f8aa937d4924275b71cce8",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "505a898bd9fa76626d242fdff96d070a06c75a728014d99290c44f072b554331",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "8a5d77cf9b6f9d9fba8c6678da349b28655aa05b",
+  "risk": "fast",
+  "schema_version": 1
+}

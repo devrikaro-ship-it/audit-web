@@ -1,0 +1,58 @@
+{
+  "task_id": "reporting-only-portal-20260908",
+  "role": "implementer",
+  "model_route": {
+    "task_class": "standard",
+    "recommended_model": "gpt-5.6-terra",
+    "reasoning_effort": "medium",
+    "catalog_checked_at": "2026-09-08T18:25:42.811702+00:00"
+  },
+  "consumed_inputs": {
+    "access": "listPortalReports receives the route token and returns only reports sharing that portal token; a requested report ID is selected only from this scoped set.",
+    "schema": "openReportSnapshot verifies each persisted signature and validates V2 currency, periods, product population, and product rows before rendering.",
+    "configuration": "GADS_LEADS_FILE and GADS_REPORTS_DIR can isolate a direct local witness; GADS_REPORT_SIGNING_SECRET can be synthetic and process-scoped.",
+    "population": "Focused controls cover current and older V2 reports, a legacy report, a foreign report selector, an unknown portal token, and invalid signed snapshots.",
+    "operation_limits": "Only the declared portal page, focused test, and task artifact directory are writable. The planned targeted check has a three-minute estimate and no real account, historical report, email, schedule, PDF, or contact action is allowed."
+  },
+  "completed": [
+    "Read the frozen contract, portal brief, remaining tasks, accepted storage verification, local Next.js 16 route guidance, and applicable delivery, checkpoint, and TDD instructions.",
+    "Verified the contract digest and clean predecessor revision.",
+    "Measured the inherited Romanian selector label and locale as the implementation defect.",
+    "Committed and ran the focused test-only negative control through the declared bounded command; the two English selector assertions failed while legacy honesty and access/signature refusals passed.",
+    "Applied the minimal production repair to use an English UTC month and year without changing token scoping, signature verification, signed values, or currency derivation.",
+    "Prepared an isolated exact-revision Next.js HTTP witness with synthetic signed GBP and USD reports plus unknown-token and tampered-signature refusal controls.",
+    "Ran the focused portal suite successfully with four passing tests through the validated bounded plan.",
+    "Ran the isolated Next.js HTTP witness successfully: authorized GBP and selected USD reports returned 200 with English dates and signed values; foreign selection fell back to the token-scoped latest report; unknown and tampered access returned 404; task-owned storage was removed."
+  ],
+  "files": [
+    "app/google-ads/portal/[token]/page.tsx",
+    "app/google-ads/portal/[token]/page.test.tsx",
+    ".superpowers/sdd/2026-09-08-reporting-only/portal/checks.json",
+    ".superpowers/sdd/2026-09-08-reporting-only/portal/checkpoint-payload.json",
+    ".superpowers/sdd/2026-09-08-reporting-only/portal/direct-portal-witness.cjs",
+    ".superpowers/sdd/2026-09-08-reporting-only/portal/impact-red.json",
+    ".superpowers/sdd/2026-09-08-reporting-only/portal/tdd-evidence.json"
+  ],
+  "commands": [
+    "sha256sum .superpowers/sdd/2026-09-08-reporting-only/delivery/contract.md",
+    "git status --short",
+    "git diff --check",
+    "python3 /Users/VladMoloso/.codex/skills/codex-delivery/scripts/run_bounded_command.py planned --plan .superpowers/sdd/2026-09-08-reporting-only/portal/impact-red.json --command-id portal_route --profile targeted_tests --cwd /Users/VladMoloso/seo-audit -- npx vitest run app/google-ads/portal/[token]/page.test.tsx --reporter=verbose",
+    "python3 /Users/VladMoloso/.codex/skills/codex-delivery/scripts/run_bounded_command.py planned --plan .superpowers/sdd/2026-09-08-reporting-only/portal/impact-final.json --command-id portal_route --profile targeted_tests --cwd /Users/VladMoloso/seo-audit -- npx vitest run app/google-ads/portal/[token]/page.test.tsx --reporter=verbose",
+    "python3 /Users/VladMoloso/.codex/skills/codex-delivery/scripts/run_bounded_command.py planned --plan .superpowers/sdd/2026-09-08-reporting-only/portal/impact-final.json --command-id direct_portal_witness --profile targeted_tests --cwd /Users/VladMoloso/seo-audit -- node .superpowers/sdd/2026-09-08-reporting-only/portal/direct-portal-witness.cjs"
+  ],
+  "findings": [
+    "The only measured portal-authored localization defect is the Romanian report-option label and ro-RO month formatting.",
+    "The focused test inherited Romanian shared-dashboard assertions even though the accepted predecessor renderer now emits English.",
+    "Unknown token populations and snapshots rejected by signature verification both reach the existing not-found refusal.",
+    "The isolated HTTP response preserves React escaping for a product title containing angle brackets and an ampersand.",
+    "No real account, historical report, email, monthly schedule, contact form, or PDF path was used or changed."
+  ],
+  "blockers": [],
+  "decisions": [
+    "Use the user-visible English label `Report generated in <Month> <Year>` with UTC date formatting.",
+    "Keep token scoping, signature verification, report selection, signed values, legacy unavailable states, and currency derivation unchanged.",
+    "Use route-level rendering as the focused test and reserve actual local HTTP for the isolated direct witness."
+  ],
+  "next_action": "Commit this completed checkpoint record, regenerate the impact plan for the resulting exact revision, rerun both declared checks, close the durable checkpoint, and return the bounded implementation handoff."
+}

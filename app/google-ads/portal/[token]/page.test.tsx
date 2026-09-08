@@ -116,7 +116,7 @@ beforeEach(() => {
   });
 });
 
-it("renders the selected signed report through the shared five-section V2 renderer without export output", async () => {
+it("renders the selected signed report with English portal labels and dates through the shared V2 renderer", async () => {
   const html = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({}) }));
   expect(html).toContain('data-report-dashboard="v2"');
   expect(Array.from(html.matchAll(/data-report-section="([^"]+)"/g), (match) => match[1])).toEqual([
@@ -127,8 +127,10 @@ it("renders the selected signed report through the shared five-section V2 render
     "product-actions",
   ]);
   expect(html).toContain("Current loss product");
-  expect(html).toContain("1–31 august 2026");
-  expect(html).toContain("EUR");
+  expect(html).toContain("Report generated in August 2026");
+  expect(html).toContain("August 1–31, 2026");
+  expect(html).toContain("€1,200");
+  expect(html).not.toContain("Raport generat la");
   expect(html).not.toContain("Profitability dashboard");
   expect(html).not.toContain("Monthly reports");
   expect(html).not.toContain("Open PDF");
@@ -140,7 +142,8 @@ it("renders the selected signed report through the shared five-section V2 render
 it("selects another report only when it belongs to the token-scoped portal population", async () => {
   const allowed = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({ report: "report-2" }) }));
   expect(allowed).toContain("Older allowed product");
-  expect(allowed).toContain("1–31 iulie 2026");
+  expect(allowed).toContain("Report generated in July 2026");
+  expect(allowed).toContain("July 1–31, 2026");
 
   const html = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({ report: "foreign-report" }) }));
   expect(listPortalReports).toHaveBeenCalledWith("portal-token");
@@ -165,16 +168,32 @@ it("renders a legacy signed report with unavailable currency and comparison rows
 
   const html = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({}) }));
   const comparisonRows = html.match(/<tr>.*?<\/tr>/g) ?? [];
-  const previousRow = comparisonRows.find((row) => row.includes("Perioada anterioară")) ?? "";
-  const previousYearRow = comparisonRows.find((row) => row.includes("Aceeași perioadă anul trecut")) ?? "";
+  const previousRow = comparisonRows.find((row) => row.includes("Previous period")) ?? "";
+  const previousYearRow = comparisonRows.find((row) => row.includes("Same period last year")) ?? "";
 
   expect(html).toContain('data-report-dashboard="v2"');
-  expect(html).toContain("Monedă indisponibilă");
-  expect(previousRow.match(/Indisponibil/g)).toHaveLength(7);
-  expect(previousYearRow.match(/Indisponibil/g)).toHaveLength(7);
+  expect(html).toContain("Currency unavailable");
+  expect(previousRow.match(/Unavailable/g)).toHaveLength(7);
+  expect(previousYearRow.match(/Unavailable/g)).toHaveLength(7);
   expect(previousRow).not.toMatch(/>0(?:[,.]0+)?</);
   expect(previousYearRow).not.toMatch(/>0(?:[,.]0+)?</);
   expect(html).not.toContain("RON");
   expect(html).not.toContain("Legacy excerpt without full metrics");
-  expect(html).toContain("Date parțiale");
+  expect(html).toContain("Partial data");
+});
+
+it("refuses unknown portal tokens and reports whose stored signature cannot be opened", async () => {
+  listPortalReports.mockResolvedValueOnce([]);
+  await expect(ClientReportPortal({
+    params: Promise.resolve({ token: "unknown-token" }),
+    searchParams: Promise.resolve({}),
+  })).rejects.toThrow("NOT_FOUND");
+  expect(listPortalReports).toHaveBeenLastCalledWith("unknown-token");
+
+  listPortalReports.mockResolvedValueOnce(portalReports);
+  openReportSnapshot.mockReturnValue(null);
+  await expect(ClientReportPortal({
+    params: Promise.resolve({ token: "portal-token" }),
+    searchParams: Promise.resolve({}),
+  })).rejects.toThrow("NOT_FOUND");
 });

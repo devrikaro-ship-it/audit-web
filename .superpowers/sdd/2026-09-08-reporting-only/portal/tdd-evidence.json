@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "red_revision": "8a5d77cf9b6f9d9fba8c6678da349b28655aa05b",
+  "production_defect": "The reporting portal generated its report selector label with Romanian text and the ro-RO locale instead of English text and deterministic UTC month formatting.",
+  "negative_control": {
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "app/google-ads/portal/[token]/page.test.tsx",
+      "--reporter=verbose"
+    ],
+    "bounded_profile": "targeted_tests",
+    "impact_plan": ".superpowers/sdd/2026-09-08-reporting-only/portal/impact-red.json",
+    "outcome": "EXPECTED_FAILURE",
+    "failed_tests": 2,
+    "passed_tests": 2,
+    "observed_failures": [
+      "The current report did not contain `Report generated in August 2026`; the rendered selector contained `Raport generat la august 2026`.",
+      "The selected older report did not contain `Report generated in July 2026`; the rendered selector contained `Raport generat la iulie 2026`."
+    ],
+    "passing_controls": [
+      "Legacy reports preserved unavailable currency and comparison values without inventing zeroes.",
+      "Unknown portal tokens and snapshots rejected by stored-signature verification remained refused."
+    ]
+  },
+  "repair": "Replace only the portal-owned selector label and locale with `Report generated in <Month> <Year>` using en-US and UTC; leave access and report data paths unchanged."
+}
