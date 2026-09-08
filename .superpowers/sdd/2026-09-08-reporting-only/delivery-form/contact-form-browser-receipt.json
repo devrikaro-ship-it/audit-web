@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "result": "PASS",
+  "revision": "fe31ef8d4d92488491c4e93b809828676f4cd458",
+  "source": "app/google-ads/raport/ContactForm.tsx",
+  "sourceSha256": "a77efe7167b4797fd6bbb4b726ee74a657a5e2265759684eb6c85119adc6293f",
+  "environment": "local isolated Next.js development server",
+  "route": "/delivery-form-proof",
+  "witness": {
+    "readyState": {
+      "labels": [
+        "Name",
+        "Email",
+        "Phone"
+      ],
+      "consent": "I agree that Devrika may use these details once to generate, store, and email this audit. This does not enroll me in monthly reports or promotional messages.",
+      "submitLabel": "Email me my PDF audit"
+    },
+    "submission": {
+      "syntheticValues": true,
+      "consentChecked": true,
+      "result": "CONTROLLED_FAILURE"
+    },
+    "failureState": {
+      "message": "We could not generate your PDF audit. Check your details and try again.",
+      "retryEnabled": true,
+      "submitLabel": "Email me my PDF audit"
+    }
+  },
+  "screenshot": {
+    "path": "contact-form-failure-state.png",
+    "sha256": "b700f69ff39816999a8488b3902e5b9b344c6f44a190b4d42de9c3829e522614"
+  },
+  "scope": {
+    "controlledActionOnly": true,
+    "saveContactInvoked": false,
+    "providerInvoked": false,
+    "collectionInvoked": false,
+    "realEmailSent": false,
+    "monthlyScheduleActivated": false,
+    "historicalReportRewritten": false,
+    "pdfChanged": false
+  }
+}
