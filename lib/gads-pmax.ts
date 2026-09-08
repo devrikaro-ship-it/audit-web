@@ -59,7 +59,7 @@ export type PmaxData = { campanii: CampaniePmax[]; grupuri: GrupAnunturi[] };
 export type PmaxAudit = { probleme: ProblemaPmax[] };
 
 const money = (n: number, currencyCode?: string) => currencyCode
-  ? new Intl.NumberFormat("en-US", { style: "currency", currency: currencyCode, maximumFractionDigits: 0 }).format(Math.round(n))
+  ? `${Math.round(n).toLocaleString("en-US")} ${currencyCode}`
   : `${Math.round(n).toLocaleString("en-US")} currency units`;
 
 /** Sub atatea materiale, un grup nu e nici doar-feed, nici construit — e abandonat la jumatate. */

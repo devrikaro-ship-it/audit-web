@@ -210,3 +210,23 @@ open point inside the code's own comment at the tile; this entry is the durable 
 mismatched member in place and produces a number that is differently wrong. An aggregate is proved by
 enumerating its members against its own label, never by observing that the total moved — and reverting a bad
 narrow fix is not the same thing as having fixed the mismatch the narrow fix was trying to close.
+
+## 2026-09-08 — Locale currency formatting hid the supplied account currency code
+
+**Symptom.** Analytical findings supplied with `EUR` rendered values such as `€148,817` and `€2,977` instead
+of displaying the authoritative account currency code. The amount was numerically correct, but readers could
+not directly compare the emitted unit with the currency code selected from the Google Ads account.
+
+**Cause.** The emitters passed the account code into `Intl.NumberFormat` with `style: "currency"`. The locale
+formatter legitimately converted that code to a symbol, which weakened the explicit account-currency contract.
+
+**How to recognise it.** A non-default currency test supplies an ISO code but asserts only a locale symbol, or
+the output contains a money symbol without the exact supplied code. A missing-currency path that silently falls
+back to a default code is the same class of defect.
+
+**Fix.** Format the rounded, grouped numeric value independently, append the unchanged supplied ISO code, and
+emit `currency units` when no authoritative currency is available. Prove both arms with independently expected
+strings and a witnessed non-RON negative control.
+
+**Class.** When provenance is part of a displayed value's meaning, a human-friendly formatter must not erase
+the provenance token. Preserve the authoritative identifier explicitly and treat its absence as unavailable.

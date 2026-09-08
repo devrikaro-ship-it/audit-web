@@ -18,7 +18,7 @@ describe("bidding pe valoare fara tinta", () => {
     const p = r.probleme.find((x) => x.cod === "bidding-fara-tinta")!;
     expect(p).toBeDefined();
     expect(p.ron).toBe(2977);
-    expect(p.detaliu).toMatch(/97% din bugetul contului/);
+    expect(p.detaliu).toMatch(/97% of account spend/);
   });
 
   it("nu se plange cand tinta e setata", () => {
@@ -82,7 +82,7 @@ describe("livrare franata", () => {
       C({ nume: "Pmax - [Awr]", stare: "LIMITED", motive: ["BUDGET_CONSTRAINED"] }),
     ]);
     const p = r.probleme.find((x) => x.cod === "livrare-limitata")!;
-    expect(p.detaliu).toMatch(/bugetul zilnic se termina prea repede/);
+    expect(p.detaliu).toMatch(/daily budget runs out too early/);
   });
 
   it("nu raporteaza UNKNOWN ca motiv — nu spune nimic nimanui", () => {
@@ -171,4 +171,19 @@ it("renders an explicitly paused brand and plural learned campaign capacity", ()
   const campaigns = Array.from({ length: 70 }, (_, index) => C({ nume: `Campaign ${index}`, cost: 100, conversii: 1 }));
   const spread = analizeazaStructura(campaigns);
   expect(spread.probleme.find((problem) => problem.cod === "prea-multe-campanii")).toBeDefined();
+});
+
+it("uses the supplied account currency and keeps the missing-currency fallback explicit", () => {
+  const campaigns = [
+    C({ nume: "Pmax - [MV]", tRoas: 0, cost: 2977, valoare: 12000, conversii: 18 }),
+    C({ nume: "Search - [BP]", cost: 105, valoare: 700, conversii: 1 }),
+  ];
+  const result = analizeazaStructura(campaigns, "EUR");
+  const detail = result.probleme.find((problem) => problem.cod === "bidding-fara-tinta")!.detaliu;
+  expect(detail).toContain("2,977 EUR");
+  expect(detail).not.toContain("RON");
+
+  const unavailable = analizeazaStructura(campaigns);
+  expect(unavailable.probleme.find((problem) => problem.cod === "bidding-fara-tinta")!.detaliu)
+    .toContain("currency units");
 });

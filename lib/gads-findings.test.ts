@@ -64,7 +64,7 @@ describe("cand masurarea e stricata", () => {
     const v = rep.findings.find((f) => f.key.startsWith("villains"))!;
     expect(v.quarantined).toBe(true);
     expect(v.ron).toBe(0);
-    expect(v.title).toContain("nu pot fi judecate");
+    expect(v.title).toContain("cannot be assessed");
   });
 
   it("produsele carantinate NU intra in cifra de pe prima pagina", () => {
@@ -72,7 +72,7 @@ describe("cand masurarea e stricata", () => {
   });
 
   it("spune in caveats ce ramane neverificabil", () => {
-    expect(rep.caveats.some((c) => c.includes("imposibil de spus"))).toBe(true);
+    expect(rep.caveats.some((c) => c.includes("impossible to determine"))).toBe(true);
   });
 
   it("produsele moarte raman valide — nu depind de masurarea vanzarilor", () => {
@@ -93,7 +93,7 @@ describe("cand masurarea e in regula", () => {
 
   it("explica pragul in termeni de marja, nu de jargon", () => {
     const v = rep.findings.find((f) => f.key === "villains")!;
-    expect(v.body).toContain("marja ta de 28%");
+    expect(v.body).toContain("your 28% margin");
   });
 
   it("nu pomeneste deloc masurarea stricata", () => {
@@ -109,7 +109,7 @@ describe("niveluri de onestitate si ordonare", () => {
   it("CSS e ESTIMARE, niciodata MASURAT", () => {
     const css = rep.findings.find((f) => f.key === "css")!;
     expect(css.tier).toBe("ESTIMARE");
-    expect(css.body).toContain("reper de piata");
+    expect(css.body).toContain("market benchmark");
   });
 
   it("ordoneaza pe bani, cel mai mare primul", () => {
@@ -120,7 +120,7 @@ describe("niveluri de onestitate si ordonare", () => {
   it("catalog necitit: tace despre produse moarte in loc sa raporteze zero", () => {
     const r2 = buildReport(audit(products, 4), OK_TRACKING, 28, 4, false);
     expect(r2.findings.some((f) => f.key === "zombies")).toBe(false);
-    expect(r2.caveats.some((c) => c.includes("catalogul complet"))).toBe(true);
+    expect(r2.caveats.some((c) => c.includes("complete catalog"))).toBe(true);
   });
 });
 
@@ -143,15 +143,15 @@ describe("simularea (ce castigi daca repari)", () => {
   });
 
   it("spune clar ca e mutare de buget, nu bani in plus", () => {
-    expect(sim!.body).toMatch(/fara sa adaugi niciun leu in plus/i);
+    expect(sim!.body).toMatch(/without adding budget/i);
     // scenariul "mareste bugetul de 2x/5x" a fost scos: cu plafonul de mai jos devenea
     // redundant si amesteca doua discutii diferite in acelasi paragraf.
     expect(sim!.body).not.toMatch(/de cinci ori/i);
   });
 
   it("spune ca e plafon optimist si ca sunt incasari, nu profit", () => {
-    expect(sim!.body).toMatch(/plafon optimist/i);
-    expect(sim!.body).toMatch(/incasari, nu profit/i);
+    expect(sim!.body).toMatch(/optimistic ceiling/i);
+    expect(sim!.body).toMatch(/sales, not profit/i);
   });
 
   it("NU sta prima — o proiectie nu conduce raportul", () => {
@@ -185,7 +185,7 @@ describe("plafonul simularii", () => {
   });
 
   it("spune pe fata ca a plafonat, si de ce", () => {
-    expect(sim.body).toMatch(/volum limitat de cautari/i);
+    expect(sim.body).toMatch(/limited search volume/i);
   });
 });
 
@@ -241,7 +241,7 @@ describe("risipa pe cautari", () => {
   it("excludes 30-day findings from the latest-365-day headline", () => {
     const rep = buildReport(audit([], 4), OK_TRACKING, 25, 4, true, { cuvinte });
     expect(rep.headline.ron).toBe(0);
-    expect(rep.findings.find((x) => x.key === "termeni-risipa")!.body).toMatch(/30 de zile/);
+    expect(rep.findings.find((x) => x.key === "termeni-risipa")!.body).toMatch(/30 days/);
   });
 
   it("spune pe fata cand nu are vizibilitate pe termeni", () => {
@@ -314,11 +314,18 @@ describe("cifra mare se potriveste cu interfata Google Ads", () => {
     expect(rep.headline.ron).toBe(148817);
   });
 
-  it("spune si cat s-a dus pe Shopping, ca sa nu para ca am ascuns diferenta", () => {
-    const rep = buildReport(r, BROKEN_TRACKING, 30, breakEvenRoas(30), true, { an });
-    expect(rep.findings[0].body).toContain("148.817 RON");
-    expect(rep.findings[0].body).toContain("129.155 RON");
+  it("uses the supplied account currency for account and Shopping spend", () => {
+    const rep = buildReport(r, BROKEN_TRACKING, 30, breakEvenRoas(30), true, { an }, "EUR");
+    expect(rep.findings[0].body).toContain("148,817 EUR");
+    expect(rep.findings[0].body).toContain("129,155 EUR");
+    expect(rep.findings[0].body).not.toContain("RON");
     expect(rep.findings[0].body).toContain("Shopping");
+  });
+
+  it("marks monetary units as unavailable when account currency is not supplied", () => {
+    const rep = buildReport(r, BROKEN_TRACKING, 30, breakEvenRoas(30), true, { an });
+    expect(rep.findings[0].body).toContain("currency units");
+    expect(rep.findings[0].body).not.toContain("RON");
   });
 
   it("fara campanii Search nu desface cifra in doua degeaba", () => {
@@ -391,25 +398,24 @@ describe("acordul la un singur produs", () => {
   const minRoas = breakEvenRoas(28);
   const rep = buildReport(audit(unSingurVillain, minRoas), OK_TRACKING, 28, minRoas);
 
-  it("titlul spune 'Un produs', nu '1 produse'", () => {
+  it("uses the singular product title instead of a numeric plural", () => {
     const v = rep.findings.find((f) => f.key === "villains")!;
-    expect(v.title).toContain("Un produs consuma");
-    expect(v.title).not.toMatch(/\b1 produse\b/);
+    expect(v.title).toContain("One product consumes");
+    expect(v.title).not.toMatch(/\b1 products\b/);
   });
 
-  it("corpul acorda verbul si scoate 'impreuna', care nu are sens la unul singur", () => {
+  it("uses the singular product body", () => {
     const v = rep.findings.find((f) => f.key === "villains")!;
-    expect(v.body).toContain("Un produs sta sub pragul asta si a consumat");
-    expect(v.body).not.toContain("impreuna");
+    expect(v.body).toContain("One product is below that threshold and consumed");
   });
 
-  it("catalogul mort, la un singur produs, acorda participiul", () => {
+  it("uses the singular unseen-product title", () => {
     const unuNevazut = [P("A", 500, 2000, 3000), P("Z", 0, 0, 0)];
     const r = buildReport(audit(unuNevazut, 4), OK_TRACKING, 28, 4);
     const z = r.findings.find((f) => f.key === "zombies");
     if (z) {
-      expect(z.title).toContain("Un produs nu a fost vazut");
-      expect(z.title).not.toMatch(/\b1 produse\b/);
+      expect(z.title).toContain("One product was not seen");
+      expect(z.title).not.toMatch(/\b1 products\b/);
     }
   });
 });

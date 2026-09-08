@@ -77,6 +77,15 @@ describe("join catalog <-> performanta", () => {
 describe("interogari", () => {
   beforeEach(() => search.mockReset());
 
+  it("exposes the four supported windows with exact English labels", () => {
+    expect(FERESTRE.map((window) => window.eticheta)).toEqual([
+      "30 days",
+      "3 months",
+      "6 months",
+      "365 days",
+    ]);
+  });
+
   it("formats the 365-day label independently of neighboring window order and copy", () => {
     const adversarialNeighbors = [...FERESTRE]
       .reverse()
@@ -90,15 +99,10 @@ describe("interogari", () => {
     );
   });
 
-  it("rejects standalone legacy period promises on every client-facing surface", () => {
+  it("rejects standalone legacy period promises in the owned analytical emitters", () => {
     const surfaces = [
-      "app/confidentialitate/page.tsx",
-      "app/google-ads/connect/page.tsx",
-      "app/google-ads/impreuna/page.tsx",
-      "app/google-ads/page.tsx",
-      "app/google-ads/raport/page.tsx",
-      "app/hub/page.tsx",
       "lib/gads-findings.ts",
+      "lib/gads-intake.ts",
     ];
     for (const path of surfaces) {
       const source = readFileSync(path, "utf8");

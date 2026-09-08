@@ -61,7 +61,7 @@ describe("reclame scoase din uz", () => {
       reclame: [rec(), rec({ tip: "EXPANDED_TEXT_AD" })],
     });
     const p = r.probleme.find((x) => x.cod === "reclame-vechi")!;
-    expect(p.detaliu).toMatch(/dau\s+impresia ca grupul are reclame/);
+    expect(p.detaliu).toMatch(/makes the group appear to contain ads/);
   });
 });
 

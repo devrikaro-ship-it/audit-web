@@ -25,12 +25,12 @@ describe("LAW 1 — setul pe care il duce bugetul", () => {
     const p = r.probleme.find((x) => x.cod === "diluare")!;
     expect(Math.round(r.diluare!)).toBe(46);
     expect(p.grad).toBe("critic");
-    expect(p.detaliu).toMatch(/nu e buget mai mare, ci set mai mic/);
+    expect(p.detaliu).toMatch(/solution is a smaller product set/);
   });
 
   it("spune cate produse poate duce bugetul, nu doar ca sunt prea multe", () => {
     const r = analizeazaShopping(date({ produseCuAfisari: 500, conversii30z: 50 }), true);
-    expect(r.probleme.find((x) => x.cod === "diluare")!.detaliu).toMatch(/in jur de 100 de produse/);
+    expect(r.probleme.find((x) => x.cod === "diluare")!.detaliu).toMatch(/roughly 100 products/);
   });
 
   it("TACE cand masurarea e stricata — toata aritmetica sta pe numarul de vanzari", () => {
@@ -53,7 +53,7 @@ describe("lipsa Shopping standard", () => {
     );
     const p = r.probleme.find((x) => x.cod === "shopping-lipsa")!;
     expect(p.grad).toBe("reglaj");
-    expect(p.detaliu).toMatch(/Performance Max raporteaza categorii/);
+    expect(p.detaliu).toMatch(/Performance Max reports search categories/);
   });
 
   it("tace cand exista o campanie Shopping activa", () => {
@@ -83,7 +83,7 @@ describe("licitare si prioritati", () => {
       true
     );
     const p = r.probleme.find((x) => x.cod === "shopping-prioritate")!;
-    expect(p.exemple).toEqual(["Shop - [Ap] — prioritate 2", "Shop - [Rev1] — prioritate 2"]);
+    expect(p.exemple).toEqual(["Shop - [Ap] — priority 2", "Shop - [Rev1] — priority 2"]);
   });
 
   it("tace cand prioritatile chiar sunt diferite — decizia a fost luata", () => {

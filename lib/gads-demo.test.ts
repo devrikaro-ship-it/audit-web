@@ -17,6 +17,10 @@ describe("comutatorul de demo", () => {
   it("da cel putin un cont care nu e manager, altfel demonstratia se blocheaza la pasul 1", () => {
     expect(demoAccounts().filter((a) => !a.manager).length).toBeGreaterThan(0);
   });
+
+  it("labels the simulated account in English", () => {
+    expect(demoAccounts()[0].name).toBe("Demo Store (simulated data)");
+  });
 });
 
 describe("datele demo, trecute prin motorul real", () => {
@@ -54,5 +58,13 @@ describe("datele demo, trecute prin motorul real", () => {
   it("are cheltuiala si ROAS de cont, ca sa poata alimenta simularea colaborarii", () => {
     expect(d.structura.cheltuialaTotala).toBeGreaterThan(0);
     expect(d.structura.roasCont).toBeGreaterThan(0);
+  });
+
+  it("keeps authored analytical explanations in English while preserving external names", () => {
+    expect(d.structura.probleme.map((problem) => problem.titlu)).toEqual([
+      "One campaign bids without a return target",
+      "The brand campaign pays for clicks that may have arrived anyway",
+    ]);
+    expect(d.structura.probleme[0].exemple).toEqual(["PMax — Catalog complet"]);
   });
 });

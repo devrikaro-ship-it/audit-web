@@ -137,11 +137,7 @@ export type ExtraAudit = {
 
 const formatMoney = (n: number, currencyCode?: string) =>
   currencyCode
-    ? new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: currencyCode,
-        maximumFractionDigits: 0,
-      }).format(Math.round(n))
+    ? `${Math.round(n).toLocaleString("en-US")} ${currencyCode}`
     : `${Math.round(n).toLocaleString("en-US")} currency units`;
 const pct = (n: number) => `${Math.round(n * 100)}%`;
 

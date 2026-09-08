@@ -80,7 +80,7 @@ describe("grupuri de anunturi", () => {
       [camp("C")]
     );
     const p = r.probleme.find((x) => x.cod === "grup-schelet")!;
-    expect(p.exemple).toEqual(["C › Ap — 1 material"]);
+    expect(p.exemple).toEqual(["C › Ap — 1 asset"]);
   });
 
   it("un grup complet nu e semnalat", () => {
@@ -104,7 +104,7 @@ describe("grupuri de anunturi", () => {
       { campanii: [pmax("C")], grupuri: [grup("G", "C", { motive: ["ASSET_GROUP_LIMITED"], total: 12, titluri: 8 })] },
       [camp("C")]
     );
-    expect(r.probleme.find((x) => x.cod === "grup-franat")!.exemple?.[0]).toMatch(/respinse de politicile/);
+    expect(r.probleme.find((x) => x.cod === "grup-franat")!.exemple?.[0]).toMatch(/rejected under Google policies/);
   });
 
   it("ignora grupurile din campanii care nu ruleaza", () => {
@@ -147,4 +147,21 @@ it("renders plural and zero-cost findings plus every group reason fallback", () 
   expect(result.probleme.find((problem) => problem.cod === "grup-franat")?.exemple?.join(" ")).toContain("custom reason");
   const zeroCost = analizeazaPmax({ campanii: [pmax("Zero", { extindereUrl: true })], grupuri: [] }, [camp("Zero", { cost: 0 })]);
   expect(zeroCost.probleme.find((problem) => problem.cod === "extindere-url")?.ron).toBe(0);
+});
+
+it("uses the supplied account currency and never silently labels spend as RON", () => {
+  const result = analizeazaPmax(
+    { campanii: [pmax("Pmax", { extindereUrl: true })], grupuri: [] },
+    [camp("Pmax", { cost: 2977 })],
+    "EUR",
+  );
+  const detail = result.probleme.find((problem) => problem.cod === "extindere-url")!.detaliu;
+  expect(detail).toContain("2,977 EUR");
+  expect(detail).not.toContain("RON");
+
+  const unavailable = analizeazaPmax(
+    { campanii: [pmax("Pmax", { extindereUrl: true })], grupuri: [] },
+    [camp("Pmax", { cost: 2977 })],
+  );
+  expect(unavailable.probleme[0].detaliu).toContain("currency units");
 });
