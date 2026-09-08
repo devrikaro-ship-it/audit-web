@@ -1,0 +1,68 @@
+{
+  "base_revision": "9eefc2b48ea16c7c4b56e11ed423d244ab83ab73",
+  "changes": [
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/pdf/repair-checkpoint-payload.json",
+      "risk": "fast",
+      "rule_id": "pdf_handoff_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "pdf_integration"
+      ],
+      "path": "lib/gads-report-pdf.integration.test.ts",
+      "risk": "fast",
+      "rule_id": "pdf_generator_behavior",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-report-pdf.integration.test.ts",
+        "--reporter=verbose"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 5,
+      "id": "pdf_integration",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/pdf/checks.json",
+  "declaration_sha256": "0829395771527d41e2a0339fa2d8d1c88621e98ff0e349dd0eadf9ac3dd863a8",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "2f36420a842bee44a8379dc9051cf0a36002b86882bf52846550ee13fec69bd7",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "b0785b78219a69c22c58f44371dce77e6a0f0c65",
+  "risk": "fast",
+  "schema_version": 1
+}

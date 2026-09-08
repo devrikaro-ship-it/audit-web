@@ -1,0 +1,11 @@
+{
+  "revision": "b0785b78219a69c22c58f44371dce77e6a0f0c65",
+  "plan": "repair-red-impact-plan.json",
+  "plan_sha256": "2f36420a842bee44a8379dc9051cf0a36002b86882bf52846550ee13fec69bd7",
+  "command_id": "pdf_integration",
+  "profile": "targeted_tests",
+  "outcome": "COMMAND_FAILED",
+  "exit_status": 1,
+  "result": "One actual-PDF provenance assertion failed; the legacy-currency and immutable-PDF controls passed.",
+  "failure": "The extracted campaign page lacked CAMPAIGN PERFORMANCE and instead contained MONTHLY-NORMALIZED REPORT VIEW above unchanged 900 GBP, 2,700 GBP, and 3x values."
+}

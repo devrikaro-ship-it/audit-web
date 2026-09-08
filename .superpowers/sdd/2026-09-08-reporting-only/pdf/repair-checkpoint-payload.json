@@ -2,7 +2,10 @@
   "completed": [
     "Read the repair brief and independent review for revision 9eefc2b48ea16c7c4b56e11ed423d244ab83ab73.",
     "Confirmed the working tree starts clean at the reviewed revision.",
-    "Measured the accepted defect: campaign fields have no period metadata, but the campaign badge claims a monthly-normalized view."
+    "Measured the accepted defect: campaign fields have no period metadata, but the campaign badge claims a monthly-normalized view.",
+    "Observed the expected actual-PDF RED failure at the missing neutral campaign badge while legacy currency and immutable-PDF controls passed.",
+    "Replaced the unsupported campaign badge with neutral campaign performance copy and scoped monthly-average wording to current comparison and product figures.",
+    "Regenerated both isolated sample PDFs and inspected all four pages successfully after the bounded suite passed all three tests."
   ],
   "findings": [
     "Currency, stored values, English copy, literal names, layout, and immutable existing-PDF behavior were accepted and remain frozen.",
@@ -14,12 +17,14 @@
   ],
   "files": [
     "lib/gads-report-pdf.integration.test.ts",
+    "lib/gads-report-pdf.ts",
     ".superpowers/sdd/2026-09-08-reporting-only/pdf/repair-checkpoint-payload.json"
   ],
   "commands": [
     "python3 /Users/VladMoloso/.codex/skills/codex-model-router/scripts/recommend_model.py standard",
-    "python3 /Users/VladMoloso/.codex/skills/codex-checkpoint/scripts/checkpoint_state.py resume --worker-id 01a08278-8c9e-7150-b281-b895f6ea554e"
+    "python3 /Users/VladMoloso/.codex/skills/codex-checkpoint/scripts/checkpoint_state.py resume --worker-id 01a08278-8c9e-7150-b281-b895f6ea554e",
+    "python3 /Users/VladMoloso/.codex/skills/codex-delivery/scripts/run_bounded_command.py planned --plan .superpowers/sdd/2026-09-08-reporting-only/pdf/repair-red-impact-plan.json --command-id pdf_integration --profile targeted_tests --cwd /Users/VladMoloso/seo-audit -- npx vitest run lib/gads-report-pdf.integration.test.ts --reporter=verbose"
   ],
   "blockers": [],
-  "next_action": "Commit the repair RED test, derive its exact impact plan, and run the planned bounded negative control against the reviewed defective generator."
+  "next_action": "Commit the scoped repair candidate and regenerated evidence, derive the exact final repair impact plan, and run its bounded check against the frozen revision."
 }

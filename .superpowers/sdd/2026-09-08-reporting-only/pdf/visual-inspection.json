@@ -9,13 +9,14 @@
   ],
   "observations": [
     "No overlap, cutoff, corrupted glyph, or missing content was visible.",
-    "The first legacy render exposed a clipped CPA currency label; the table font was repaired, PDFs were regenerated, the targeted suite passed again, and all four final pages were reinspected.",
+    "The repaired campaign section uses the neutral CAMPAIGN PERFORMANCE badge while retaining the campaign name and 900 GBP, 2,700 GBP, and 3x values.",
+    "Monthly-average wording appears only on the current comparison and product sections, not as a campaign period claim.",
     "GBP and explicit unknown-currency labels are legible in cards, comparison rows, product tables, and campaign tables.",
     "Synthetic names containing ampersands and angle brackets render as literal text."
   ],
   "sha256": {
-    "non-ron-v2.pdf": "0242c13f9be03dfd6fe47d6493ddc3ac84d7d918e2c5e266fb6377d58be66f5f",
-    "legacy-unknown-currency.pdf": "e4099644abe7a1e95c67434d05883351c25af6024c011d6de8f78534d1d1b9aa",
-    "immutable-report.pdf": "f29327710f37d99aecdbe47f765398b10911a83852a48c3a8b4b1d11f107e447"
+    "non-ron-v2.pdf": "82ffd4824845dbc16735e70816fc7a56808aecdf0e560f1d23714932abca4ebe",
+    "legacy-unknown-currency.pdf": "87865ce96176fd04a1938b88d2b78271c87c552f424427fb78a6dba44f928e81",
+    "immutable-report.pdf": "b7ce92d8ad2e2b8f80050a22208352919e6eb67916a67d1f97b61110f76cf81c"
   }
 }

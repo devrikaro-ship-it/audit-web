@@ -1,0 +1,12 @@
+{
+  "command_id": "pdf_integration",
+  "profile": "targeted_tests",
+  "outcome": "COMMAND_SUCCEEDED",
+  "exit_status": 0,
+  "result": "One test file passed; three tests passed; zero tests failed.",
+  "controls": [
+    "The actual campaign page uses CAMPAIGN PERFORMANCE, retains PMax <UK> & Brand with 900 GBP, 2,700 GBP, and 3x, and rejects unsupported campaign normalization or period claims.",
+    "Current and product sections use plain monthly-average wording.",
+    "GBP, explicit legacy currency units, selected-period non-substitution, English copy, literal names, and immutable existing-PDF behavior remain passing."
+  ]
+}

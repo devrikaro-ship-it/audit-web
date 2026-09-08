@@ -141,15 +141,15 @@ function buildPdf(report: GadsReportSnapshot): Promise<Buffer> {
 
     addPageTitle(doc, "Current account vs optimized + CSS", "Measured vs future simulation");
     comparisonTable(doc, report, currencyCode);
-    doc.fillColor(MUTED).font("Helvetica").fontSize(8).text("Current figures are the stored monthly-normalized view. The optimized scenario includes an estimated 20% CSS CPC reduction and diminishing returns as budget grows. It is a simulation, not a guarantee.", 40, doc.y, { width: 515 });
+    doc.fillColor(MUTED).font("Helvetica").fontSize(8).text("The current comparison uses monthly averages. The optimized scenario includes an estimated 20% CSS CPC reduction and diminishing returns as budget grows. It is a simulation, not a guarantee.", 40, doc.y, { width: 515 });
     doc.moveDown(1.3);
 
     ensureSpace(doc, 120);
-    addPageTitle(doc, "Products consuming your budget", "Monthly-normalized report view - ranked by cost");
+    addPageTitle(doc, "Products consuming your budget", "Monthly averages - ranked by cost");
     productTable(doc, report.losses, "MONEY AT RISK", RED, currencyCode);
 
     ensureSpace(doc, 120);
-    addPageTitle(doc, "Profitable products receiving too little traffic", "Monthly-normalized report view - ranked by opportunity");
+    addPageTitle(doc, "Profitable products receiving too little traffic", "Monthly averages - ranked by opportunity");
     productTable(doc, report.opportunities, "OPPORTUNITY", GREEN, currencyCode);
 
     ensureSpace(doc, 130);
@@ -160,11 +160,11 @@ function buildPdf(report: GadsReportSnapshot): Promise<Buffer> {
     doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Give controlled growth to products already proven profitable.");
     doc.moveDown(0.7).fillColor(NAVY).font("Helvetica-Bold").fontSize(11).text("3. Grow under control");
     doc.fillColor(MUTED).font("Helvetica").fontSize(9).text("Increase spend only while simulated ROAS remains above break-even.");
-    doc.moveDown(1.2).fontSize(8).text("Operating costs are modeled at a fixed 20% of sales. All current-account figures use the stored monthly-normalized report view; future figures are simulations.");
+    doc.moveDown(1.2).fontSize(8).text("Operating costs are modeled at a fixed 20% of sales. Current comparison and product figures are monthly averages; future figures are simulations.");
 
     if (report.campaigns?.length) {
       ensureSpace(doc, 150);
-      addPageTitle(doc, "How campaigns are organized now", "Monthly-normalized report view");
+      addPageTitle(doc, "How campaigns are organized now", "Campaign performance");
       campaignTable(doc, report.campaigns, currencyCode);
     }
 
