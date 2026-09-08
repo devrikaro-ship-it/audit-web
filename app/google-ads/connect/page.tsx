@@ -75,7 +75,7 @@ export default async function Connect({ searchParams }: { searchParams: Promise<
               <>
                 <p className="text-xs font-extrabold uppercase tracking-[0.14em]" style={{ color: C.indigo }}>Secure connection through Google</p>
                 <h2 className="mt-3 text-2xl font-black leading-tight tracking-[-0.7px] sm:text-3xl" style={{ fontFamily: sora, color: C.navy }}>Tell us which store to analyze</h2>
-                <p className="mt-3 text-sm leading-relaxed" style={{ color: C.gray500 }}>After you continue, choose the Google Ads account and confirm access directly on Google's page.</p>
+                <p className="mt-3 text-sm leading-relaxed" style={{ color: C.gray500 }}>After you continue, choose the Google Ads account and confirm access directly on Google&apos;s page.</p>
 
                 <form action="/api/google-ads/start" method="get" className="mt-7">
                   <label htmlFor="website" className="block text-left text-sm font-bold" style={{ color: C.gray800 }}>Store website</label>

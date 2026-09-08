@@ -44,7 +44,7 @@ export default function Termeni() {
 
         <H2>What we ask from you</H2>
         <P>
-          Authorize access to your Google Ads account through Google's official authorization
+          Authorize access to your Google Ads account through Google&apos;s official authorization
           mechanism and provide an approximate profit margin so we can calculate the threshold below
           which a product loses money. We do not ask for passwords, payment-card details, or documents.
         </P>

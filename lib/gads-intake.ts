@@ -26,7 +26,11 @@ export function formatAuditWindowLabel(days: number): string {
   }).format(days);
 }
 
-export const AUDIT_WINDOW_LABEL = formatAuditWindowLabel(WINDOW_DAYS);
+/** Legacy Romanian label retained for the excluded collaboration page. */
+export const AUDIT_WINDOW_LABEL = `${WINDOW_DAYS} de zile`;
+
+/** English label for public reporting surfaces. */
+export const AUDIT_WINDOW_LABEL_ENGLISH = formatAuditWindowLabel(WINDOW_DAYS);
 
 /**
  * Supported catalog-map windows. Short windows answer whether a product sold recently;
@@ -36,7 +40,7 @@ export const FERESTRE = [
   { zile: 30, eticheta: "30 days" },
   { zile: 90, eticheta: "3 months" },
   { zile: 180, eticheta: "6 months" },
-  { zile: WINDOW_DAYS, eticheta: AUDIT_WINDOW_LABEL },
+  { zile: WINDOW_DAYS, eticheta: AUDIT_WINDOW_LABEL_ENGLISH },
 ] as const;
 
 export type PerfRow = {

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
-import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
+import { AUDIT_WINDOW_LABEL_ENGLISH as AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 import { publicOAuthAttributes, publicOAuthProjection, publicOAuthStatement } from "@/lib/gads-public-oauth-contract";
 
 // The Audit Devrika hub is the starting point for every audit.

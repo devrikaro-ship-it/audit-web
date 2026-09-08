@@ -5,7 +5,7 @@ import { C, sora, inter, brandGradient } from "@/lib/theme";
 import { parseGrossMargin, unseal, SESSION_COOKIE } from "@/lib/gads-session";
 import { accessTokenFrom, oauthConfig } from "@/lib/gads-oauth";
 import {
-  AUDIT_WINDOW_LABEL,
+  AUDIT_WINDOW_LABEL_ENGLISH as AUDIT_WINDOW_LABEL,
   dateRange,
   fetchShoppingProducts,
   fetchShoppingProductsForRange,

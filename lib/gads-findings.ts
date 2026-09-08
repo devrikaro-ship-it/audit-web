@@ -17,7 +17,7 @@ import type { PmaxAudit } from "./gads-pmax";
 import type { ShoppingAudit } from "./gads-shopping";
 import type { SearchAudit } from "./gads-search";
 import type { TotaluriAn } from "./gads-an";
-import { AUDIT_WINDOW_LABEL } from "./gads-intake";
+import { AUDIT_WINDOW_LABEL_ENGLISH as AUDIT_WINDOW_LABEL } from "./gads-intake";
 
 /** Cele trei niveluri de onestitate. Nu se amesteca niciodata. */
 export type Tier = "MASURAT" | "ESTIMARE" | "SIMULARE";

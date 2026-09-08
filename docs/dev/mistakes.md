@@ -280,3 +280,28 @@ runtime suite in the same declared impact plan.
 **Class.** Runtime-green test code can still be compiler-invalid. Fixture repair must preserve the exercised
 inputs and behavior while replacing only the invalid test representation; production types must not be loosened
 to accommodate a mock.
+
+## 2026-09-09 — A shared translated label changed an excluded legacy consumer
+
+**Symptom.** Translating the shared 365-day audit label to English repaired public reporting pages but also
+changed the copy rendered by the excluded collaboration page. The final suite then failed its unchanged legacy
+snapshot. Repository lint also treated generated delivery evidence as application source and obscured four real
+JSX apostrophe errors.
+
+**Cause.** One exported display string served consumers with different language contracts, so changing the
+producer silently expanded the reporting-only change into an excluded route. Separately, the lint perimeter did
+not distinguish application code from generated `.superpowers` evidence scripts.
+
+**How to recognise it.** A translated shared constant has consumers inside and outside the authorized surface,
+or a repository lint failure is dominated by generated evidence paths while a smaller set of errors remains in
+tracked application files. Enumerate every import before changing shared presentation copy and classify lint
+failures by source ownership.
+
+**Fix.** Preserve the legacy export for the excluded consumer, add an explicit English export, and migrate only
+the authorized reporting consumers. Prove both labels independently, render the public consumers, and keep the
+excluded source unchanged. Exclude `.superpowers/**` from application lint while retaining focused lint coverage
+for the repaired application files.
+
+**Class.** Shared presentation constants do not imply a shared language contract. A scoped translation needs an
+explicit compatibility boundary, and generated release evidence needs a declared lint boundary that does not
+weaken checks on production or test code.

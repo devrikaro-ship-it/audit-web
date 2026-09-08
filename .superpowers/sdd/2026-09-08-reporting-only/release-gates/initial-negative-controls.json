@@ -1,0 +1,17 @@
+{
+  "source": ".superpowers/sdd/2026-09-08-reporting-only/release-review/recovery-receipt.json",
+  "source_sha256": "4170fe3bee55c956b6aba6a39ec3f99afaf627e76f16c0f4335f629561631cfa",
+  "controls": [
+    {
+      "gate": "full suite",
+      "observed_exit_status": 1,
+      "observed_failure": "The excluded collaboration snapshot received the shared English 365-day label, and three public-output expectations still required the retired Romanian unnamed fallback."
+    },
+    {
+      "gate": "repository lint",
+      "observed_exit_status": 1,
+      "observed_failure": "Generated .superpowers evidence scripts produced 46 CommonJS import errors, while four tracked application files produced real react/no-unescaped-entities errors."
+    }
+  ],
+  "scope": "These witnessed failures are the finite release-gate prerequisites repaired by this task. The full suite remains reserved for fresh review."
+}

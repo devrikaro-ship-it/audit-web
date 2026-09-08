@@ -1,0 +1,16 @@
+{
+  "command_id": "label_and_findings",
+  "candidate_revision": "ab2402e79bb105644d358e633721b15664cc101d",
+  "impact_plan_sha256": "446407aa9fcb99df86532856ac1db77c24e3ff14b28d8f19359087565020a65c",
+  "command": "npx vitest run lib/gads-intake.test.ts lib/gads-findings.test.ts",
+  "bounded_profile": "targeted_tests",
+  "exit_status": 1,
+  "observed": {
+    "test_files_failed": 1,
+    "test_files_passed": 1,
+    "tests_failed": 1,
+    "tests_passed": 67,
+    "failure": "The legacy AUDIT_WINDOW_LABEL returned 365 days instead of 365 de zile."
+  },
+  "negative_control": "The focused compatibility assertion failed before the production repair and isolated the excluded-consumer regression."
+}

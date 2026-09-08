@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { C, sora, inter, brandGradient } from "@/lib/theme";
-import { AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
+import { AUDIT_WINDOW_LABEL_ENGLISH as AUDIT_WINDOW_LABEL } from "@/lib/gads-intake";
 import { publicOAuthAttributes, publicOAuthProjection } from "@/lib/gads-public-oauth-contract";
 
 const CONNECT_HREF = "/google-ads/connect";

@@ -1,0 +1,107 @@
+{
+  "base_revision": "117e105cdd25799cdda34322080d27a13f87059a",
+  "changes": [
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/release-gates/checks.json",
+      "risk": "fast",
+      "rule_id": "repair_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "test",
+      "checks": [
+        "label_and_findings",
+        "transitive_public_output",
+        "strict_typecheck"
+      ],
+      "path": "lib/gads-intake.test.ts",
+      "risk": "fast",
+      "rule_id": "label_tests",
+      "status": "M"
+    },
+    {
+      "category": "test",
+      "checks": [
+        "label_and_findings",
+        "transitive_public_output",
+        "strict_typecheck"
+      ],
+      "path": "lib/public-output-transitive-coverage.test.ts",
+      "risk": "fast",
+      "rule_id": "label_tests",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-intake.test.ts",
+        "lib/gads-findings.test.ts"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "label_and_findings",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "strict_typecheck",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/public-output-transitive-coverage.test.ts"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "transitive_public_output",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/release-gates/checks.json",
+  "declaration_sha256": "9c8a2d059118c864a3ed860d9b01a77ce5c3c2eb542b4087b72fd0ae5350c723",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "1a64330971696ae06939c8198dc934a98ac2fceaddfeef8b5d1fdc0e019bbc99",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "ab2402e79bb105644d358e633721b15664cc101d",
+  "risk": "fast",
+  "schema_version": 1
+}

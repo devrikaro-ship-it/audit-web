@@ -574,7 +574,7 @@ function GroupPanel({
       </div>
       {claim.kind === "simulation" ? (
         <p className="simulationNotice">
-          The simulation uses the period's measured data and is not a guarantee
+          The simulation uses the period&apos;s measured data and is not a guarantee
           of future sales.
         </p>
       ) : null}

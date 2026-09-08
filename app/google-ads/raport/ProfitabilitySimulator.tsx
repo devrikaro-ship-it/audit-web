@@ -54,7 +54,7 @@ export default function ProfitabilitySimulator({ analysis, averageOrderValue, sn
         </section>
         <ScenarioComparison snapshot={snapshot} currencyCode={currencyCode} />
         <CampaignArchitecture snapshot={snapshot} currencyCode={currencyCode} />
-        <section className="cta"><div><h3>Recover budget trapped in the wrong products.</h3><p>Get a prioritized optimization plan built from your products' actual performance.</p></div><a href="#contact-form">Get the optimization plan →</a></section>
+        <section className="cta"><div><h3>Recover budget trapped in the wrong products.</h3><p>Get a prioritized optimization plan built from your products&apos; actual performance.</p></div><a href="#contact-form">Get the optimization plan →</a></section>
       </main>
     </section>
     <style>{css}</style>
