@@ -11,7 +11,7 @@ const path = require("node:path");
 const repositoryRoot = path.resolve(__dirname, "../../../..");
 const workRoot = path.join(__dirname, ".contact-form-witness-work");
 const appRoot = path.join(workRoot, "app");
-const routeRoot = path.join(appRoot, "app", "__delivery-form-proof");
+const routeRoot = path.join(appRoot, "app", "delivery-form-proof");
 const browserReadyFile = path.join(__dirname, "browser-ready.json");
 const browserDoneFile = path.join(__dirname, "browser-done.json");
 
@@ -129,7 +129,7 @@ export default function DeliveryFormProofPage() {
 
   let cleanupPassed = false;
   try {
-    const url = `http://127.0.0.1:${port}/__delivery-form-proof`;
+    const url = `http://127.0.0.1:${port}/delivery-form-proof`;
     const response = await waitForResponse(url, server);
     const html = await response.text();
     assert.equal(response.status, 200);
