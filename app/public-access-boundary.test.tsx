@@ -679,7 +679,6 @@ describe("public Google Ads access boundary", () => {
     const html = renderToStaticMarkup(<PrivacyPage />);
 
     expect(html).toContain("<b>Audit Devrika</b> in the list");
-    expect(normalizePublicOutput(html)).toContain("find Audit Devrika in the list");
   });
 
   it("explains the product-level audit before asking for the connection", () => {

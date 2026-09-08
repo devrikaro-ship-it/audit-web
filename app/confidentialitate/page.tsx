@@ -130,7 +130,7 @@ export default function Confidentialitate() {
           <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" style={{ color: C.indigo }}>
             myaccount.google.com/permissions
           </a>
-          , find <b>Audit Devrika</b> in the list, and select &ldquo;Remove access.&rdquo; The application
+          , find <b>Audit Devrika</b>{" "}in the list, and select &ldquo;Remove access.&rdquo; The application
           can no longer read your account after access is removed.
         </P>
 
