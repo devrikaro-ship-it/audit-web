@@ -22,7 +22,7 @@ it("renders English AOV and acquisition-cost controls in the selected account cu
   expect(html).toContain("5.00×");
 });
 
-it("snaps the measured AOV to 50 RON and acquisition cost to five percentage point steps", () => {
+it("snaps the measured AOV to 50-unit and acquisition-cost to five-percentage-point steps", () => {
   const html = renderToStaticMarkup(<MarginForm initialAverageOrderValue={2486} initialGoodsCost={1292.72} measured currencyCode="EUR" action={() => {}} />);
 
   expect(html).toContain('type="number" min="50"');

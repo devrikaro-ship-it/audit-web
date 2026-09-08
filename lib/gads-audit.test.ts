@@ -1,14 +1,13 @@
-// LANG: pending full translation to EN
 import { describe, it, expect } from "vitest";
 import { audit, breakEvenRoas, categoryId, suggestMargin, PRAG_CLICURI, type Product } from "./gads-audit";
 import { parseGrossMargin } from "./gads-margin";
 
-// Cele 12 teste portate din test_engine.py (repo audit-google-ads-devrika) — valorile
-// asteptate sunt calculate de mana, nu preluate din output. Plus testele pentru stratul
-// nou: pragul derivat din marja + sugestia pe industrie.
+// The 12 tests ported from test_engine.py (audit-google-ads-devrika repository) use expected
+// values calculated by hand rather than copied from output. Additional tests cover the newer
+// margin-derived threshold and industry suggestion layer.
 
-// Implicit: trafic peste prag si o vanzare daca a adus valoare — asa testele scrise
-// inainte de segmentarea pe trafic isi pastreaza intelesul (ele judecau randamentul).
+// Default: traffic above the threshold and one sale when value was generated. This preserves the
+// meaning of tests written before traffic segmentation, when they measured return.
 const P = (
   productId: string,
   cost: number,
@@ -171,16 +170,16 @@ describe("marja sugerata din industria lui", () => {
 });
 
 describe("segmentarea pe performanta: Heroes / Sidekicks / Villains / Zombies / 0 Zombies", () => {
-  // Tinta 4,00. Pragul de trafic implicit: 40 de clicuri.
-  // P(id, cost, valoare, afisari, categorie, clicuri, vanzari)
+  // Target 4.00. Default traffic threshold: 40 clicks.
+  // P(id, cost, value, impressions, category, clicks, conversions)
   const catalog = [
-    P("hero", 400, 2400, 9000, undefined, 200, 6),      // trafic destul + peste tinta
-    P("hero-2", 300, 1500, 7000, undefined, 55, 3),     // idem, exact peste prag
-    P("villain", 350, 350, 8000, undefined, 180, 1),    // trafic destul, sub tinta
-    P("villain-0", 120, 0, 5000, undefined, 90, 0),     // trafic destul, nicio vanzare
-    P("sidekick", 40, 600, 900, undefined, 12, 1),      // trafic putin, DAR a vandut
-    P("zombie", 30, 0, 600, undefined, 8, 0),           // trafic putin si nicio vanzare
-    P("zero", 0, 0, 0, undefined, 0, 0),                // nicio afisare
+    P("hero", 400, 2400, 9000, undefined, 200, 6),      // Enough traffic and above target.
+    P("hero-2", 300, 1500, 7000, undefined, 55, 3),     // Same, just above the threshold.
+    P("villain", 350, 350, 8000, undefined, 180, 1),    // Enough traffic, below target.
+    P("villain-0", 120, 0, 5000, undefined, 90, 0),     // Enough traffic, no sales.
+    P("sidekick", 40, 600, 900, undefined, 12, 1),      // Low traffic, but it sold.
+    P("zombie", 30, 0, 600, undefined, 8, 0),           // Low traffic and no sales.
+    P("zero", 0, 0, 0, undefined, 0, 0),                // No impressions.
   ];
   const r = audit(catalog, 4);
 
@@ -193,8 +192,8 @@ describe("segmentarea pe performanta: Heroes / Sidekicks / Villains / Zombies / 
   });
 
   it("trafic putin DAR cu vanzare = Sidekick, nu Villain", () => {
-    // Miezul regulii: produsul asta are randament bun (15x), dar nu de aia e Sidekick, ci
-    // pentru ca n-a fost lasat sa se arate. Confundat cu un Villain, l-ai opri exact invers.
+    // Core rule: this product has a good return (15x), but it is a Sidekick because it lacked
+    // exposure. Confusing it with a Villain would lead to the exact opposite action.
     expect(r.sidekicks.map((s) => s.productId)).toEqual(["sidekick"]);
     expect(r.sidekicks[0].productRoas).toBe(15);
   });
@@ -217,16 +216,16 @@ describe("segmentarea pe performanta: Heroes / Sidekicks / Villains / Zombies / 
   });
 
   it("acelasi produs isi schimba grupa cand pragul de trafic se schimba", () => {
-    // Cu prag 10, produsul cu 12 clicuri are brusc "destul trafic" si e judecat pe randament.
+    // At a threshold of 10, the product with 12 clicks has enough traffic and is judged by return.
     const cuPragMic = audit(catalog, 4, true, 10);
     expect(cuPragMic.sidekicks).toEqual([]);
     expect(cuPragMic.heroes.map((h) => h.productId)).toContain("sidekick");
   });
 
   it("pragul e acelasi indiferent de fereastra analizata", () => {
-    // Scaling by the 365-day window erased the Villain population on real accounts.
-    // pe un cont real (MagazinFitness, 20.08.2026). Un produs cu 40 de clicuri si nicio vanzare
-    // spune acelasi lucru si intr-o luna, si intr-un an.
+    // Scaling by the 365-day window erased the Villain population on a real account
+    // (MagazinFitness, 2026-08-20). A product with 40 clicks and no sale means the same thing over
+    // one month or one year.
     expect(PRAG_CLICURI).toBe(40);
     const peAn = audit([P("v", 400, 100, 20000, undefined, 45, 0)], 4);
     expect(peAn.villains.map((v) => v.productId)).toEqual(["v"]);

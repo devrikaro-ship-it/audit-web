@@ -1,13 +1,12 @@
-// Modul demo pentru auditul pe cont Google Ads conectat.
+// Demo mode for auditing a connected Google Ads account.
 //
-// DE CE EXISTA: fara un cont real conectat, fluxul nu se poate vedea deloc — nici in intalnire,
-// nici la testare. `GADS_DEMO=1` inlocuieste STRICT stratul care aduce datele (tokenul + cele
-// sapte interogari). Analiza, pragurile si randarea raman codul real, deci ce vezi in demo e
-// exact ce vede prospectul, doar pe cifre inventate.
+// WHY IT EXISTS: without a real connected account, the flow cannot be shown in a meeting or in
+// tests. `GADS_DEMO=1` replaces ONLY the data-fetching layer (the token plus seven queries).
+// Analysis, thresholds, and rendering remain production code, so the demo shows exactly what a
+// prospect sees, only with simulated figures.
 //
-// REGULA DE ONESTITATE: cand demo-ul e pornit, raportul o spune la vedere. Un raport demo care
-// pretinde ca sunt "cifrele tale reale" e o minciuna care ajunge la un client — s-a intamplat
-// deja o data, in versiunea Python a tool-ului.
+// HONESTY RULE: when demo mode is on, the report says so visibly. A demo report claiming these
+// are "your real figures" lies to a client; that already happened once in the Python version.
 
 import type { AccessibleAccount } from "./gads-oauth";
 import type { Product } from "./gads-audit";
@@ -19,10 +18,10 @@ import type { ShoppingData } from "./gads-shopping";
 import type { SearchData } from "./gads-search";
 import type { TermenBrut } from "./gads-keywords";
 
-/** Valoarea pusa in sesiune in loc de refresh token — nu ajunge niciodata la Google. */
+/** Value stored in the session instead of a refresh token; it never reaches Google. */
 export const DEMO_REFRESH_TOKEN = "demo";
 export const DEMO_CUSTOMER_ID = "1234567890";
-export const DEMO_CUSTOMER_NAME = "Magazin Demo (date simulate)";
+export const DEMO_CUSTOMER_NAME = "Demo Store (simulated data)";
 
 export function demoOn(env: Record<string, string | undefined> = process.env): boolean {
   return env.GADS_DEMO === "1";
@@ -47,9 +46,9 @@ export type DemoData = {
     previousYear: Product[];
   };
   /**
-   * Acelasi catalog, dat ca "ferestre" de timp, ca demonstratia sa aiba si comutatorul de
-   * perioada. Cifrele nu se schimba intre ferestre — sunt simulate, si a le inventa diferite
-   * ar da impresia unei precizii pe care demo-ul n-o are.
+   * The same catalog exposed as time windows so the demonstration includes the period selector.
+   * Figures do not change between windows: they are simulated, and inventing different values
+   * would imply precision the demo does not have.
    */
   ferestre: { zile: number; eticheta: string; products: Product[] }[];
   catalogComplete: boolean;
@@ -61,9 +60,9 @@ export type DemoData = {
   brutCautari: SearchData;
 };
 
-// Magazin de mobila, pentru ca taxonomia Google are id-ul 436 = "mobila" si asa se vede si
-// sugestia de marja pe industrie. Cifrele sunt coerente intre ele: cheltuiala campaniei de
-// Shopping = suma costurilor produselor, iar ROAS-ul contului iese din valorile de mai jos.
+// Furniture store because Google taxonomy ID 436 means furniture and demonstrates the industry
+// margin suggestion. The figures are internally consistent: Shopping campaign spend equals the
+// sum of product costs, and account ROAS follows from the values below.
 const CATEGORIE_MOBILA = "productCategoryConstants/LEVEL1~436";
 
 const P = (
@@ -85,33 +84,33 @@ const P = (
 });
 
 export function demoData(): DemoData {
-  // Catalogul demo acopera INTENTIONAT toate cele cinci etichete — altfel demonstratia arata
-  // un raport pe jumatate si nu se vede la ce foloseste segmentarea.
-  //        titlu, cost, valoare, afisari, clicuri, vanzari
+  // The demo catalog INTENTIONALLY covers all five labels; otherwise the demonstration would show
+  // half a report and fail to explain the value of segmentation.
+  //        title, cost, value, impressions, clicks, conversions
   const products: Product[] = [
-    // Heroes: trafic destul + randament peste tinta
+    // Heroes: enough traffic and return above target.
     P("Canapea premium 3 locuri", 6200, 41000, 120400, 1240, 16),
     P("Masa extensibila stejar", 4100, 24800, 88300, 820, 14),
     P("Fotoliu tapitat gri", 2600, 12900, 51200, 520, 10),
-    // Villains: trafic destul, dar nu se acopera
+    // Villains: enough traffic, but below break-even.
     P("Set 4 scaune bucatarie", 5400, 9800, 62700, 1080, 11),
     P("Comoda 6 sertare alba", 3900, 4100, 40100, 780, 4),
     P("Birou reglabil pe inaltime", 3100, 2600, 33400, 620, 2),
     P("Covor shaggy 200x300", 2450, 0, 21800, 490, 0),
-    // Sidekicks: putin trafic, dar au vandut
+    // Sidekicks: low traffic, but they sold.
     P("Lampadar arcuit", 210, 900, 4200, 18, 1),
     P("Masuta cafea nuc", 165, 1400, 3600, 14, 1),
-    // Zombies: trafic sub prag si nicio vanzare — netestate, nu proaste
+    // Zombies: traffic below threshold and no sales; untested, not bad.
     P("Taburet catifea rotativ", 95, 0, 3100, 14, 0),
     P("Oglinda decorativa 80 cm", 40, 0, 1500, 7, 0),
-    // 0 Zombies: nicio afisare
+    // 0 Zombies: no impressions.
     P("Noptiera stejar natur", 0, 0, 0, 0, 0),
     P("Etajera metalica industriala", 0, 0, 0, 0, 0),
     P("Suport TV rotativ", 0, 0, 0, 0, 0),
     P("Perna decorativa catifea", 0, 0, 0, 0, 0),
   ];
 
-  const costShopping = 28260; // suma costurilor de mai sus
+  const costShopping = 28260; // Sum of the costs above.
   const valoareShopping = 97500;
 
   const structura: StructuraAudit = {
@@ -174,8 +173,8 @@ export function demoData(): DemoData {
     },
     structura,
     brutCuvinte: {
-      // "premium" blocheaza chiar produsul cel mai bine vandut — exact cazul pe care il cauta
-      // analiza de negative toxice.
+      // "premium" blocks the best-selling product itself, which is exactly the case the toxic
+      // negative analysis looks for.
       negative: ["premium", "ieftin", "second hand"],
       termeni: [
         { termen: "canapea ieftina second hand", cost: 1840, conversii: 0, clicuri: 243 },

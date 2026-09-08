@@ -10,15 +10,15 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Step 1 of 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/h1[0]/text "Which account should we analyze?"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Nu am putut citi datele contului."
+root/div[0]/div[0]/div[0]/p[1]/text "We could not read the selected account data."
 root/div[0]/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/div[0]/a[0]/text "Reincearca conectarea"
+root/div[0]/div[0]/div[0]/a[0]/text "Reconnect"
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. We do not change anything, and you can revoke access at any time from your Google account.""
 `;
 
 exports[`account selection recovery > preserves the account-list explanation when listing accounts fails > account-picker:list-error 1`] = `
@@ -31,17 +31,17 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Step 1 of 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/h1[0]/text "Which account should we analyze?"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Nu am putut citi lista de conturi. Se intampla cand contul nu are inca acces la Google Ads API sau cand conectarea a expirat."
+root/div[0]/div[0]/div[0]/p[1]/text "We could not read the account list. This can happen when the account does not yet have Google Ads API access or when the connection has expired."
 root/div[0]/div[0]/div[0]/p[2]
 root/div[0]/div[0]/div[0]/p[2]/text "list failed"
 root/div[0]/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/div[0]/a[0]/text "Reincearca conectarea"
+root/div[0]/div[0]/div[0]/a[0]/text "Reconnect"
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. We do not change anything, and you can revoke access at any time from your Google account.""
 `;
 
 exports[`account selection recovery > renders the successful picker state through the canonical contract > account-picker:success-zero 1`] = `
@@ -54,15 +54,15 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Step 1 of 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/h1[0]/text "Which account should we analyze?"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Contul cu care te-ai conectat nu are niciun cont de Google Ads pe care sa-l putem analiza. Daca administrezi magazinul din alt cont Google, conecteaza-te cu acela."
+root/div[0]/div[0]/div[0]/p[1]/text "The Google account you connected has no Google Ads account that we can analyze. If you manage the store with another Google account, connect that one instead."
 root/div[0]/div[0]/div[0]/a[0] href="/api/google-ads/start"
-root/div[0]/div[0]/div[0]/a[0]/text "Incearca alt cont Google"
+root/div[0]/div[0]/div[0]/a[0]/text "Try another Google account"
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. We do not change anything, and you can revoke access at any time from your Google account.""
 `;
 
 exports[`account selection recovery > seals the complete demo picker text > account-picker:demo 1`] = `
@@ -75,11 +75,11 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Step 1 of 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/h1[0]/text "Which account should we analyze?"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Am gasit un cont. Alege magazinul pe care vrei sa-l vezi analizat."
+root/div[0]/div[0]/div[0]/p[1]/text "We found one account. Choose the store you want us to analyze."
 root/div[0]/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/div[0]/form[0] action="javascript:throw new Error(&#x27;React form unexpectedly submitted.&#x27;)"
 root/div[0]/div[0]/div[0]/div[0]/form[0]/input[0] type="hidden" name="customerId" value="<IDENTIFIER>"
@@ -94,7 +94,7 @@ root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]/text "<IDENTI
 root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. We do not change anything, and you can revoke access at any time from your Google account.""
 `;
 
 exports[`account selection recovery > seals the complete picker text for many account results > account-picker:success-many 1`] = `
@@ -107,11 +107,11 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Step 1 of 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/h1[0]/text "Which account should we analyze?"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Am gasit 2 conturi. Alege magazinul pe care vrei sa-l vezi analizat."
+root/div[0]/div[0]/div[0]/p[1]/text "We found 2 accounts. Choose the store you want us to analyze."
 root/div[0]/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/div[0]/form[0] action="javascript:throw new Error(&#x27;React form unexpectedly submitted.&#x27;)"
 root/div[0]/div[0]/div[0]/div[0]/form[0]/input[0] type="hidden" name="customerId" value="<IDENTIFIER>"
@@ -138,7 +138,7 @@ root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/span[0]/span[1]/text "<IDENTI
 root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/div[0]/div[0]/form[1]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. We do not change anything, and you can revoke access at any time from your Google account.""
 `;
 
 exports[`account selection recovery > seals the complete picker text for one account results > account-picker:success-one 1`] = `
@@ -151,11 +151,11 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Pasul 1 din 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Step 1 of 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Ce cont analizam?"
+root/div[0]/div[0]/div[0]/h1[0]/text "Which account should we analyze?"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Am gasit un cont. Alege magazinul pe care vrei sa-l vezi analizat."
+root/div[0]/div[0]/div[0]/p[1]/text "We found one account. Choose the store you want us to analyze."
 root/div[0]/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/div[0]/form[0] action="javascript:throw new Error(&#x27;React form unexpectedly submitted.&#x27;)"
 root/div[0]/div[0]/div[0]/div[0]/form[0]/input[0] type="hidden" name="customerId" value="<IDENTIFIER>"
@@ -170,5 +170,5 @@ root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/span[0]/span[1]/text "<IDENTI
 root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/div[0]/div[0]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Aplicatia citeste datele necesare auditului: conturile Google Ads accesibile, inclusiv identificatorul, numele, statutul de manager si moneda, fusul orar al contului ales, produsele si performanta lor in Shopping, configurarea conversiilor, structura campaniilor, campaniile Performance Max, campaniile Shopping, campaniile Search, cuvintele cheie negative, termenii de cautare si totalurile contului din ultimele 365 de zile. Nu modificam nimic si poti retrage accesul oricand din contul tau Google.""
+root/div[0]/div[0]/p[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. We do not change anything, and you can revoke access at any time from your Google account.""
 `;

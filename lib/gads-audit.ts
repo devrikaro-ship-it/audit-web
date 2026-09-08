@@ -1,12 +1,11 @@
-// LANG: pending full translation to EN
-// Motorul auditului de Google Ads pe cont conectat (modul CONNECTED).
-// Functie PURA de (produse, marja) — fara I/O, fara API. Intake-ul si raportul stau in afara.
+// Google Ads audit engine for a connected account (CONNECTED mode).
+// Pure function of (products, margin): no I/O and no API. Intake and reporting stay outside.
 import { requireGrossMargin } from "./gads-margin";
-// Portat 1:1 din engine.py (repo audit-google-ads-devrika), cu testele lui hand-computed.
+// Ported 1:1 from engine.py (audit-google-ads-devrika repository), with its hand-computed tests.
 //
-// Diferenta fata de originalul Python: acolo clientul era intrebat direct ROAS-ul minim.
-// Oamenii nu stiu sa si-l calculeze, deci acum intrebam MARJA (pe care orice comerciant o stie)
-// si derivam noi pragul: break-even ROAS = 1 / marja. Vezi `breakEvenRoas`.
+// Unlike the Python original, this version does not ask the client for a minimum ROAS.
+// People generally cannot calculate it themselves, so we ask for MARGIN (which a merchant knows)
+// and derive the threshold: break-even ROAS = 1 / margin. See `breakEvenRoas`.
 
 export type Product = {
   productId: string;
@@ -15,46 +14,46 @@ export type Product = {
   conversionValue: number;
   impressions: number;
   /**
-   * Clicurile spun daca produsul a avut destul trafic cat sa poata fi judecat. Sunt MOTOR
-   * INTERN: nici numarul, nici pragul nu apar in raportul clientului — el vede doar in ce
-   * grupa a cazut produsul.
+   * Clicks show whether the product had enough traffic to be judged. They are INTERNAL ENGINE
+   * data: neither the count nor the threshold appears in the client report; the client only sees
+   * which group contains the product.
    */
   clicks: number;
-  /** Cate vanzari a facut (numar, nu valoare). Desparte "a vandut putin" de "n-a vandut". */
+  /** Number of sales, not their value. Distinguishes "sold a little" from "did not sell." */
   conversions: number;
-  /** Categoria Google a produsului — folosita doar ca sa ghicim industria. */
+  /** Google product category, used only to infer the industry. */
   category?: string;
 };
 
 export type Villain = Product & { productRoas: number };
 
-/** Un produs peste prag. Acelasi camp de randament ca la Villain, ca sa se poata afisa la fel. */
+/** A product above the threshold. Uses the same return field as Villain for consistent display. */
 export type Erou = Product & { productRoas: number };
 
 export type AuditResult = {
   villains: Villain[];
   villainsTotalCost: number;
-  /** Trafic destul SI randament peste tinta: castigatori doveditii. Aici pui buget. */
+  /** Enough traffic AND return above target: proven winners. Budget belongs here. */
   heroes: Erou[];
   /**
-   * Trafic putin, DAR au vandut. Sunt produse bune care n-au fost lasate sa se arate —
-   * cea mai ieftina crestere din cont, si motivul pentru care nu se pot arunca la gramada
-   * cu cele care n-au vandut: diferenta nu e performanta, e expunerea.
+   * Low traffic, BUT they sold. These are good products that were not given enough exposure:
+   * the cheapest account growth, and the reason they cannot be grouped with products that did
+   * not sell. The difference is exposure, not performance.
    */
   sidekicks: Erou[];
-  /** Pragul de trafic folosit la clasificare. MOTOR INTERN — nu se afiseaza clientului. */
+  /** Traffic threshold used for classification. INTERNAL ENGINE data, never shown to the client. */
   pragClicuri: number;
-  /** `list` = produsele concrete, ca raportul sa poata numi cateva, nu doar sa le numere. */
+  /** `list` contains concrete products so the report can name examples, not just count them. */
   /**
-   * Trafic sub prag SI nicio vanzare. Nu sunt condamnate — pur si simplu n-au avut destul
-   * trafic cat sa se poata spune ceva despre ele. De regula sunt grosul catalogului.
+   * Traffic below the threshold AND no sales. They are not condemned; they simply lack enough
+   * traffic for a conclusion. They usually make up most of the catalog.
    */
   zombies: { count: number; pctOfCatalog: number; list: Product[] };
-  /** Nicio afisare: n-au fost servite deloc. Problema e de feed sau de structura, nu de randament. */
+  /** No impressions: never served. This is a feed or structure issue, not a return issue. */
   zeroZombies: { count: number; pctOfCatalog: number; list: Product[] };
-  /** ESTIMARE: coeficient de piata pe cheltuiala reala. null daca magazinul are deja CSS. */
+  /** ESTIMATE: market coefficient applied to actual spend. null when the store already has CSS. */
   cssOverpaid: number | null;
-  /** SIMULARE: plafon optimist, VENIT nu profit. null cand nu raman castigatori cu spend. */
+  /** SIMULATION: optimistic ceiling, REVENUE not profit. null when no winners with spend remain. */
   zone2Simulation: { current: number; x2: number; x5: number } | null;
   totals: {
     totalCost: number;
@@ -67,74 +66,73 @@ export type AuditResult = {
 };
 
 /**
- * Cat trafic trebuie sa fi strans un produs ca sa merite judecat. Sub 40 de clicuri fara nicio
- * vanzare nu se poate spune nimic: la o rata de conversie normala de magazin, nici nu te astepti
- * la o comanda. Pragul NU se arata clientului.
+ * How much traffic a product must collect before it can be judged. Below 40 clicks with no sale,
+ * no conclusion is justified: at a normal store conversion rate, an order is not yet expected.
+ * The threshold is NOT shown to the client.
  *
- * Fix, nu proportional cu fereastra. Am incercat sa-l scalez (40 pe 30 de zile -> 487 pe un an)
- * and the 365-day version erased nearly the entire Villain population on real accounts; **Villains
- * ajungea la ZERO produse** iar tot ce ardea bani se ascundea in Sidekicks. Intrebarea "am
- * destule date?" nu depinde de cat de lunga e fereastra — 40 de clicuri fara vanzare inseamna
- * acelasi lucru si intr-o luna, si intr-un an.
+ * Fixed, not proportional to the date window. Scaling it (40 over 30 days -> 487 over one year)
+ * made the 365-day version erase nearly the entire Villain population on real accounts: Villains
+ * fell to ZERO products while every wasteful product hid among Sidekicks. The question "is there
+ * enough data?" does not depend on the window length: 40 clicks without a sale means the same
+ * thing over one month or one year.
  */
 export const PRAG_CLICURI = 40;
 
-/** Coeficient standard de piata: fara CSS, CPC-ul poate fi cu pana la ~20% mai mare. */
+/** Standard market coefficient: without CSS, CPC can be up to approximately 20% higher. */
 export const CSS_DELTA = 0.2;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Pragul: din marja, nu din intrebare directa
+// Threshold: derived from margin, not from a direct question
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Break-even ROAS = 1 / marja. Sub el, fiecare vanzare din reclame pierde bani.
- * Doctrina de casa (memoria feedback_ecom_cpa_max_formula): singurul numar de business
- * necesar per cont e break-even-ul; restul se deriva.
+ * Break-even ROAS = 1 / margin. Below it, every sale from ads loses money.
+ * House doctrine (feedback_ecom_cpa_max_formula memory): break-even is the only business number
+ * required per account; everything else is derived.
  *
- * @param marginPct marja bruta in procente (ex 30 pentru 30%)
+ * @param marginPct Gross margin as a percentage (for example, 30 for 30%).
  */
 export function breakEvenRoas(marginPct: number): number {
   return 100 / requireGrossMargin(marginPct);
 }
 
 /**
- * Marje brute tipice pe industrie — valoare SUGERATA in formular, niciodata afirmata ca fapt
- * despre magazinul lui. Omul o poate schimba.
+ * Typical gross margins by industry: a SUGGESTED form value, never asserted as a fact about the
+ * client's store. The person can change it.
  *
- * Cheia = id-ul de categorie Google de nivel 1 (`shopping_product.category_level1`). Am ales
- * id-ul, nu textul, dintr-un motiv verificat pe cont real (06-08-2026): `product_type_level1`
- * e text liber scris de comerciant in limba lui ("hrana uscata", "recompense si snackuri"),
- * deci nu se poate potrivi de o regula generala. Taxonomia Google are in schimb 21 de id-uri
- * stabile, independente de limba.
+ * The key is the level-one Google category ID (`shopping_product.category_level1`). We use the
+ * ID instead of text for a reason verified on a real account (2026-08-06):
+ * `product_type_level1` is free text written by the merchant in their language, so a general rule
+ * cannot match it reliably. Google's taxonomy instead has 21 stable, language-independent IDs.
  */
 export const INDUSTRY_MARGIN: ReadonlyMap<number, { label: string; marginPct: number }> = new Map([
-  [1, { label: "hrana si accesorii animale", marginPct: 28 }],
-  [8, { label: "arta si divertisment", marginPct: 45 }],
-  [111, { label: "business si industrial", marginPct: 30 }],
-  [141, { label: "foto si optica", marginPct: 20 }],
-  [166, { label: "imbracaminte si accesorii", marginPct: 55 }],
-  [222, { label: "electronice", marginPct: 15 }],
-  [412, { label: "alimente si bauturi", marginPct: 25 }],
-  [436, { label: "mobila", marginPct: 45 }],
-  [469, { label: "sanatate si frumusete", marginPct: 60 }],
-  [536, { label: "casa si gradina", marginPct: 42 }],
-  [537, { label: "bebelusi si copii mici", marginPct: 40 }],
-  [632, { label: "bricolaj si scule", marginPct: 30 }],
-  [783, { label: "carti si media", marginPct: 30 }],
-  [888, { label: "auto si piese", marginPct: 30 }],
-  [922, { label: "birotica si papetarie", marginPct: 35 }],
-  [988, { label: "sport si fitness", marginPct: 40 }],
-  [1239, { label: "jucarii si jocuri", marginPct: 40 }],
+  [1, { label: "pet supplies", marginPct: 28 }],
+  [8, { label: "arts and entertainment", marginPct: 45 }],
+  [111, { label: "business and industrial", marginPct: 30 }],
+  [141, { label: "cameras and optics", marginPct: 20 }],
+  [166, { label: "apparel and accessories", marginPct: 55 }],
+  [222, { label: "electronics", marginPct: 15 }],
+  [412, { label: "food and beverages", marginPct: 25 }],
+  [436, { label: "furniture", marginPct: 45 }],
+  [469, { label: "health and beauty", marginPct: 60 }],
+  [536, { label: "home and garden", marginPct: 42 }],
+  [537, { label: "baby and toddler", marginPct: 40 }],
+  [632, { label: "hardware and tools", marginPct: 30 }],
+  [783, { label: "books and media", marginPct: 30 }],
+  [888, { label: "vehicles and parts", marginPct: 30 }],
+  [922, { label: "office supplies", marginPct: 35 }],
+  [988, { label: "sporting goods", marginPct: 40 }],
+  [1239, { label: "toys and games", marginPct: 40 }],
   [2092, { label: "software", marginPct: 70 }],
-  [5181, { label: "bagaje si genti", marginPct: 50 }],
+  [5181, { label: "luggage and bags", marginPct: 50 }],
 ]);
 
-/** Marja implicita cand nu recunoastem industria — mediana ecom, deliberat conservatoare. */
+/** Default margin for an unknown industry: a deliberately conservative ecommerce median. */
 export const DEFAULT_MARGIN_PCT = 35;
 
 /**
- * Extrage id-ul numeric din resource name-ul intors de API
- * (`productCategoryConstants/LEVEL1~1` -> 1). Accepta si un id dat direct.
+ * Extracts the numeric ID from the resource name returned by the API
+ * (`productCategoryConstants/LEVEL1~1` -> 1). Also accepts a direct ID.
  */
 export function categoryId(raw?: string): number | null {
   if (!raw) return null;
@@ -143,8 +141,8 @@ export function categoryId(raw?: string): number | null {
 }
 
 /**
- * Ghiceste industria din categoriile produselor lui si intoarce marja de SUGERAT — pe categoria
- * DOMINANTA din catalog, ca un magazin mixt sa nu fie etichetat dupa un colt de raft.
+ * Infers the industry from product categories and returns a SUGGESTED margin for the catalog's
+ * DOMINANT category, so a mixed store is not labelled by one corner of a shelf.
  */
 export function suggestMargin(products: Product[]): {
   label: string;
@@ -166,32 +164,32 @@ export function suggestMargin(products: Product[]): {
     }
   }
   if (bestId !== null) return { ...INDUSTRY_MARGIN.get(bestId)!, detected: true };
-  return { label: "magazin online", marginPct: DEFAULT_MARGIN_PCT, detected: false };
+  return { label: "online store", marginPct: DEFAULT_MARGIN_PCT, detected: false };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Motorul
+// Engine
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Segmentarea pe performanta (doctrina casei, vezi `references/google-ads-research.md`).
- * Se regleaza din DOUA numere: randamentul tinta si cat trafic trebuie sa fi avut un produs
- * ca sa merite judecat.
+ * Performance segmentation (house doctrine; see `references/google-ads-research.md`).
+ * It is controlled by TWO numbers: the target return and how much traffic a product must receive
+ * before it can be judged.
  *
- *   1. 0 Zombie  -> nicio afisare: n-a fost servit deloc.
- *   2. cu afisari:
- *        a) trafic >= prag:  roas >= tinta -> Hero      (dovedit -> pui buget)
- *                            roas <  tinta -> Villain   (arde bani cu trafic real -> tai)
- *        b) trafic <  prag:  are vanzari   -> Sidekick  (subexpus -> il lasi sa se arate)
- *                            fara vanzari  -> Zombie    (nu stim nimic despre el, n-a avut sansa)
+ *   1. 0 Zombie  -> no impressions: never served.
+ *   2. with impressions:
+ *        a) traffic >= threshold: roas >= target -> Hero     (proven -> allocate budget)
+ *                                roas < target  -> Villain   (wastes money with real traffic -> cut)
+ *        b) traffic < threshold:  has sales     -> Sidekick  (underexposed -> let it serve)
+ *                                no sales      -> Zombie    (unknown; it had no fair chance)
  *
- * De ce contorul de trafic si nu banii cheltuiti: intrebarea reala e "am destule date cat sa
- * judec produsul asta?". Un produs cu doua clicuri si nicio vanzare nu e un produs prost, e un
- * produs netestat — iar a-l pune la un loc cu unul care a ars trafic real face raportul
- * atacabil din prima. Pragul e MOTOR INTERN: nu apare in raportul clientului.
+ * Why traffic count instead of money spent: the real question is "is there enough data to judge
+ * this product?" A product with two clicks and no sale is not a bad product; it is untested.
+ * Grouping it with a product that wasted meaningful traffic undermines the report immediately.
+ * The threshold is INTERNAL ENGINE data and does not appear in the client report.
  *
- * @param isByGoogle magazinul ruleaza Shopping direct prin Google (fara CSS)? Doar atunci
- *                   are sens estimarea de CSS.
+ * @param isByGoogle Whether the store runs Shopping directly through Google (without CSS).
+ *                   Only then does the CSS estimate apply.
  */
 export function audit(
   products: Product[],
@@ -228,8 +226,8 @@ export function audit(
   }
 
   villains.sort((a, b) => b.cost - a.cost);
-  // Heroes dupa cat aduc (aia sunt produsele pe care se sprijina contul), Sidekicks dupa
-  // randament (aia merita expuse primele). Ordinea de citire = ordinea in care se lucreaza.
+  // Sort Heroes by value generated (the products supporting the account) and Sidekicks by return
+  // (the products worth exposing first). Reading order matches work order.
   heroes.sort((a, b) => b.conversionValue - a.conversionValue);
   sidekicks.sort((a, b) => b.productRoas - a.productRoas);
   zombiesList.sort((a, b) => b.cost - a.cost);

@@ -1,8 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:account-picker 1`] = `"title="Alege contul · Audit Google Ads Devrika""`;
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:account-picker 1`] = `"title="Choose an account · Devrika Google Ads Audit""`;
 
-exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:connect 1`] = `"title="Conecteaza contul Google Ads · Devrika""`;
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:connect 1`] = `"title="Connect your Google Ads account · Devrika""`;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:hub 1`] = `
 "description="A web application that analyzes your store and advertising accounts and shows where you are losing money: on your website, in Google Ads, and in Shopping campaigns."
@@ -14,7 +14,7 @@ exports[`public Google Ads access boundary > matches every emitted metadata obje
 title="Free Google Ads audit — Devrika""
 `;
 
-exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:margin 1`] = `"title="Marja ta · Audit Google Ads Devrika""`;
+exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:margin 1`] = `"title="Your margin · Devrika Google Ads Audit""`;
 
 exports[`public Google Ads access boundary > matches every emitted metadata object to an independent structural snapshot > metadata:privacy 1`] = `
 "description="How the Devrika application handles your Google Ads account data: what we read, what we retain, who we do not share it with, and how you revoke access."
@@ -43,56 +43,56 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conecteaza contul si vezi performanta fiecarui produs"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Connect your account and see how every product performs"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Ai oprit conectarea la Google. Nu s-a intamplat nimic — poti relua oricand."
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "You stopped the Google connection. Nothing changed — you can resume at any time."
 root/div[0]/div[0]/main[0]/section[1]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Conectare securizata prin Google"
+root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Secure connection through Google"
 root/div[0]/div[0]/main[0]/section[1]/h2[0]
-root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Spune-ne ce magazin analizam"
+root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Tell us which store to analyze"
 root/div[0]/div[0]/main[0]/section[1]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/p[2]/text "Dupa ce continui, alegi contul Google Ads si confirmi accesul direct in pagina Google."
+root/div[0]/div[0]/main[0]/section[1]/p[2]/text "After you continue, choose the Google Ads account and confirm access directly on Google&#x27;s page."
 root/div[0]/div[0]/main[0]/section[1]/form[0] action="/api/google-ads/start"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Site-ul magazinului"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Store website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/input[0] type="url" name="website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "Folosim adresa doar ca sa identificam magazinul in raport. Valoarea medie reala a comenzii vine din conversiile Purchase din Google Ads."
+root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "We use this address only to identify the store in your report. The actual average order value comes from Google Ads Purchase conversions."
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0] type="submit"
-root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continua in siguranta cu Google"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continue securely with Google"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]
@@ -100,20 +100,20 @@ root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "Nu modificam campanii sau bugete"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "We do not change campaigns or budgets"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "Nu cerem Gmail sau Drive"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "We do not request Gmail or Drive"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Retragi accesul oricand"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Revoke access at any time"
 root/div[0]/div[0]/main[0]/section[1]/details[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exact ce date citim si ce permite accesul Google"
+root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exactly what data we read and what Google access permits"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
@@ -124,12 +124,12 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ad
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "We do not request access to Gmail, Drive, or other services. You can revoke access at any time from your Google account."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-config 1`] = `
@@ -145,56 +145,56 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conecteaza contul si vezi performanta fiecarui produs"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Connect your account and see how every product performs"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Conectarea nu e activa inca pe acest server."
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "The connection is not active on this server yet."
 root/div[0]/div[0]/main[0]/section[1]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Conectare securizata prin Google"
+root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Secure connection through Google"
 root/div[0]/div[0]/main[0]/section[1]/h2[0]
-root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Spune-ne ce magazin analizam"
+root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Tell us which store to analyze"
 root/div[0]/div[0]/main[0]/section[1]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/p[2]/text "Dupa ce continui, alegi contul Google Ads si confirmi accesul direct in pagina Google."
+root/div[0]/div[0]/main[0]/section[1]/p[2]/text "After you continue, choose the Google Ads account and confirm access directly on Google&#x27;s page."
 root/div[0]/div[0]/main[0]/section[1]/form[0] action="/api/google-ads/start"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Site-ul magazinului"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Store website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/input[0] type="url" name="website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "Folosim adresa doar ca sa identificam magazinul in raport. Valoarea medie reala a comenzii vine din conversiile Purchase din Google Ads."
+root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "We use this address only to identify the store in your report. The actual average order value comes from Google Ads Purchase conversions."
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0] type="submit"
-root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continua in siguranta cu Google"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continue securely with Google"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]
@@ -202,20 +202,20 @@ root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "Nu modificam campanii sau bugete"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "We do not change campaigns or budgets"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "Nu cerem Gmail sau Drive"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "We do not request Gmail or Drive"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Retragi accesul oricand"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Revoke access at any time"
 root/div[0]/div[0]/main[0]/section[1]/details[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exact ce date citim si ce permite accesul Google"
+root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exactly what data we read and what Google access permits"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
@@ -226,12 +226,12 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ad
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "We do not request access to Gmail, Drive, or other services. You can revoke access at any time from your Google account."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-expirat 1`] = `
@@ -247,56 +247,56 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conecteaza contul si vezi performanta fiecarui produs"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Connect your account and see how every product performs"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Accesul la contul tau de Google a expirat sau a fost retras intre timp. Reconecteaza-te si reluam auditul — dureaza zece secunde."
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Access to your Google account expired or was revoked. Reconnect to resume the audit — it takes about ten seconds."
 root/div[0]/div[0]/main[0]/section[1]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Conectare securizata prin Google"
+root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Secure connection through Google"
 root/div[0]/div[0]/main[0]/section[1]/h2[0]
-root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Spune-ne ce magazin analizam"
+root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Tell us which store to analyze"
 root/div[0]/div[0]/main[0]/section[1]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/p[2]/text "Dupa ce continui, alegi contul Google Ads si confirmi accesul direct in pagina Google."
+root/div[0]/div[0]/main[0]/section[1]/p[2]/text "After you continue, choose the Google Ads account and confirm access directly on Google&#x27;s page."
 root/div[0]/div[0]/main[0]/section[1]/form[0] action="/api/google-ads/start"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Site-ul magazinului"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Store website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/input[0] type="url" name="website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "Folosim adresa doar ca sa identificam magazinul in raport. Valoarea medie reala a comenzii vine din conversiile Purchase din Google Ads."
+root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "We use this address only to identify the store in your report. The actual average order value comes from Google Ads Purchase conversions."
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0] type="submit"
-root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continua in siguranta cu Google"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continue securely with Google"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]
@@ -304,20 +304,20 @@ root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "Nu modificam campanii sau bugete"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "We do not change campaigns or budgets"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "Nu cerem Gmail sau Drive"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "We do not request Gmail or Drive"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Retragi accesul oricand"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Revoke access at any time"
 root/div[0]/div[0]/main[0]/section[1]/details[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exact ce date citim si ce permite accesul Google"
+root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exactly what data we read and what Google access permits"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
@@ -328,12 +328,12 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ad
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "We do not request access to Gmail, Drive, or other services. You can revoke access at any time from your Google account."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-fara-cod 1`] = `
@@ -349,56 +349,56 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conecteaza contul si vezi performanta fiecarui produs"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Connect your account and see how every product performs"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Raspunsul de la Google a venit incomplet. Mai incearca o data."
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Google returned an incomplete response. Please try again."
 root/div[0]/div[0]/main[0]/section[1]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Conectare securizata prin Google"
+root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Secure connection through Google"
 root/div[0]/div[0]/main[0]/section[1]/h2[0]
-root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Spune-ne ce magazin analizam"
+root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Tell us which store to analyze"
 root/div[0]/div[0]/main[0]/section[1]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/p[2]/text "Dupa ce continui, alegi contul Google Ads si confirmi accesul direct in pagina Google."
+root/div[0]/div[0]/main[0]/section[1]/p[2]/text "After you continue, choose the Google Ads account and confirm access directly on Google&#x27;s page."
 root/div[0]/div[0]/main[0]/section[1]/form[0] action="/api/google-ads/start"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Site-ul magazinului"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Store website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/input[0] type="url" name="website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "Folosim adresa doar ca sa identificam magazinul in raport. Valoarea medie reala a comenzii vine din conversiile Purchase din Google Ads."
+root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "We use this address only to identify the store in your report. The actual average order value comes from Google Ads Purchase conversions."
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0] type="submit"
-root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continua in siguranta cu Google"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continue securely with Google"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]
@@ -406,20 +406,20 @@ root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "Nu modificam campanii sau bugete"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "We do not change campaigns or budgets"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "Nu cerem Gmail sau Drive"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "We do not request Gmail or Drive"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Retragi accesul oricand"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Revoke access at any time"
 root/div[0]/div[0]/main[0]/section[1]/details[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exact ce date citim si ce permite accesul Google"
+root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exactly what data we read and what Google access permits"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
@@ -430,12 +430,12 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ad
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "We do not request access to Gmail, Drive, or other services. You can revoke access at any time from your Google account."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-google 1`] = `
@@ -451,56 +451,56 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conecteaza contul si vezi performanta fiecarui produs"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Connect your account and see how every product performs"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Google a refuzat conectarea. Mai incearca o data."
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Google declined the connection. Please try again."
 root/div[0]/div[0]/main[0]/section[1]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Conectare securizata prin Google"
+root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Secure connection through Google"
 root/div[0]/div[0]/main[0]/section[1]/h2[0]
-root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Spune-ne ce magazin analizam"
+root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Tell us which store to analyze"
 root/div[0]/div[0]/main[0]/section[1]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/p[2]/text "Dupa ce continui, alegi contul Google Ads si confirmi accesul direct in pagina Google."
+root/div[0]/div[0]/main[0]/section[1]/p[2]/text "After you continue, choose the Google Ads account and confirm access directly on Google&#x27;s page."
 root/div[0]/div[0]/main[0]/section[1]/form[0] action="/api/google-ads/start"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Site-ul magazinului"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Store website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/input[0] type="url" name="website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "Folosim adresa doar ca sa identificam magazinul in raport. Valoarea medie reala a comenzii vine din conversiile Purchase din Google Ads."
+root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "We use this address only to identify the store in your report. The actual average order value comes from Google Ads Purchase conversions."
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0] type="submit"
-root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continua in siguranta cu Google"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continue securely with Google"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]
@@ -508,20 +508,20 @@ root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "Nu modificam campanii sau bugete"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "We do not change campaigns or budgets"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "Nu cerem Gmail sau Drive"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "We do not request Gmail or Drive"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Retragi accesul oricand"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Revoke access at any time"
 root/div[0]/div[0]/main[0]/section[1]/details[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exact ce date citim si ce permite accesul Google"
+root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exactly what data we read and what Google access permits"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
@@ -532,12 +532,12 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ad
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "We do not request access to Gmail, Drive, or other services. You can revoke access at any time from your Google account."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-schimb 1`] = `
@@ -553,56 +553,56 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conecteaza contul si vezi performanta fiecarui produs"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Connect your account and see how every product performs"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Google nu a putut confirma conectarea. Mai incearca o data."
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Google could not confirm the connection. Please try again."
 root/div[0]/div[0]/main[0]/section[1]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Conectare securizata prin Google"
+root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Secure connection through Google"
 root/div[0]/div[0]/main[0]/section[1]/h2[0]
-root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Spune-ne ce magazin analizam"
+root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Tell us which store to analyze"
 root/div[0]/div[0]/main[0]/section[1]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/p[2]/text "Dupa ce continui, alegi contul Google Ads si confirmi accesul direct in pagina Google."
+root/div[0]/div[0]/main[0]/section[1]/p[2]/text "After you continue, choose the Google Ads account and confirm access directly on Google&#x27;s page."
 root/div[0]/div[0]/main[0]/section[1]/form[0] action="/api/google-ads/start"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Site-ul magazinului"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Store website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/input[0] type="url" name="website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "Folosim adresa doar ca sa identificam magazinul in raport. Valoarea medie reala a comenzii vine din conversiile Purchase din Google Ads."
+root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "We use this address only to identify the store in your report. The actual average order value comes from Google Ads Purchase conversions."
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0] type="submit"
-root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continua in siguranta cu Google"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continue securely with Google"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]
@@ -610,20 +610,20 @@ root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "Nu modificam campanii sau bugete"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "We do not change campaigns or budgets"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "Nu cerem Gmail sau Drive"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "We do not request Gmail or Drive"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Retragi accesul oricand"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Revoke access at any time"
 root/div[0]/div[0]/main[0]/section[1]/details[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exact ce date citim si ce permite accesul Google"
+root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exactly what data we read and what Google access permits"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
@@ -634,12 +634,12 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ad
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "We do not request access to Gmail, Drive, or other services. You can revoke access at any time from your Google account."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-sesiune 1`] = `
@@ -655,56 +655,56 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conecteaza contul si vezi performanta fiecarui produs"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Connect your account and see how every product performs"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Sesiunea a expirat. Reconecteaza contul ca sa continuam."
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Your session expired. Reconnect your account to continue."
 root/div[0]/div[0]/main[0]/section[1]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Conectare securizata prin Google"
+root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Secure connection through Google"
 root/div[0]/div[0]/main[0]/section[1]/h2[0]
-root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Spune-ne ce magazin analizam"
+root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Tell us which store to analyze"
 root/div[0]/div[0]/main[0]/section[1]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/p[2]/text "Dupa ce continui, alegi contul Google Ads si confirmi accesul direct in pagina Google."
+root/div[0]/div[0]/main[0]/section[1]/p[2]/text "After you continue, choose the Google Ads account and confirm access directly on Google&#x27;s page."
 root/div[0]/div[0]/main[0]/section[1]/form[0] action="/api/google-ads/start"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Site-ul magazinului"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Store website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/input[0] type="url" name="website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "Folosim adresa doar ca sa identificam magazinul in raport. Valoarea medie reala a comenzii vine din conversiile Purchase din Google Ads."
+root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "We use this address only to identify the store in your report. The actual average order value comes from Google Ads Purchase conversions."
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0] type="submit"
-root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continua in siguranta cu Google"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continue securely with Google"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]
@@ -712,20 +712,20 @@ root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "Nu modificam campanii sau bugete"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "We do not change campaigns or budgets"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "Nu cerem Gmail sau Drive"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "We do not request Gmail or Drive"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Retragi accesul oricand"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Revoke access at any time"
 root/div[0]/div[0]/main[0]/section[1]/details[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exact ce date citim si ce permite accesul Google"
+root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exactly what data we read and what Google access permits"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
@@ -736,12 +736,12 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ad
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "We do not request access to Gmail, Drive, or other services. You can revoke access at any time from your Google account."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:error-state 1`] = `
@@ -757,56 +757,56 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conecteaza contul si vezi performanta fiecarui produs"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Connect your account and see how every product performs"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Conectarea a expirat inainte sa fie finalizata. Mai incearca o data."
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "The connection expired before it was completed. Please try again."
 root/div[0]/div[0]/main[0]/section[1]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Conectare securizata prin Google"
+root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Secure connection through Google"
 root/div[0]/div[0]/main[0]/section[1]/h2[0]
-root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Spune-ne ce magazin analizam"
+root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Tell us which store to analyze"
 root/div[0]/div[0]/main[0]/section[1]/p[2]
-root/div[0]/div[0]/main[0]/section[1]/p[2]/text "Dupa ce continui, alegi contul Google Ads si confirmi accesul direct in pagina Google."
+root/div[0]/div[0]/main[0]/section[1]/p[2]/text "After you continue, choose the Google Ads account and confirm access directly on Google&#x27;s page."
 root/div[0]/div[0]/main[0]/section[1]/form[0] action="/api/google-ads/start"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Site-ul magazinului"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Store website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/input[0] type="url" name="website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "Folosim adresa doar ca sa identificam magazinul in raport. Valoarea medie reala a comenzii vine din conversiile Purchase din Google Ads."
+root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "We use this address only to identify the store in your report. The actual average order value comes from Google Ads Purchase conversions."
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0] type="submit"
-root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continua in siguranta cu Google"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continue securely with Google"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]
@@ -814,20 +814,20 @@ root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "Nu modificam campanii sau bugete"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "We do not change campaigns or budgets"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "Nu cerem Gmail sau Drive"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "We do not request Gmail or Drive"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Retragi accesul oricand"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Revoke access at any time"
 root/div[0]/div[0]/main[0]/section[1]/details[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exact ce date citim si ce permite accesul Google"
+root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exactly what data we read and what Google access permits"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
@@ -838,12 +838,12 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ad
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "We do not request access to Gmail, Drive, or other services. You can revoke access at any time from your Google account."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:normal 1`] = `
@@ -859,54 +859,54 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conecteaza contul si vezi performanta fiecarui produs"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Connect your account and see how every product performs"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Conectare securizata prin Google"
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Secure connection through Google"
 root/div[0]/div[0]/main[0]/section[1]/h2[0]
-root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Spune-ne ce magazin analizam"
+root/div[0]/div[0]/main[0]/section[1]/h2[0]/text "Tell us which store to analyze"
 root/div[0]/div[0]/main[0]/section[1]/p[1]
-root/div[0]/div[0]/main[0]/section[1]/p[1]/text "Dupa ce continui, alegi contul Google Ads si confirmi accesul direct in pagina Google."
+root/div[0]/div[0]/main[0]/section[1]/p[1]/text "After you continue, choose the Google Ads account and confirm access directly on Google&#x27;s page."
 root/div[0]/div[0]/main[0]/section[1]/form[0] action="/api/google-ads/start"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Site-ul magazinului"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/label[0]/text "Store website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/input[0] type="url" name="website"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "Folosim adresa doar ca sa identificam magazinul in raport. Valoarea medie reala a comenzii vine din conversiile Purchase din Google Ads."
+root/div[0]/div[0]/main[0]/section[1]/form[0]/p[0]/text "We use this address only to identify the store in your report. The actual average order value comes from Google Ads Purchase conversions."
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0] type="submit"
-root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continua in siguranta cu Google"
+root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/text "Continue securely with Google"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/form[0]/button[0]/svg[0]/path[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]
@@ -914,20 +914,20 @@ root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "Nu modificam campanii sau bugete"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[0]/text "We do not change campaigns or budgets"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "Nu cerem Gmail sau Drive"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[1]/text "We do not request Gmail or Drive"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/span[0]/svg[0]/path[0]
-root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Retragi accesul oricand"
+root/div[0]/div[0]/main[0]/section[1]/div[0]/div[2]/text "Revoke access at any time"
 root/div[0]/div[0]/main[0]/section[1]/details[0]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exact ce date citim si ce permite accesul Google"
+root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/text "Exactly what data we read and what Google access permits"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/summary[0]/span[0]/text "+"
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]
@@ -938,12 +938,12 @@ root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[1]/text "The Google Ad
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[2]/text "We do not change anything in your account."
 root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]
-root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "Nu cerem acces la Gmail, Drive sau alte servicii. Poti retrage accesul oricand din contul tau Google."
+root/div[0]/div[0]/main[0]/section[1]/details[0]/div[0]/p[3]/text "We do not request access to Gmail, Drive, or other services. You can revoke access at any time from your Google account."
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders normal and recoverable connect states through the canonical contract > connect:unconfigured 1`] = `
@@ -959,49 +959,49 @@ root/div[0]/div[0]/main[0]/section[0]
 root/div[0]/div[0]/main[0]/section[0]/div[0] aria-hidden="true"
 root/div[0]/div[0]/main[0]/section[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "Ultimul pas inainte de analiza"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[0]/text "The final step before analysis"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "Conectarea se activeaza in curand"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/h1[0]/text "The connection will be available soon"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "Auditul citeste ultimele 365 de zile si iti arata cu nume si cifre ce produse pierd bani, ce produse merita mai mult trafic si cum s-ar putea redistribui bugetul."
+root/div[0]/div[0]/main[0]/section[0]/div[1]/p[1]/text "The audit reads the last 365 days and shows, by name and numbers, which products lose money, which deserve more traffic, and how the budget could be redistributed."
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "Ce vei vedea in raport"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[0]/p[0]/text "What you will see in the report"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/span[0]/text "01"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Produse care consuma buget"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[0]/text "Products consuming budget"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Pierderi ordonate dupa cost"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[1]/div[0]/p[1]/text "Losses ranked by cost"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/span[0]/text "02"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Produse profitabile fara trafic"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[0]/text "Profitable products without traffic"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ordonat dupa vanzari"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[2]/div[0]/p[1]/text "Potential ranked by sales"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/span[0]/text "03"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Contul dupa optimizare"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[0]/text "Account after optimization"
 root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]
-root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Simulare cu buget controlat"
+root/div[0]/div[0]/main[0]/section[0]/div[1]/div[0]/div[3]/div[0]/p[1]/text "Controlled-budget simulation"
 root/div[0]/div[0]/main[0]/section[1]
 root/div[0]/div[0]/main[0]/section[1]/p[0]
-root/div[0]/div[0]/main[0]/section[1]/p[0]/text "Auditul automat este in ultima faza de pregatire. Pana atunci, iti putem analiza manual aceleasi cifre."
-root/div[0]/div[0]/main[0]/section[1]/a[0] href="mailto:hello@devrika.ro?subject=Audit%20Google%20Ads%20Shopping"
-root/div[0]/div[0]/main[0]/section[1]/a[0]/text "Scrie-ne pentru audit"
+root/div[0]/div[0]/main[0]/section[1]/p[0]/text "The automated audit is in its final preparation stage. Until then, we can analyze the same figures manually."
+root/div[0]/div[0]/main[0]/section[1]/a[0] href="mailto:hello@devrika.ro?subject=Google%20Ads%20Shopping%20Audit"
+root/div[0]/div[0]/main[0]/section[1]/a[0]/text "Contact us for an audit"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/a[0] href="/google-ads"
-root/div[0]/div[0]/div[0]/a[0]/text "← Inapoi la pagina auditului"
+root/div[0]/div[0]/div[0]/a[0]/text "← Back to the audit page"
 root/div[0]/div[0]/div[0]/span[0]
-root/div[0]/div[0]/div[0]/span[0]/text "Fara card · Fara abonament · Raport PDF salvat""
+root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF report""
 `;
 
 exports[`public Google Ads access boundary > renders the canonical contract on the hub surface > hub:normal 1`] = `

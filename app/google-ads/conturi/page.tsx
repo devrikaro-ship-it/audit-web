@@ -11,7 +11,7 @@ import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 import { alegeCont } from "./actions";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Alege contul · Audit Google Ads Devrika" };
+export const metadata = { title: "Choose an account · Devrika Google Ads Audit" };
 
 export default async function Conturi({
   searchParams,
@@ -32,7 +32,7 @@ export default async function Conturi({
     try {
       accounts = await runGoogleAdsRead("listAccounts", async () => listAccounts(await accessTokenFrom(session.refreshToken)));
     } catch (e) {
-      errorDetails = e instanceof Error ? e.message : "necunoscuta";
+      errorDetails = e instanceof Error ? e.message : "unknown";
     }
   }
 
@@ -52,9 +52,9 @@ export default async function Conturi({
         </Link>
 
         <div className="rounded-2xl border bg-white p-7 md:p-9" style={{ borderColor: "#e6ebf4", boxShadow: "0 8px 32px rgba(11,31,58,0.06)" }}>
-          <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Pasul 1 din 3</p>
+          <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Step 1 of 3</p>
           <h1 className="mb-3 font-extrabold leading-[1.2] tracking-[-0.5px]" style={{ fontFamily: sora, fontSize: "clamp(22px,3.5vw,30px)", color: "#0f172a" }}>
-            Ce cont analizam?
+            Which account should we analyze?
           </h1>
 
           {hasAccountReadError ? (
@@ -71,24 +71,24 @@ export default async function Conturi({
                 <p className="mb-6 rounded-lg px-4 py-3 text-[13px]" style={{ background: C.redBg, color: C.red }}>{errorDetails}</p>
               )}
               <Link href="/api/google-ads/start" className="inline-flex min-h-11 items-center rounded-xl px-6 text-[15px] font-bold text-white" style={{ background: brandGradient }}>
-                Reincearca conectarea
+                Reconnect
               </Link>
             </>
           ) : usable.length === 0 ? (
             <>
               <p className="mb-6 text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
-                Contul cu care te-ai conectat nu are niciun cont de Google Ads pe care sa-l putem
-                analiza. Daca administrezi magazinul din alt cont Google, conecteaza-te cu acela.
+                The Google account you connected has no Google Ads account that we can analyze.
+                If you manage the store with another Google account, connect that one instead.
               </p>
               <Link href="/api/google-ads/start" className="inline-flex min-h-11 items-center rounded-xl px-6 text-[15px] font-bold text-white" style={{ background: brandGradient }}>
-                Incearca alt cont Google
+                Try another Google account
               </Link>
             </>
           ) : (
             <>
               <p className="mb-7 text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
-                Am gasit {usable.length === 1 ? "un cont" : `${usable.length} conturi`}. Alege
-                magazinul pe care vrei sa-l vezi analizat.
+                We found {usable.length === 1 ? "one account" : `${usable.length} accounts`}. Choose
+                the store you want us to analyze.
               </p>
               <div className="flex flex-col gap-2.5">
                 {usable.map((a) => (

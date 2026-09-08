@@ -10,16 +10,16 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Pasul 2 din 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Step 2 of 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Hai să stabilim pragul de la care campaniile tale Google Ads fac sau pierd bani"
+root/div[0]/div[0]/div[0]/h1[0]/text "Let&#x27;s set the point where your Google Ads campaigns start making or losing money"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Confirmă valoarea medie a unei comenzi și spune-ne cât te costă marfa din acea comandă. Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani."
+root/div[0]/div[0]/div[0]/p[1]/text "Confirm the average order value and tell us the cost of goods in that order. We calculate the maximum CPA and minimum ROAS at which you still break even."
 root/div[0]/div[0]/div[0]/p[2]
-root/div[0]/div[0]/div[0]/p[2]/text "marja trebuie sa fie intre 1 si 99 la suta"
+root/div[0]/div[0]/div[0]/p[2]/text "Gross margin must be between 1% and 99%."
 root/div[0]/div[0]/div[0]/form[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Nu cerem facturi și nu avem acces la contabilitate. Poți ajusta valorile înainte de generarea auditului.""
+root/div[0]/div[0]/p[0]/text "We do not ask for invoices or access your accounting records. You can adjust the values before generating the audit.""
 `;
 
 exports[`renders the normal margin state through the canonical contract > margin:normal 1`] = `
@@ -32,12 +32,12 @@ root/div[0]/div[0]/a[0]/span[0]
 root/div[0]/div[0]/a[0]/span[0]/text "Devrika"
 root/div[0]/div[0]/div[0]
 root/div[0]/div[0]/div[0]/p[0]
-root/div[0]/div[0]/div[0]/p[0]/text "Pasul 2 din 3"
+root/div[0]/div[0]/div[0]/p[0]/text "Step 2 of 3"
 root/div[0]/div[0]/div[0]/h1[0]
-root/div[0]/div[0]/div[0]/h1[0]/text "Hai să stabilim pragul de la care campaniile tale Google Ads fac sau pierd bani"
+root/div[0]/div[0]/div[0]/h1[0]/text "Let&#x27;s set the point where your Google Ads campaigns start making or losing money"
 root/div[0]/div[0]/div[0]/p[1]
-root/div[0]/div[0]/div[0]/p[1]/text "Confirmă valoarea medie a unei comenzi și spune-ne cât te costă marfa din acea comandă. Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani."
+root/div[0]/div[0]/div[0]/p[1]/text "Confirm the average order value and tell us the cost of goods in that order. We calculate the maximum CPA and minimum ROAS at which you still break even."
 root/div[0]/div[0]/div[0]/form[0]
 root/div[0]/div[0]/p[0]
-root/div[0]/div[0]/p[0]/text "Nu cerem facturi și nu avem acces la contabilitate. Poți ajusta valorile înainte de generarea auditului.""
+root/div[0]/div[0]/p[0]/text "We do not ask for invoices or access your accounting records. You can adjust the values before generating the audit.""
 `;

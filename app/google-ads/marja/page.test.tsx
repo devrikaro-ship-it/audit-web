@@ -47,7 +47,7 @@ it("renders the normal margin state through the canonical contract", async () =>
   expect(html).toContain('data-measured="true"');
   expect(html).toContain('data-currency="EUR"');
   expect(html).toContain("cost of goods in that order");
-  expect(html).toContain("Let's set the point where your Google Ads campaigns start making or losing money");
+  expect(html).toContain("Let&#x27;s set the point where your Google Ads campaigns start making or losing money");
   expect(html).toContain("We do not ask for invoices or access your accounting records");
   expect(normalizePublicOutput(html)).toMatchSnapshot("margin:normal");
 });

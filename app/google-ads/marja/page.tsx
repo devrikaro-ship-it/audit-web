@@ -13,12 +13,12 @@ import MarginForm from "./MarginForm";
 import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
 import { aggregatePurchaseBaseline, readPurchaseBaseline, type PurchaseBaseline } from "@/lib/gads-an";
 
-// Singura intrebare de business din tot fluxul. NU intrebam ROAS-ul minim — oamenii nu si-l
-// pot calcula si ii pierzi in formular. Intrebam marja, pe care orice comerciant o stie, si
-// pornim de la valoarea tipica INDUSTRIEI LUI, dedusa din catalogul pe care tocmai l-am citit.
+// This is the only business question in the flow. We do not ask for minimum ROAS because
+// merchants cannot reliably calculate it. We ask for margin and start from the typical value
+// for the detected industry, based on the catalog we just read.
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Marja ta · Audit Google Ads Devrika" };
+export const metadata = { title: "Your margin · Devrika Google Ads Audit" };
 
 export default async function Marja({
   searchParams,
@@ -31,11 +31,13 @@ export default async function Marja({
   if (!session) redirect("/google-ads/connect?eroare=sesiune");
   if (!session.customerId) redirect("/google-ads/conturi");
   if (!session.customerTimeZone) redirect("/google-ads/conturi");
+  if (!session.currencyCode) redirect("/google-ads/conturi");
   const customerId = session.customerId;
   const customerTimeZone = session.customerTimeZone;
+  const currencyCode = session.currencyCode;
 
   const cfg = oauthConfig();
-  let sugestie = { label: "magazin online", marginPct: 35, detected: false };
+  let sugestie = { label: "online store", marginPct: 35, detected: false };
   let nrProduse = 0;
   let baseline: PurchaseBaseline | null = null;
   if (demoOn()) {
@@ -61,7 +63,7 @@ export default async function Marja({
     sugestie = suggestMargin(products);
     baseline = measuredBaseline;
   } catch {
-    // Daca citirea catalogului pica, intrebarea ramane valabila cu valoarea implicita.
+    // If the catalog read fails, the question remains valid with its default value.
   }
 
   return (
@@ -74,19 +76,19 @@ export default async function Marja({
         </Link>
 
         <div className="rounded-2xl border bg-white p-7 md:p-9" style={{ borderColor: "#e6ebf4", boxShadow: "0 8px 32px rgba(11,31,58,0.06)" }}>
-          <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Pasul 2 din 3</p>
+          <p className="mb-2 text-[13px] font-bold uppercase tracking-[2px]" style={{ color: C.cyan }}>Step 2 of 3</p>
           <h1 className="mb-3 font-extrabold leading-[1.2] tracking-[-0.5px]" style={{ fontFamily: sora, fontSize: "clamp(22px,3.5vw,30px)", color: "#0f172a" }}>
-            Hai să stabilim pragul de la care campaniile tale Google Ads fac sau pierd bani
+            Let&apos;s set the point where your Google Ads campaigns start making or losing money
           </h1>
           <p className="mb-1 text-[15px] leading-relaxed" style={{ color: C.gray500 }}>
-            Confirmă valoarea medie a unei comenzi și spune-ne cât te costă marfa din acea comandă.
-            Noi calculăm CPA-ul maxim și ROAS-ul minim la care încă nu pierzi bani.
+            Confirm the average order value and tell us the cost of goods in that order.
+            We calculate the maximum CPA and minimum ROAS at which you still break even.
           </p>
           {nrProduse > 0 && (
             <p className="mb-6 text-[13.5px]" style={{ color: C.gray400 }}>
               {sugestie.detected
-                ? `Am citit ${nrProduse} produse din contul tau si arata a ${sugestie.label}. Magazinele din categoria asta au tipic ${sugestie.marginPct}% — am pornit de acolo, schimba daca la tine e altfel.`
-                : `Am citit ${nrProduse} produse din contul tau, dar nu am putut deduce categoria. Am pus o valoare medie de ${sugestie.marginPct}% — pune-o pe a ta.`}
+                ? `We read ${nrProduse} products from your account and they look like ${sugestie.label}. Stores in this category typically have a ${sugestie.marginPct}% margin — we started there, but change it if yours is different.`
+                : `We read ${nrProduse} products from your account but could not identify the category. We used an average margin of ${sugestie.marginPct}% — replace it with yours.`}
             </p>
           )}
 
@@ -101,12 +103,13 @@ export default async function Marja({
             initialAverageOrderValue={Math.round(baseline?.averageOrderValue ?? 300)}
             initialGoodsCost={Math.round((baseline?.averageOrderValue ?? 300) * (1 - sugestie.marginPct / 100))}
             measured={baseline?.averageOrderValue !== null && baseline?.averageOrderValue !== undefined}
+            currencyCode={currencyCode}
             action={salveazaMarja}
           />
         </div>
 
         <p className="mt-6 text-center text-[12.5px]" style={{ color: C.gray400 }}>
-          Nu cerem facturi și nu avem acces la contabilitate. Poți ajusta valorile înainte de generarea auditului.
+          We do not ask for invoices or access your accounting records. You can adjust the values before generating the audit.
         </p>
       </div>
     </div>

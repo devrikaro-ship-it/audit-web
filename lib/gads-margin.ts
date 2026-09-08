@@ -1,4 +1,4 @@
-export const GROSS_MARGIN_ERROR = "marja trebuie sa fie intre 1 si 99 la suta";
+export const GROSS_MARGIN_ERROR = "Gross margin must be between 1% and 99%.";
 export const GROSS_MARGIN_MIN = 1;
 export const GROSS_MARGIN_MAX = 99;
 export const GROSS_MARGIN_STEP = 0.1;
