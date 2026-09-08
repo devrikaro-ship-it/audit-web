@@ -1,5 +1,17 @@
 # seo-audit — dev mistakes
 
+## 2026-09-08 — Extensionless test declarations silently reduced the executed test set
+
+**Symptom.** The account UI check reported two passing test files and 13 passing tests even though its declaration named three files. The command still exited successfully, so the missing branch suite could have been mistaken for full coverage.
+
+**Cause.** The declared paths ended in `actions.test.ts` and `actions-branches.test.ts`, while the repository files are `actions.test.tsx` and `actions.branches.test.tsx`. Vitest ran the matching page test and one separately matched file without rejecting every unmatched explicit path.
+
+**How to recognise it.** Compare the declared file list with `rg --files` and compare the expected file count with Vitest's `Test Files` total. A green command with fewer executed files than declared is an incomplete check.
+
+**Fix.** Use the exact `.tsx` filenames and preserve punctuation in the branch test name. The repaired check runs three files and 16 tests. Treat the executed file count as part of the test receipt, not only the exit status.
+
+**Class.** A green test command proves only the tests the runner discovered. Exact input identity and observed test counts are required before accepting the result.
+
 ## 2026-09-08 — Result proof requires the verifying state
 
 Symptom: recording valid local result proof failed with `result proof requires point state verifying`. Measured cause: the coordinator left the point at `local_ready` while the independent verifier ran. Recognition signal: a finished verifier receipt with the ledger still at `local_ready`. Repair: use the supported transition to `verifying`, then record the unchanged proof. The first rejected command did not change state. Future dispatches must set the declared role state before recording its result.
