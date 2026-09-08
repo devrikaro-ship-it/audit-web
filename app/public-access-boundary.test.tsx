@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import ts from "typescript";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -46,13 +47,19 @@ type PublicOAuthOracle = {
     to: string;
     operatorSource: { quote: string; scope: string };
   };
-  sourceBaseline: { appCommit: string };
+  sourceBaseline: { appCommit: string; externalRomanianOracleSha256: string };
   contract: typeof publicOAuthContract;
   clauses: Record<keyof typeof publicOAuthClauseFacts, string>;
-  states: Record<string, { output: string }>;
+  documentLanguage: string;
+  rootMetadata: { title: string; description: string };
+  states: Record<string, { required: string[]; forbidden: string[] }>;
 };
+const externalRomanianOraclePath = path.resolve(
+  process.cwd(),
+  "../.claude/skills/audit-google-ads/references/public-oauth-oracle.json",
+);
 const publicOAuthOracle = JSON.parse(fs.readFileSync(
-  path.resolve(process.cwd(), "../.claude/skills/audit-google-ads/references/public-oauth-oracle.json"),
+  path.resolve(process.cwd(), "docs/testing/public-oauth-oracle.en.json"),
   "utf8",
 )) as PublicOAuthOracle;
 const localizedClauseOracle = publicOAuthOracle.clauses;
@@ -416,6 +423,27 @@ describe("public Google Ads access boundary", () => {
       expect(normalizePublicMetadata(metadata)).toMatchSnapshot(`metadata:${surface}`);
     }
   });
+
+  it("renders the point-one English public entry oracle", () => {
+    const rootLayoutSource = fs.readFileSync(path.join(process.cwd(), "app/layout.tsx"), "utf8");
+    const renderedStates = {
+      "landing:normal": normalizePublicOutput(renderToStaticMarkup(<LandingPage />)),
+      "hub:normal": normalizePublicOutput(renderToStaticMarkup(<HubPage />)),
+      "privacy:normal": normalizePublicOutput(renderToStaticMarkup(<PrivacyPage />)),
+      "terms:normal": normalizePublicOutput(renderToStaticMarkup(<TermsPage />)),
+    };
+
+    expect(rootLayoutSource).toContain(`lang="${publicOAuthOracle.documentLanguage}"`);
+    expect(rootLayoutSource).toContain(publicOAuthOracle.rootMetadata.title);
+    expect(publicOAuthProjection.rootMetadata).toBe(publicOAuthOracle.rootMetadata.description);
+    for (const [stateId, oracle] of Object.entries(publicOAuthOracle.states)) {
+      if (stateId === "connect:normal") continue;
+      const output = renderedStates[stateId as keyof typeof renderedStates];
+      expect(output, stateId).toBeTruthy();
+      for (const expected of oracle.required) expect(output, `${stateId}: ${expected}`).toContain(expected);
+      for (const forbidden of oracle.forbidden) expect(output, `${stateId}: ${forbidden}`).not.toContain(forbidden);
+    }
+  });
   it("exposes the one closed executable OAuth contract", () => {
     expect(publicOAuthContract).toEqual({
       providerScope: "adwords",
@@ -464,8 +492,10 @@ describe("public Google Ads access boundary", () => {
       "connect:normal", "hub:normal", "landing:normal", "privacy:normal", "terms:normal",
     ]);
     expect(publicOAuthOracle.version).toBe(publicOAuthOracle.transition.to);
-    expect(publicOAuthOracle.transition.operatorSource.quote).toBe("Da, hai sa terminam cu asta, te rog");
-    expect(publicOAuthOracle.transition.operatorSource.scope).toContain("measured protection mechanisms");
+    expect(publicOAuthOracle.transition.operatorSource.quote).toBe("Implement the first unchanged English launch point.");
+    expect(publicOAuthOracle.transition.operatorSource.scope).toContain("same truthful scope and protection facts");
+    expect(createHash("sha256").update(fs.readFileSync(externalRomanianOraclePath)).digest("hex"))
+      .toBe(publicOAuthOracle.sourceBaseline.externalRomanianOracleSha256);
 
     const clauseStates = {
       "hub:normal": ["application-read-operations-only", "mutation-none"],
@@ -474,10 +504,8 @@ describe("public Google Ads access boundary", () => {
       "connect:normal": ["oauth-permission-not-read-only", "mutation-none"],
     } as const;
     for (const [stateId, clauses] of Object.entries(clauseStates)) {
-      const start = snapshotCorpus.indexOf(`> ${stateId} 1`);
-      const end = snapshotCorpus.indexOf("exports[`", start + 1);
-      const output = snapshotCorpus.slice(start, end < 0 ? undefined : end);
-      for (const clause of clauses) expect(output).toContain(localizedClauseOracle[clause]);
+      const oracle = publicOAuthOracle.states[stateId];
+      for (const clause of clauses) expect(oracle.required).toContain(localizedClauseOracle[clause]);
     }
   });
 
@@ -642,7 +670,8 @@ describe("public Google Ads access boundary", () => {
     }[surface];
     expect(html).toContain(expectedVisibleProjection);
     const output = normalizePublicOutput(html);
-    expect(output).toBe(publicOAuthOracle.states[`${surface}:normal`].output);
+    for (const expected of publicOAuthOracle.states[`${surface}:normal`].required) expect(output).toContain(expected);
+    for (const forbidden of publicOAuthOracle.states[`${surface}:normal`].forbidden) expect(output).not.toContain(forbidden);
     expect(output).toMatchSnapshot(`${surface}:normal`);
   });
 
@@ -774,7 +803,8 @@ describe("public Google Ads access boundary", () => {
       expect(normal).toContain(projectOAuthClauses("mutation-none"));
       expect(normalizePublicOutput(unknownError)).toContain("detail");
       const normalOutput = normalizePublicOutput(normal);
-      expect(normalOutput).toBe(publicOAuthOracle.states["connect:normal"].output);
+      for (const expected of publicOAuthOracle.states["connect:normal"].required) expect(normalOutput).toContain(expected);
+      for (const forbidden of publicOAuthOracle.states["connect:normal"].forbidden) expect(normalOutput).not.toContain(forbidden);
       expect(normalOutput).toMatchSnapshot("connect:normal");
       for (const errorCode of ["anulat", "state", "sesiune", "expirat", "schimb", "fara_cod", "google", "config"] as const) {
         const errorState = renderToStaticMarkup(await ConnectPage({ searchParams: Promise.resolve({ eroare: errorCode }) }));

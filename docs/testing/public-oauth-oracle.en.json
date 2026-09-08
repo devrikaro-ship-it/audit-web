@@ -1,0 +1,93 @@
+{
+  "version": "2.0.0-en",
+  "transition": {
+    "from": "1.0.0-ro",
+    "to": "2.0.0-en",
+    "operatorSource": {
+      "quote": "Implement the first unchanged English launch point.",
+      "scope": "The running app's root/hub, Google Ads landing, legal pages and shared OAuth disclosures render English with the same truthful scope and protection facts."
+    }
+  },
+  "sourceBaseline": {
+    "appCommit": "1d00c9aeadac7473c2f48bf85667bb74885d5a25",
+    "externalRomanianOracleSha256": "7c62044aac110053da13ec59d1309c29861b884b9e4fa52e01cca1b514c0efa3"
+  },
+  "contract": {
+    "providerScope": "adwords",
+    "permissionCapability": "broad",
+    "applicationBehavior": "read-operations-only",
+    "mutationBehavior": "none"
+  },
+  "documentLanguage": "en",
+  "rootMetadata": {
+    "title": "Free audit for online stores — Devrika",
+    "description": "Find out in 2 minutes why your store is not selling as much as it could: tracking, SEO, user experience, and Google Ads/Shopping. Free, no account required."
+  },
+  "clauses": {
+    "provider-scope-adwords": "With your explicit consent, the application requests one Google permission (adwords).",
+    "oauth-permission-not-read-only": "The Google Ads OAuth permission is not read-only.",
+    "application-read-operations-only": "The application reads data, compares it with your business thresholds, and shows you the result immediately.",
+    "mutation-none": "We do not change anything in your account."
+  },
+  "states": {
+    "connect:normal": {
+      "required": [
+        "The Google Ads OAuth permission is not read-only.",
+        "We do not change anything in your account."
+      ],
+      "forbidden": [
+        "Permisiunea OAuth Google Ads nu este exclusiv de citire.",
+        "Nu modificam nimic in contul tau."
+      ]
+    },
+    "hub:normal": {
+      "required": [
+        "A web application that analyzes your store and advertising accounts",
+        "The application reads data, compares it with your business thresholds, and shows you the result immediately.",
+        "We do not change anything in your account.",
+        "Requested report data is retained only for delivery and support."
+      ],
+      "forbidden": [
+        "O aplicatie web care analizeaza",
+        "Dupa raport, datele contului nu raman la noi."
+      ]
+    },
+    "landing:normal": {
+      "required": [
+        "Do you know which Google Shopping products make money and which consume your budget?",
+        "Analyze my account",
+        "The app reads the data required for the audit:",
+        "We do not change anything in your account."
+      ],
+      "forbidden": [
+        "Stii ce produse din Google Shopping",
+        "Analizeaza contul meu"
+      ]
+    },
+    "privacy:normal": {
+      "required": [
+        "Privacy Policy",
+        "The Google Ads OAuth permission is not read-only.",
+        "Your Google authorization is held in a signed session cookie that expires after one hour.",
+        "If you request the PDF, we store",
+        "audit.devrika.io"
+      ],
+      "forbidden": [
+        "Politica de confidentialitate",
+        "audit.devrika.ro"
+      ]
+    },
+    "terms:normal": {
+      "required": [
+        "Terms and Conditions",
+        "The application reads data, compares it with your business thresholds, and shows you the result immediately.",
+        "We do not change anything in your account.",
+        "If optional monthly report delivery becomes available"
+      ],
+      "forbidden": [
+        "Termeni si conditii",
+        "Monthly reporting continues"
+      ]
+    }
+  }
+}
