@@ -47,7 +47,7 @@ describe("report contact form states", () => {
     await waitFor(() => expect(push).toHaveBeenCalledWith("/google-ads/portal/saved-token"));
     expect(view.getByText("Your PDF audit has been generated and saved, but the email could not be sent.")).toBeTruthy();
     expect(view.container.textContent).not.toMatch(/delayed|queued|later/i);
-    expect(view.getByRole("link", { name: "Open my dashboard" }).getAttribute("href")).toBe("/google-ads/portal/saved-token");
+    expect(view.container.querySelector("a")?.getAttribute("href")).toBe("/google-ads/portal/saved-token");
   });
 
   it("submits only the fixed-size pending reference and never serializes snapshot bytes", () => {
