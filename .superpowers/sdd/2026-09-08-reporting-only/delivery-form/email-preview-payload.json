@@ -1,0 +1,18 @@
+{
+  "transportInvoked": false,
+  "idempotencyKey": "gads-report-preview-report-2026-09-08",
+  "payload": {
+    "from": "Devrika <reports@devrika.ro>",
+    "to": [
+      "owner@example.com"
+    ],
+    "subject": "Your Google Ads profitability audit",
+    "html": "<p>Hello Mara &lt;Owner&gt; &amp; &quot;Co&quot; O&#39;Reilly,</p><p>Your Google Ads profitability audit is attached as a PDF.</p><p><a href=\"https://audit.devrika.ro/google-ads/portal/preview-token_2026\">Open your live dashboard</a></p><p>Devrika</p>",
+    "attachments": [
+      {
+        "filename": "google-ads-audit-preview-report-2026-09-08.pdf",
+        "content": "JVBERi0xLjQKc3ludGhldGljIGF1ZGl0IHByZXZpZXcKJSVFT0Y="
+      }
+    ]
+  }
+}
