@@ -675,6 +675,13 @@ describe("public Google Ads access boundary", () => {
     expect(output).toMatchSnapshot(`${surface}:normal`);
   });
 
+  it("separates the application name in the privacy revoke instructions", () => {
+    const html = renderToStaticMarkup(<PrivacyPage />);
+
+    expect(html).toContain("<b>Audit Devrika</b> in the list");
+    expect(normalizePublicOutput(html)).toContain("find Audit Devrika in the list");
+  });
+
   it("explains the product-level audit before asking for the connection", () => {
     const html = renderToStaticMarkup(<LandingPage />);
     const sectionOrder = [...html.matchAll(/data-landing-section="([^"]+)"/g)].map((match) => match[1]);

@@ -5,6 +5,28 @@ and `docs/ads-research/`) — this is what broke in the code, how it was caught,
 this file is user-facing Romanian by design; where quoted below it is TRANSLATED, with the exact source location
 given so the literal string can be read directly in the file.
 
+## 2026-09-08 — Inline JSX whitespace disappeared from the rendered privacy instructions
+
+**Symptom.** The privacy page source visually separated the inline bold application name from the following
+words, but the real server response contained `<b>Audit Devrika</b>in the list`. The visible instruction read
+`find Audit Devrikain the list`.
+
+**Cause.** The boundary after the inline `<b>` element had no explicit JSX whitespace node. In the rendered
+server HTML, the ordinary source whitespace did not become a leading space in the following text node. The
+observed output establishes the missing separator; no unsupported claim about the exact compiler transform is
+needed.
+
+**How to recognise it.** Inspect rendered HTML or visible text where prose continues immediately after an
+inline JSX element. A closing tag followed directly by the first character of the next word, such as
+`</b>in`, is the stable signal; source formatting alone is not evidence that a space renders.
+
+**Fix.** Add an explicit `{" "}` JSX separator after the inline element. Verify both the exact server-rendered
+HTML boundary and the normalized visible sentence, then confirm the real local HTTP response contains the
+correctly separated words.
+
+**Class.** Whitespace around inline JSX elements is output behavior. Protect the rendered boundary, not the
+source indentation that appears to express it.
+
 ## 2026-09-04 — The production Google Ads OAuth client displays Google's unverified-app warning
 
 **Symptom.** A real production OAuth run in standard Google Chrome passed the automated-browser check but then
