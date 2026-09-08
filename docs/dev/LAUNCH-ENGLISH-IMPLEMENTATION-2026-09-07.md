@@ -45,4 +45,12 @@ Public entry, legal pages, document language and shared OAuth disclosures passed
 
 Evidence is under `.superpowers/sdd/2026-09-07-launch-english/point-1-verification-public/` and `point-1-verification-access/`; the exact-candidate browser receipt is `root-browser-2b0c613.md` in the same run. Two incomplete whole-point verifier attempts were followed by finite public-page and access-refusal verification tasks. Their incomplete attempts are not acceptance evidence.
 
-Points two through six remain pending. Production has not changed. The next point translates connection/account/financial UI and carries the selected account currency into the form, whose existing display currently hardcodes RON. Formulas and submitted numeric values remain unchanged.
+At that milestone, points two through six remained pending and production was unchanged.
+
+## Point-two local acceptance — 2026-09-08
+
+Connection, account selection and financial intake passed independent code review and real local verification at `f8b69e42c3efb04c973772fd27d5033922c7fe9b`. Authored copy is English. The financial form now uses the selected account currency and refuses a session without that currency. Calculations, callback/session behavior and server actions are unchanged.
+
+The actual local demo flow selected the explicitly simulated account and displayed AOV 1650, goods cost 907.5 RON, CPA 412.50 RON and ROAS 4.00. A valid financial form advanced with HTTP 303 to the report; an empty AOV returned HTTP 303 to the financial-error screen, and an unauthenticated request returned HTTP 307 to connection. The verifier stopped before report generation. Unit controls separately proved EUR display and rejection of a hardcoded RON regression.
+
+Evidence is under `.superpowers/sdd/2026-09-07-launch-english/point-2-review/` and `point-2-verification/`. The ledger records points one and two as passed. Points three through six remain pending; production has not changed. The next point is report UI and newly generated analytical copy, preserving calculations, classifications, uncertainty and account currency.

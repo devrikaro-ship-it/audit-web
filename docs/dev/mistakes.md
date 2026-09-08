@@ -1,5 +1,17 @@
 # seo-audit — dev mistakes
 
+## 2026-09-08 — Validate finite handoff and proof shapes before launch
+
+Symptom: point-two launch rejected a missing predecessor mapping, and later code-proof registration rejected an extra reference inside the reviewer verdict. Measured cause: document links do not substitute for `context.dependency_results`, and `reviewer_verdict` permits exactly `status`, `revision` and `repo_root`. Recognition signal: a dependent point without its exact point/result/reference entry, or an otherwise correct verdict object with extra keys. Repair: supply every declared predecessor once, and place optional provenance outside the exact verdict object. Both corrected records were accepted without changing their substantive evidence.
+
+## 2026-09-08 — Keep the local browser host consistent
+
+Symptom: demo connection from `127.0.0.1` returned a session-expired screen. Measured cause: the application redirected to `localhost`, while its host-only cookie belonged to `127.0.0.1`. Recognition signal: different loopback hostnames before and after the redirect. Repair: start and continue the local demo flow on `http://localhost:3100`; normal connection and account selection then succeeded. No cookie policy or production behavior was changed.
+
+## 2026-09-08 — Preserve a completed review across a handoff timeout
+
+Symptom: the review artifact and checkpoint recorded PASS, while the launcher reached its deadline before terminal handoff. Measured cause: the bounded attempt ended after the finite review was complete; the reason for delayed terminal output was not established. Recognition signal: completed checkpoint, persisted exact-revision verdict, and a timeout attempt record. Repair: preserve the completed checkpoint, which correctly refuses modification, and use the permitted identical retry to return the saved result after identity checks. The retry must not repeat completed source review or tests.
+
 ## 2026-09-08 — Extensionless test declarations silently reduced the executed test set
 
 **Symptom.** The account UI check reported two passing test files and 13 passing tests even though its declaration named three files. The command still exited successfully, so the missing branch suite could have been mistaken for full coverage.
