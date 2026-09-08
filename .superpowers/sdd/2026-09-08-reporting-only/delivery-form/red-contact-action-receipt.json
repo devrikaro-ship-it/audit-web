@@ -1,0 +1,13 @@
+{
+  "revision": "7664b900b896a827c6885d87502de2526731637f",
+  "command_id": "contact_action_tests",
+  "outcome": "COMMAND_FAILED",
+  "exit_status": 1,
+  "observed": [
+    "The English Name-label control failed against the inherited Romanian label.",
+    "The retry-state control failed against the inherited Romanian failure copy.",
+    "The honest EMAIL_FAILED control exposed the inherited delayed-delivery claim.",
+    "Both final-byte population arms exposed serviceReportsEnabled=true and consent version 2026-08-27."
+  ],
+  "test_summary": "5 failed, 8 passed"
+}

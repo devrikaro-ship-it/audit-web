@@ -34,7 +34,7 @@ describe("report contact form states", () => {
     fireEvent.submit(view.container.querySelector("form")!);
     await waitFor(() => expect(action).toHaveBeenCalledTimes(2));
     expect(view.container.textContent).toContain("We could not generate your PDF audit");
-    expect(view.getByRole("button", { name: "Email me my PDF audit" })).not.toHaveAttribute("disabled");
+    expect(view.getByRole("button", { name: "Email me my PDF audit" }).hasAttribute("disabled")).toBe(false);
     fireEvent.submit(view.container.querySelector("form")!);
     await waitFor(() => expect(push).toHaveBeenCalledWith("/google-ads/portal/retry-token"));
   });

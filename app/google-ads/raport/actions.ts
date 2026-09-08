@@ -18,7 +18,7 @@ import {
 
 export type ContactResult = { ok: true; deliveryStatus: "EMAIL_SENT" | "EMAIL_FAILED"; reportId: string; portalPath: string } | { ok: false; error: string };
 
-const SERVICE_TERMS_VERSION = "2026-08-27";
+const SERVICE_TERMS_VERSION = "2026-09-08-one-time-report";
 const PENDING_REFERENCE_PATTERN = /^[A-Za-z0-9_-]{43}$/;
 
 function text(formData: FormData, key: string, max: number): string {
@@ -114,8 +114,7 @@ export async function saveContact(formData: FormData): Promise<ContactResult> {
       portalToken: identity.portalToken,
       deliveryStatus: "NEW_LEAD",
       consentAt,
-      serviceReportsEnabled: true,
-      serviceReportsConsentAt: consentAt,
+      serviceReportsEnabled: false,
       serviceTermsVersion: SERVICE_TERMS_VERSION,
     });
     await heartbeatPendingReportClaim(claim);

@@ -98,6 +98,7 @@
         "read_disclosure_test",
         "changed_typecheck",
         "report_snapshots",
+        "snapshot_update",
         "email_preview"
       ]
     },

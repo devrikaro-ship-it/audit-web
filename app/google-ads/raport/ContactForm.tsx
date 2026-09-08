@@ -12,34 +12,38 @@ export default function ContactForm({ action, pendingReportReference }: { action
 
   if (status === "SENT" || status === "SAVED") {
     return <div className="rounded-xl px-5 py-4 text-[14.5px]" style={{ background: C.greenBg, color: C.green }}>
-      <p>{status === "SENT" ? "Raportul PDF a fost generat, salvat și trimis pe email." : "Raportul PDF a fost generat și salvat. Trimiterea pe email este întârziată, dar raportul rămâne disponibil echipei noastre."}</p>
+      <p>{status === "SENT" ? "Your PDF audit has been generated, saved, and emailed to you." : "Your PDF audit has been generated and saved, but the email could not be sent."}</p>
       {portalPath && <a href={portalPath} className="mt-3 inline-flex font-bold underline">Open my dashboard</a>}
     </div>;
   }
 
   return <form action={async (formData) => {
     setStatus("SENDING");
-    const result = await action(formData);
-    if (!result.ok) setStatus("FAILED");
-    else {
-      setPortalPath(result.portalPath);
-      setStatus(result.deliveryStatus === "EMAIL_SENT" ? "SENT" : "SAVED");
-      router.push(result.portalPath);
+    try {
+      const result = await action(formData);
+      if (!result.ok) setStatus("FAILED");
+      else {
+        setPortalPath(result.portalPath);
+        setStatus(result.deliveryStatus === "EMAIL_SENT" ? "SENT" : "SAVED");
+        router.push(result.portalPath);
+      }
+    } catch {
+      setStatus("FAILED");
     }
   }} className="flex flex-col gap-3">
     <input type="hidden" name="pendingReportReference" value={pendingReportReference} />
-    {status === "FAILED" && <p className="rounded-xl px-5 py-4 text-[14px]" style={{ background: C.redBg, color: C.red }}>Nu am putut genera raportul PDF. Verifică datele și încearcă din nou.</p>}
+    {status === "FAILED" && <p className="rounded-xl px-5 py-4 text-[14px]" style={{ background: C.redBg, color: C.red }}>We could not generate your PDF audit. Check your details and try again.</p>}
     <div className="flex flex-col gap-3 sm:flex-row">
-      <Field label="Nume" name="name" autoComplete="name" />
+      <Field label="Name" name="name" autoComplete="name" />
       <Field label="Email" name="email" type="email" autoComplete="email" />
     </div>
-    <Field label="Telefon" name="phone" type="tel" autoComplete="tel" />
+    <Field label="Phone" name="phone" type="tel" autoComplete="tel" />
     <label className="flex items-start gap-2 text-left text-xs leading-relaxed" style={{ color: C.gray500 }}>
       <input name="reportConsent" value="yes" type="checkbox" required className="mt-0.5 h-4 w-4" />
-      I agree that Devrika may use these details to generate, store, and email my audit. Monthly campaign reports will be sent to this email while Devrika has access to the campaign data. This agreement does not subscribe me to promotional messages.
+      I agree that Devrika may use these details once to generate, store, and email this audit. This does not enroll me in monthly reports or promotional messages.
     </label>
     <button type="submit" disabled={status === "SENDING"} className="mt-1 flex min-h-11 cursor-pointer items-center justify-center rounded-[14px] px-8 py-[14px] text-[15.5px] font-bold text-white disabled:cursor-wait disabled:opacity-70" style={{ background: brandGradient, fontFamily: sora }}>
-      {status === "SENDING" ? "Generăm raportul PDF…" : "Trimite-mi raportul PDF pe email"}
+      {status === "SENDING" ? "Generating PDF audit…" : "Email me my PDF audit"}
     </button>
   </form>;
 }

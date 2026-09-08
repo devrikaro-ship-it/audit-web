@@ -1,0 +1,197 @@
+{
+  "base_revision": "1841625904e286da362ef57b8cff93753f93c3d3",
+  "changes": [
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/checkpoint-measurement.json",
+      "risk": "fast",
+      "rule_id": "delivery_form_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/checks.json",
+      "risk": "fast",
+      "rule_id": "delivery_form_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/tsconfig.json",
+      "risk": "fast",
+      "rule_id": "delivery_form_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "contact_action_tests",
+        "email_payload_tests",
+        "read_disclosure_test",
+        "changed_typecheck",
+        "report_snapshots",
+        "email_preview"
+      ],
+      "path": "app/google-ads/raport/ContactForm.test.tsx",
+      "risk": "fast",
+      "rule_id": "delivery_form_surface",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "contact_action_tests",
+        "email_payload_tests",
+        "read_disclosure_test",
+        "changed_typecheck",
+        "report_snapshots",
+        "email_preview"
+      ],
+      "path": "app/google-ads/raport/actions.test.tsx",
+      "risk": "fast",
+      "rule_id": "delivery_form_surface",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "contact_action_tests",
+        "email_payload_tests",
+        "read_disclosure_test",
+        "changed_typecheck",
+        "report_snapshots",
+        "email_preview"
+      ],
+      "path": "app/google-ads/raport/read-disclosure.test.tsx",
+      "risk": "fast",
+      "rule_id": "delivery_form_surface",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "contact_action_tests",
+        "email_payload_tests",
+        "read_disclosure_test",
+        "changed_typecheck",
+        "report_snapshots",
+        "email_preview"
+      ],
+      "path": "lib/gads-report-email.test.ts",
+      "risk": "fast",
+      "rule_id": "delivery_form_surface",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "-p",
+        ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/tsconfig.json"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "changed_typecheck",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ContactForm.test.tsx",
+        "app/google-ads/raport/actions.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "contact_action_tests",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-report-email.test.ts"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 2,
+      "id": "email_payload_tests",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "node",
+        "--experimental-strip-types",
+        ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/generate-email-preview.mjs"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 2,
+      "id": "email_preview",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/read-disclosure.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 2,
+      "id": "read_disclosure_test",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/page.test.tsx",
+        "app/public-access-boundary.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "report_snapshots",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-08-reporting-only/delivery-form/checks.json",
+  "declaration_sha256": "91be5b82b88dfff6f4d4cf0ace2f1fac4350569b40a4307ab6fd24405bd452a0",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "bc870834ca7b5bd4d1b965b402edc2aedbb65c60e5e97afd4a1e6030a5833f5b",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "7664b900b896a827c6885d87502de2526731637f",
+  "risk": "fast",
+  "schema_version": 1
+}
