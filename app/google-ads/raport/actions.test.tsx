@@ -12,7 +12,9 @@ const generateStoredReportPdf = vi.hoisted(() => vi.fn(async (reportId: string) 
   path: `/data/${reportId}.pdf`,
   buffer: Buffer.from("pdf"),
 })));
-const sendReportEmail = vi.hoisted(() => vi.fn(async () => ({ ok: true as const, messageId: "email-1" })));
+const sendReportEmail = vi.hoisted(() => vi.fn(async (): Promise<
+  { ok: true; messageId: string } | { ok: false; reason: string }
+> => ({ ok: true, messageId: "email-1" })));
 
 vi.mock("next/headers", () => ({
   cookies: async () => ({ get: () => ({ value: cookieState.value }) }),
@@ -138,6 +140,18 @@ describe("Google Ads report contact delivery", () => {
     expect(await listLeads()).toEqual([]);
   });
 
+  it("refuses missing one-time report consent before creating a lead", async () => {
+    const staged = await stage(1);
+    const form = contactForm(staged.reference);
+    form.delete("reportConsent");
+
+    await expect((await action())(form)).resolves.toEqual({ ok: false, error: "CONTACT_INVALID" });
+    const { listLeads } = await import("@/lib/gads-leads");
+    expect(await listLeads()).toEqual([]);
+    expect(generateStoredReportPdf).not.toHaveBeenCalled();
+    expect(sendReportEmail).not.toHaveBeenCalled();
+  });
+
   it.each([382, 10_000])("submits only a fixed reference and preserves exact final bytes at %i products", async (productCount) => {
     const staged = await stage(productCount);
     expect(staged.signedSnapshot.length).toBeGreaterThan(200_000);
@@ -153,6 +167,12 @@ describe("Google Ads report contact delivery", () => {
     const { listLeads } = await import("@/lib/gads-leads");
     const [lead] = await listLeads();
     expect(lead.reportId).toBe(result.reportId);
+    expect(lead).toMatchObject({
+      consentAt: expect.any(Number),
+      serviceReportsEnabled: false,
+      serviceTermsVersion: "2026-09-08-one-time-report",
+    });
+    expect(lead).not.toHaveProperty("serviceReportsConsentAt");
     expect(await readFile(lead.snapshotPath!, "utf8")).toBe(staged.signedSnapshot);
     const opened = openReportSnapshot(await readFile(lead.snapshotPath!, "utf8"));
     expect(opened?.reportV2?.products).toHaveLength(productCount);

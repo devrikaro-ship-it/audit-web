@@ -5,6 +5,7 @@ import {
   projectGoogleAdsReadCategories,
   registeredGoogleAdsReadCategories,
   validateGoogleAdsReadCoverage,
+  type GoogleAdsReadCategory,
 } from "@/lib/gads-read-disclosure";
 import { reportSourceReadCategories, validateReportSourceReadCategories } from "./report-contract";
 
@@ -21,11 +22,11 @@ describe("Google Ads read disclosure", () => {
   });
 
   it("refuses an omitted category and a source without a disclosure", () => {
-    const withoutAnnualTotals = Object.fromEntries(
+    const withoutAnnualTotals: Readonly<Record<string, readonly GoogleAdsReadCategory[]>> = Object.fromEntries(
       Object.entries(registeredGoogleAdsReadCategories).map(([source, categories]) => [
         source,
         categories.includes("annual-account-totals")
-          ? ["shopping-product-performance"]
+          ? (["shopping-product-performance"] as const)
           : categories,
       ]),
     );

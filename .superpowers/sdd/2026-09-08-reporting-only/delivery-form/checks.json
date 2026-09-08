@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "contact_action_tests": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ContactForm.test.tsx",
+        "app/google-ads/raport/actions.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "email_payload_tests": {
+      "profile": "targeted_tests",
+      "command": ["npx", "vitest", "run", "lib/gads-report-email.test.ts"],
+      "cwd": ".",
+      "estimated_minutes": 2
+    },
+    "read_disclosure_test": {
+      "profile": "targeted_tests",
+      "command": ["npx", "vitest", "run", "app/google-ads/raport/read-disclosure.test.tsx"],
+      "cwd": ".",
+      "estimated_minutes": 2
+    },
+    "changed_typecheck": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "-p",
+        ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/tsconfig.json"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "report_snapshots": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/page.test.tsx",
+        "app/public-access-boundary.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "snapshot_update": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/page.test.tsx",
+        "app/public-access-boundary.test.tsx",
+        "--update"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "email_preview": {
+      "profile": "targeted_tests",
+      "command": [
+        "node",
+        "--experimental-strip-types",
+        ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/generate-email-preview.mjs"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 2
+    }
+  },
+  "rules": [
+    {
+      "id": "delivery_form_surface",
+      "patterns": [
+        "app/google-ads/raport/ContactForm.tsx",
+        "app/google-ads/raport/ContactForm.test.tsx",
+        "app/google-ads/raport/actions.ts",
+        "app/google-ads/raport/actions.test.tsx",
+        "app/google-ads/raport/read-disclosure.test.tsx",
+        "lib/gads-report-email.ts",
+        "lib/gads-report-email.test.ts",
+        "app/google-ads/raport/__snapshots__/page.test.tsx.snap",
+        "app/__snapshots__/public-access-boundary.test.tsx.snap"
+      ],
+      "statuses": ["A", "M"],
+      "category": "runtime",
+      "risk": "fast",
+      "checks": [
+        "contact_action_tests",
+        "email_payload_tests",
+        "read_disclosure_test",
+        "changed_typecheck",
+        "report_snapshots",
+        "email_preview"
+      ]
+    },
+    {
+      "id": "delivery_form_artifacts",
+      "patterns": [
+        ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/**"
+      ],
+      "statuses": ["A", "M"],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": [],
+      "allow_no_checks": true
+    }
+  ]
+}

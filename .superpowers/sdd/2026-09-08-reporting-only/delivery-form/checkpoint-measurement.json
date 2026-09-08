@@ -1,0 +1,28 @@
+{
+  "completed": [
+    "Read the authoritative delivery packet, reporting specification, relevant project documentation, required skills, and installed Next.js 16.2.4 form and data-security guidance.",
+    "Measured the existing contact form, server action, lead schema and consumers, pending-submission identity, email transport, and affected tests at revision 1841625904e286da362ef57b8cff93753f93c3d3.",
+    "Confirmed that one-time consent can be recorded without changing the lead schema: consentAt and a new serviceTermsVersion identify the accepted one-time terms, while serviceReportsEnabled remains false and serviceReportsConsentAt is omitted.",
+    "Confirmed that historical leads are not rewritten because saveOrGetReportLead returns an existing report identity unchanged."
+  ],
+  "findings": [
+    "The form is partly Romanian, promises monthly reports, claims an email delay when delivery failed, and leaves a thrown action in the sending state.",
+    "The server action currently enables monthly service reports for each new report lead.",
+    "The email body deletes special characters from the supplied name instead of HTML-escaping them; transport guards already refuse missing configuration and invalid portal paths before fetch.",
+    "The affected email test reads fetch options through an inferred no-argument mock and requires a real fetch signature."
+  ],
+  "decisions": [
+    "Use consent version 2026-09-08-one-time-report for the finite report-generation agreement.",
+    "Extract a pure production email-payload builder and use it for both the Resend transport and a retained synthetic preview; no provider call is permitted during preview generation.",
+    "Prove failure recovery, missing consent/configuration, invalid destination, exact attachment bytes and filename, escaped visible names, and valid delivery through focused controls."
+  ],
+  "files": [
+    ".superpowers/sdd/2026-09-08-reporting-only/delivery-form/checkpoint-measurement.json"
+  ],
+  "commands": [
+    "Live model catalog route: gpt-5.6-terra, medium reasoning, standard task class.",
+    "Read-only source and consumer inspection at 1841625904e286da362ef57b8cff93753f93c3d3."
+  ],
+  "blockers": [],
+  "next_action": "Write the focused failing tests and declared change-impact checks, commit the RED candidate, and witness the expected failures through the bounded planned-command route."
+}

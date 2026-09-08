@@ -12,22 +12,42 @@ describe("report contact form states", () => {
 
   it("opens the client portal after an accepted submission", async () => {
     const view = render(<ContactForm action={vi.fn().mockResolvedValue({ ok: true, deliveryStatus: "EMAIL_SENT", reportId: "r", portalPath: "/google-ads/portal/client-token" })} pendingReportReference={"a".repeat(43)} />);
-    expect(view.getByLabelText("Nume")).toBeTruthy();
-    expect(view.getByText(/monthly campaign reports will be sent to this email/i)).toBeTruthy();
+    expect(view.getByLabelText("Name")).toBeTruthy();
+    expect(view.getByText(/use these details once to generate, store, and email this audit/i)).toBeTruthy();
+    expect(view.container.textContent).toMatch(/does not enroll me in monthly reports/i);
     expect(view.container.textContent).not.toMatch(/newsletter|promotional materials/i);
-    expect(view.getByRole("button", { name: "Trimite-mi raportul PDF pe email" })).toBeTruthy();
+    expect(view.getByRole("button", { name: "Email me my PDF audit" })).toBeTruthy();
     fireEvent.submit(view.container.querySelector("form")!);
     await waitFor(() => expect(push).toHaveBeenCalledWith("/google-ads/portal/client-token"));
+    expect(view.getByText("Your PDF audit has been generated, saved, and emailed to you.")).toBeTruthy();
   });
 
-  it("renders recovery and permits a retry after a rejected submission", async () => {
-    const action = vi.fn().mockResolvedValueOnce({ ok: false, error: "PDF_FAILED" }).mockResolvedValueOnce({ ok: true, deliveryStatus: "EMAIL_SENT", reportId: "r" });
+  it("renders recovery and permits retries after rejected and thrown submissions", async () => {
+    const action = vi.fn()
+      .mockResolvedValueOnce({ ok: false, error: "PDF_FAILED" })
+      .mockRejectedValueOnce(new Error("temporary action failure"))
+      .mockResolvedValueOnce({ ok: true, deliveryStatus: "EMAIL_SENT", reportId: "r", portalPath: "/google-ads/portal/retry-token" });
     const view = render(<ContactForm action={action} pendingReportReference={"a".repeat(43)} />);
     fireEvent.submit(view.container.querySelector("form")!);
-    await waitFor(() => expect(view.container.textContent).toContain("Nu am putut genera raportul PDF"));
+    await waitFor(() => expect(view.container.textContent).toContain("We could not generate your PDF audit"));
     expect(push).not.toHaveBeenCalled();
     fireEvent.submit(view.container.querySelector("form")!);
-    await waitFor(() => expect(view.container.querySelector("form")).toBeNull());
+    await waitFor(() => expect(action).toHaveBeenCalledTimes(2));
+    expect(view.container.textContent).toContain("We could not generate your PDF audit");
+    expect(view.getByRole("button", { name: "Email me my PDF audit" })).not.toHaveAttribute("disabled");
+    fireEvent.submit(view.container.querySelector("form")!);
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/google-ads/portal/retry-token"));
+  });
+
+  it("reports an email failure truthfully while preserving the portal destination", async () => {
+    const view = render(<ContactForm action={vi.fn().mockResolvedValue({ ok: true, deliveryStatus: "EMAIL_FAILED", reportId: "r", portalPath: "/google-ads/portal/saved-token" })} pendingReportReference={"a".repeat(43)} />);
+
+    fireEvent.submit(view.container.querySelector("form")!);
+
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/google-ads/portal/saved-token"));
+    expect(view.getByText("Your PDF audit has been generated and saved, but the email could not be sent.")).toBeTruthy();
+    expect(view.container.textContent).not.toMatch(/delayed|queued|later/i);
+    expect(view.getByRole("link", { name: "Open my dashboard" }).getAttribute("href")).toBe("/google-ads/portal/saved-token");
   });
 
   it("submits only the fixed-size pending reference and never serializes snapshot bytes", () => {
