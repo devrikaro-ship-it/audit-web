@@ -1,0 +1,32 @@
+{
+  "completed": [
+    "Read the validated handoff, frozen contract point, UI brief, analytical predecessor result, implementer role, delivery workflow, checkpoint standard, TDD standard, and project report authority.",
+    "Confirmed contract SHA-256 882eb4c48b9ae6eff6a92b78343171fa39c94d729b6f97cac4cd291276bce56c, clean baseline revision f316e754b6974de5f290c7df6c1752657a88536d, and the complete writable perimeter.",
+    "Measured the connected simulator input path: session.currencyCode is validated by gads-session, fetchStructura accepts an optional currency code, but the together page does not pass it and the simulator hardcodes ro-RO/RON.",
+    "Measured the preserved real baseline from the authoritative brief: 15 report products in groups 6/4/2/3, 10860 RON measured loss, 91908 RON simulated missed sales, and the connected simulator numeric scenarios specified there."
+  ],
+  "decisions": [
+    "Keep calculation formulas and numeric keys unchanged; translate the three closed engine reasons only at the simulator display boundary.",
+    "Require a supplied currency code at the connected simulator boundary instead of introducing any RON fallback.",
+    "Use only exact diff-derived targeted checks through the bounded planned-command wrapper; full suite and build remain point 6."
+  ],
+  "files": [
+    ".superpowers/sdd/2026-09-07-launch-english/point-3-ui/checks.json",
+    ".superpowers/sdd/2026-09-07-launch-english/point-3-ui/checkpoint-payload.json"
+  ],
+  "commands": [
+    "checkpoint_state.py resume --worker-id 01a0817d-f40a-7981-a5ad-996b104aa460",
+    "shasum -a 256 contract.md",
+    "git status --porcelain=v1 and git rev-parse HEAD",
+    "source and test discovery with rg"
+  ],
+  "findings": [
+    "Access is local and read/write within the declared perimeter; no browser or server ownership is needed for this implementer role.",
+    "Authoritative session currency is present as session.currencyCode and already used by the report page.",
+    "The connected simulator currently lacks currency propagation through citesteCifre, fetchStructura, and Simulator props.",
+    "The calculator engine exposes three closed Romanian failure messages; its formulas and engine files are outside the writable perimeter.",
+    "Operation limits are the launcher's 30-minute implementation budget, 5-minute idle limit, and 5-minute targeted command profile; planned checks estimate 3-4 minutes each."
+  ],
+  "blockers": [],
+  "next_action": "Commit the point-owned check declaration, derive an explicit change-impact plan, and run the inherited report UI check before adding the connected simulator English and currency test."
+}

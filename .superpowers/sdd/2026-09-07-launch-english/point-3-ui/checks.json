@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "report_ui": {
+      "profile": "targeted_tests",
+      "command": ["npx", "vitest", "run", "app/google-ads/raport/ReportingDashboard.test.tsx", "app/google-ads/raport/CatalogPePerformanta.test.tsx", "app/google-ads/raport/ProfitabilitySimulator.test.tsx", "app/google-ads/raport/page.test.tsx", "app/google-ads/raport/report-contract.test.tsx", "app/google-ads/raport/read-disclosure.test.tsx", "app/public-access-boundary.test.tsx"],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "connected_simulator": {
+      "profile": "targeted_tests",
+      "command": ["npx", "vitest", "run", "app/google-ads/impreuna/page.test.tsx", "app/google-ads/impreuna/Simulator.test.tsx", "app/google-ads/impreuna/Simulator.branches.test.tsx"],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "calculator_controls": {
+      "profile": "targeted_tests",
+      "command": ["npx", "vitest", "run", "lib/calc/calc.test.ts", "lib/calc/calc.coverage.test.ts"],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "snapshot_update": {
+      "profile": "targeted_tests",
+      "command": ["npx", "vitest", "run", "app/google-ads/raport/page.test.tsx", "app/public-access-boundary.test.tsx", "app/google-ads/impreuna/page.test.tsx", "app/google-ads/impreuna/Simulator.test.tsx", "--update"],
+      "cwd": ".",
+      "estimated_minutes": 3
+    }
+  },
+  "rules": [
+    {
+      "id": "report_surface",
+      "patterns": ["app/google-ads/raport/**", "app/public-access-boundary.test.tsx", "app/__snapshots__/public-access-boundary.test.tsx.snap", "lib/gads-report-metrics.ts", "lib/gads-report-metrics.test.ts"],
+      "statuses": ["A", "M"],
+      "category": "frontend",
+      "risk": "fast",
+      "checks": ["report_ui", "snapshot_update"]
+    },
+    {
+      "id": "connected_simulator",
+      "patterns": ["app/google-ads/impreuna/**"],
+      "statuses": ["A", "M"],
+      "category": "frontend",
+      "risk": "fast",
+      "checks": ["connected_simulator", "calculator_controls", "snapshot_update"]
+    },
+    {
+      "id": "point_artifacts",
+      "patterns": [".superpowers/sdd/2026-09-07-launch-english/point-3-ui/**", "docs/testing/**", "docs/dev/mistakes.md"],
+      "statuses": ["A", "M"],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": [],
+      "allow_no_checks": true
+    }
+  ]
+}
