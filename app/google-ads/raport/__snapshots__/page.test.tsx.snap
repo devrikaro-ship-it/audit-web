@@ -228,6 +228,8 @@ root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[0] type="button" role="tab" aria
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[0]/text "Products"
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[1] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-before-after"
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[1]/text "Before &amp; after"
+root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[2] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-tracking"
+root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[2]/text "Tracking"
 root/div[0]/main[0]/div[3]/div[0]/div[0] role="tabpanel" aria-labelledby="report-view-tab-products"
 root/div[0]/main[0]/div[3]/div[0]/div[0]/main[0]
 root/div[0]/main[0]/div[3]/div[0]/div[0]/main[0]/section[0] aria-label="Main conclusions"
@@ -571,6 +573,47 @@ root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/div[2]/div[1]/ul[0]/li[2]
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/div[2]/div[1]/ul[0]/li[2]/text "Current values are measured; optimized values are a model, not a guarantee."
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/p[0]
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/p[0]/text "Budget exploration unavailable: complete finite product model inputs are required."
+root/div[0]/main[0]/div[3]/div[0]/section[2] role="tabpanel" aria-labelledby="report-view-tab-tracking"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]/text "Conversion configuration"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]/text "Tracking"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "Enabled Google Ads conversion actions recorded when this report was generated."
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/strong[0]/text "Configuration observed"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/text "Observed at"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/time[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/time[0]/text "27 Aug 2026, 08:00 UTC"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0] aria-label="Observed conversion actions"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Action"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Category"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Role"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]/text "Purchase"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/text "PURCHASE"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "Primary"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/h3[0]/text "Supported configuration issues"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/p[0]/text "No supported configuration issues found."
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[1]/text "Limited scope: this checks enabled Google Ads conversion-action configuration only. It does not verify tag firing, consent, Enhanced Conversions, event volume, attribution, or end-to-end tracking health."
 root/div[0]/main[0]/div[4] aria-hidden="true"
 root/div[0]/main[0]/div[4]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
@@ -971,6 +1014,8 @@ root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[0] type="button" role="tab" aria
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[0]/text "Products"
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[1] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-before-after"
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[1]/text "Before &amp; after"
+root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[2] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-tracking"
+root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[2]/text "Tracking"
 root/div[0]/main[0]/div[3]/div[0]/div[0] role="tabpanel" aria-labelledby="report-view-tab-products"
 root/div[0]/main[0]/div[3]/div[0]/div[0]/main[0]
 root/div[0]/main[0]/div[3]/div[0]/div[0]/main[0]/section[0] aria-label="Main conclusions"
@@ -1314,6 +1359,47 @@ root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/div[2]/div[1]/ul[0]/li[2]
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/div[2]/div[1]/ul[0]/li[2]/text "Current values are measured; optimized values are a model, not a guarantee."
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/p[0]
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/p[0]/text "Budget exploration unavailable: complete finite product model inputs are required."
+root/div[0]/main[0]/div[3]/div[0]/section[2] role="tabpanel" aria-labelledby="report-view-tab-tracking"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]/text "Conversion configuration"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]/text "Tracking"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "Enabled Google Ads conversion actions recorded when this report was generated."
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/strong[0]/text "Configuration observed"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/text "Observed at"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/time[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/time[0]/text "27 Aug 2026, 08:00 UTC"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0] aria-label="Observed conversion actions"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Action"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Category"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Role"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]/text "Purchase"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/text "PURCHASE"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "Primary"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/h3[0]/text "Supported configuration issues"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/p[0]/text "No supported configuration issues found."
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[1]/text "Limited scope: this checks enabled Google Ads conversion-action configuration only. It does not verify tag firing, consent, Enhanced Conversions, event volume, attribution, or end-to-end tracking health."
 root/div[0]/main[0]/div[4] aria-hidden="true"
 root/div[0]/main[0]/div[4]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
@@ -1700,6 +1786,8 @@ root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[0] type="button" role="tab" aria
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[0]/text "Products"
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[1] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-before-after"
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[1]/text "Before &amp; after"
+root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[2] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-tracking"
+root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[2]/text "Tracking"
 root/div[0]/main[0]/div[3]/div[0]/div[0] role="tabpanel" aria-labelledby="report-view-tab-products"
 root/div[0]/main[0]/div[3]/div[0]/div[0]/main[0]
 root/div[0]/main[0]/div[3]/div[0]/div[0]/main[0]/section[0] aria-label="Main conclusions"
@@ -2043,6 +2131,47 @@ root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/div[2]/div[1]/ul[0]/li[2]
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/div[2]/div[1]/ul[0]/li[2]/text "Current values are measured; optimized values are a model, not a guarantee."
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/p[0]
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/p[0]/text "Budget exploration unavailable: complete finite product model inputs are required."
+root/div[0]/main[0]/div[3]/div[0]/section[2] role="tabpanel" aria-labelledby="report-view-tab-tracking"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]/text "Conversion configuration"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]/text "Tracking"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "Enabled Google Ads conversion actions recorded when this report was generated."
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/strong[0]/text "Configuration observed"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/text "Observed at"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/time[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/time[0]/text "27 Aug 2026, 08:00 UTC"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0] aria-label="Observed conversion actions"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Action"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Category"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Role"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]/text "Purchase"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/text "PURCHASE"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "Primary"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/h3[0]/text "Supported configuration issues"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/p[0]/text "No supported configuration issues found."
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[1]/text "Limited scope: this checks enabled Google Ads conversion-action configuration only. It does not verify tag firing, consent, Enhanced Conversions, event volume, attribution, or end-to-end tracking health."
 root/div[0]/main[0]/div[4] aria-hidden="true"
 root/div[0]/main[0]/div[4]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
@@ -2420,6 +2549,8 @@ root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[0] type="button" role="tab" aria
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[0]/text "Products"
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[1] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-before-after"
 root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[1]/text "Before &amp; after"
+root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[2] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-tracking"
+root/div[0]/main[0]/div[3]/div[0]/nav[0]/button[2]/text "Tracking"
 root/div[0]/main[0]/div[3]/div[0]/div[0] role="tabpanel" aria-labelledby="report-view-tab-products"
 root/div[0]/main[0]/div[3]/div[0]/div[0]/main[0]
 root/div[0]/main[0]/div[3]/div[0]/div[0]/main[0]/section[0] aria-label="Main conclusions"
@@ -2763,6 +2894,47 @@ root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/div[2]/div[1]/ul[0]/li[2]
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/div[2]/div[1]/ul[0]/li[2]/text "Current values are measured; optimized values are a model, not a guarantee."
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/p[0]
 root/div[0]/main[0]/div[3]/div[0]/section[1]/div[0]/p[0]/text "Budget exploration unavailable: complete finite product model inputs are required."
+root/div[0]/main[0]/div[3]/div[0]/section[2] role="tabpanel" aria-labelledby="report-view-tab-tracking"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]/text "Conversion configuration"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]/text "Tracking"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "Enabled Google Ads conversion actions recorded when this report was generated."
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[0]/strong[0]/text "Configuration observed"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/text "Observed at"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/time[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[0]/time[0]/text "27 Aug 2026, 08:00 UTC"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0] aria-label="Observed conversion actions"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Action"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Category"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Role"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]/text "Purchase"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/text "PURCHASE"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "Primary"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/h3[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/h3[0]/text "Supported configuration issues"
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/p[0]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/div[2]/p[0]/text "No supported configuration issues found."
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[1]
+root/div[0]/main[0]/div[3]/div[0]/section[2]/div[0]/p[1]/text "Limited scope: this checks enabled Google Ads conversion-action configuration only. It does not verify tag firing, consent, Enhanced Conversions, event volume, attribution, or end-to-end tracking health."
 root/div[0]/main[0]/div[4] aria-hidden="true"
 root/div[0]/main[0]/div[4]/div[0]
 root/div[0]/main[0]/div[4]/div[0]/span[0] aria-hidden="true"
@@ -3110,6 +3282,8 @@ root/div[0]/main[0]/div[4]/div[0]/nav[0]/button[0] type="button" role="tab" aria
 root/div[0]/main[0]/div[4]/div[0]/nav[0]/button[0]/text "Products"
 root/div[0]/main[0]/div[4]/div[0]/nav[0]/button[1] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-before-after"
 root/div[0]/main[0]/div[4]/div[0]/nav[0]/button[1]/text "Before &amp; after"
+root/div[0]/main[0]/div[4]/div[0]/nav[0]/button[2] type="button" role="tab" aria-selected="false" aria-controls="report-view-panel-tracking"
+root/div[0]/main[0]/div[4]/div[0]/nav[0]/button[2]/text "Tracking"
 root/div[0]/main[0]/div[4]/div[0]/div[0] role="tabpanel" aria-labelledby="report-view-tab-products"
 root/div[0]/main[0]/div[4]/div[0]/div[0]/main[0]
 root/div[0]/main[0]/div[4]/div[0]/div[0]/main[0]/section[0] aria-label="Main conclusions"
@@ -3580,6 +3754,54 @@ root/div[0]/main[0]/div[4]/div[0]/section[1]/div[0]/div[3]/label[0]/strong[0]/te
 root/div[0]/main[0]/div[4]/div[0]/section[1]/div[0]/div[3]/input[0] aria-label="Simulated monthly budget" type="range" value="2355"
 root/div[0]/main[0]/div[4]/div[0]/section[1]/div[0]/div[3]/small[0]
 root/div[0]/main[0]/div[4]/div[0]/section[1]/div[0]/div[3]/small[0]/text "Model limit: 43,212 EUR"
+root/div[0]/main[0]/div[4]/div[0]/section[2] role="tabpanel" aria-labelledby="report-view-tab-tracking"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]/div[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]/div[0]/span[0]/text "Conversion configuration"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]/div[0]/h2[0]/text "Tracking"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "Enabled Google Ads conversion actions recorded when this report was generated."
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]/strong[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[0]/strong[0]/text "Configuration observed"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/p[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/p[0]/text "Observed at"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/p[0]/time[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/p[0]/time[0]/text "27 Aug 2026, 08:00 UTC"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0] aria-label="Observed conversion actions"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[0]/text "Action"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[1]/text "Category"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/thead[0]/tr[0]/th[2]/text "Role"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/th[0]/text "Achizitie site"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[0]/text "PURCHASE"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[0]/td[1]/text "Primary"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[1]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/th[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/th[0]/text "Adaugare in cos"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[0]/text "ADD_TO_CART"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[1]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[1]/table[0]/tbody[0]/tr[1]/td[1]/text "Secondary"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[2]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[2]/h3[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[2]/h3[0]/text "Supported configuration issues"
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[2]/p[0]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/div[2]/p[0]/text "No supported configuration issues found."
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/p[1]
+root/div[0]/main[0]/div[4]/div[0]/section[2]/div[0]/p[1]/text "Limited scope: this checks enabled Google Ads conversion-action configuration only. It does not verify tag firing, consent, Enhanced Conversions, event volume, attribution, or end-to-end tracking health."
 root/div[0]/main[0]/div[5] aria-hidden="true"
 root/div[0]/main[0]/div[5]/div[0]
 root/div[0]/main[0]/div[5]/div[0]/span[0] aria-hidden="true"
