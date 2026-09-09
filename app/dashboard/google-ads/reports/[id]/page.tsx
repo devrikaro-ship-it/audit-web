@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { managerAccountKey, readManagerReport, registeredReports, requireManagerAccess } from "@/lib/gads-manager";
 import ReportingDashboard from "@/app/google-ads/raport/ReportingDashboard";
 import { beforeAfterSourceFromSnapshot } from "@/lib/gads-product-simulation";
+import { trackingObservationFromSnapshot } from "@/lib/gads-report-delivery";
 import styles from "../../manager.module.css";
 
 export const dynamic = "force-dynamic";
@@ -40,6 +41,7 @@ export default async function ManagerReportPage({ params, searchParams }: {
     {saved && <ReportingDashboard
       report={saved.report}
       sourceSnapshot={beforeAfterSourceFromSnapshot(saved.snapshot)}
+      tracking={trackingObservationFromSnapshot(saved.snapshot)}
     />}
   </div>;
 }

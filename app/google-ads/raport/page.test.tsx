@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { Product } from "@/lib/gads-audit";
 import type { ReportDateRange } from "@/lib/gads-report-periods";
 import { openReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
+import type { TrackingState } from "@/lib/gads-tracking";
 import { normalizePublicOutput } from "@/app/public-output-goldens";
 
 let sessionMargin: unknown = 25;
@@ -86,7 +87,14 @@ const P = (id: string, cost: number, val: number, imp: number, clicks = 100): Pr
   ({ productId: id, title: `Canapea extensibila model ${id}`, cost, conversionValue: val,
      impressions: imp, clicks, conversions: val > 0 ? 1 : 0 });
 
-const stareTracking = { ok: true, reasons: [] as string[], junkPrimary: [] as string[] };
+const stareTracking: TrackingState = {
+  ok: true,
+  conversions: [{ name: "Purchase", category: "PURCHASE", primary: true }],
+  junkPrimary: [],
+  hasSalePrimary: true,
+  reasons: [],
+};
+let trackingReadFails = false;
 const sourceState = {
   primaryCatalogFails: false,
   secondaryCatalogSuccessCount: Number.POSITIVE_INFINITY,
@@ -126,7 +134,12 @@ vi.mock("@/lib/calc", async (orig) => {
     roasImbunatatit: (...args: unknown[]) => returnImprovementAvailable ? actual.roasImbunatatit(...args) : null,
   };
 });
-vi.mock("@/lib/gads-tracking", () => ({ fetchTracking: async () => stareTracking }));
+vi.mock("@/lib/gads-tracking", () => ({
+  fetchTracking: async () => {
+    if (trackingReadFails) throw new Error("Google Ads tracking read unavailable");
+    return stareTracking;
+  },
+}));
 vi.mock("@/lib/gads-structure", async (orig) => ({
   ...(await orig<Record<string, unknown>>()),
   fetchStructura: async () => sourceState.structureAvailable ? ({
@@ -190,7 +203,11 @@ describe("pagina de raport, randata", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-08-27T08:00:00Z"));
     stareTracking.ok = true;
+    stareTracking.conversions = [{ name: "Purchase", category: "PURCHASE", primary: true }];
+    stareTracking.junkPrimary = [];
+    stareTracking.hasSalePrimary = true;
     stareTracking.reasons = [];
+    trackingReadFails = false;
     sourceState.primaryCatalogFails = false;
     sourceState.secondaryCatalogSuccessCount = Number.POSITIVE_INFINITY;
     sourceState.structureAvailable = true;
@@ -334,6 +351,65 @@ describe("pagina de raport, randata", () => {
     expect(openReportSnapshot(capturedReportSnapshot)?.reportV2?.products).toHaveLength(4);
     expect(h).toContain(`data-pending-reference="${"p".repeat(43)}"`);
     expect(h).not.toContain(capturedReportSnapshot);
+  });
+
+  it("persists and reopens the exact observed tracking configuration used by the report", async () => {
+    stareTracking.ok = false;
+    stareTracking.conversions = [
+      { name: "Purchase", category: "PURCHASE", primary: true },
+      { name: "Qualified lead", category: "SUBMIT_LEAD_FORM", primary: false },
+      { name: "Page view", category: "PAGE_VIEW", primary: true },
+    ];
+    stareTracking.junkPrimary = [{ name: "Page view", category: "PAGE_VIEW", primary: true }];
+    stareTracking.hasSalePrimary = true;
+    stareTracking.reasons = ['1 primary action is not a sale: "Page view"'];
+
+    const h = await html();
+    const stored = openReportSnapshot(capturedReportSnapshot);
+
+    expect(stored?.tracking).toEqual({
+      status: "OBSERVED",
+      observedAt: "2026-08-27T08:00:00.000Z",
+      actions: [
+        { name: "Purchase", category: "PURCHASE", primary: true },
+        { name: "Qualified lead", category: "SUBMIT_LEAD_FORM", primary: false },
+        { name: "Page view", category: "PAGE_VIEW", primary: true },
+      ],
+      issues: ['1 primary action is not a sale: "Page view"'],
+    });
+    expect(h).toContain("Tracking");
+    expect(h).toContain("Qualified lead");
+    expect(h).toContain("SUBMIT_LEAD_FORM");
+    expect(h).toContain("Secondary");
+    expect(h).toContain("Limited scope");
+  });
+
+  it("stores a failed tracking collection as unavailable", async () => {
+    trackingReadFails = true;
+    const h = await html();
+
+    expect(openReportSnapshot(capturedReportSnapshot)?.tracking).toEqual({ status: "UNAVAILABLE" });
+    expect(h).toContain("No conversion-configuration observation is available");
+  });
+
+  it("keeps a successful empty tracking collection distinct from unavailable", async () => {
+    stareTracking.ok = false;
+    stareTracking.conversions = [];
+    stareTracking.junkPrimary = [];
+    stareTracking.hasSalePrimary = false;
+    stareTracking.reasons = [
+      "no Purchase conversion is marked as a primary action",
+      "the account has no active conversion actions configured",
+    ];
+    const h = await html();
+
+    expect(openReportSnapshot(capturedReportSnapshot)?.tracking).toMatchObject({
+      status: "OBSERVED",
+      actions: [],
+      issues: stareTracking.reasons,
+    });
+    expect(h).toContain("Configuration observed");
+    expect(h).toContain("No enabled conversion actions were observed");
   });
 
   it("refuses to render a generated report when durable persistence fails", async () => {

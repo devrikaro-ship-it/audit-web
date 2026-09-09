@@ -44,6 +44,16 @@ const snapshot = {
 const v2Snapshot = {
   ...snapshot,
   accountName: "Current V2 Store",
+  tracking: {
+    status: "OBSERVED" as const,
+    observedAt: "2026-08-27T08:00:00.000Z",
+    actions: [
+      { name: "Purchase", category: "PURCHASE", primary: true },
+      { name: "Qualified lead", category: "SUBMIT_LEAD_FORM", primary: false },
+    ],
+    issues: ["A page-view action is primary."],
+    sourceToken: "must-not-cross-the-client-boundary",
+  },
   reportV2: {
     version: 2 as const,
     currencyCode: "EUR",
@@ -122,6 +132,11 @@ it("renders the selected signed report with English portal labels and dates thro
   expect(html).toContain('data-report-dashboard="v2"');
   expect(html).toContain('aria-label="Report views"');
   expect(html).toContain("Before &amp; after");
+  expect(html).toContain("Tracking");
+  expect(html).toContain("Configuration observed");
+  expect(html).toContain("Qualified lead");
+  expect(html).toContain("Secondary");
+  expect(html).toContain("Limited scope");
   expect(html).toContain("12 months of evidence");
   expect(html).toContain("1,200 EUR");
   expect(Array.from(html.matchAll(/data-report-section="([^"]+)"/g), (match) => match[1])).toEqual([
@@ -143,6 +158,7 @@ it("renders the selected signed report with English portal labels and dates thro
   expect(html).not.toContain("<iframe");
   expect(html).not.toContain('data-legacy-permanent-labels');
   expect(html).not.toContain("store.example");
+  expect(html).not.toContain("must-not-cross-the-client-boundary");
 });
 
 it("selects another report only when it belongs to the token-scoped portal population", async () => {
@@ -186,6 +202,8 @@ it("renders a legacy signed report with unavailable currency and comparison rows
   expect(html).not.toContain("RON");
   expect(html).not.toContain("Legacy excerpt without full metrics");
   expect(html).toContain("Partial data");
+  expect(html).toContain("Tracking");
+  expect(html).toContain("No conversion-configuration observation is available");
 });
 
 it("refuses unknown portal tokens and reports whose stored signature cannot be opened", async () => {
