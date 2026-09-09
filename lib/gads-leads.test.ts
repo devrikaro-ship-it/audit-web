@@ -123,6 +123,45 @@ describe("salvarea lead-ului din auditul de Google Ads", () => {
       .rejects.toThrow("conflicts");
   });
 
+  it("enriches one contact-free report without duplicating it or losing contact on retry", async () => {
+    const { listLeads, saveOrGetReportLead } = await import("./gads-leads");
+    const generated = {
+      nume: "",
+      email: "",
+      customerId: "111",
+      customerName: "Example Store",
+      website: "https://store.example/",
+      reportId: "generated-report",
+      reportToken: "stable-report-token",
+      portalToken: "stable-portal-token",
+      snapshotPath: "/data/generated-report.snapshot",
+    };
+    const first = await saveOrGetReportLead(generated);
+    const enriched = await saveOrGetReportLead({
+      ...generated,
+      nume: "Ion Popescu",
+      email: "ION@EXAMPLE.COM",
+      telefon: "0722000111",
+      consentAt: 123,
+      serviceReportsEnabled: false,
+      serviceTermsVersion: "one-time-report",
+    });
+    const retry = await saveOrGetReportLead(generated);
+
+    expect(enriched.id).toBe(first.id);
+    expect(retry).toMatchObject({
+      id: first.id,
+      nume: "Ion Popescu",
+      email: "ion@example.com",
+      telefon: "0722000111",
+      consentAt: 123,
+      serviceReportsEnabled: false,
+    });
+    expect(await listLeads()).toHaveLength(1);
+    await expect(saveOrGetReportLead({ ...generated, nume: "Other Person", email: "other@example.com" }))
+      .rejects.toThrow("conflicts");
+  });
+
   it("cand scrierea pica, raporteaza esecul si lasa lead-ul in log", async () => {
     vi.doMock("node:fs", () => ({
       promises: {

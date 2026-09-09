@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "focused_tests": {
+      "profile": "targeted_tests",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "lib/gads-generated-report.test.ts",
+        "lib/gads-leads.test.ts",
+        "lib/gads-pending-report.test.ts",
+        "app/google-ads/raport/page.test.tsx",
+        "app/google-ads/raport/actions.test.tsx",
+        "app/dashboard/google-ads/page.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "typecheck": {
+      "profile": "targeted_tests",
+      "command": ["./node_modules/.bin/tsc", "--noEmit", "--pretty", "false"],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "lint_changed": {
+      "profile": "targeted_tests",
+      "command": [
+        "./node_modules/.bin/eslint",
+        "lib/gads-generated-report.ts",
+        "lib/gads-generated-report.test.ts",
+        "lib/gads-leads.ts",
+        "lib/gads-leads.test.ts",
+        "lib/gads-pending-report.ts",
+        "lib/gads-pending-report.test.ts",
+        "app/google-ads/raport/page.tsx",
+        "app/google-ads/raport/page.test.tsx",
+        "scripts/recover-generated-report.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 2
+    }
+  },
+  "rules": [
+    {
+      "id": "autosave_point",
+      "patterns": [
+        "lib/gads-generated-report.ts",
+        "lib/gads-generated-report.test.ts",
+        "lib/gads-leads.ts",
+        "lib/gads-leads.test.ts",
+        "lib/gads-pending-report.ts",
+        "lib/gads-pending-report.test.ts",
+        "app/google-ads/raport/page.tsx",
+        "app/google-ads/raport/page.test.tsx",
+        "app/google-ads/raport/actions.test.tsx",
+        "app/dashboard/google-ads/page.test.tsx",
+        "scripts/recover-generated-report.ts",
+        ".superpowers/sdd/2026-09-09-autosave/implementation/**"
+      ],
+      "statuses": ["A", "M"],
+      "category": "runtime",
+      "risk": "guarded",
+      "checks": ["focused_tests", "typecheck", "lint_changed"]
+    }
+  ]
+}

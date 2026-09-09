@@ -22,6 +22,9 @@ let capturedSealedSession = "";
 let exactRangeReads: ReportDateRange[] = [];
 let failedExactRead: "selected" | "previous" | "previousYear" | null = null;
 let mutateSnapshotBeforeSeal: ((snapshot: GadsReportSnapshot) => GadsReportSnapshot) | null = null;
+let capturedPersistedSnapshot = "";
+let capturedPersistedSession = "";
+let persistenceFailure: Error | null = null;
 
 // Randam PAGINA REALA, nu o copie a ei. Verificarea la nivel de date spune ca cifrele sunt
 // corecte; asta spune ca ajung pe ecran — tabelul de produse chiar apare, sectiunile chiar
@@ -48,6 +51,14 @@ vi.mock("@/lib/gads-pending-report", () => ({
     capturedReportSnapshot = signedSnapshot;
     capturedSealedSession = sealedSession;
     return { reference: "p".repeat(43) };
+  },
+}));
+vi.mock("@/lib/gads-generated-report", () => ({
+  persistGeneratedReport: async ({ signedSnapshot, sealedSession }: { signedSnapshot: string; sealedSession: string }) => {
+    if (persistenceFailure) throw persistenceFailure;
+    capturedPersistedSnapshot = signedSnapshot;
+    capturedPersistedSession = sealedSession;
+    return { reportId: "generated-id" };
   },
 }));
 vi.mock("@/lib/gads-report-delivery", async (original) => {
@@ -204,6 +215,9 @@ describe("pagina de raport, randata", () => {
     exactRangeReads = [];
     failedExactRead = null;
     mutateSnapshotBeforeSeal = null;
+    capturedPersistedSnapshot = "";
+    capturedPersistedSession = "";
+    persistenceFailure = null;
   });
 
   afterEach(() => vi.useRealTimers());
@@ -317,9 +331,17 @@ describe("pagina de raport, randata", () => {
     const h = await html();
     expect(capturedPendingReference).toBe("p".repeat(43));
     expect(capturedSealedSession).toBe("cookie-fals");
+    expect(capturedPersistedSnapshot).toBe(capturedReportSnapshot);
+    expect(capturedPersistedSession).toBe("cookie-fals");
     expect(openReportSnapshot(capturedReportSnapshot)?.reportV2?.products).toHaveLength(4);
     expect(h).toContain(`data-pending-reference="${"p".repeat(43)}"`);
     expect(h).not.toContain(capturedReportSnapshot);
+  });
+
+  it("refuses to render a generated report when durable persistence fails", async () => {
+    persistenceFailure = new Error("injected durable persistence failure");
+    await expect(html()).rejects.toThrow("injected durable persistence failure");
+    expect(capturedPendingReference).toBe("");
   });
 
   it("stores a failed comparison read as unavailable instead of a zero period", async () => {

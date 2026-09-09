@@ -212,6 +212,29 @@ describe("pending Google Ads report snapshots", () => {
     await releasePendingReportClaim(changedReplay);
   });
 
+  it("binds the exact generated snapshot identity while distinct snapshots stay distinct", async () => {
+    const session = validSession();
+    const signedSnapshot = sealReportSnapshot(reportSnapshot(1));
+    const firstStaged = await stagePendingReportSnapshot(signedSnapshot, session);
+    const secondStaged = await stagePendingReportSnapshot(signedSnapshot, session);
+    const first = await claimPendingReport(firstStaged.reference, session);
+    const second = await claimPendingReport(secondStaged.reference, session);
+    const firstIdentity = await bindPendingReportSubmission(first, contact);
+    const secondIdentity = await bindPendingReportSubmission(second, contact);
+    expect(secondIdentity).toEqual(firstIdentity);
+    await releasePendingReportClaim(first);
+    await releasePendingReportClaim(second);
+
+    const distinctStaged = await stagePendingReportSnapshot(
+      sealReportSnapshot({ ...reportSnapshot(1), generatedAt: "2026-09-03T12:00:01.000Z" }),
+      session,
+    );
+    const distinct = await claimPendingReport(distinctStaged.reference, session);
+    const distinctIdentity = await bindPendingReportSubmission(distinct, contact);
+    expect(distinctIdentity.reportId).not.toBe(firstIdentity.reportId);
+    await releasePendingReportClaim(distinct);
+  });
+
   it("recovers an abandoned claim only after its lease expires", async () => {
     process.env.GADS_PENDING_CLAIM_LEASE_MS = "1000";
     const session = validSession();

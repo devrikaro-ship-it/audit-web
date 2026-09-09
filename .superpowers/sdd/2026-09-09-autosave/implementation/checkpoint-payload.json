@@ -1,0 +1,64 @@
+{
+  "task_name": "report-autosave-implementation-20260909",
+  "task_id": "report-autosave-implementation-20260909",
+  "role": "implementer",
+  "status": "active",
+  "objective": "Persist every generated signed Google Ads report before optional contact submission, with stable identity and controlled legacy recovery.",
+  "completed": [
+    "Read the frozen contract, implementation brief, baseline standard, project authority, delivery workflow, checkpoint, TDD, verification, and relevant Next.js 16 documentation.",
+    "Measured the current generation, pending snapshot, contact delivery, lead ledger, immutable snapshot, and protected manager paths.",
+    "Confirmed current report identity and durable lead registration are created only inside saveContact after explicit contact consent."
+  ],
+  "findings": [
+    "The report page stages signed bytes but does not register a durable manager report.",
+    "saveContact currently allocates report identity and lead storage only after explicit contact consent.",
+    "The existing production recovery source is a valid READY pending snapshot with no customer ID."
+  ],
+  "decisions": [
+    "Use the existing signed snapshot store and lead ledger rather than adding a second registry.",
+    "Derive a stable report identity from the signed snapshot digest so generation registration and later contact delivery converge on one report.",
+    "Keep contact fields empty at generation and only enrich them atomically after the existing explicit one-time email consent gate.",
+    "Recover legacy pending snapshots by exact canonical directory plus expected digest and account metadata, preserving the source pending file."
+  ],
+  "files": [
+    ".superpowers/sdd/2026-09-09-autosave/implementation/checkpoint-payload.json"
+  ],
+  "commands": [
+    { "command": "codex model catalog route", "result": "gpt-5.6-sol, reasoning high" },
+    { "command": "checkpoint_state.py resume --worker-id 01a0855f-800e-7f10-b27a-b9f5303babff", "result": "active checkpoint restored" },
+    { "command": "read-only source and contract inspection", "result": "current persistence boundary measured" }
+  ],
+  "blockers": [],
+  "next_action": "Add focused failing tests for no-contact persistence, idempotency, contact enrichment, and exact legacy recovery refusal controls, then witness RED through the planned bounded command route.",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "54c7703f7a528704a9b8111b2bf4474791f2f416",
+  "working_tree": "Dirty only for root-owned docs plus this implementation checkpoint artifact; preserve unrelated files.",
+  "allowed_paths": [
+    "lib/gads-leads.ts",
+    "lib/gads-leads.test.ts",
+    "lib/gads-pending-report.ts",
+    "lib/gads-pending-report.test.ts",
+    "lib/gads-report-snapshot.ts",
+    "lib/gads-report-snapshot.test.ts",
+    "lib/gads-generated-report.ts",
+    "lib/gads-generated-report.test.ts",
+    "lib/gads-manager.ts",
+    "app/google-ads/raport",
+    "app/dashboard/google-ads/page.tsx",
+    "app/dashboard/google-ads/ManagerTable.tsx",
+    "app/dashboard/google-ads/page.test.tsx",
+    "scripts/recover-generated-report.ts",
+    ".superpowers/sdd/2026-09-09-autosave"
+  ],
+  "acceptance_criteria": [
+    "A generated report persists without contact data and appears through its exact protected manager link.",
+    "Same-report retries and later optional contact submission preserve one identity and one history entry.",
+    "No automatic email or recurring enrollment occurs.",
+    "Invalid and crossed snapshots are refused.",
+    "The existing MagazinFitness.ro pending snapshot can be recovered without collection and without deleting its source."
+  ],
+  "dependencies": [],
+  "environment": "local implementation candidate for deployed:https://audit.devrika.io",
+  "commit_sha": null,
+  "branch": "main"
+}
