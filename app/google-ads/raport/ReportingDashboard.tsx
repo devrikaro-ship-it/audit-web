@@ -20,6 +20,7 @@ import {
   type BeforeAfterReportSource,
   type BeforeAfterTotals,
 } from "@/lib/gads-product-simulation";
+import type { TrackingObservation } from "@/lib/gads-report-delivery";
 
 export type PeriodSelector = {
   action: string;
@@ -30,15 +31,17 @@ export type PeriodSelector = {
 type ReportingDashboardProps = {
   report: GoogleAdsReportV2ViewModel;
   sourceSnapshot?: BeforeAfterReportSource;
+  tracking?: TrackingObservation;
   periodSelector?: PeriodSelector;
   demo?: boolean;
 };
 
-type ReportView = "products" | "before-after";
+type ReportView = "products" | "before-after" | "tracking";
 
 const REPORT_VIEWS: { key: ReportView; label: string }[] = [
   { key: "products", label: "Products" },
   { key: "before-after", label: "Before & after" },
+  { key: "tracking", label: "Tracking" },
 ];
 
 type GroupPresentation = {
@@ -160,6 +163,7 @@ const groupDomId = (key: V2ProductLabel): string =>
 export default function ReportingDashboard({
   report,
   sourceSnapshot,
+  tracking,
   periodSelector,
   demo = false,
 }: ReportingDashboardProps): ReactElement {
@@ -439,7 +443,86 @@ export default function ReportingDashboard({
       >
         <BeforeAfterPanel source={sourceSnapshot} />
       </section>
+      <section
+        className="trackingPanel"
+        role="tabpanel"
+        id="report-view-panel-tracking"
+        aria-labelledby="report-view-tab-tracking"
+        hidden={activeReportView !== "tracking"}
+      >
+        <TrackingPanel observation={tracking} />
+      </section>
       <style>{dashboardCss}</style>
+    </div>
+  );
+}
+
+function trackingTimestamp(value: string): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "UTC",
+  }).format(new Date(value));
+}
+
+function TrackingPanel({ observation }: { observation?: TrackingObservation }) {
+  const observed = observation?.status === "OBSERVED" ? observation : null;
+  return (
+    <div className="trackingContent">
+      <div className="trackingHeading">
+        <div>
+          <span>Conversion configuration</span>
+          <h2>Tracking</h2>
+          <p>
+            Enabled Google Ads conversion actions recorded when this report was generated.
+          </p>
+        </div>
+        <strong data-tracking-status={observed ? "observed" : "unavailable"}>
+          {observed ? "Configuration observed" : "Unavailable"}
+        </strong>
+      </div>
+
+      {observed ? (
+        <>
+          <p className="trackingObservedAt">
+            Observed at <time dateTime={observed.observedAt}>{trackingTimestamp(observed.observedAt)} UTC</time>
+          </p>
+          {observed.actions.length > 0 ? (
+            <div className="trackingTableScroll" data-horizontal-scroll="tracking" tabIndex={0}>
+              <table className="trackingTable" aria-label="Observed conversion actions">
+                <thead><tr><th scope="col">Action</th><th scope="col">Category</th><th scope="col">Role</th></tr></thead>
+                <tbody>
+                  {observed.actions.map((action, index) => (
+                    <tr key={`${action.name}-${action.category}-${index}`}>
+                      <th scope="row">{action.name}</th>
+                      <td>{action.category}</td>
+                      <td>{action.primary ? "Primary" : "Secondary"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="trackingEmpty">No enabled conversion actions were observed.</p>
+          )}
+          <div className="trackingIssues">
+            <h3>Supported configuration issues</h3>
+            {observed.issues.length > 0 ? (
+              <ul>{observed.issues.map((issue, index) => <li key={`${issue}-${index}`}>{issue}</li>)}</ul>
+            ) : (
+              <p>No supported configuration issues found.</p>
+            )}
+          </div>
+        </>
+      ) : (
+        <p className="trackingEmpty">
+          No conversion-configuration observation is available for this saved report.
+        </p>
+      )}
+
+      <p className="trackingScope">
+        Limited scope: this checks enabled Google Ads conversion-action configuration only. It does not verify tag firing, consent, Enhanced Conversions, event volume, attribution, or end-to-end tracking health.
+      </p>
     </div>
   );
 }
@@ -982,7 +1065,8 @@ function ProductResult({
 }
 
 const dashboardCss = `
-.reportV2,.reportContent,.conclusionGrid,.comparisonSection,.productActions,.beforeAfterPanel,.beforeAfterContent{min-width:0}
+.reportV2,.reportContent,.conclusionGrid,.comparisonSection,.productActions,.beforeAfterPanel,.beforeAfterContent,.trackingPanel,.trackingContent{min-width:0}
+.trackingPanel{padding:32px clamp(14px,4vw,52px) 56px}.trackingContent{display:grid;gap:20px}.trackingHeading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}.trackingHeading>div>span{color:var(--cyan);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.trackingHeading h2{margin:4px 0;font-family:var(--font-sora),sans-serif;font-size:28px}.trackingHeading p{max-width:72ch;margin:0;color:var(--muted)}.trackingHeading>strong{padding:8px 12px;border-radius:999px;background:#e9f6f8;color:#096b83;font-size:11px;white-space:nowrap}.trackingHeading>strong[data-tracking-status=unavailable]{background:var(--amber-soft);color:var(--amber)}.trackingObservedAt,.trackingEmpty,.trackingScope{margin:0;color:var(--muted)}.trackingTableScroll{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fefeff}.trackingTableScroll:focus-visible{outline:3px solid #8cb6ee;outline-offset:3px}.trackingTable{width:100%;min-width:620px;border-collapse:collapse}.trackingTable th,.trackingTable td{padding:14px;border-bottom:1px solid #e9ecf2;text-align:left}.trackingTable thead th{background:#f4f6fa;color:#69768e;font-size:10px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.trackingTable tbody tr:last-child th,.trackingTable tbody tr:last-child td{border-bottom:0}.trackingIssues,.trackingScope,.trackingEmpty{padding:18px;border:1px solid var(--line);border-radius:14px;background:#fefeff}.trackingIssues h3{margin:0 0 8px;font-family:var(--font-sora),sans-serif;font-size:16px}.trackingIssues ul,.trackingIssues p{margin:0;color:var(--muted)}.trackingIssues ul{padding-left:20px}.trackingIssues li+li{margin-top:5px}.trackingScope{border-color:#d7deeb;background:#f4f6fa;font-size:12px}@media(max-width:700px){.trackingHeading{align-items:flex-start;flex-direction:column}.trackingPanel{padding-top:22px}.trackingTableScroll{margin-inline:-14px;border-radius:0}}
 .reportViewTabs{display:flex;gap:8px;padding:18px clamp(14px,4vw,52px) 0;overflow-x:auto;background:var(--surface);scrollbar-width:thin}.reportViewTabs button{flex:0 0 auto;min-width:138px;min-height:46px;padding:10px 18px;border:1px solid var(--line);border-radius:12px 12px 0 0;background:#eef1f6;color:#59657b;font:inherit;font-weight:800;cursor:pointer}.reportViewTabs button[aria-selected=true]{border-color:#4c46c7;background:#fefeff;color:var(--navy);box-shadow:inset 0 -3px #4c46c7}.reportViewTabs button:focus-visible{outline:3px solid #8cb6ee;outline-offset:2px}.beforeAfterPanel{padding:32px clamp(14px,4vw,52px) 56px}.beforeAfterContent{display:grid;gap:22px}.beforeAfterHeading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}.beforeAfterHeading>div>span{color:var(--cyan);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.beforeAfterHeading h2{margin:4px 0;font-family:var(--font-sora),sans-serif;font-size:28px}.beforeAfterHeading p{max-width:72ch;margin:0;color:var(--muted)}.beforeAfterHeading>strong{padding:8px 12px;border-radius:999px;background:#e9f6f8;color:#096b83;font-size:11px;white-space:nowrap}.beforeAfterTableScroll{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fefeff}.beforeAfterTableScroll:focus-visible{outline:3px solid #8cb6ee;outline-offset:3px}.beforeAfterTable{width:100%;min-width:860px;border-collapse:collapse;font-variant-numeric:tabular-nums}.beforeAfterTable th,.beforeAfterTable td{padding:14px;border-bottom:1px solid #e9ecf2;text-align:right;white-space:nowrap}.beforeAfterTable thead th{background:#f4f6fa;color:#69768e;font-size:10px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.beforeAfterTable th:first-child{text-align:left}.beforeAfterTable tbody th{color:var(--ink);font-size:13px}.beforeAfterTable tbody tr:last-child th,.beforeAfterTable tbody tr:last-child td{border-bottom:0}.beforeAfterDetails{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:14px}.targetSummary,.assumptionSummary,.budgetControl,.modelUnavailable{padding:18px;border:1px solid var(--line);border-radius:14px;background:#fefeff}.targetSummary h3,.assumptionSummary h3{margin:0 0 8px;font-family:var(--font-sora),sans-serif;font-size:16px}.targetSummary p{margin:4px 0;color:var(--muted)}.assumptionSummary ul{margin:0;padding-left:19px;color:var(--muted)}.assumptionSummary li+li{margin-top:5px}.budgetControl{display:grid;gap:10px}.budgetControl label{display:flex;align-items:center;justify-content:space-between;gap:18px}.budgetControl label span{font-weight:800}.budgetControl label strong{color:var(--navy);font-family:var(--font-sora),sans-serif;font-size:19px}.budgetControl input{width:100%;accent-color:#4c46c7}.budgetControl small,.modelUnavailable{color:var(--muted)}.modelUnavailable{margin:0}@media(max-width:700px){.beforeAfterHeading{align-items:flex-start;flex-direction:column}.beforeAfterDetails{grid-template-columns:1fr}.beforeAfterPanel{padding-top:22px}.reportViewTabs{padding-inline:14px}.budgetControl label{align-items:flex-start;flex-direction:column;gap:4px}}
 .reportV2{--ink:#101833;--muted:#66738c;--line:#e1e6ef;--surface:#fbfcfe;--surface-alt:#f5f7fb;--navy:#191d61;--blue:#2b4187;--cyan:#087c9c;--red:#cf3442;--red-soft:#fff2f3;--amber:#a76508;--amber-soft:#fff7e8;--green:#137755;--green-soft:#eaf8f2;min-height:100vh;background:var(--surface);color:var(--ink);font-family:var(--font-inter),sans-serif;font-size:14px;line-height:1.5}.reportV2 *{box-sizing:border-box}.brandHeader{display:flex;align-items:center;gap:24px;min-height:72px;padding:14px clamp(18px,4vw,52px);border-bottom:1px solid var(--line);background:#fefeff}.brandIdentity{display:flex;align-items:center;gap:11px;font-family:var(--font-sora),sans-serif;letter-spacing:.12em}.brandMark{display:grid;width:34px;height:34px;place-items:center;border-radius:10px;background:linear-gradient(135deg,#4c46c7,#13a7c5);color:#fdfcff;font-weight:800}.reportPeriod{display:flex;align-items:center;gap:8px;margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface-alt);color:var(--muted);font-size:12px}.reportPeriod b{color:var(--ink)}.periodForm{display:flex;align-items:center;gap:8px}.periodForm label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.periodForm select,.periodForm button{min-height:38px;border:1px solid var(--line);border-radius:9px;background:#fefeff;color:var(--ink);font:inherit}.periodForm select{max-width:220px;padding:0 10px}.periodForm button{padding:0 13px;font-weight:700}.demoBadge{padding:7px 10px;border-radius:7px;background:var(--amber-soft);color:var(--amber);font-size:11px;font-weight:800}.accountSummary{padding:42px clamp(18px,4vw,52px) 36px;background:linear-gradient(120deg,var(--navy),var(--blue) 58%,var(--cyan));color:#fdfcff}.heroCopy>span{color:#9be6ec;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.heroCopy h1{max-width:900px;margin:12px 0 10px;font-family:var(--font-sora),sans-serif;font-size:clamp(30px,4.2vw,48px);line-height:1.08;letter-spacing:-.035em}.heroCopy p{max-width:760px;margin:0;color:#d4dbef;font-size:16px}.targetGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:28px;overflow:hidden;border:1px solid rgba(255,255,255,.24);border-radius:15px;background:rgba(255,255,255,.07)}.targetTile{min-width:0;padding:16px 18px;border-inline-start:1px solid rgba(255,255,255,.18)}.targetTile:first-child{border-inline-start:0}.targetTile small,.targetTile span{display:block}.targetTile small{color:#c4cce4;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.targetTile strong{display:block;margin-top:6px;font-family:var(--font-sora),sans-serif;font-size:22px;overflow-wrap:anywhere}.targetTile span{margin-top:2px;color:#d4dbef;font-size:10px}.targetTile[data-status=warning] strong{color:#ff9da4}.targetTile[data-status=positive] strong{color:#7be9c3}.targetTile[data-status=unavailable] strong{color:#f5ca77}.reportContent{display:grid;gap:34px;padding:32px clamp(14px,4vw,52px) 56px}.conclusionGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.conclusionCard{display:flex;min-width:0;flex-direction:column;gap:7px;padding:22px;border:1px solid var(--line);border-radius:15px;background:#fefeff}.conclusionCard.loss{border-color:#f4c8cc;background:var(--red-soft)}.conclusionCard.opportunity{border-color:#eed7ae;background:var(--amber-soft)}.conclusionCard h2{margin:0;font-family:var(--font-sora),sans-serif;font-size:19px}.conclusionValue{font-family:var(--font-sora),sans-serif;font-size:27px;line-height:1.15;overflow-wrap:anywhere}.conclusionCard.loss .conclusionValue{color:var(--red)}.conclusionCard.opportunity .conclusionValue{color:var(--amber)}.conclusionCard p{margin:0;color:var(--muted);font-size:13px}.conclusionCard>small{color:var(--amber);font-weight:700}.evidenceLabel{width:max-content;padding:4px 7px;border-radius:6px;background:#eef1f6;color:#59657b;font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.loss .evidenceLabel{background:#ffe3e5;color:var(--red)}.opportunity .evidenceLabel{background:#fce8c4;color:var(--amber)}.sectionHeading h2{margin:0;font-family:var(--font-sora),sans-serif;font-size:22px}.sectionHeading p{max-width:70ch;margin:5px 0 13px;color:var(--muted);font-size:13px}.comparisonScroll,.productTableScroll{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fefeff}.comparisonScroll:focus-visible,.productTableScroll:focus-visible{outline:3px solid #8cb6ee;outline-offset:3px}.comparisonTable,.productTable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}.comparisonTable{min-width:820px}.comparisonTable th,.comparisonTable td,.productTable th,.productTable td{padding:12px 14px;border-bottom:1px solid #e9ecf2;text-align:right;white-space:nowrap}.comparisonTable th,.productTable th{background:#f4f6fa;color:#69768e;font-size:10px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.comparisonTable th:first-child,.comparisonTable td:first-child,.productTable th:first-child,.productTable td:first-child{text-align:left}.comparisonTable td:first-child strong,.comparisonTable td:first-child span{display:block}.comparisonTable td:first-child span{margin-top:2px;color:var(--muted);font-size:10px}.comparisonTable .selectedPeriod{background:#fbfcff}.lossText,.profitText,.unavailableResult,.neutralResult{display:inline-flex;flex-direction:column;align-items:flex-end;gap:1px}.lossText{color:var(--red)}.profitText{color:var(--green)}.neutralResult{color:var(--muted)}.unavailableResult{color:var(--amber)}.lossText small,.profitText small,.unavailableResult small,.neutralResult small{font-size:10px}.productActions{min-width:0}.partialNotice,.simulationNotice{margin:0 0 12px;padding:10px 12px;border:1px solid #ecd7ae;border-radius:10px;background:var(--amber-soft);color:#76510f;font-size:12px}.actionTabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}.actionTabs button{display:flex;align-items:center;gap:7px;flex:0 0 auto;min-height:44px;padding:9px 13px;border:1px solid var(--line);border-radius:11px 11px 0 0;background:#f5f7fb;color:#4c5871;font:inherit;font-weight:750;cursor:pointer}.actionTabs button b{display:grid;min-width:22px;height:22px;place-items:center;border-radius:999px;background:#e8ebf2;font-size:11px}.actionTabs button small{font-size:9px;color:var(--amber)}.actionTabs button[aria-selected=true]{border-color:#dd606a;background:#fefeff;color:#bd2532;box-shadow:inset 0 -3px #d93846}.actionTabs button:focus-visible{position:relative;z-index:2;outline:3px solid #8cb6ee;outline-offset:2px}.groupPanel{overflow:hidden;border:1px solid var(--line);border-radius:0 15px 15px 15px;background:#fefeff}.groupSummary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:center;padding:21px 22px;border-bottom:1px solid #e9ecf2}.groupKicker{color:var(--red);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.groupPanel.opportunity .groupKicker{color:var(--amber)}.groupPanel.profit .groupKicker{color:var(--green)}.groupSummary h3{margin:3px 0 4px;font-family:var(--font-sora),sans-serif;font-size:21px}.groupSummary p{max-width:70ch;margin:0;color:var(--muted);font-size:12px}.supportFacts{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.supportFacts span{padding:5px 8px;border-radius:7px;background:#f1f3f7;color:#56637b;font-size:10px;font-weight:750}.groupClaim{text-align:right}.groupClaim small,.groupClaim span{display:block;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.groupClaim strong{display:block;max-width:300px;margin:3px 0;font-family:var(--font-sora),sans-serif;font-size:25px;overflow-wrap:anywhere}.groupPanel.loss .groupClaim strong{color:var(--red)}.groupPanel.opportunity .groupClaim strong{color:var(--amber)}.groupPanel.profit .groupClaim strong{color:var(--green)}.groupPanel .simulationNotice{margin:14px 22px}.productTableScroll{border:0;border-radius:0}.productTable{min-width:1060px}.productTable tr:last-child td{border-bottom:0}.productTable tbody tr:hover{background:#f8faff}.productTable tbody tr.quarantined{background:#fffaf0}.productIdentity{display:flex;align-items:center;gap:9px;min-width:230px}.productIdentity>span{display:grid;width:32px;height:32px;flex:0 0 32px;place-items:center;border:1px solid #dfe4ed;border-radius:8px;background:#f4f6fa;color:#504bc0;font-size:9px;font-weight:850}.productIdentity strong,.productIdentity small{display:block;max-width:260px;overflow:hidden;text-overflow:ellipsis}.productIdentity small{color:#8b96aa;font-size:9px}.emptyState{display:grid;gap:5px;padding:38px 22px;text-align:center}.emptyState span{color:var(--muted);font-size:12px}.groupFooter{padding:12px 22px;border-top:1px solid #e9ecf2;background:#f7f8fb;color:var(--muted);font-size:11px}@media(max-width:900px){.brandHeader{align-items:flex-start;flex-wrap:wrap}.reportPeriod{margin-left:auto}.periodForm{width:100%;order:3}.periodForm select{flex:1}.targetGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.targetTile:nth-child(3){border-top:1px solid rgba(255,255,255,.18);border-inline-start:0}.targetTile:nth-child(4){border-top:1px solid rgba(255,255,255,.18)}.conclusionGrid{grid-template-columns:1fr}.groupSummary{grid-template-columns:1fr}.groupClaim{text-align:left}.lossText,.profitText,.unavailableResult,.neutralResult{align-items:flex-start}}@media(max-width:540px){.brandHeader{gap:12px;padding:13px 14px}.brandIdentity strong{font-size:13px}.reportPeriod{display:grid;gap:0;padding:7px 9px;font-size:10px}.demoBadge{width:100%;text-align:center}.accountSummary{padding:30px 18px}.heroCopy h1{font-size:30px}.heroCopy p{font-size:14px}.targetTile{padding:14px 12px}.targetTile strong{font-size:17px}.reportContent{gap:28px;padding:22px 14px 40px}.conclusionCard{padding:18px}.conclusionValue{font-size:23px}.sectionHeading h2{font-size:20px}.groupSummary{padding:18px}.groupClaim strong{font-size:22px}.actionTabs{margin-inline:-14px;padding-inline:14px}.productTableScroll{scrollbar-width:thin}}
 `;

@@ -60,6 +60,9 @@ import {
   openReportSnapshot,
   sealReportSnapshot,
   type GadsReportSnapshot,
+  type TrackingObservation,
+  trackingObservationFromSnapshot,
+  trackingObservationFromState,
 } from "@/lib/gads-report-delivery";
 import { persistGeneratedReport, stagePendingReportSnapshot } from "@/lib/gads-pending-report";
 
@@ -97,6 +100,7 @@ type SurseAudit = {
     previousYear: { products: Product[]; catalogComplete: boolean } | null;
   };
   tracking: TrackingState;
+  trackingObservation: TrackingObservation;
   structura?: StructuraAudit;
   an?: TotaluriAn | null;
   /** Catalogul pe fiecare fereastra scurta. `null` acolo unde interogarea a cazut. */
@@ -128,6 +132,10 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
     const data = demoData();
     return {
       ...data,
+      trackingObservation: trackingObservationFromState(
+        data.tracking,
+        new Date().toISOString(),
+      ),
       reportPeriods: {
         ranges,
         previous: {
@@ -186,9 +194,20 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
         () => null,
       ),
     ),
-    runGoogleAdsRead("fetchTracking", () =>
-      fetchTracking(customerId, auth).catch(() => TRACKING_NECUNOSCUT),
-    ),
+    runGoogleAdsRead("fetchTracking", async () => {
+      try {
+        const state = await fetchTracking(customerId, auth);
+        return {
+          state,
+          observation: trackingObservationFromState(state, new Date().toISOString()),
+        };
+      } catch {
+        return {
+          state: TRACKING_NECUNOSCUT,
+          observation: { status: "UNAVAILABLE" } as const,
+        };
+      }
+    }),
     runGoogleAdsRead("fetchStructura", () =>
       fetchStructura(customerId, auth, session.currencyCode).catch(() => undefined),
     ),
@@ -240,7 +259,8 @@ async function surse(session: GadsSession): Promise<SurseAudit | null> {
       previous: previousCatalog,
       previousYear: previousYearCatalog,
     },
-    tracking,
+    tracking: tracking.state,
+    trackingObservation: tracking.observation,
     structura,
     brutCuvinte,
     brutPmax,
@@ -508,6 +528,7 @@ export default async function Raport() {
         productPopulationStatus: catalogComplete ? "COMPLETE" : "PARTIAL",
       }).classificationDiagnostics,
     },
+    tracking: s.trackingObservation,
   };
   const signedReportSnapshot = sealReportSnapshot(snapshot);
   const openedReportSnapshot = openReportSnapshot(signedReportSnapshot);
@@ -759,6 +780,7 @@ export default async function Raport() {
           <ReportingDashboard
             report={snapshotViewV2}
             sourceSnapshot={beforeAfterSourceFromSnapshot(snapshot)}
+            tracking={trackingObservationFromSnapshot(openedReportSnapshot)}
             demo={demo}
           />
         </ReportSurface>

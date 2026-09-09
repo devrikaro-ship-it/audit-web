@@ -4,6 +4,7 @@ import {
   openReportSnapshot,
   renderReportHtml,
   sealReportSnapshot,
+  trackingObservationFromSnapshot,
   type GadsReportSnapshot,
   type GadsReportSnapshotV2,
 } from "./gads-report-delivery";
@@ -88,6 +89,45 @@ describe("stored Google Ads report delivery", () => {
     } as unknown as GadsReportSnapshot;
 
     expect(openReportSnapshot(sealReportSnapshot(malformed))).toBeNull();
+  });
+
+  it("round-trips valid tracking while exposing only the closed client observation", () => {
+    const expanded = {
+      ...snapshot,
+      tracking: {
+        status: "OBSERVED" as const,
+        observedAt: "2026-09-09T08:00:00.000Z",
+        actions: [
+          { name: "Purchase", category: "PURCHASE", primary: true },
+          { name: "Qualified lead", category: "SUBMIT_LEAD_FORM", primary: false },
+        ],
+        issues: ["A page-view action is primary."],
+        refreshToken: "must-not-cross-the-client-boundary",
+        sourceSession: { customerId: "123" },
+      },
+    } as unknown as GadsReportSnapshot;
+
+    const opened = openReportSnapshot(sealReportSnapshot(expanded));
+    expect(opened).not.toBeNull();
+    expect(trackingObservationFromSnapshot(opened!)).toEqual({
+      status: "OBSERVED",
+      observedAt: "2026-09-09T08:00:00.000Z",
+      actions: [
+        { name: "Purchase", category: "PURCHASE", primary: true },
+        { name: "Qualified lead", category: "SUBMIT_LEAD_FORM", primary: false },
+      ],
+      issues: ["A page-view action is primary."],
+    });
+    expect(trackingObservationFromSnapshot(opened!)).not.toHaveProperty("refreshToken");
+    expect(trackingObservationFromSnapshot(opened!)).not.toHaveProperty("sourceSession");
+
+    const unavailable = { ...snapshot, tracking: { status: "UNAVAILABLE" as const } };
+    expect(openReportSnapshot(sealReportSnapshot(unavailable))).toEqual(unavailable);
+    expect(trackingObservationFromSnapshot(unavailable)).toEqual({ status: "UNAVAILABLE" });
+
+    const legacy = { ...snapshot };
+    expect(openReportSnapshot(sealReportSnapshot(legacy))).toEqual(legacy);
+    expect(trackingObservationFromSnapshot(legacy)).toBeUndefined();
   });
 
   it("round-trips complete account traffic and product reporting rows", () => {

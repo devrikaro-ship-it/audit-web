@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import { listPortalReports } from "@/lib/gads-leads";
-import { openReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
+import {
+  openReportSnapshot,
+  trackingObservationFromSnapshot,
+  type GadsReportSnapshot,
+} from "@/lib/gads-report-delivery";
 import { readStoredReportSnapshot } from "@/lib/gads-report-snapshot";
 import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
 import ReportingDashboard from "@/app/google-ads/raport/ReportingDashboard";
@@ -101,6 +105,7 @@ export default async function ClientReportPortal({ params, searchParams }: { par
       <ReportingDashboard
         report={report}
         sourceSnapshot={beforeAfterSourceFromSnapshot(selected.snapshot)}
+        tracking={trackingObservationFromSnapshot(selected.snapshot)}
         periodSelector={{
           action: `/google-ads/portal/${encodeURIComponent(token)}`,
           selected: selected.lead.reportId!,

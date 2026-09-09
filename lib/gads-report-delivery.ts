@@ -10,6 +10,20 @@ import type {
 } from "@/lib/gads-report-metrics";
 import { comparisonRanges, type ReportDateRange } from "@/lib/gads-report-periods";
 import { validateCurrencyCode } from "@/lib/gads-session";
+import type { TrackingState } from "@/lib/gads-tracking";
+
+export type TrackingObservation =
+  | {
+      status: "OBSERVED";
+      observedAt: string;
+      actions: {
+        name: string;
+        category: string;
+        primary: boolean;
+      }[];
+      issues: string[];
+    }
+  | { status: "UNAVAILABLE" };
 
 export type DeliveryProduct = {
   productId: string;
@@ -63,7 +77,42 @@ export type GadsReportSnapshot = {
   productAnalysis?: ProductAnalysis;
   reportProducts?: ReportProductInput[];
   reportV2?: GadsReportSnapshotV2;
+  tracking?: TrackingObservation;
 };
+
+export function trackingObservationFromState(
+  state: TrackingState,
+  observedAt: string,
+): TrackingObservation {
+  return {
+    status: "OBSERVED",
+    observedAt,
+    actions: state.conversions.map(({ name, category, primary }) => ({
+      name,
+      category,
+      primary,
+    })),
+    issues: [...state.reasons],
+  };
+}
+
+export function trackingObservationFromSnapshot(
+  snapshot: GadsReportSnapshot,
+): TrackingObservation | undefined {
+  const observation = snapshot.tracking;
+  if (!observation) return undefined;
+  if (observation.status === "UNAVAILABLE") return { status: "UNAVAILABLE" };
+  return {
+    status: "OBSERVED",
+    observedAt: observation.observedAt,
+    actions: observation.actions.map(({ name, category, primary }) => ({
+      name,
+      category,
+      primary,
+    })),
+    issues: [...observation.issues],
+  };
+}
 
 export function normalizeReportProductsToPeriod(products: ReportProductInput[], periodCount: number): ReportProductInput[] {
   if (!Number.isFinite(periodCount) || periodCount <= 0) throw new Error("periodCount must be positive");
@@ -116,6 +165,7 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
   const generatedAtValid = item.generatedAt === undefined || (typeof item.generatedAt === "string" && Number.isFinite(Date.parse(item.generatedAt)));
   const evidenceMonthsValid = item.evidenceMonths === undefined || (typeof item.evidenceMonths === "number" && Number.isInteger(item.evidenceMonths) && item.evidenceMonths > 0);
   const reportV2Valid = item.reportV2 === undefined || validReportV2(item.reportV2);
+  const trackingValid = item.tracking === undefined || validTrackingObservation(item.tracking);
   return (
     typeof item.website === "string" &&
     typeof item.accountName === "string" &&
@@ -124,8 +174,36 @@ function validSnapshot(value: unknown): value is GadsReportSnapshot {
     Array.isArray(item.losses) && item.losses.length <= 20 &&
     Array.isArray(item.opportunities) && item.opportunities.length <= 20 &&
     campaignsValid &&
-    productAnalysisValid && reportProductsValid && generatedAtValid && evidenceMonthsValid && reportV2Valid
+    productAnalysisValid && reportProductsValid && generatedAtValid && evidenceMonthsValid && reportV2Valid && trackingValid
   );
+}
+
+const boundedText = (value: unknown, maximumLength: number): value is string =>
+  typeof value === "string" && value.length > 0 && value.length <= maximumLength;
+
+function validTrackingObservation(value: unknown): value is TrackingObservation {
+  if (!value || typeof value !== "object") return false;
+  const observation = value as {
+    status?: unknown;
+    observedAt?: unknown;
+    actions?: unknown;
+    issues?: unknown;
+  };
+  if (observation.status === "UNAVAILABLE") return true;
+  if (observation.status !== "OBSERVED") return false;
+  if (!boundedText(observation.observedAt, 64) || !Number.isFinite(Date.parse(observation.observedAt))) {
+    return false;
+  }
+  if (!Array.isArray(observation.actions) || observation.actions.length > 500) return false;
+  if (!observation.actions.every((action) => (
+    action
+    && boundedText(action.name, 500)
+    && boundedText(action.category, 100)
+    && typeof action.primary === "boolean"
+  ))) return false;
+  return Array.isArray(observation.issues)
+    && observation.issues.length <= 500
+    && observation.issues.every((issue) => boundedText(issue, 1_000));
 }
 
 const V2_PRODUCT_LABELS = new Set<V2ProductLabel>([

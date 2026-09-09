@@ -125,7 +125,7 @@ it("adds accessible report tabs and compares the existing model over one explici
   const tablist = screen.getByRole("tablist", { name: "Report views" });
   const tabs = within(tablist).getAllByRole("tab");
 
-  expect(tabs.map((tab) => tab.textContent)).toEqual(["Products", "Before & after"]);
+  expect(tabs.map((tab) => tab.textContent)).toEqual(["Products", "Before & after", "Tracking"]);
   expect(tabs[0].getAttribute("aria-selected")).toBe("true");
   expect(container.querySelectorAll("[data-report-section]")).toHaveLength(5);
 
@@ -133,6 +133,12 @@ it("adds accessible report tabs and compares the existing model over one explici
   fireEvent.keyDown(tabs[0], { key: "ArrowRight" });
   expect(tabs[1].getAttribute("aria-selected")).toBe("true");
   expect(document.activeElement).toBe(tabs[1]);
+
+  fireEvent.keyDown(tabs[1], { key: "End" });
+  expect(tabs[2].getAttribute("aria-selected")).toBe("true");
+  expect(document.activeElement).toBe(tabs[2]);
+  fireEvent.keyDown(tabs[2], { key: "Home" });
+  fireEvent.keyDown(tabs[0], { key: "ArrowRight" });
 
   const panel = screen.getByRole("tabpanel", { name: "Before & after" });
   expect(within(panel).getByText("Monthly equivalent")).toBeTruthy();
@@ -158,6 +164,62 @@ it("adds accessible report tabs and compares the existing model over one explici
   fireEvent.change(budget, { target: { value: "60" } });
   expect(within(table).getAllByRole("row")[2].textContent).toContain("60 EUR");
   expect(panel.textContent).not.toMatch(/NaN|Infinity/);
+});
+
+it("renders the saved tracking observation as escaped text with its original roles and timestamp", () => {
+  const { container } = render(
+    <ReportingDashboard
+      report={createReport()}
+      tracking={{
+        status: "OBSERVED",
+        observedAt: "2026-09-09T08:00:00.000Z",
+        actions: [
+          { name: "Purchase", category: "PURCHASE", primary: true },
+          { name: '<img src="x" onerror="alert(1)">', category: "SUBMIT_LEAD_FORM", primary: false },
+        ],
+        issues: ["A page-view action is primary.", "<script>alert(1)</script>"],
+      }}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("tab", { name: "Tracking" }));
+  const panel = screen.getByRole("tabpanel", { name: "Tracking" });
+  expect(within(panel).getByText("Configuration observed")).toBeTruthy();
+  expect(panel.querySelector("time")?.getAttribute("datetime")).toBe("2026-09-09T08:00:00.000Z");
+  expect(within(panel).getByRole("row", { name: /Purchase PURCHASE Primary/ })).toBeTruthy();
+  expect(within(panel).getByRole("row", { name: /SUBMIT_LEAD_FORM Secondary/ })).toBeTruthy();
+  expect(within(panel).getByText('<img src="x" onerror="alert(1)">')).toBeTruthy();
+  expect(within(panel).getByText("<script>alert(1)</script>")).toBeTruthy();
+  expect(container.querySelector('img[src="x"]')).toBeNull();
+  expect(container.querySelector("script")).toBeNull();
+  expect(within(panel).getByText(/does not verify tag firing, consent, Enhanced Conversions/)).toBeTruthy();
+  expect(panel.textContent).not.toMatch(/tracking (?:is )?healthy|passed end-to-end/i);
+});
+
+it("distinguishes an unavailable collection from a successful empty configuration observation", () => {
+  const unavailable = render(<ReportingDashboard report={createReport()} tracking={{ status: "UNAVAILABLE" }} />);
+  fireEvent.click(screen.getByRole("tab", { name: "Tracking" }));
+  expect(screen.getByRole("tabpanel", { name: "Tracking" }).textContent).toContain(
+    "No conversion-configuration observation is available",
+  );
+  unavailable.unmount();
+
+  render(
+    <ReportingDashboard
+      report={createReport()}
+      tracking={{
+        status: "OBSERVED",
+        observedAt: "2026-09-09T08:00:00.000Z",
+        actions: [],
+        issues: ["No active conversion action was observed."],
+      }}
+    />,
+  );
+  fireEvent.click(screen.getByRole("tab", { name: "Tracking" }));
+  const observed = screen.getByRole("tabpanel", { name: "Tracking" });
+  expect(within(observed).getByText("Configuration observed")).toBeTruthy();
+  expect(within(observed).getByText("No enabled conversion actions were observed.")).toBeTruthy();
+  expect(within(observed).getByText("No active conversion action was observed.")).toBeTruthy();
 });
 
 it("keeps the before-and-after surface honest when source inputs are missing or nonfinite", () => {
