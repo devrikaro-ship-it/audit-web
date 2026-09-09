@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "role": "implementer",
+  "revision": "9aee64cd19fd9c6c7006b7dc2092912513ea2001",
+  "base_revision": "623e29788047456518b23b006eeb688008aa1213",
+  "plan_sha256": "66fe15d280d75b3f464627e3c5b4aa37d81e0f70326c88cc2a23169b72a998a3",
+  "outcome": "COMMANDS_SUCCEEDED",
+  "checks": [
+    {
+      "id": "focused_tests",
+      "result": "7 files passed; 107 tests passed"
+    },
+    {
+      "id": "typecheck",
+      "result": "passed"
+    },
+    {
+      "id": "lint_changed",
+      "result": "passed"
+    },
+    {
+      "id": "recovery_cli",
+      "result": "passed and printed the guarded source-preserving recovery invocation"
+    }
+  ],
+  "invariants": [
+    "The closed public output graph is back to its frozen fifty-four-file inventory.",
+    "The public inventory test and manifest are unchanged.",
+    "Every frozen authentication, snapshot calculation, delivery, session, and email path is unchanged.",
+    "Root-owned documentation changes remain untouched."
+  ]
+}

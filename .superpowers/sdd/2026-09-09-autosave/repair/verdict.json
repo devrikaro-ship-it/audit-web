@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "role": "implementer",
+  "outcome": "READY_FOR_REVIEW",
+  "implementation_revision": "9aee64cd19fd9c6c7006b7dc2092912513ea2001",
+  "base_revision": "623e29788047456518b23b006eeb688008aa1213",
+  "observable_result": [
+    "Generated reports retain deterministic persistence, exact protected manager links, idempotent retry identity, and optional in-place contact enrichment.",
+    "The public output graph no longer gains an extra runtime node because the lifecycle behavior is owned by the existing gads-pending-report module.",
+    "Invalid, crossed, tampered, or noncanonical snapshots remain refused.",
+    "The manager directory now states that generated reports appear automatically and contact details are optional."
+  ],
+  "red_evidence": [
+    "At revision 53e5831458f7a0464bb262bb3fa9e236254f1c46, the bounded focused run passed 105 tests and failed the two intended graph and copy controls."
+  ],
+  "green_evidence": [
+    "At implementation revision 9aee64cd19fd9c6c7006b7dc2092912513ea2001, the bounded focused run passed 107 of 107 tests in 7 files.",
+    "The bounded TypeScript, changed-file ESLint, and executable recovery CLI checks passed."
+  ],
+  "frozen_paths": {
+    "changed": [],
+    "verified_against_base": [
+      "lib/dashboard-session.ts",
+      "proxy.ts",
+      "lib/gads-report-delivery.ts",
+      "lib/gads-session.ts",
+      "lib/gads-report-email.ts"
+    ]
+  },
+  "public_graph_contract": {
+    "inventory_files": 54,
+    "test_changed": false,
+    "manifest_changed": false
+  },
+  "remaining_risks": [
+    "The root role still owns the full release suite and frontend build, independent review, publication, production recovery, protected authentication check, and exact live report verification."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "role": "implementer",
+  "revision": "53e5831458f7a0464bb262bb3fa9e236254f1c46",
+  "base_revision": "623e29788047456518b23b006eeb688008aa1213",
+  "plan_sha256": "4c0c6ca009b53615eaba7cc9f0a44f805cf2e2aa05063f33c99b1157d7ac7c12",
+  "outcome": "EXPECTED_FAILURE",
+  "evidence": [
+    "The bounded focused run passed 105 tests and failed exactly two negative controls.",
+    "The closed public output graph rejected lib/gads-generated-report.ts as the fifty-fifth reachable runtime file against the frozen fifty-four-file inventory.",
+    "The dashboard page test rejected the obsolete form-dependent manager copy."
+  ]
+}

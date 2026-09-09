@@ -6,7 +6,7 @@
   "objective": "Repair the closed public output graph regression without changing generated report persistence behavior, and correct the manager admission copy.",
   "repo_root": "/Users/VladMoloso/seo-audit",
   "branch": "feature/launch-english",
-  "revision": "623e29788047456518b23b006eeb688008aa1213",
+  "revision": "9aee64cd19fd9c6c7006b7dc2092912513ea2001",
   "environment": "local repair candidate for deployed:https://audit.devrika.io",
   "acceptance_criteria": [
     "The public output inventory returns to its existing closed 54-file graph without changing the inventory test or manifest.",
@@ -16,32 +16,54 @@
   "completed": [
     "Read the repair contract, brief, implementation verdict, release receipt, task binding, project documentation, and applicable skill instructions.",
     "Rechecked repository revision and preserved root-owned documentation changes.",
-    "Confirmed that the separate gads-generated-report runtime module is the only added public graph node and that ManagerTable owns the outdated empty-state sentence."
+    "Witnessed the closed-graph and manager-copy negative controls fail before the repair.",
+    "Moved generated report identity, persistence, and recovery into the existing pending-report lifecycle owner and deleted the additional runtime module.",
+    "Updated all known runtime, test, and CLI imports and corrected the manager admission copy.",
+    "Passed 107 focused tests, TypeScript, changed-file ESLint, and the executable recovery CLI at revision 9aee64cd19fd9c6c7006b7dc2092912513ea2001.",
+    "Verified that frozen paths and the public graph inventory test and manifest are unchanged from repair base 623e29788047456518b23b006eeb688008aa1213."
   ],
   "findings": [
     "The release suite passed 597 tests and failed only because public reachability grew from 54 to 55 files.",
     "Generated report identity, persistence, and recovery belong to the existing gads-pending-report lifecycle module.",
-    "The existing page test can verify the new empty-state copy without changing the out-of-perimeter ManagerTable test."
+    "The existing dashboard page test verifies the new empty-state copy without modifying the out-of-perimeter ManagerTable test."
   ],
   "decisions": [
-    "Move the generated report lifecycle exports into gads-pending-report and delete the redundant runtime module.",
-    "Keep the focused generated-report test file but import the behavior from gads-pending-report.",
-    "Use the witnessed release-suite failure as the graph RED control and add a focused manager-copy RED assertion before production edits."
+    "Restore the closed graph by removing the redundant runtime node rather than weakening the inventory contract.",
+    "Keep the focused generated-report test file while importing behavior from gads-pending-report.",
+    "Preserve every persistence, consent, identity, and recovery guard unchanged while relocating its owner."
   ],
   "files": [
-    ".superpowers/sdd/2026-09-09-autosave/repair/checkpoint-payload.json"
+    ".superpowers/sdd/2026-09-09-autosave/implementation/checks.json",
+    ".superpowers/sdd/2026-09-09-autosave/repair",
+    "app/dashboard/google-ads/ManagerTable.tsx",
+    "app/dashboard/google-ads/page.test.tsx",
+    "app/google-ads/raport/actions.test.tsx",
+    "app/google-ads/raport/page.test.tsx",
+    "app/google-ads/raport/page.tsx",
+    "lib/gads-generated-report.test.ts",
+    "lib/gads-generated-report.ts",
+    "lib/gads-pending-report.ts",
+    "scripts/recover-generated-report.ts"
   ],
   "commands": [
     {
-      "command": "recommend_model.py critical",
-      "result": "gpt-5.6-sol, reasoning xhigh, live catalog"
+      "command": "run_bounded_command.py planned focused_tests",
+      "result": "7 files passed; 107 tests passed"
     },
     {
-      "command": "release-suite.txt inspection",
-      "result": "597 passed, 1 graph inventory failure"
+      "command": "run_bounded_command.py planned typecheck",
+      "result": "passed"
+    },
+    {
+      "command": "run_bounded_command.py planned lint_changed",
+      "result": "passed"
+    },
+    {
+      "command": "run_bounded_command.py planned recovery_cli",
+      "result": "passed and printed the guarded invocation"
     }
   ],
   "blockers": [],
-  "working_tree": "Root-owned docs/dev changes remain untouched.",
-  "next_action": "Add and witness the manager-copy RED assertion through a bounded declared targeted check."
+  "working_tree": "Only root-owned docs/dev changes remain outside the repair artifact set.",
+  "next_action": "Commit the repair evidence, rerun the declared targeted checks on the exact artifact revision, close this checkpoint, and return the revision for independent review."
 }
