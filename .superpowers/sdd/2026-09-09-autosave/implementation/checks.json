@@ -43,6 +43,8 @@
     "recovery_cli": {
       "profile": "targeted_tests",
       "command": [
+        "/usr/bin/env",
+        "JITI_ALIAS={\"@\":\"/Users/VladMoloso/seo-audit\"}",
         "./node_modules/.bin/jiti",
         "scripts/recover-generated-report.ts",
         "--help"
