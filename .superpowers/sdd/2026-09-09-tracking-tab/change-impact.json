@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "tracking_tests": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-tracking.test.ts",
+        "lib/gads-report-delivery.test.ts",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/raport/page.test.tsx",
+        "app/dashboard/google-ads/reports/[id]/page.test.tsx",
+        "app/google-ads/portal/[token]/page.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "tracking_types": {
+      "profile": "targeted_tests",
+      "command": ["npx", "tsc", "--noEmit", "--incremental", "false"],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "tracking_lint": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "eslint",
+        "lib/gads-tracking.ts",
+        "lib/gads-tracking.test.ts",
+        "lib/gads-report-delivery.ts",
+        "lib/gads-report-delivery.test.ts",
+        "app/google-ads/raport/ReportingDashboard.tsx",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/raport/page.tsx",
+        "app/google-ads/raport/page.test.tsx",
+        "app/dashboard/google-ads/reports/[id]/page.tsx",
+        "app/dashboard/google-ads/reports/[id]/page.test.tsx",
+        "app/google-ads/portal/[token]/page.tsx",
+        "app/google-ads/portal/[token]/page.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 2
+    }
+  },
+  "rules": [
+    {
+      "id": "tracking-runtime-and-consumers",
+      "patterns": [
+        "lib/gads-tracking.ts",
+        "lib/gads-report-delivery.ts",
+        "app/google-ads/raport/**/*.tsx",
+        "app/dashboard/google-ads/reports/**/*.tsx",
+        "app/google-ads/portal/**/*.tsx"
+      ],
+      "statuses": ["A", "M"],
+      "category": "runtime",
+      "risk": "fast",
+      "checks": ["tracking_tests", "tracking_types", "tracking_lint"]
+    },
+    {
+      "id": "tracking-focused-tests",
+      "patterns": [
+        "lib/gads-tracking.test.ts",
+        "lib/gads-report-delivery.test.ts"
+      ],
+      "statuses": ["A", "M"],
+      "category": "test",
+      "risk": "fast",
+      "checks": ["tracking_tests"]
+    },
+    {
+      "id": "tracking-delivery-governance",
+      "patterns": [
+        ".superpowers/sdd/2026-09-09-tracking-tab/change-impact.json"
+      ],
+      "statuses": ["A", "M"],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": ["tracking_tests"]
+    }
+  ]
+}
