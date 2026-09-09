@@ -32,7 +32,7 @@ function fixtureSnapshot(revenue = 600): GadsReportSnapshot {
 
 async function record(id: string, customerId: string, createdAt: number, revenue: number, active?: boolean): Promise<GadsLead> {
   const { sealReportSnapshot } = await import("@/lib/gads-report-delivery");
-  const snapshotPath = path.join(directory, "reports", `${id}.snapshot`);
+  const snapshotPath = path.join(directory, "reports", `report-${id}.snapshot`);
   await writeFile(snapshotPath, sealReportSnapshot(fixtureSnapshot(revenue)));
   return { id, customerId, createdAt, nume: `Owner ${id}`, email: "same-owner@example.test", telefon: "123456789", customerName: `Store ${customerId}`, reportId: `report-${id}`, snapshotPath, reportToken: "private-report-token", portalToken: "private-portal-token", serviceReportsEnabled: active, breakEvenRoas: 100 };
 }
@@ -136,4 +136,22 @@ it("opens the exact account-scoped history and refuses cross-account, unknown, u
   await writeFile(ledger, "invalid-json");
   access.allowed = false;
   await expect(open("latest")).rejects.toThrow("NOT_FOUND");
+});
+
+it("refuses another report's valid signed file when its ledger path is cross-linked", async () => {
+  const first = await record("first", "1111111111", 300, 300);
+  const second = await record("second", "2222222222", 200, 900);
+  const Page = (await import("./reports/[id]/page")).default;
+  const open = () => Page({ params: Promise.resolve({ id: "first" }), searchParams: Promise.resolve({}) });
+  await writeFile(ledger, JSON.stringify([first, second]));
+  expect(parse(renderToStaticMarkup(await open())).querySelector(".targetTile strong")?.textContent).toBe("3×");
+  await writeFile(ledger, JSON.stringify([{ ...first, snapshotPath: second.snapshotPath }, second]));
+  const html = renderToStaticMarkup(await open());
+  expect(html).toContain("Report unavailable");
+  expect(parse(html).querySelector(".targetTile")).toBeNull();
+  const Directory = (await import("./page")).default;
+  const rows = Array.from(parse(renderToStaticMarkup(await Directory())).querySelectorAll("tbody tr"));
+  expect(rows[0].textContent).toContain("Unavailable");
+  expect(rows[0].textContent).not.toContain("9.00×");
+  expect(rows[1].textContent).toContain("9.00×");
 });
