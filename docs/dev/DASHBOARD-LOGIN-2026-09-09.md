@@ -23,3 +23,15 @@ Production origin validation and redirects use the existing PUBLIC_URL configura
 ## Acceptance
 
 Verify a real production login page, valid login and session access, direct-link return, refresh, logout and replay refusal. Invalid credentials, forged/expired sessions, cross-origin POST, external return paths and missing configuration must not grant access; each guard has a passing counterpart. Use synthetic credentials only for local browser controls. Production verification uses configured credentials exclusively inside the server process and emits sanitized outcomes. Preserve existing manager grouping/report access and public reporting. Independent exact revision review and production verification are required before completion.
+
+## Published result
+
+Application revision `2ce626f8599d59eeb3ec0807cb11944a432bd927` was published at `https://audit.devrika.io/dashboard/login` through deployment `dzdv250zbyupw9btewzs1qj3`, completed on September 9, 2026 at 08:20:56 UTC. Existing credentials and application configuration were unchanged; no database migration was required.
+
+The exact candidate passed 21 focused tests, all 591 repository tests, type checking, lint and the production build. Independent repair review passed with no remaining contract findings. Witnessed failing controls cover the security guards, including invalid explicit Authorization combined with a valid session.
+
+The root's actual production HTTPS observation confirmed login, internal return, authenticated refresh, protected manager access, logout and refusal of the revoked session. Invalid credentials, forged sessions, conflicting Authorization and cross-site requests were refused. Existing valid Basic access and public reporting remained available. The client ledger was unchanged and the temporary verification session was removed. Post-deployment logs included successful startup and no new error matches.
+
+An actual Chrome visit confirmed the production login form renders. The browser's successful credential-entry flow used an isolated local application with synthetic credentials; production credential validation was exercised inside the running server over HTTPS, without exposing credentials or cookies. Evidence is retained under `.superpowers/sdd/2026-09-09-login/`: `live-receipt.json`, `live-browser-receipt.json`, `live-login.png`, `local-browser-receipt.json`, `repair-review/verdict.json` and the `repair-*` check receipts.
+
+Independent production verification passed on September 9 at 08:37:14 UTC with no findings, recorded in `verification/verdict.json`. Its separate live matrices additionally planted an expired verifier-owned session and an external return URL: both were refused, all owned session files were removed, and the client ledger remained byte-identical. The live manager currently has zero registered saved accounts; production therefore proves the actual empty state, while the retained manager tests cover populated behavior. No clients were seeded for verification.
