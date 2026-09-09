@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "focused_tests": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "lib/gads-product-simulation.test.ts",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/raport/page.test.tsx",
+        "app/dashboard/google-ads/reports/[id]/page.test.tsx",
+        "app/google-ads/portal/[token]/page.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 5
+    },
+    "typecheck": {
+      "profile": "targeted_tests",
+      "command": ["npx", "tsc", "--noEmit", "--incremental", "false", "--pretty", "false"],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "lint_changed": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "eslint",
+        "lib/gads-product-simulation.ts",
+        "lib/gads-product-simulation.test.ts",
+        "app/google-ads/raport/ReportingDashboard.tsx",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/raport/page.tsx",
+        "app/dashboard/google-ads/reports/[id]/page.tsx",
+        "app/dashboard/google-ads/reports/[id]/page.test.tsx",
+        "app/google-ads/portal/[token]/page.tsx",
+        "app/google-ads/portal/[token]/page.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    }
+  },
+  "rules": [
+    {
+      "id": "report_before_after_surface",
+      "patterns": [
+        "app/google-ads/raport/**",
+        "app/dashboard/google-ads/reports/**",
+        "app/google-ads/portal/**",
+        "lib/gads-product-simulation.ts",
+        "lib/gads-product-simulation.test.ts"
+      ],
+      "statuses": ["A", "M"],
+      "category": "frontend",
+      "risk": "guarded",
+      "checks": ["focused_tests", "typecheck", "lint_changed"]
+    },
+    {
+      "id": "implementation_artifacts",
+      "patterns": [".superpowers/sdd/2026-09-09-report-tabs/implementation/**"],
+      "statuses": ["A", "M"],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": [],
+      "allow_no_checks": true
+    }
+  ]
+}

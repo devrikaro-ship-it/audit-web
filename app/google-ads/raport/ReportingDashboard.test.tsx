@@ -7,6 +7,7 @@ import {
   type GoogleAdsReportV2ViewModel,
   type ReportProductInputV2,
 } from "@/lib/gads-report-metrics";
+import { analyzeProducts } from "@/lib/gads-product-simulation";
 import ReportingDashboard from "./ReportingDashboard";
 
 afterEach(cleanup);
@@ -83,6 +84,110 @@ const reportInput = (
 const createReport = (
   overrides: Partial<GoogleAdsReportV2Input> = {},
 ): GoogleAdsReportV2ViewModel => buildGoogleAdsReportV2(reportInput(overrides));
+
+const sourceSnapshot = {
+  currencyCode: "EUR",
+  evidenceMonths: 12,
+  minimumRoasTarget: 5,
+  maximumCpaTarget: 75,
+  current: {
+    spend: 120,
+    revenue: 300,
+    orders: 10 / 12,
+    cpa: 144,
+    roas: 2.5,
+  },
+  optimized: {
+    spend: 120,
+    revenue: 1_255,
+    orders: 4.18,
+    cpa: 28.71,
+    roas: 10.46,
+  },
+  productAnalysis: analyzeProducts([
+    product("monthly-loss", "LOSS_MAKER", {
+      cost: 1_200,
+      conversionValue: 1_200,
+      conversions: 2,
+    }),
+    product("monthly-opportunity", "UNDERPROMOTED_POTENTIAL", {
+      cost: 240,
+      conversionValue: 2_400,
+      conversions: 8,
+    }),
+  ], { breakEvenRoas: 5, months: 12 }),
+};
+
+it("adds accessible report tabs and compares the existing model over one explicit monthly period", () => {
+  const { container } = render(
+    <ReportingDashboard report={createReport()} sourceSnapshot={sourceSnapshot} />,
+  );
+  const tablist = screen.getByRole("tablist", { name: "Report views" });
+  const tabs = within(tablist).getAllByRole("tab");
+
+  expect(tabs.map((tab) => tab.textContent)).toEqual(["Products", "Before & after"]);
+  expect(tabs[0].getAttribute("aria-selected")).toBe("true");
+  expect(container.querySelectorAll("[data-report-section]")).toHaveLength(5);
+
+  tabs[0].focus();
+  fireEvent.keyDown(tabs[0], { key: "ArrowRight" });
+  expect(tabs[1].getAttribute("aria-selected")).toBe("true");
+  expect(document.activeElement).toBe(tabs[1]);
+
+  const panel = screen.getByRole("tabpanel", { name: "Before & after" });
+  expect(within(panel).getByText("Monthly equivalent")).toBeTruthy();
+  expect(within(panel).getByText(/12 months of evidence/i)).toBeTruthy();
+  const table = within(panel).getByRole("table", { name: "Before and after comparison" });
+  expect(within(table).getAllByRole("columnheader").map((header) => header.textContent)).toEqual([
+    "Scenario",
+    "Budget",
+    "Sales",
+    "Orders",
+    "CPA",
+    "ROAS",
+    "Target-based profit / loss",
+  ]);
+  expect(within(table).getAllByRole("row")[1].textContent).toContain("120 EUR");
+  expect(within(table).getAllByRole("row")[1].textContent).toContain("Loss");
+  expect(within(table).getAllByRole("row")[2].textContent).toContain("Profit");
+  expect(within(panel).getByText(/Minimum ROAS target: 5×/)).toBeTruthy();
+  expect(within(panel).getByText(/Maximum CPA target: 75 EUR/)).toBeTruthy();
+  expect(within(panel).getByText(/20% CSS CPC reduction/)).toBeTruthy();
+
+  const budget = within(panel).getByRole("slider", { name: "Simulated monthly budget" });
+  fireEvent.change(budget, { target: { value: "60" } });
+  expect(within(table).getAllByRole("row")[2].textContent).toContain("60 EUR");
+  expect(panel.textContent).not.toMatch(/NaN|Infinity/);
+});
+
+it("keeps the before-and-after surface honest when source inputs are missing or nonfinite", () => {
+  render(
+    <ReportingDashboard
+      report={createReport()}
+      sourceSnapshot={{
+        currencyCode: undefined,
+        evidenceMonths: undefined,
+        minimumRoasTarget: null,
+        maximumCpaTarget: null,
+        current: {
+          spend: Number.NaN,
+          revenue: Number.POSITIVE_INFINITY,
+          orders: Number.NaN,
+          cpa: null,
+          roas: Number.NaN,
+        },
+      }}
+    />,
+  );
+  fireEvent.click(screen.getByRole("tab", { name: "Before & after" }));
+  const panel = screen.getByRole("tabpanel", { name: "Before & after" });
+  const table = within(panel).getByRole("table", { name: "Before and after comparison" });
+
+  expect(within(panel).getByText("Evidence window unavailable")).toBeTruthy();
+  expect(within(table).getAllByText("Unavailable").length).toBeGreaterThanOrEqual(12);
+  expect(within(panel).queryByRole("slider")).toBeNull();
+  expect(panel.textContent).not.toMatch(/NaN|Infinity|RON|EUR/);
+});
 
 it("renders the approved five-section English hierarchy from supplied V2 values", () => {
   const report = createReport();
@@ -169,11 +274,11 @@ it("opens loss by default and supports pointer plus complete keyboard tab naviga
   expect(tabs[0].getAttribute("aria-selected")).toBe("true");
   expect(tabs[0].getAttribute("tabindex")).toBe("0");
   expect(tabs[0].getAttribute("aria-controls")).toBe("product-panel-loss-maker");
-  expect(screen.getByRole("tabpanel").id).toBe("product-panel-loss-maker");
+  expect(screen.getByRole("tabpanel", { name: /Consumes budget/ }).id).toBe("product-panel-loss-maker");
 
   fireEvent.click(tabs[1]);
   expect(tabs[1].getAttribute("aria-selected")).toBe("true");
-  expect(screen.getByRole("tabpanel").id).toBe("product-panel-not-promoted");
+  expect(screen.getByRole("tabpanel", { name: /Underpromoted/ }).id).toBe("product-panel-not-promoted");
 
   tabs[1].focus();
   fireEvent.keyDown(tabs[1], { key: "ArrowRight" });
@@ -209,10 +314,11 @@ it("shows each product once across four complete nine-column action tables", () 
     "ROAS",
   ];
 
-  for (const tab of screen.getAllByRole("tab")) {
+  for (const tab of within(screen.getByRole("tablist", { name: "Product actions" })).getAllByRole("tab")) {
     fireEvent.click(tab);
-    const panel = screen.getByRole("tabpanel");
-    const table = within(panel).getByRole("table", { name: /Products:/ });
+    const panel = document.getElementById(tab.getAttribute("aria-controls") ?? "");
+    expect(panel).toBeTruthy();
+    const table = within(panel as HTMLElement).getByRole("table", { name: /Products:/ });
     const headers = within(table).getAllByRole("columnheader");
     expect(headers).toHaveLength(9);
     expect(headers.slice(0, 8).map((header) => header.textContent)).toEqual(expectedHeaders);
@@ -264,7 +370,7 @@ it("reconciles every conclusion with its tab and labels measured, simulated, par
 
   expect(screen.getAllByText(/partial data/i).length).toBeGreaterThan(0);
   fireEvent.click(screen.getByRole("tab", { name: /Have potential/ }));
-  const opportunityPanel = screen.getByRole("tabpanel");
+  const opportunityPanel = screen.getByRole("tabpanel", { name: /Have potential/ });
   expect(within(opportunityPanel).getByText("Simulation")).toBeTruthy();
   expect(within(opportunityPanel).getByText(/not a guarantee/i)).toBeTruthy();
   expect(within(opportunityPanel).getByText(/clicks per sale/i)).toBeTruthy();
@@ -310,7 +416,7 @@ it("renders honest empty and zero-denominator states without removing any tab or
   });
   render(<ReportingDashboard report={report} />);
 
-  expect(screen.getAllByRole("tab")).toHaveLength(4);
+  expect(within(screen.getByRole("tablist", { name: "Product actions" })).getAllByRole("tab")).toHaveLength(4);
   expect(screen.getAllByText("Unavailable").length).toBeGreaterThan(0);
   expect(screen.getByText(/no valid product/i)).toBeTruthy();
   expect(screen.getByRole("table", { name: /Products:/ })).toBeTruthy();
@@ -368,11 +474,11 @@ it("labels unavailable group claims and meaningful benchmarks as unavailable ins
 
   fireEvent.click(screen.getByRole("tab", { name: /Underpromoted/ }));
   expect(
-    within(screen.getByRole("tabpanel")).getByText("Account average: Unavailable"),
+    within(screen.getByRole("tabpanel", { name: /Underpromoted/ })).getByText("Account average: Unavailable"),
   ).toBeTruthy();
   fireEvent.click(screen.getByRole("tab", { name: /Have potential/ }));
   expect(
-    within(screen.getByRole("tabpanel")).getByText("Account average: Unavailable"),
+    within(screen.getByRole("tabpanel", { name: /Have potential/ })).getByText("Account average: Unavailable"),
   ).toBeTruthy();
 
   const selectedPeriodRow = within(
@@ -417,7 +523,7 @@ it("obeys hand-built target presentation states and authoritative quarantined to
   expect(within(notPromotedTab).getByText("7 unavailable")).toBeTruthy();
   fireEvent.click(notPromotedTab);
   expect(
-    within(screen.getByRole("tabpanel")).getByText(
+    within(screen.getByRole("tabpanel", { name: /Underpromoted/ })).getByText(
       "7 products with unavailable classification",
     ),
   ).toBeTruthy();
