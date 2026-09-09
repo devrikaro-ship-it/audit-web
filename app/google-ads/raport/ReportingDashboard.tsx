@@ -12,6 +12,14 @@ import type {
   TargetPresentationStatus,
   V2ProductLabel,
 } from "@/lib/gads-report-metrics";
+import {
+  CSS_CPC_REDUCTION_PCT,
+  DIMINISHING_RETURN_RATE,
+  isUsableProductAnalysis,
+  simulateOptimizedBudget,
+  type BeforeAfterReportSource,
+  type BeforeAfterTotals,
+} from "@/lib/gads-product-simulation";
 
 export type PeriodSelector = {
   action: string;
@@ -21,9 +29,17 @@ export type PeriodSelector = {
 
 type ReportingDashboardProps = {
   report: GoogleAdsReportV2ViewModel;
+  sourceSnapshot?: BeforeAfterReportSource;
   periodSelector?: PeriodSelector;
   demo?: boolean;
 };
+
+type ReportView = "products" | "before-after";
+
+const REPORT_VIEWS: { key: ReportView; label: string }[] = [
+  { key: "products", label: "Products" },
+  { key: "before-after", label: "Before & after" },
+];
 
 type GroupPresentation = {
   tabLabel: string;
@@ -143,9 +159,12 @@ const groupDomId = (key: V2ProductLabel): string =>
 
 export default function ReportingDashboard({
   report,
+  sourceSnapshot,
   periodSelector,
   demo = false,
 }: ReportingDashboardProps): ReactElement {
+  const [activeReportView, setActiveReportView] =
+    useState<ReportView>("products");
   const [activeGroupKey, setActiveGroupKey] =
     useState<V2ProductLabel>("LOSS_MAKER");
   const activeGroup =
@@ -176,6 +195,29 @@ export default function ReportingDashboard({
     setActiveGroupKey(nextGroup.key);
     const buttons = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
       '[role="tab"]',
+    );
+    buttons?.[nextIndex]?.focus();
+  };
+
+  const selectReportViewFromKeyboard = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    currentIndex: number,
+  ) => {
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowRight") {
+      nextIndex = (currentIndex + 1) % REPORT_VIEWS.length;
+    } else if (event.key === "ArrowLeft") {
+      nextIndex = (currentIndex - 1 + REPORT_VIEWS.length) % REPORT_VIEWS.length;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = REPORT_VIEWS.length - 1;
+    }
+    if (nextIndex === null) return;
+    event.preventDefault();
+    setActiveReportView(REPORT_VIEWS[nextIndex].key);
+    const buttons = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
+      "[data-report-view-tab]",
     );
     buttons?.[nextIndex]?.focus();
   };
@@ -253,7 +295,40 @@ export default function ReportingDashboard({
         </div>
       </section>
 
-      <main className="reportContent">
+      <nav
+        className="reportViewTabs"
+        role="tablist"
+        aria-label="Report views"
+        data-horizontal-scroll="report-tabs"
+      >
+        {REPORT_VIEWS.map((view, index) => {
+          const selected = activeReportView === view.key;
+          return (
+            <button
+              key={view.key}
+              type="button"
+              role="tab"
+              id={`report-view-tab-${view.key}`}
+              aria-selected={selected}
+              aria-controls={`report-view-panel-${view.key}`}
+              tabIndex={selected ? 0 : -1}
+              data-report-view-tab
+              onClick={() => setActiveReportView(view.key)}
+              onKeyDown={(event) => selectReportViewFromKeyboard(event, index)}
+            >
+              {view.label}
+            </button>
+          );
+        })}
+      </nav>
+
+      <div
+        role="tabpanel"
+        id="report-view-panel-products"
+        aria-labelledby="report-view-tab-products"
+        hidden={activeReportView !== "products"}
+      >
+        <main className="reportContent">
         <section
           className="conclusionGrid"
           aria-label="Main conclusions"
@@ -353,9 +428,198 @@ export default function ReportingDashboard({
           </div>
           <GroupPanel group={activeGroup} report={report} />
         </section>
-      </main>
+        </main>
+      </div>
+      <section
+        className="beforeAfterPanel"
+        role="tabpanel"
+        id="report-view-panel-before-after"
+        aria-labelledby="report-view-tab-before-after"
+        hidden={activeReportView !== "before-after"}
+      >
+        <BeforeAfterPanel source={sourceSnapshot} />
+      </section>
       <style>{dashboardCss}</style>
     </div>
+  );
+}
+
+const finiteNonnegativeValue = (value: unknown): value is number =>
+  typeof value === "number" && Number.isFinite(value) && value >= 0;
+
+const validCurrencyCode = (value: unknown): value is string =>
+  typeof value === "string" && /^[A-Z]{3}$/.test(value);
+
+function beforeAfterMoney(value: unknown, currencyCode: string | null): string {
+  if (!finiteNonnegativeValue(value) || currencyCode === null) return "Unavailable";
+  return `${formatNumber(value, 2)} ${currencyCode}`;
+}
+
+function beforeAfterMetric(value: unknown, suffix = ""): string {
+  return finiteNonnegativeValue(value) ? `${formatNumber(value, 2)}${suffix}` : "Unavailable";
+}
+
+function targetResult(
+  totals: BeforeAfterTotals | undefined,
+  minimumRoasTarget: number | null,
+): number | null {
+  if (
+    !totals ||
+    !finiteNonnegativeValue(totals.spend) ||
+    !finiteNonnegativeValue(totals.revenue) ||
+    minimumRoasTarget === null
+  ) return null;
+  return totals.revenue / minimumRoasTarget - totals.spend;
+}
+
+function BeforeAfterPanel({ source }: { source?: BeforeAfterReportSource }) {
+  const analysis = isUsableProductAnalysis(source?.productAnalysis)
+    ? source.productAnalysis
+    : null;
+  const initialBudget = analysis
+    ? Math.min(
+        finiteNonnegativeValue(source?.optimized?.spend)
+          ? source.optimized.spend
+          : analysis.currentMonthlySpend,
+        analysis.economicBudgetLimit,
+      )
+    : 0;
+  const [budget, setBudget] = useState(initialBudget);
+  const simulation = analysis ? simulateOptimizedBudget(analysis, budget) : null;
+  const optimized: BeforeAfterTotals | undefined = simulation
+    ? {
+        spend: simulation.budget,
+        revenue: simulation.expectedRevenue,
+        orders: simulation.expectedOrders,
+        cpa: simulation.expectedOrders > 0
+          ? simulation.budget / simulation.expectedOrders
+          : null,
+        roas: simulation.expectedRoas,
+      }
+    : source?.optimized;
+  const currencyCode = validCurrencyCode(source?.currencyCode)
+    ? source.currencyCode
+    : null;
+  const evidenceMonths = finiteNonnegativeValue(source?.evidenceMonths) && source.evidenceMonths > 0
+    ? source.evidenceMonths
+    : null;
+  const minimumRoasTarget = finiteNonnegativeValue(source?.minimumRoasTarget) && source.minimumRoasTarget > 0
+    ? source.minimumRoasTarget
+    : null;
+  const maximumCpaTarget = finiteNonnegativeValue(source?.maximumCpaTarget) && source.maximumCpaTarget > 0
+    ? source.maximumCpaTarget
+    : null;
+
+  return (
+    <div className="beforeAfterContent">
+      <div className="beforeAfterHeading">
+        <div>
+          <span>Monthly equivalent</span>
+          <h2>Before & after</h2>
+          <p>
+            Current measured performance and the optimized scenario use the same
+            monthly period, account currency, and configured targets.
+          </p>
+        </div>
+        <strong>{evidenceMonths === null ? "Evidence window unavailable" : `${formatNumber(evidenceMonths, 2)} months of evidence`}</strong>
+      </div>
+
+      <div className="beforeAfterTableScroll" data-horizontal-scroll="before-after" tabIndex={0}>
+        <table aria-label="Before and after comparison" className="beforeAfterTable">
+          <thead>
+            <tr>
+              {["Scenario", "Budget", "Sales", "Orders", "CPA", "ROAS", "Target-based profit / loss"].map((label) => (
+                <th key={label} scope="col">{label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <BeforeAfterRow
+              label="Current · measured"
+              totals={source?.current}
+              currencyCode={currencyCode}
+              minimumRoasTarget={minimumRoasTarget}
+            />
+            <BeforeAfterRow
+              label="Optimized · simulated"
+              totals={optimized}
+              currencyCode={currencyCode}
+              minimumRoasTarget={minimumRoasTarget}
+            />
+          </tbody>
+        </table>
+      </div>
+
+      <div className="beforeAfterDetails">
+        <div className="targetSummary">
+          <h3>Targets used</h3>
+          <p>Minimum ROAS target: {minimumRoasTarget === null ? "Unavailable" : formatRatio(minimumRoasTarget)}</p>
+          <p>Maximum CPA target: {beforeAfterMoney(maximumCpaTarget, currencyCode)}</p>
+        </div>
+        <div className="assumptionSummary">
+          <h3>Assumptions</h3>
+          <ul>
+            <li>{CSS_CPC_REDUCTION_PCT}% CSS CPC reduction</li>
+            <li>{formatNumber(DIMINISHING_RETURN_RATE * 100, 2)}% diminishing-return rate as product spend scales</li>
+            <li>Current values are measured; optimized values are a model, not a guarantee.</li>
+          </ul>
+        </div>
+      </div>
+
+      {analysis ? (
+        <div className="budgetControl">
+          <label htmlFor="simulated-monthly-budget">
+            <span>Simulated monthly budget</span>
+            <strong>{beforeAfterMoney(budget, currencyCode)}</strong>
+          </label>
+          <input
+            id="simulated-monthly-budget"
+            aria-label="Simulated monthly budget"
+            type="range"
+            min="0"
+            max={Math.max(1, Math.floor(analysis.economicBudgetLimit))}
+            step="1"
+            value={budget}
+            onChange={(event) => setBudget(Number(event.currentTarget.value))}
+          />
+          <small>Model limit: {beforeAfterMoney(analysis.economicBudgetLimit, currencyCode)}</small>
+        </div>
+      ) : (
+        <p className="modelUnavailable">Budget exploration unavailable: complete finite product model inputs are required.</p>
+      )}
+    </div>
+  );
+}
+
+function BeforeAfterRow({
+  label,
+  totals,
+  currencyCode,
+  minimumRoasTarget,
+}: {
+  label: string;
+  totals?: BeforeAfterTotals;
+  currencyCode: string | null;
+  minimumRoasTarget: number | null;
+}) {
+  const result = targetResult(totals, minimumRoasTarget);
+  return (
+    <tr>
+      <th scope="row">{label}</th>
+      <td>{beforeAfterMoney(totals?.spend, currencyCode)}</td>
+      <td>{beforeAfterMoney(totals?.revenue, currencyCode)}</td>
+      <td>{beforeAfterMetric(totals?.orders)}</td>
+      <td>{beforeAfterMoney(totals?.cpa, currencyCode)}</td>
+      <td>{beforeAfterMetric(totals?.roas, "×")}</td>
+      <td>
+        {result === null || currencyCode === null ? "Unavailable" : (
+          <span className={result < 0 ? "lossText" : "profitText"}>
+            <strong>{result < 0 ? "Loss" : result > 0 ? "Profit" : "At threshold"}</strong>
+            <small>{beforeAfterMoney(Math.abs(result), currencyCode)}</small>
+          </span>
+        )}
+      </td>
+    </tr>
   );
 }
 
@@ -718,6 +982,7 @@ function ProductResult({
 }
 
 const dashboardCss = `
-.reportV2,.reportContent,.conclusionGrid,.comparisonSection,.productActions{min-width:0}
+.reportV2,.reportContent,.conclusionGrid,.comparisonSection,.productActions,.beforeAfterPanel,.beforeAfterContent{min-width:0}
+.reportViewTabs{display:flex;gap:8px;padding:18px clamp(14px,4vw,52px) 0;overflow-x:auto;background:var(--surface);scrollbar-width:thin}.reportViewTabs button{flex:0 0 auto;min-width:138px;min-height:46px;padding:10px 18px;border:1px solid var(--line);border-radius:12px 12px 0 0;background:#eef1f6;color:#59657b;font:inherit;font-weight:800;cursor:pointer}.reportViewTabs button[aria-selected=true]{border-color:#4c46c7;background:#fefeff;color:var(--navy);box-shadow:inset 0 -3px #4c46c7}.reportViewTabs button:focus-visible{outline:3px solid #8cb6ee;outline-offset:2px}.beforeAfterPanel{padding:32px clamp(14px,4vw,52px) 56px}.beforeAfterContent{display:grid;gap:22px}.beforeAfterHeading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}.beforeAfterHeading>div>span{color:var(--cyan);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.beforeAfterHeading h2{margin:4px 0;font-family:var(--font-sora),sans-serif;font-size:28px}.beforeAfterHeading p{max-width:72ch;margin:0;color:var(--muted)}.beforeAfterHeading>strong{padding:8px 12px;border-radius:999px;background:#e9f6f8;color:#096b83;font-size:11px;white-space:nowrap}.beforeAfterTableScroll{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fefeff}.beforeAfterTableScroll:focus-visible{outline:3px solid #8cb6ee;outline-offset:3px}.beforeAfterTable{width:100%;min-width:860px;border-collapse:collapse;font-variant-numeric:tabular-nums}.beforeAfterTable th,.beforeAfterTable td{padding:14px;border-bottom:1px solid #e9ecf2;text-align:right;white-space:nowrap}.beforeAfterTable thead th{background:#f4f6fa;color:#69768e;font-size:10px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.beforeAfterTable th:first-child{text-align:left}.beforeAfterTable tbody th{color:var(--ink);font-size:13px}.beforeAfterTable tbody tr:last-child th,.beforeAfterTable tbody tr:last-child td{border-bottom:0}.beforeAfterDetails{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:14px}.targetSummary,.assumptionSummary,.budgetControl,.modelUnavailable{padding:18px;border:1px solid var(--line);border-radius:14px;background:#fefeff}.targetSummary h3,.assumptionSummary h3{margin:0 0 8px;font-family:var(--font-sora),sans-serif;font-size:16px}.targetSummary p{margin:4px 0;color:var(--muted)}.assumptionSummary ul{margin:0;padding-left:19px;color:var(--muted)}.assumptionSummary li+li{margin-top:5px}.budgetControl{display:grid;gap:10px}.budgetControl label{display:flex;align-items:center;justify-content:space-between;gap:18px}.budgetControl label span{font-weight:800}.budgetControl label strong{color:var(--navy);font-family:var(--font-sora),sans-serif;font-size:19px}.budgetControl input{width:100%;accent-color:#4c46c7}.budgetControl small,.modelUnavailable{color:var(--muted)}.modelUnavailable{margin:0}@media(max-width:700px){.beforeAfterHeading{align-items:flex-start;flex-direction:column}.beforeAfterDetails{grid-template-columns:1fr}.beforeAfterPanel{padding-top:22px}.reportViewTabs{padding-inline:14px}.budgetControl label{align-items:flex-start;flex-direction:column;gap:4px}}
 .reportV2{--ink:#101833;--muted:#66738c;--line:#e1e6ef;--surface:#fbfcfe;--surface-alt:#f5f7fb;--navy:#191d61;--blue:#2b4187;--cyan:#087c9c;--red:#cf3442;--red-soft:#fff2f3;--amber:#a76508;--amber-soft:#fff7e8;--green:#137755;--green-soft:#eaf8f2;min-height:100vh;background:var(--surface);color:var(--ink);font-family:var(--font-inter),sans-serif;font-size:14px;line-height:1.5}.reportV2 *{box-sizing:border-box}.brandHeader{display:flex;align-items:center;gap:24px;min-height:72px;padding:14px clamp(18px,4vw,52px);border-bottom:1px solid var(--line);background:#fefeff}.brandIdentity{display:flex;align-items:center;gap:11px;font-family:var(--font-sora),sans-serif;letter-spacing:.12em}.brandMark{display:grid;width:34px;height:34px;place-items:center;border-radius:10px;background:linear-gradient(135deg,#4c46c7,#13a7c5);color:#fdfcff;font-weight:800}.reportPeriod{display:flex;align-items:center;gap:8px;margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface-alt);color:var(--muted);font-size:12px}.reportPeriod b{color:var(--ink)}.periodForm{display:flex;align-items:center;gap:8px}.periodForm label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.periodForm select,.periodForm button{min-height:38px;border:1px solid var(--line);border-radius:9px;background:#fefeff;color:var(--ink);font:inherit}.periodForm select{max-width:220px;padding:0 10px}.periodForm button{padding:0 13px;font-weight:700}.demoBadge{padding:7px 10px;border-radius:7px;background:var(--amber-soft);color:var(--amber);font-size:11px;font-weight:800}.accountSummary{padding:42px clamp(18px,4vw,52px) 36px;background:linear-gradient(120deg,var(--navy),var(--blue) 58%,var(--cyan));color:#fdfcff}.heroCopy>span{color:#9be6ec;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.heroCopy h1{max-width:900px;margin:12px 0 10px;font-family:var(--font-sora),sans-serif;font-size:clamp(30px,4.2vw,48px);line-height:1.08;letter-spacing:-.035em}.heroCopy p{max-width:760px;margin:0;color:#d4dbef;font-size:16px}.targetGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:28px;overflow:hidden;border:1px solid rgba(255,255,255,.24);border-radius:15px;background:rgba(255,255,255,.07)}.targetTile{min-width:0;padding:16px 18px;border-inline-start:1px solid rgba(255,255,255,.18)}.targetTile:first-child{border-inline-start:0}.targetTile small,.targetTile span{display:block}.targetTile small{color:#c4cce4;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.targetTile strong{display:block;margin-top:6px;font-family:var(--font-sora),sans-serif;font-size:22px;overflow-wrap:anywhere}.targetTile span{margin-top:2px;color:#d4dbef;font-size:10px}.targetTile[data-status=warning] strong{color:#ff9da4}.targetTile[data-status=positive] strong{color:#7be9c3}.targetTile[data-status=unavailable] strong{color:#f5ca77}.reportContent{display:grid;gap:34px;padding:32px clamp(14px,4vw,52px) 56px}.conclusionGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.conclusionCard{display:flex;min-width:0;flex-direction:column;gap:7px;padding:22px;border:1px solid var(--line);border-radius:15px;background:#fefeff}.conclusionCard.loss{border-color:#f4c8cc;background:var(--red-soft)}.conclusionCard.opportunity{border-color:#eed7ae;background:var(--amber-soft)}.conclusionCard h2{margin:0;font-family:var(--font-sora),sans-serif;font-size:19px}.conclusionValue{font-family:var(--font-sora),sans-serif;font-size:27px;line-height:1.15;overflow-wrap:anywhere}.conclusionCard.loss .conclusionValue{color:var(--red)}.conclusionCard.opportunity .conclusionValue{color:var(--amber)}.conclusionCard p{margin:0;color:var(--muted);font-size:13px}.conclusionCard>small{color:var(--amber);font-weight:700}.evidenceLabel{width:max-content;padding:4px 7px;border-radius:6px;background:#eef1f6;color:#59657b;font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.loss .evidenceLabel{background:#ffe3e5;color:var(--red)}.opportunity .evidenceLabel{background:#fce8c4;color:var(--amber)}.sectionHeading h2{margin:0;font-family:var(--font-sora),sans-serif;font-size:22px}.sectionHeading p{max-width:70ch;margin:5px 0 13px;color:var(--muted);font-size:13px}.comparisonScroll,.productTableScroll{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fefeff}.comparisonScroll:focus-visible,.productTableScroll:focus-visible{outline:3px solid #8cb6ee;outline-offset:3px}.comparisonTable,.productTable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}.comparisonTable{min-width:820px}.comparisonTable th,.comparisonTable td,.productTable th,.productTable td{padding:12px 14px;border-bottom:1px solid #e9ecf2;text-align:right;white-space:nowrap}.comparisonTable th,.productTable th{background:#f4f6fa;color:#69768e;font-size:10px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.comparisonTable th:first-child,.comparisonTable td:first-child,.productTable th:first-child,.productTable td:first-child{text-align:left}.comparisonTable td:first-child strong,.comparisonTable td:first-child span{display:block}.comparisonTable td:first-child span{margin-top:2px;color:var(--muted);font-size:10px}.comparisonTable .selectedPeriod{background:#fbfcff}.lossText,.profitText,.unavailableResult,.neutralResult{display:inline-flex;flex-direction:column;align-items:flex-end;gap:1px}.lossText{color:var(--red)}.profitText{color:var(--green)}.neutralResult{color:var(--muted)}.unavailableResult{color:var(--amber)}.lossText small,.profitText small,.unavailableResult small,.neutralResult small{font-size:10px}.productActions{min-width:0}.partialNotice,.simulationNotice{margin:0 0 12px;padding:10px 12px;border:1px solid #ecd7ae;border-radius:10px;background:var(--amber-soft);color:#76510f;font-size:12px}.actionTabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}.actionTabs button{display:flex;align-items:center;gap:7px;flex:0 0 auto;min-height:44px;padding:9px 13px;border:1px solid var(--line);border-radius:11px 11px 0 0;background:#f5f7fb;color:#4c5871;font:inherit;font-weight:750;cursor:pointer}.actionTabs button b{display:grid;min-width:22px;height:22px;place-items:center;border-radius:999px;background:#e8ebf2;font-size:11px}.actionTabs button small{font-size:9px;color:var(--amber)}.actionTabs button[aria-selected=true]{border-color:#dd606a;background:#fefeff;color:#bd2532;box-shadow:inset 0 -3px #d93846}.actionTabs button:focus-visible{position:relative;z-index:2;outline:3px solid #8cb6ee;outline-offset:2px}.groupPanel{overflow:hidden;border:1px solid var(--line);border-radius:0 15px 15px 15px;background:#fefeff}.groupSummary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:center;padding:21px 22px;border-bottom:1px solid #e9ecf2}.groupKicker{color:var(--red);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.groupPanel.opportunity .groupKicker{color:var(--amber)}.groupPanel.profit .groupKicker{color:var(--green)}.groupSummary h3{margin:3px 0 4px;font-family:var(--font-sora),sans-serif;font-size:21px}.groupSummary p{max-width:70ch;margin:0;color:var(--muted);font-size:12px}.supportFacts{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.supportFacts span{padding:5px 8px;border-radius:7px;background:#f1f3f7;color:#56637b;font-size:10px;font-weight:750}.groupClaim{text-align:right}.groupClaim small,.groupClaim span{display:block;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.groupClaim strong{display:block;max-width:300px;margin:3px 0;font-family:var(--font-sora),sans-serif;font-size:25px;overflow-wrap:anywhere}.groupPanel.loss .groupClaim strong{color:var(--red)}.groupPanel.opportunity .groupClaim strong{color:var(--amber)}.groupPanel.profit .groupClaim strong{color:var(--green)}.groupPanel .simulationNotice{margin:14px 22px}.productTableScroll{border:0;border-radius:0}.productTable{min-width:1060px}.productTable tr:last-child td{border-bottom:0}.productTable tbody tr:hover{background:#f8faff}.productTable tbody tr.quarantined{background:#fffaf0}.productIdentity{display:flex;align-items:center;gap:9px;min-width:230px}.productIdentity>span{display:grid;width:32px;height:32px;flex:0 0 32px;place-items:center;border:1px solid #dfe4ed;border-radius:8px;background:#f4f6fa;color:#504bc0;font-size:9px;font-weight:850}.productIdentity strong,.productIdentity small{display:block;max-width:260px;overflow:hidden;text-overflow:ellipsis}.productIdentity small{color:#8b96aa;font-size:9px}.emptyState{display:grid;gap:5px;padding:38px 22px;text-align:center}.emptyState span{color:var(--muted);font-size:12px}.groupFooter{padding:12px 22px;border-top:1px solid #e9ecf2;background:#f7f8fb;color:var(--muted);font-size:11px}@media(max-width:900px){.brandHeader{align-items:flex-start;flex-wrap:wrap}.reportPeriod{margin-left:auto}.periodForm{width:100%;order:3}.periodForm select{flex:1}.targetGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.targetTile:nth-child(3){border-top:1px solid rgba(255,255,255,.18);border-inline-start:0}.targetTile:nth-child(4){border-top:1px solid rgba(255,255,255,.18)}.conclusionGrid{grid-template-columns:1fr}.groupSummary{grid-template-columns:1fr}.groupClaim{text-align:left}.lossText,.profitText,.unavailableResult,.neutralResult{align-items:flex-start}}@media(max-width:540px){.brandHeader{gap:12px;padding:13px 14px}.brandIdentity strong{font-size:13px}.reportPeriod{display:grid;gap:0;padding:7px 9px;font-size:10px}.demoBadge{width:100%;text-align:center}.accountSummary{padding:30px 18px}.heroCopy h1{font-size:30px}.heroCopy p{font-size:14px}.targetTile{padding:14px 12px}.targetTile strong{font-size:17px}.reportContent{gap:28px;padding:22px 14px 40px}.conclusionCard{padding:18px}.conclusionValue{font-size:23px}.sectionHeading h2{font-size:20px}.groupSummary{padding:18px}.groupClaim strong{font-size:22px}.actionTabs{margin-inline:-14px;padding-inline:14px}.productTableScroll{scrollbar-width:thin}}
 `;

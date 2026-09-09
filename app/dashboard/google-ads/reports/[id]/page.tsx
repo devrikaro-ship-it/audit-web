@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { managerAccountKey, readManagerReport, registeredReports, requireManagerAccess } from "@/lib/gads-manager";
 import ReportingDashboard from "@/app/google-ads/raport/ReportingDashboard";
+import { beforeAfterSourceFromSnapshot } from "@/lib/gads-product-simulation";
 import styles from "../../manager.module.css";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +37,9 @@ export default async function ManagerReportPage({ params, searchParams }: {
       </form>
       {!saved && <section className={styles.panel}><div className={styles.empty}><h1>Report unavailable</h1><p>This saved report could not be opened. Select another saved report or return to the manager.</p></div></section>}
     </div>
-    {saved && <ReportingDashboard report={saved.report} />}
+    {saved && <ReportingDashboard
+      report={saved.report}
+      sourceSnapshot={beforeAfterSourceFromSnapshot(saved.snapshot)}
+    />}
   </div>;
 }
