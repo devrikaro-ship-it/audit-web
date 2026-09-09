@@ -80,6 +80,8 @@ it("refuses manager access before reading a broken ledger, while valid access re
   const Page = (await import("./page")).default;
   const html = renderToStaticMarkup(await Page());
   expect(html).toContain("No saved reports yet");
+  expect(html).toContain("Generated reports appear here automatically. Contact details are optional.");
+  expect(html).not.toContain("after a report is saved through the reporting form");
   await writeFile(ledger, "invalid-json");
   access.allowed = false;
   await expect(Page()).rejects.toThrow("NOT_FOUND");

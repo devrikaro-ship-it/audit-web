@@ -12,7 +12,8 @@
         "lib/gads-pending-report.test.ts",
         "app/google-ads/raport/page.test.tsx",
         "app/google-ads/raport/actions.test.tsx",
-        "app/dashboard/google-ads/page.test.tsx"
+        "app/dashboard/google-ads/page.test.tsx",
+        "app/public-access-boundary.test.tsx"
       ],
       "cwd": ".",
       "estimated_minutes": 4
@@ -35,6 +36,8 @@
         "lib/gads-pending-report.test.ts",
         "app/google-ads/raport/page.tsx",
         "app/google-ads/raport/page.test.tsx",
+        "app/dashboard/google-ads/ManagerTable.tsx",
+        "app/dashboard/google-ads/page.test.tsx",
         "scripts/recover-generated-report.ts"
       ],
       "cwd": ".",
@@ -66,11 +69,13 @@
         "app/google-ads/raport/page.tsx",
         "app/google-ads/raport/page.test.tsx",
         "app/google-ads/raport/actions.test.tsx",
+        "app/dashboard/google-ads/ManagerTable.tsx",
         "app/dashboard/google-ads/page.test.tsx",
         "scripts/recover-generated-report.ts",
-        ".superpowers/sdd/2026-09-09-autosave/implementation/**"
+        ".superpowers/sdd/2026-09-09-autosave/implementation/**",
+        ".superpowers/sdd/2026-09-09-autosave/repair/**"
       ],
-      "statuses": ["A", "M"],
+      "statuses": ["A", "M", "D"],
       "category": "runtime",
       "risk": "guarded",
       "checks": ["focused_tests", "typecheck", "lint_changed", "recovery_cli"]

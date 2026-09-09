@@ -1,0 +1,47 @@
+{
+  "task_id": "report-autosave-graph-repair-20260909",
+  "task_name": "report-autosave-graph-repair-20260909",
+  "role": "implementer",
+  "status": "active",
+  "objective": "Repair the closed public output graph regression without changing generated report persistence behavior, and correct the manager admission copy.",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "branch": "feature/launch-english",
+  "revision": "623e29788047456518b23b006eeb688008aa1213",
+  "environment": "local repair candidate for deployed:https://audit.devrika.io",
+  "acceptance_criteria": [
+    "The public output inventory returns to its existing closed 54-file graph without changing the inventory test or manifest.",
+    "Generated report persistence, identity, recovery, contact enrichment, consent, and protected report behavior remain unchanged.",
+    "The empty manager directory states that generated reports appear automatically and contact details are optional."
+  ],
+  "completed": [
+    "Read the repair contract, brief, implementation verdict, release receipt, task binding, project documentation, and applicable skill instructions.",
+    "Rechecked repository revision and preserved root-owned documentation changes.",
+    "Confirmed that the separate gads-generated-report runtime module is the only added public graph node and that ManagerTable owns the outdated empty-state sentence."
+  ],
+  "findings": [
+    "The release suite passed 597 tests and failed only because public reachability grew from 54 to 55 files.",
+    "Generated report identity, persistence, and recovery belong to the existing gads-pending-report lifecycle module.",
+    "The existing page test can verify the new empty-state copy without changing the out-of-perimeter ManagerTable test."
+  ],
+  "decisions": [
+    "Move the generated report lifecycle exports into gads-pending-report and delete the redundant runtime module.",
+    "Keep the focused generated-report test file but import the behavior from gads-pending-report.",
+    "Use the witnessed release-suite failure as the graph RED control and add a focused manager-copy RED assertion before production edits."
+  ],
+  "files": [
+    ".superpowers/sdd/2026-09-09-autosave/repair/checkpoint-payload.json"
+  ],
+  "commands": [
+    {
+      "command": "recommend_model.py critical",
+      "result": "gpt-5.6-sol, reasoning xhigh, live catalog"
+    },
+    {
+      "command": "release-suite.txt inspection",
+      "result": "597 passed, 1 graph inventory failure"
+    }
+  ],
+  "blockers": [],
+  "working_tree": "Root-owned docs/dev changes remain untouched.",
+  "next_action": "Add and witness the manager-copy RED assertion through a bounded declared targeted check."
+}
