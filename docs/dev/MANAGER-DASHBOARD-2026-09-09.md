@@ -25,3 +25,17 @@ Use a witnessed regression against the current page, real temporary storage with
 ## Language and limitations
 
 New product copy and source are English. Older dashboard pages and inherited comments elsewhere remain translation debt. This component does not add user registration or retain temporary reports beyond their existing lifecycle. An account appears after its report is saved through the existing delivery flow.
+
+## Published result — 2026-09-09
+
+The manager is published at `https://audit.devrika.io/dashboard/google-ads` on application revision `eb23c258a7dc415722368cc2efe57655b57a1f65`. Coolify deployment `fv90276hu49jpoakskqe55n9` completed with running container `eeef1df2dec1`. No migration was required. The directory groups saved reports by account, shows registrant details and separate recurring/availability states, compares signed selected-period measurements with their targets, and opens protected account-scoped reports and history.
+
+Independent code review and production verification both returned PASS. The final candidate passed 585 tests, type checking, lint and production build. Initial behavior, deliberately restored defects, and a valid cross-linked signed snapshot each produced witnessed failing controls before their passing repairs. Canonical snapshot-path binding prevents one account's valid snapshot from being displayed under another record.
+
+Fresh production observation at 07:01:34 UTC found zero registered saved accounts and verified the truthful empty state. Authenticated directory access returned 200; missing and invalid credentials returned 401; an authenticated unknown report returned 404; the existing public reporting entrypoint returned 200. The ledger remained unchanged. The new container's log contained successful startup and no application errors in the inspected window.
+
+Populated search, row activation and account-history behavior were verified with separately labeled synthetic signed-storage controls. The production browser image renders the actual authenticated response capture; it is not an interactive signed-in production session. No production records were seeded, and no external MCC accounts were imported.
+
+Evidence is retained under `.superpowers/sdd/2026-09-09-manager/`: `repair-review/verdict.json`, `verification/verdict.json`, `verification/production-observation.json`, `live-browser-receipt.json`, `local-browser-receipt.json`, `local-repaired-opened-dom.txt`, `code-proof.json` and `result-proof.json`.
+
+Delivery bookkeeping remains open because the shared governance validator rejects the literal tracked Next.js `[id]` route as a wildcard before checking its approved parent scope. The independent scope review passed. `proof-admission-blocker.json` records the issue; no scope rule or delivery state was manually weakened. This tooling repair is separate from the published manager application.
