@@ -49,6 +49,10 @@
       "patterns": [
         "lib/gads-tracking.ts",
         "lib/gads-report-delivery.ts",
+        "app/google-ads/raport/ReportingDashboard.tsx",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/raport/page.tsx",
+        "app/google-ads/raport/page.test.tsx",
         "app/google-ads/raport/**/*.tsx",
         "app/dashboard/google-ads/reports/**/*.tsx",
         "app/google-ads/portal/**/*.tsx"
