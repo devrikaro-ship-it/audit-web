@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "role": "implementer",
+  "outcome": "READY_FOR_REVIEW",
+  "implementation_revision": "21887d15f194d786ea36dde867a56de29708903b",
+  "base_revision": "54c7703f7a528704a9b8111b2bf4474791f2f416",
+  "touched_files": [
+    "app/google-ads/raport/actions.test.tsx",
+    "app/google-ads/raport/page.test.tsx",
+    "app/google-ads/raport/page.tsx",
+    "lib/gads-generated-report.test.ts",
+    "lib/gads-generated-report.ts",
+    "lib/gads-leads.test.ts",
+    "lib/gads-leads.ts",
+    "lib/gads-pending-report.test.ts",
+    "lib/gads-pending-report.ts",
+    "scripts/recover-generated-report.ts"
+  ],
+  "observable_result": [
+    "A successfully generated signed report is durably stored and registered before the report page renders, even when contact fields are empty.",
+    "The signed snapshot digest deterministically identifies the report, so retries converge on one ledger row and one protected manager path.",
+    "A later consented contact submission enriches that row and preserves the existing email-delivery flow without recurring enrollment.",
+    "Invalid signatures, session-crossed snapshots, recovery digest mismatches, tampered recovery metadata, and noncanonical recovery paths are refused.",
+    "Recovery copies verified bytes into immutable report storage while leaving the pending source available to the existing contact flow."
+  ],
+  "red_evidence": [
+    "At test revision 663ded6c9fe348bbccc989b8083973c0a451545a, the bounded focused run failed seven new assertions while seventy pre-existing controls passed.",
+    "At revision a9c37e29ef94fdd52813214f5474217564da83bd, the bounded recovery CLI loaded its real module graph and failed specifically because --help was not implemented."
+  ],
+  "green_evidence": [
+    "At implementation revision 21887d15f194d786ea36dde867a56de29708903b, the bounded focused run passed 78 of 78 tests in 6 files.",
+    "The bounded TypeScript, changed-file ESLint, and executable recovery CLI checks all passed."
+  ],
+  "frozen_paths": {
+    "changed": [],
+    "verified_against_base": [
+      "lib/dashboard-session.ts",
+      "proxy.ts",
+      "lib/gads-report-delivery.ts",
+      "lib/gads-session.ts",
+      "lib/gads-report-email.ts"
+    ]
+  },
+  "production_recovery_invocation": "/usr/bin/env 'JITI_ALIAS={\"@\":\"/absolute/deployed/repository/root\"}' ./node_modules/.bin/jiti scripts/recover-generated-report.ts --pending-directory '<exact canonical MagazinFitness.ro pending directory>' --expected-snapshot-digest '<sha256 of the signed snapshot bytes>' --expected-website '<exact signed snapshot website>' --expected-account-name '<exact signed snapshot accountName>'",
+  "production_recovery_note": "Add --customer-id only when the operator has an authoritative Google Ads customer ID. Do not infer it from the account name. Resolve every bracketed value from the production snapshot and metadata immediately before execution.",
+  "remaining_risks": [
+    "Independent code review, the root-owned full-suite/build gates, deployment, production recovery, protected manager authentication, and exact live report verification remain outside the implementer role.",
+    "The recovery entrypoint uses the lockfile-installed Jiti runner; changing the dependency graph requires revalidating that operational command."
+  ]
+}

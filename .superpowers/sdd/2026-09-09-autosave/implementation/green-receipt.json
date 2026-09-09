@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": "21887d15f194d786ea36dde867a56de29708903b",
+  "plan": "cli-green-plan.json",
+  "checks": [
+    {
+      "command_id": "focused_tests",
+      "outcome": "COMMAND_SUCCEEDED",
+      "exit_status": 0,
+      "evidence": "6 test files passed; 78 tests passed."
+    },
+    {
+      "command_id": "typecheck",
+      "outcome": "COMMAND_SUCCEEDED",
+      "exit_status": 0,
+      "evidence": "TypeScript completed with no diagnostics."
+    },
+    {
+      "command_id": "lint_changed",
+      "outcome": "COMMAND_SUCCEEDED",
+      "exit_status": 0,
+      "evidence": "ESLint completed with no diagnostics."
+    },
+    {
+      "command_id": "recovery_cli",
+      "outcome": "COMMAND_SUCCEEDED",
+      "exit_status": 0,
+      "evidence": "The real TypeScript entrypoint loaded and --help printed its exact guarded invocation."
+    }
+  ]
+}

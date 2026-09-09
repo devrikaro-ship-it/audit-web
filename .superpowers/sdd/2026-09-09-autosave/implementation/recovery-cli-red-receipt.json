@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "command_id": "recovery_cli",
+  "observations": [
+    {
+      "revision": "6cc58a1e5f6f3103f56482389ecf49498ba310fa",
+      "outcome": "COMMAND_FAILED",
+      "exit_status": 1,
+      "failure": "Native Node could not resolve the extensionless TypeScript module graph."
+    },
+    {
+      "revision": "2c624b9",
+      "outcome": "COMMAND_FAILED",
+      "exit_status": 1,
+      "failure": "The installed TypeScript runner loaded the entrypoint but could not resolve the repository @ alias."
+    },
+    {
+      "revision": "a9c37e29ef94fdd52813214f5474217564da83bd",
+      "plan": "alias-red-plan.json",
+      "outcome": "COMMAND_FAILED",
+      "exit_status": 1,
+      "failure": "Invalid or incomplete argument: --help",
+      "meaning": "The full production module graph loaded and exposed the missing help behavior."
+    }
+  ],
+  "passing_arm": {
+    "revision": "21887d15f194d786ea36dde867a56de29708903b",
+    "plan": "cli-green-plan.json",
+    "outcome": "COMMAND_SUCCEEDED",
+    "exit_status": 0,
+    "observed": "The executable CLI printed the required recovery flags and source-preservation guarantee."
+  }
+}

@@ -1,0 +1,279 @@
+{
+  "base_revision": "54c7703f7a528704a9b8111b2bf4474791f2f416",
+  "changes": [
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": ".superpowers/sdd/2026-09-09-autosave/implementation/checkpoint-payload.json",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": ".superpowers/sdd/2026-09-09-autosave/implementation/checks.json",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": ".superpowers/sdd/2026-09-09-autosave/implementation/red-plan.json",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": ".superpowers/sdd/2026-09-09-autosave/implementation/red-receipt.json",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "app/google-ads/raport/actions.test.tsx",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "app/google-ads/raport/page.test.tsx",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "app/google-ads/raport/page.tsx",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "lib/gads-generated-report.test.ts",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "lib/gads-generated-report.ts",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "A"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "lib/gads-leads.test.ts",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "lib/gads-leads.ts",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "lib/gads-pending-report.test.ts",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "lib/gads-pending-report.ts",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "M"
+    },
+    {
+      "category": "runtime",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "recovery_cli"
+      ],
+      "path": "scripts/recover-generated-report.ts",
+      "risk": "guarded",
+      "rule_id": "autosave_point",
+      "status": "A"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "lib/gads-generated-report.test.ts",
+        "lib/gads-leads.test.ts",
+        "lib/gads-pending-report.test.ts",
+        "app/google-ads/raport/page.test.tsx",
+        "app/google-ads/raport/actions.test.tsx",
+        "app/dashboard/google-ads/page.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 4,
+      "id": "focused_tests",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "./node_modules/.bin/eslint",
+        "lib/gads-generated-report.ts",
+        "lib/gads-generated-report.test.ts",
+        "lib/gads-leads.ts",
+        "lib/gads-leads.test.ts",
+        "lib/gads-pending-report.ts",
+        "lib/gads-pending-report.test.ts",
+        "app/google-ads/raport/page.tsx",
+        "app/google-ads/raport/page.test.tsx",
+        "scripts/recover-generated-report.ts"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 2,
+      "id": "lint_changed",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "/usr/bin/env",
+        "JITI_ALIAS={\"@\":\"/Users/VladMoloso/seo-audit\"}",
+        "./node_modules/.bin/jiti",
+        "scripts/recover-generated-report.ts",
+        "--help"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 1,
+      "id": "recovery_cli",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "./node_modules/.bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit",
+      "estimated_minutes": 3,
+      "id": "typecheck",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit/.superpowers/sdd/2026-09-09-autosave/implementation/checks.json",
+  "declaration_sha256": "cda1b6955f67c01afa770bca320c70d4d0ad684e59d25b39f22580c496705ba1",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "1cba9fb66c08bd96dc8246610b031baa4b7e00f4932e6054966fef55d62a2e97",
+  "repo_root": "/Users/VladMoloso/seo-audit",
+  "revision": "a9c37e29ef94fdd52813214f5474217564da83bd",
+  "risk": "guarded",
+  "schema_version": 1
+}

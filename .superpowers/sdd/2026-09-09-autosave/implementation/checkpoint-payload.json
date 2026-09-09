@@ -2,43 +2,68 @@
   "task_name": "report-autosave-implementation-20260909",
   "task_id": "report-autosave-implementation-20260909",
   "role": "implementer",
-  "status": "active",
+  "status": "complete",
   "objective": "Persist every generated signed Google Ads report before optional contact submission, with stable identity and controlled legacy recovery.",
   "completed": [
-    "Read the frozen contract, implementation brief, baseline standard, project authority, delivery workflow, checkpoint, TDD, verification, and relevant Next.js 16 documentation.",
-    "Measured the current generation, pending snapshot, contact delivery, lead ledger, immutable snapshot, and protected manager paths.",
-    "Confirmed current report identity and durable lead registration are created only inside saveContact after explicit contact consent.",
-    "Committed focused contract tests at 663ded6c9fe348bbccc989b8083973c0a451545a and witnessed the expected RED through the planned bounded command route.",
-    "Implemented the first local candidate for deterministic persistence, in-place contact enrichment, page fail-closed integration, and exact pending-snapshot recovery."
-    ,"Recovered the timed-out attempt at revision 6cc58a1 and located its only unfinished operation: an executable recovery CLI control."
+    "Read all authoritative task, project, delivery, checkpoint, TDD, verification, and relevant framework instructions.",
+    "Recovered the valid prior implementation attempt and located the timed-out recovery CLI operation before retrying it.",
+    "Witnessed focused RED controls for contact-free persistence, stable identity, contact enrichment, crossed-snapshot refusal, fail-closed rendering, and executable recovery help.",
+    "Implemented deterministic signed-report persistence, atomic in-place contact enrichment, page integration, and guarded source-preserving recovery.",
+    "Passed the declared bounded focused tests, TypeScript, changed-file ESLint, and executable recovery CLI checks at revision 21887d15f194d786ea36dde867a56de29708903b.",
+    "Verified that every frozen path is unchanged from base revision 54c7703f7a528704a9b8111b2bf4474791f2f416."
   ],
   "findings": [
-    "The report page stages signed bytes but does not register a durable manager report.",
-    "saveContact currently allocates report identity and lead storage only after explicit contact consent.",
-    "The existing production recovery source is a valid READY pending snapshot with no customer ID."
+    "The previous flow registered a durable report only after contact consent.",
+    "One signed snapshot can have multiple temporary pending references, so report identity must derive from signed bytes rather than the reference or contact submission.",
+    "The recovery module graph needs the repository @ alias when invoked outside Next.js."
   ],
   "decisions": [
-    "Use the existing signed snapshot store and lead ledger rather than adding a second registry.",
-    "Derive a stable report identity from the signed snapshot digest so generation registration and later contact delivery converge on one report.",
-    "Keep contact fields empty at generation and only enrich them atomically after the existing explicit one-time email consent gate.",
-    "Recover legacy pending snapshots by exact canonical directory plus expected digest and account metadata, preserving the source pending file."
+    "Use the existing immutable snapshot store and lead ledger as the single durable registry.",
+    "Derive report and bearer identity from the signed snapshot digest and the existing report signing secret.",
+    "Keep autosave contact and consent fields absent until a complete, explicitly consented contact submission arrives.",
+    "Require canonical pending path, expected digest, exact website, exact account name, valid metadata, exact byte count, and valid signature for recovery.",
+    "Leave production execution and verification to the root role."
   ],
   "files": [
-    ".superpowers/sdd/2026-09-09-autosave/implementation/checkpoint-payload.json"
+    "app/google-ads/raport/actions.test.tsx",
+    "app/google-ads/raport/page.test.tsx",
+    "app/google-ads/raport/page.tsx",
+    "lib/gads-generated-report.test.ts",
+    "lib/gads-generated-report.ts",
+    "lib/gads-leads.test.ts",
+    "lib/gads-leads.ts",
+    "lib/gads-pending-report.test.ts",
+    "lib/gads-pending-report.ts",
+    "scripts/recover-generated-report.ts",
+    ".superpowers/sdd/2026-09-09-autosave/implementation"
   ],
   "commands": [
-    { "command": "codex model catalog route", "result": "gpt-5.6-sol, reasoning high" },
-    { "command": "checkpoint_state.py resume --worker-id 01a0855f-800e-7f10-b27a-b9f5303babff", "result": "active checkpoint restored" },
-    { "command": "read-only source and contract inspection", "result": "current persistence boundary measured" },
-    { "command": "change_impact.py plan 54c7703..663ded6", "result": "READY, focused tests/types/lint selected" },
-    { "command": "run_bounded_command.py planned focused_tests", "result": "expected RED: 7 failed, 70 passed" },
-    { "command": "run_bounded_command.py planned recovery_cli at 6cc58a1", "result": "expected RED exposed Node ESM resolution failure before CLI argument handling" }
+    {
+      "command": "change_impact.py plan",
+      "result": "READY for every exact committed candidate used by the bounded checks"
+    },
+    {
+      "command": "run_bounded_command.py planned focused_tests",
+      "result": "6 files passed; 78 tests passed"
+    },
+    {
+      "command": "run_bounded_command.py planned typecheck",
+      "result": "passed"
+    },
+    {
+      "command": "run_bounded_command.py planned lint_changed",
+      "result": "passed"
+    },
+    {
+      "command": "run_bounded_command.py planned recovery_cli",
+      "result": "passed and printed the guarded invocation"
+    }
   ],
   "blockers": [],
-  "next_action": "Witness the recovery CLI help behavior fail under the repository's installed TypeScript runner, then implement the smallest help/entrypoint repair and rerun the declared targeted matrix.",
+  "next_action": "Root launches independent review of the exact committed candidate, runs final repository gates, publishes the reviewed artifact, executes guarded production recovery with freshly verified metadata, and verifies the protected live report in both directions.",
   "repo_root": "/Users/VladMoloso/seo-audit",
-  "revision": "6cc58a1e5f6f3103f56482389ecf49498ba310fa",
-  "working_tree": "Dirty only for root-owned docs plus this implementation checkpoint artifact; preserve unrelated files.",
+  "revision": "21887d15f194d786ea36dde867a56de29708903b",
+  "working_tree": "Only root-owned documentation changes remain outside the implementation artifact set.",
   "allowed_paths": [
     "lib/gads-leads.ts",
     "lib/gads-leads.test.ts",
@@ -65,6 +90,6 @@
   ],
   "dependencies": [],
   "environment": "local implementation candidate for deployed:https://audit.devrika.io",
-  "commit_sha": "6cc58a1e5f6f3103f56482389ecf49498ba310fa",
+  "commit_sha": "21887d15f194d786ea36dde867a56de29708903b",
   "branch": "feature/launch-english"
 }
