@@ -76,6 +76,20 @@ describe("stored Google Ads report delivery", () => {
     expect(openReportSnapshot(sealReportSnapshot(malformed as unknown as GadsReportSnapshot))).toBeNull();
   });
 
+  it("refuses malformed signed tracking instead of treating it as a readable observation", () => {
+    const malformed = {
+      ...snapshot,
+      tracking: {
+        status: "OBSERVED",
+        observedAt: "not-a-timestamp",
+        actions: [{ name: "Purchase", category: "PURCHASE", primary: "yes" }],
+        issues: [],
+      },
+    } as unknown as GadsReportSnapshot;
+
+    expect(openReportSnapshot(sealReportSnapshot(malformed))).toBeNull();
+  });
+
   it("round-trips complete account traffic and product reporting rows", () => {
     const expanded = {
       ...snapshot,
