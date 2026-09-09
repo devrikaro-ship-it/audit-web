@@ -1,0 +1,15 @@
+.page { min-height: 100svh; display: grid; place-items: center; background: #f5f5fa; padding: 32px 20px; color: #202331; }
+.card { width: 100%; max-width: 440px; padding: 40px; border: 1px solid #e4e4ed; border-radius: 20px; background: white; box-shadow: 0 16px 48px #24234806; }
+.brand { display: inline-block; color: #4d478c; font-size: 20px; font-weight: 750; text-decoration: none; margin-bottom: 48px; }
+.brand span { font-weight: 400; }
+.eyebrow { color: #77768b; text-transform: uppercase; letter-spacing: .16em; font-size: 10px; font-weight: 700; margin-bottom: 12px; }
+.card h1 { font-size: 32px; line-height: 1.2; font-weight: 750; letter-spacing: -.03em; margin: 0 0 12px; }
+.intro { color: #747786; line-height: 1.6; font-size: 15px; margin-bottom: 28px; }
+.card label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.card input:not([type=hidden]) { width: 100%; min-height: 48px; border: 1px solid #dcdce7; border-radius: 9px; padding: 10px 12px; font: inherit; background: #fdfdff; margin-bottom: 20px; }
+.card input:focus-visible, .card button:focus-visible, .brand:focus-visible { outline: 3px solid #8e88d3; outline-offset: 3px; }
+.card button { width: 100%; min-height: 48px; border: 0; border-radius: 9px; background: #514a91; color: white; font-size: 14px; font-weight: 650; display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; cursor: pointer; }
+.card button:hover { background: #403978; }
+.note { margin-top: 28px; text-align: center; color: #777b88; font-size: 12px; }
+.error { background: #fff2f1; color: #9b302e; border-radius: 9px; padding: 12px; margin-bottom: 20px; font-size: 13px; line-height: 1.5; }
+@media (max-width: 480px) { .card { padding: 28px 24px; } .brand { margin-bottom: 36px; } }

@@ -1,23 +1,21 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { basicAuthOk, dashCredentials } from "@/lib/dash-auth";
+import { NextResponse, type NextRequest } from "next/server";
+import { dashCredentials } from "@/lib/dash-auth";
+import { dashboardAccessOk } from "@/lib/dashboard-session";
 
-// Protectie Basic Auth pe /dashboard (instrument intern Devrika).
-// User/parola din env: DASH_USER / DASH_PASS. In productie sunt OBLIGATORII: fara ele
-// dashboard-ul raspunde 503, ca sa nu existe niciodata o parola implicita intr-un repo public.
-export function proxy(request: NextRequest) {
-  const cred = dashCredentials();
-  if (!cred) {
-    return new NextResponse(
-      "Dashboard indisponibil: DASH_USER si DASH_PASS nu sunt setate pe server.",
-      { status: 503 }
-    );
+export async function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname === "/dashboard/login" || request.nextUrl.pathname === "/dashboard/login/submit") return NextResponse.next();
+  if (!dashCredentials()) return new NextResponse("Dashboard temporarily unavailable.", { status: 503, headers: { "Cache-Control": "no-store" } });
+  if (await dashboardAccessOk(request.headers)) return NextResponse.next();
+  if (request.headers.has("authorization") || !["GET", "HEAD"].includes(request.method)) {
+    return new NextResponse("Authentication required.", { status: 401, headers: { "Cache-Control": "no-store" } });
   }
-  if (basicAuthOk(request.headers.get("authorization"), cred)) return NextResponse.next();
-  return new NextResponse("Autentificare necesara", {
-    status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="Devrika Audit Dashboard"' },
-  });
+  const url = request.nextUrl.clone();
+  url.pathname = "/dashboard/login";
+  url.search = "";
+  url.searchParams.set("next", request.nextUrl.pathname + request.nextUrl.search);
+  const response = NextResponse.redirect(url);
+  response.headers.set("Cache-Control", "no-store");
+  return response;
 }
 
 export const config = { matcher: ["/dashboard", "/dashboard/:path*"] };

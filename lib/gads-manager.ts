@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import path from "node:path";
 import { notFound } from "next/navigation";
-import { basicAuthOk, dashCredentials } from "./dash-auth";
+import { dashboardAccessOk } from "./dashboard-session";
 import { listLeads, type GadsLead } from "./gads-leads";
 import { openReportSnapshot } from "./gads-report-delivery";
 import { readStoredReportSnapshot, reportStorageDirectory } from "./gads-report-snapshot";
@@ -9,7 +9,7 @@ import { reportViewFromSnapshot, reportTimestamp } from "./gads-saved-report-vie
 import type { ReportMetric } from "./gads-report-metrics";
 
 export async function requireManagerAccess(): Promise<void> {
-  if (!basicAuthOk((await headers()).get("authorization"), dashCredentials())) notFound();
+  if (!await dashboardAccessOk(await headers())) notFound();
 }
 
 export function managerAccountKey(lead: GadsLead): string {
