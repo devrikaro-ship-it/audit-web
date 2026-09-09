@@ -1,0 +1,65 @@
+import type { GadsReportSnapshot } from "@/lib/gads-report-delivery";
+import { buildGoogleAdsReportV2, type GoogleAdsReportV2ViewModel, type ReportProductInputV2 } from "@/lib/gads-report-metrics";
+
+export const reportTimestamp = (snapshot: GadsReportSnapshot, legacyCreatedAt: number) => snapshot.generatedAt ?? new Date(legacyCreatedAt).toISOString();
+
+function legacyProducts(snapshot: GadsReportSnapshot): ReportProductInputV2[] {
+  const lossIds = new Set(snapshot.losses.map((product) => product.productId));
+  const opportunityIds = new Set(snapshot.opportunities.map((product) => product.productId));
+  return (snapshot.reportProducts ?? []).map((product) => ({
+    ...product,
+    sourceLabel: lossIds.has(product.productId)
+      ? "LOSS_MAKER"
+      : opportunityIds.has(product.productId)
+        ? "UNDERPROMOTED_POTENTIAL"
+        : undefined,
+  }));
+}
+
+export function reportViewFromSnapshot(
+  snapshot: GadsReportSnapshot,
+  legacyCreatedAt: number,
+): GoogleAdsReportV2ViewModel {
+  if (snapshot.reportV2) {
+    return buildGoogleAdsReportV2({
+      currencyCode: snapshot.reportV2.currencyCode,
+      minimumRoasTarget: snapshot.breakEvenRoas,
+      maximumCpaTarget: snapshot.breakEvenCpa,
+      periods: snapshot.reportV2.periods,
+      products: snapshot.reportV2.products,
+      productPopulationStatus: snapshot.reportV2.productPopulationStatus,
+    });
+  }
+
+  const unavailableDate = reportTimestamp(snapshot, legacyCreatedAt).slice(0, 10);
+  const report = buildGoogleAdsReportV2({
+    minimumRoasTarget: snapshot.breakEvenRoas,
+    maximumCpaTarget: snapshot.breakEvenCpa,
+    periods: {
+      selected: {
+        range: { from: unavailableDate, to: unavailableDate },
+        spend: snapshot.current.spend,
+        salesVolume: snapshot.current.revenue,
+        numberOfSales: snapshot.current.orders,
+      },
+      previous: null,
+      previousYear: null,
+    },
+    products: legacyProducts(snapshot),
+    productPopulationStatus: "PARTIAL",
+  });
+
+  return {
+    ...report,
+    periods: {
+      selected: {
+        status: "UNAVAILABLE",
+        key: "SELECTED",
+        reason: "Exact selected-period boundaries are unavailable in this legacy report",
+      },
+      previous: report.periods.previous,
+      previousYear: report.periods.previousYear,
+    },
+  };
+}
+
