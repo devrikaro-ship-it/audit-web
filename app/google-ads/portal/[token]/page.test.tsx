@@ -119,6 +119,10 @@ beforeEach(() => {
 it("renders the selected signed report with English portal labels and dates through the shared V2 renderer", async () => {
   const html = renderToStaticMarkup(await ClientReportPortal({ params: Promise.resolve({ token: "portal-token" }), searchParams: Promise.resolve({}) }));
   expect(html).toContain('data-report-dashboard="v2"');
+  expect(html).toContain('aria-label="Report views"');
+  expect(html).toContain("Before &amp; after");
+  expect(html).toContain("12 months of evidence");
+  expect(html).toContain("1,200 EUR");
   expect(Array.from(html.matchAll(/data-report-section="([^"]+)"/g), (match) => match[1])).toEqual([
     "brand-header",
     "account-summary",
@@ -137,6 +141,7 @@ it("renders the selected signed report with English portal labels and dates thro
   expect(html).not.toContain("application/pdf");
   expect(html).not.toContain("<iframe");
   expect(html).not.toContain('data-legacy-permanent-labels');
+  expect(html).not.toContain("store.example");
 });
 
 it("selects another report only when it belongs to the token-scoped portal population", async () => {
