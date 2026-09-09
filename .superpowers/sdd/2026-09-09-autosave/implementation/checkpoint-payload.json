@@ -10,6 +10,7 @@
     "Confirmed current report identity and durable lead registration are created only inside saveContact after explicit contact consent.",
     "Committed focused contract tests at 663ded6c9fe348bbccc989b8083973c0a451545a and witnessed the expected RED through the planned bounded command route.",
     "Implemented the first local candidate for deterministic persistence, in-place contact enrichment, page fail-closed integration, and exact pending-snapshot recovery."
+    ,"Recovered the timed-out attempt at revision 6cc58a1 and located its only unfinished operation: an executable recovery CLI control."
   ],
   "findings": [
     "The report page stages signed bytes but does not register a durable manager report.",
@@ -30,12 +31,13 @@
     { "command": "checkpoint_state.py resume --worker-id 01a0855f-800e-7f10-b27a-b9f5303babff", "result": "active checkpoint restored" },
     { "command": "read-only source and contract inspection", "result": "current persistence boundary measured" },
     { "command": "change_impact.py plan 54c7703..663ded6", "result": "READY, focused tests/types/lint selected" },
-    { "command": "run_bounded_command.py planned focused_tests", "result": "expected RED: 7 failed, 70 passed" }
+    { "command": "run_bounded_command.py planned focused_tests", "result": "expected RED: 7 failed, 70 passed" },
+    { "command": "run_bounded_command.py planned recovery_cli at 6cc58a1", "result": "expected RED exposed Node ESM resolution failure before CLI argument handling" }
   ],
   "blockers": [],
-  "next_action": "Commit the implementation candidate, derive a fresh exact-diff plan, and run focused tests, typecheck, and lint through the bounded planned route.",
+  "next_action": "Witness the recovery CLI help behavior fail under the repository's installed TypeScript runner, then implement the smallest help/entrypoint repair and rerun the declared targeted matrix.",
   "repo_root": "/Users/VladMoloso/seo-audit",
-  "revision": "663ded6c9fe348bbccc989b8083973c0a451545a",
+  "revision": "6cc58a1e5f6f3103f56482389ecf49498ba310fa",
   "working_tree": "Dirty only for root-owned docs plus this implementation checkpoint artifact; preserve unrelated files.",
   "allowed_paths": [
     "lib/gads-leads.ts",
@@ -63,6 +65,6 @@
   ],
   "dependencies": [],
   "environment": "local implementation candidate for deployed:https://audit.devrika.io",
-  "commit_sha": null,
-  "branch": "main"
+  "commit_sha": "6cc58a1e5f6f3103f56482389ecf49498ba310fa",
+  "branch": "feature/launch-english"
 }
