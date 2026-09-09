@@ -1,9 +1,10 @@
 import { headers } from "next/headers";
+import path from "node:path";
 import { notFound } from "next/navigation";
 import { basicAuthOk, dashCredentials } from "./dash-auth";
 import { listLeads, type GadsLead } from "./gads-leads";
 import { openReportSnapshot } from "./gads-report-delivery";
-import { readStoredReportSnapshot } from "./gads-report-snapshot";
+import { readStoredReportSnapshot, reportStorageDirectory } from "./gads-report-snapshot";
 import { reportViewFromSnapshot, reportTimestamp } from "./gads-saved-report-view";
 import type { ReportMetric } from "./gads-report-metrics";
 
@@ -22,6 +23,9 @@ export async function registeredReports(): Promise<GadsLead[]> {
 
 export async function readManagerReport(lead: GadsLead) {
   if (!lead.reportId || !lead.snapshotPath) return null;
+  if (!/^[a-zA-Z0-9-]+$/.test(lead.reportId)) return null;
+  const expectedPath = path.join(path.resolve(reportStorageDirectory()), `${lead.reportId}.snapshot`);
+  if (path.resolve(lead.snapshotPath) !== expectedPath) return null;
   try {
     const snapshot = openReportSnapshot(await readStoredReportSnapshot(lead.snapshotPath));
     if (!snapshot) return null;
