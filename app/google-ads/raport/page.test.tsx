@@ -52,8 +52,6 @@ vi.mock("@/lib/gads-pending-report", () => ({
     capturedSealedSession = sealedSession;
     return { reference: "p".repeat(43) };
   },
-}));
-vi.mock("@/lib/gads-generated-report", () => ({
   persistGeneratedReport: async ({ signedSnapshot, sealedSession }: { signedSnapshot: string; sealedSession: string }) => {
     if (persistenceFailure) throw persistenceFailure;
     capturedPersistedSnapshot = signedSnapshot;

@@ -33,7 +33,7 @@ export default function ManagerTable({ accounts }: { accounts: ManagerAccount[] 
         <div><h2>Client reports</h2><p>Latest saved report for each store.</p></div>
         <label className={styles.search}>Search stores or contacts<input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Store, account ID, name or email" /></label>
       </div>
-      {accounts.length === 0 ? <div className={styles.empty}><h3>No saved reports yet</h3><p>Stores appear here after a report is saved through the reporting form.</p><a href="/google-ads">Open reporting</a></div> : <>
+      {accounts.length === 0 ? <div className={styles.empty}><h3>No saved reports yet</h3><p>Generated reports appear here automatically. Contact details are optional.</p><a href="/google-ads">Open reporting</a></div> : <>
         <div className={styles.tableScroll}>
           <table className={styles.table}>
             <caption className={styles.srOnly}>Registered stores and their latest report. Select a store to open its report.</caption>

@@ -60,8 +60,7 @@ import {
   sealReportSnapshot,
   type GadsReportSnapshot,
 } from "@/lib/gads-report-delivery";
-import { stagePendingReportSnapshot } from "@/lib/gads-pending-report";
-import { persistGeneratedReport } from "@/lib/gads-generated-report";
+import { persistGeneratedReport, stagePendingReportSnapshot } from "@/lib/gads-pending-report";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";

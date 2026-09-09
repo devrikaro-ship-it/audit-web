@@ -1,4 +1,4 @@
-import { recoverPendingGeneratedReport } from "../lib/gads-generated-report";
+import { recoverPendingGeneratedReport } from "../lib/gads-pending-report";
 
 const HELP_TEXT = `Usage:
   JITI_ALIAS='{"@":"/absolute/repository/root"}' ./node_modules/.bin/jiti scripts/recover-generated-report.ts \\

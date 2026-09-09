@@ -154,7 +154,7 @@ describe("Google Ads report contact delivery", () => {
 
   it("enriches the generated report in place after explicit contact consent", async () => {
     const staged = await stage(1);
-    const { persistGeneratedReport } = await import("@/lib/gads-generated-report");
+    const { persistGeneratedReport } = await import("@/lib/gads-pending-report");
     const generated = await persistGeneratedReport({
       signedSnapshot: staged.signedSnapshot,
       sealedSession: cookieState.value,

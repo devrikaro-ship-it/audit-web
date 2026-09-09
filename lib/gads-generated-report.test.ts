@@ -67,7 +67,7 @@ describe("generated Google Ads report persistence", () => {
 
   it("stores an exact signed report before contact and exposes one manager record", async () => {
     const signedSnapshot = sealReportSnapshot(snapshot());
-    const { persistGeneratedReport } = await import("./gads-generated-report");
+    const { persistGeneratedReport } = await import("./gads-pending-report");
     const first = await persistGeneratedReport({ signedSnapshot, sealedSession: session() });
     const retry = await persistGeneratedReport({ signedSnapshot, sealedSession: session() });
 
@@ -91,7 +91,7 @@ describe("generated Google Ads report persistence", () => {
   });
 
   it("keeps distinct generations distinct and refuses invalid or crossed snapshots", async () => {
-    const { persistGeneratedReport } = await import("./gads-generated-report");
+    const { persistGeneratedReport } = await import("./gads-pending-report");
     const first = await persistGeneratedReport({
       signedSnapshot: sealReportSnapshot(snapshot()),
       sealedSession: session(),
@@ -121,7 +121,7 @@ describe("generated Google Ads report persistence", () => {
     );
     const before = await readFile(path.join(pendingDirectory, "snapshot"), "utf8");
     const digest = createHash("sha256").update(signedSnapshot).digest("hex");
-    const { recoverPendingGeneratedReport } = await import("./gads-generated-report");
+    const { recoverPendingGeneratedReport } = await import("./gads-pending-report");
     const recovered = await recoverPendingGeneratedReport({
       pendingDirectory,
       expectedSnapshotDigest: digest,

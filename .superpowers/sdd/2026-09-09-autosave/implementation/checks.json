@@ -28,7 +28,6 @@
       "profile": "targeted_tests",
       "command": [
         "./node_modules/.bin/eslint",
-        "lib/gads-generated-report.ts",
         "lib/gads-generated-report.test.ts",
         "lib/gads-leads.ts",
         "lib/gads-leads.test.ts",
