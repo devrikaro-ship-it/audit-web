@@ -1,0 +1,15 @@
+{
+  "plan": "red-plan.json",
+  "base_revision": "54c7703f7a528704a9b8111b2bf4474791f2f416",
+  "test_revision": "663ded6c9fe348bbccc989b8083973c0a451545a",
+  "command_id": "focused_tests",
+  "outcome": "COMMAND_FAILED",
+  "exit_status": 1,
+  "observed_failures": [
+    "The generated-report persistence module did not exist.",
+    "A contact-free lead could not be enriched in place.",
+    "Two pending references for the same signed snapshot received different delivery identities.",
+    "The report page did not call durable persistence or fail closed when persistence failed."
+  ],
+  "passing_control": "Seventy existing focused tests passed in the same run."
+}

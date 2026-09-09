@@ -19,6 +19,7 @@ import path from "node:path";
 import { openReportSnapshot, type GadsReportSnapshot } from "./gads-report-delivery";
 import { SESSION_MAX_AGE, unseal } from "./gads-session";
 import { reportStorageDirectory } from "./gads-report-snapshot";
+import { generatedReportIdentity } from "./gads-generated-report";
 
 const REFERENCE_PATTERN = /^[A-Za-z0-9_-]{43}$/;
 const DEFAULT_CLAIM_LEASE_MS = 60_000;
@@ -374,11 +375,10 @@ export async function bindPendingReportSubmission(
     claim.delivery = record.delivery;
     return record.delivery;
   }
+  const generatedIdentity = generatedReportIdentity(record.snapshotDigest);
   const delivery: PendingDeliveryIdentity = {
     submissionDigest: contactDigest,
-    reportId: randomUUID(),
-    reportToken: randomBytes(24).toString("base64url"),
-    portalToken: randomBytes(24).toString("base64url"),
+    ...generatedIdentity,
   };
   await writeRecord(claim.directory, { ...record, state: "DELIVERING", delivery });
   claim.delivery = delivery;

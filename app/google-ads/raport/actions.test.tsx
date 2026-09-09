@@ -152,6 +152,30 @@ describe("Google Ads report contact delivery", () => {
     expect(sendReportEmail).not.toHaveBeenCalled();
   });
 
+  it("enriches the generated report in place after explicit contact consent", async () => {
+    const staged = await stage(1);
+    const { persistGeneratedReport } = await import("@/lib/gads-generated-report");
+    const generated = await persistGeneratedReport({
+      signedSnapshot: staged.signedSnapshot,
+      sealedSession: cookieState.value,
+    });
+    const result = await (await action())(contactForm(staged.reference));
+
+    expect(result).toMatchObject({ ok: true, reportId: generated.reportId });
+    const { listLeads } = await import("@/lib/gads-leads");
+    const leads = await listLeads();
+    expect(leads).toHaveLength(1);
+    expect(leads[0]).toMatchObject({
+      id: generated.lead.id,
+      nume: "Ion Popescu",
+      email: "ion@example.com",
+      telefon: "0722000111",
+      consentAt: expect.any(Number),
+      serviceReportsEnabled: false,
+      deliveryStatus: "EMAIL_SENT",
+    });
+  });
+
   it.each([382, 10_000])("submits only a fixed reference and preserves exact final bytes at %i products", async (productCount) => {
     const staged = await stage(productCount);
     expect(staged.signedSnapshot.length).toBeGreaterThan(200_000);

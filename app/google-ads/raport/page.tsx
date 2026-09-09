@@ -61,6 +61,7 @@ import {
   type GadsReportSnapshot,
 } from "@/lib/gads-report-delivery";
 import { stagePendingReportSnapshot } from "@/lib/gads-pending-report";
+import { persistGeneratedReport } from "@/lib/gads-generated-report";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -514,6 +515,7 @@ export default async function Raport() {
     throw new Error("Signed V2 report snapshot validation failed");
   }
   if (!sealedSession) throw new Error("Sealed report session is unavailable");
+  await persistGeneratedReport({ signedSnapshot: signedReportSnapshot, sealedSession });
   const { reference: pendingReportReference } = await stagePendingReportSnapshot(
     signedReportSnapshot,
     sealedSession,

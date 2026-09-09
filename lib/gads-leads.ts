@@ -115,33 +115,89 @@ export async function saveLead(rec: Omit<GadsLead, "id" | "createdAt">): Promise
 }
 
 const IMMUTABLE_REPORT_FIELDS = [
-  "nume",
-  "email",
-  "telefon",
   "customerId",
   "customerName",
+  "marginPct",
   "website",
+  "averageOrderValue",
+  "goodsCost",
+  "breakEvenCpa",
+  "breakEvenRoas",
   "reportToken",
 ] as const;
+
+function present(value: unknown): boolean {
+  return value !== undefined && value !== null && value !== "";
+}
+
+function normalizedReportInput(
+  rec: Omit<GadsLead, "id" | "createdAt"> & { reportId: string; reportToken: string },
+) {
+  return { ...rec, email: rec.email.trim().toLowerCase() };
+}
+
+function mergeReportLead(
+  existing: GadsLead,
+  incoming: ReturnType<typeof normalizedReportInput>,
+  list: GadsLead[],
+): GadsLead {
+  for (const field of IMMUTABLE_REPORT_FIELDS) {
+    if (present(existing[field]) && present(incoming[field]) && existing[field] !== incoming[field]) {
+      throw new Error("Existing report lead conflicts with immutable delivery data");
+    }
+  }
+  const existingHasContact = Boolean(existing.nume || existing.email || existing.telefon);
+  const incomingHasContact = Boolean(incoming.nume || incoming.email || incoming.telefon);
+  if (existingHasContact && incomingHasContact
+    && (existing.nume !== incoming.nume
+      || existing.email.trim().toLowerCase() !== incoming.email
+      || existing.telefon !== incoming.telefon)) {
+    throw new Error("Existing report lead conflicts with immutable contact data");
+  }
+  if (!existingHasContact && incomingHasContact
+    && (!incoming.nume || !incoming.email || !incoming.telefon)) {
+    throw new Error("Report contact enrichment must be complete");
+  }
+  if (existingHasContact || !incomingHasContact) return existing;
+
+  const reusedPortalToken = list.find((lead) =>
+    lead.id !== existing.id
+    && lead.email.trim().toLowerCase() === incoming.email
+    && lead.customerId === (incoming.customerId ?? existing.customerId)
+    && typeof lead.portalToken === "string"
+  )?.portalToken;
+  return {
+    ...existing,
+    ...Object.fromEntries(Object.entries(incoming).filter(([, value]) => present(value))),
+    id: existing.id,
+    createdAt: existing.createdAt,
+    email: incoming.email,
+    portalToken: reusedPortalToken ?? existing.portalToken ?? incoming.portalToken,
+  };
+}
 
 export async function saveOrGetReportLead(
   rec: Omit<GadsLead, "id" | "createdAt"> & { reportId: string; reportToken: string },
 ): Promise<GadsLead> {
   return withLock(async () => {
     const list = await load();
-    const existing = list.find((lead) => lead.reportId === rec.reportId);
+    const normalized = normalizedReportInput(rec);
+    const existingIndex = list.findIndex((lead) => lead.reportId === normalized.reportId);
+    const existing = list[existingIndex];
     if (existing) {
-      const matches = IMMUTABLE_REPORT_FIELDS.every((field) => existing[field] === rec[field]);
-      if (!matches) throw new Error("Existing report lead conflicts with immutable delivery data");
-      return existing;
+      const merged = mergeReportLead(existing, normalized, list);
+      if (merged !== existing) {
+        list[existingIndex] = merged;
+        await persist(list);
+      }
+      return merged;
     }
-    const normalizedEmail = rec.email.trim().toLowerCase();
-    const reusedPortalToken = list.find((lead) =>
-      lead.email.trim().toLowerCase() === normalizedEmail
-      && lead.customerId === rec.customerId
+    const reusedPortalToken = normalized.email && list.find((lead) =>
+      lead.email.trim().toLowerCase() === normalized.email
+      && lead.customerId === normalized.customerId
       && typeof lead.portalToken === "string"
     )?.portalToken;
-    const lead = createLead({ ...rec, portalToken: reusedPortalToken ?? rec.portalToken });
+    const lead = createLead({ ...normalized, portalToken: reusedPortalToken || normalized.portalToken });
     list.unshift(lead);
     await persist(list);
     return lead;
