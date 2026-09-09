@@ -559,6 +559,9 @@ describe("pagina de raport, randata", () => {
   it("renders the V2 dashboard with the complete product action groups", async () => {
     const h = await html();
     expect(h).toContain('data-report-dashboard="v2"');
+    expect(h).toContain('aria-label="Report views"');
+    expect(h).toContain("Before &amp; after");
+    expect(h).toContain("12 months of evidence");
     expect(h).toContain('aria-label="Products: Consumes budget"');
     expect(h).toContain("Consumes budget");
     expect(h).toContain("Underpromoted");
