@@ -1,6 +1,18 @@
 {
   "schema_version": 1,
   "checks": {
+    "tracking_snapshots": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/page.test.tsx",
+        "--update"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 2
+    },
     "tracking_tests": {
       "profile": "targeted_tests",
       "command": [
@@ -53,6 +65,7 @@
         "app/google-ads/raport/ReportingDashboard.test.tsx",
         "app/google-ads/raport/page.tsx",
         "app/google-ads/raport/page.test.tsx",
+        "app/google-ads/raport/__snapshots__/page.test.tsx.snap",
         "app/google-ads/raport/**/*.tsx",
         "app/dashboard/google-ads/reports/**/*.tsx",
         "app/google-ads/portal/**/*.tsx"
@@ -60,7 +73,7 @@
       "statuses": ["A", "M"],
       "category": "runtime",
       "risk": "fast",
-      "checks": ["tracking_tests", "tracking_types", "tracking_lint"]
+      "checks": ["tracking_snapshots", "tracking_tests", "tracking_types", "tracking_lint"]
     },
     {
       "id": "tracking-focused-tests",
