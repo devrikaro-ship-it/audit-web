@@ -33,6 +33,34 @@ export type ProductAnalysis = {
   opportunities: ProductAnalysisRow[];
 };
 
+export type BeforeAfterTotals = {
+  spend?: number;
+  revenue?: number;
+  orders?: number;
+  cpa?: number | null;
+  roas?: number | null;
+};
+
+export type BeforeAfterReportSource = {
+  currencyCode?: string;
+  evidenceMonths?: number;
+  minimumRoasTarget?: number | null;
+  maximumCpaTarget?: number | null;
+  current?: BeforeAfterTotals;
+  optimized?: BeforeAfterTotals;
+  productAnalysis?: ProductAnalysis;
+};
+
+type BeforeAfterSnapshotInput = {
+  evidenceMonths?: number;
+  breakEvenRoas: number;
+  breakEvenCpa: number;
+  current: BeforeAfterTotals;
+  optimized: BeforeAfterTotals;
+  productAnalysis?: ProductAnalysis;
+  reportV2?: { currencyCode?: string };
+};
+
 export type SimulatedProductRow = ProductAnalysisRow & {
   strategy: "SCALE" | "CAP";
   simulatedCost: number;
@@ -202,6 +230,76 @@ export function analyzeProducts(
   return { ...base, economicBudgetLimit: findEconomicLimit(base) };
 }
 
+export function beforeAfterSourceFromSnapshot(
+  snapshot: BeforeAfterSnapshotInput,
+): BeforeAfterReportSource {
+  return {
+    currencyCode: snapshot.reportV2?.currencyCode,
+    evidenceMonths: snapshot.evidenceMonths,
+    minimumRoasTarget: snapshot.breakEvenRoas,
+    maximumCpaTarget: snapshot.breakEvenCpa,
+    current: {
+      spend: snapshot.current.spend,
+      revenue: snapshot.current.revenue,
+      orders: snapshot.current.orders,
+      cpa: snapshot.current.cpa,
+      roas: snapshot.current.roas,
+    },
+    optimized: {
+      spend: snapshot.optimized.spend,
+      revenue: snapshot.optimized.revenue,
+      orders: snapshot.optimized.orders,
+      cpa: snapshot.optimized.cpa,
+      roas: snapshot.optimized.roas,
+    },
+    productAnalysis: snapshot.productAnalysis,
+  };
+}
+
+const finiteNonnegative = (value: number): boolean =>
+  Number.isFinite(value) && value >= 0;
+
+const usableAnalysisRow = (row: ProductAnalysisRow): boolean =>
+  typeof row.productId === "string" &&
+  typeof row.title === "string" &&
+  [
+    row.cost,
+    row.conversionValue,
+    row.conversions,
+    row.clicks,
+    row.impressions,
+    row.monthlyCost,
+    row.monthlyRevenue,
+    row.monthlyOrders,
+    row.roas,
+    row.monthlyMoneyAtRisk,
+    row.estimatedSalesOpportunity,
+  ].every(finiteNonnegative) &&
+  (row.cpa === null || finiteNonnegative(row.cpa));
+
+export function isUsableProductAnalysis(
+  analysis: ProductAnalysis | undefined,
+): analysis is ProductAnalysis {
+  return Boolean(
+    analysis &&
+      Number.isFinite(analysis.breakEvenRoas) &&
+      analysis.breakEvenRoas > 0 &&
+      Number.isFinite(analysis.months) &&
+      analysis.months > 0 &&
+      finiteNonnegative(analysis.currentMonthlySpend) &&
+      finiteNonnegative(analysis.lossProductMonthlyCap) &&
+      Number.isFinite(analysis.economicBudgetLimit) &&
+      analysis.economicBudgetLimit > 0 &&
+      analysis.losses.every(usableAnalysisRow) &&
+      analysis.opportunities.length > 0 &&
+      analysis.opportunities.every(usableAnalysisRow),
+  );
+}
+
 export function simulateOptimizedBudget(analysis: ProductAnalysis, requestedBudget: number): BudgetSimulation {
-  return simulateRaw(analysis, Math.min(Math.max(0, requestedBudget), analysis.economicBudgetLimit));
+  const safeBudget = Number.isFinite(requestedBudget) ? requestedBudget : 0;
+  const safeLimit = finiteNonnegative(analysis.economicBudgetLimit)
+    ? analysis.economicBudgetLimit
+    : 0;
+  return simulateRaw(analysis, Math.min(Math.max(0, safeBudget), safeLimit));
 }

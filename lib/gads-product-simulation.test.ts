@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { DIMINISHING_RETURN_RATE, analyzeProducts, simulateOptimizedBudget } from "./gads-product-simulation";
+import {
+  DIMINISHING_RETURN_RATE,
+  analyzeProducts,
+  beforeAfterSourceFromSnapshot,
+  isUsableProductAnalysis,
+  simulateOptimizedBudget,
+} from "./gads-product-simulation";
 
 const products = [
   { productId: "loss-high", title: "High-cost loss", cost: 1200, conversionValue: 1200, conversions: 2, clicks: 500, impressions: 5000 },
@@ -119,5 +125,63 @@ describe("controlled optimized budget simulation", () => {
     const scaled = result.products.filter((row) => row.strategy === "SCALE" && row.simulatedCost > 0);
     expect(scaled.length).toBeGreaterThan(0);
     expect(scaled.every((row) => (row.simulatedRoas ?? 0) >= analysis.breakEvenRoas)).toBe(true);
+  });
+
+  it("turns a nonfinite requested budget into a finite zero-budget result", () => {
+    const analysis = analyzeProducts(products, { breakEvenRoas: 5, months: 12 });
+    expect(simulateOptimizedBudget(analysis, Number.NaN)).toMatchObject({
+      budget: 0,
+      expectedRevenue: 0,
+      expectedOrders: 0,
+      expectedRoas: null,
+    });
+  });
+
+  it("only admits complete finite analyses to the interactive model", () => {
+    const analysis = analyzeProducts(products, { breakEvenRoas: 5, months: 12 });
+    expect(isUsableProductAnalysis(analysis)).toBe(true);
+    expect(isUsableProductAnalysis({ ...analysis, economicBudgetLimit: Number.POSITIVE_INFINITY })).toBe(false);
+    expect(isUsableProductAnalysis({ ...analysis, opportunities: [] })).toBe(false);
+  });
+});
+
+describe("before-and-after snapshot projection", () => {
+  it("passes only the explicit report source fields to the client component", () => {
+    const analysis = analyzeProducts(products, { breakEvenRoas: 5, months: 12 });
+    const source = beforeAfterSourceFromSnapshot({
+      evidenceMonths: 12,
+      breakEvenRoas: 5,
+      breakEvenCpa: 75,
+      current: { spend: 120, revenue: 300, orders: 1, cpa: 120, roas: 2.5 },
+      optimized: { spend: 120, revenue: 900, orders: 3, cpa: 40, roas: 7.5 },
+      productAnalysis: analysis,
+      reportV2: { currencyCode: "EUR" },
+      website: "https://private.example",
+      refreshToken: "must-not-cross-the-client-boundary",
+    } as Parameters<typeof beforeAfterSourceFromSnapshot>[0] & {
+      website: string;
+      refreshToken: string;
+    });
+
+    expect(source).toMatchObject({
+      currencyCode: "EUR",
+      evidenceMonths: 12,
+      minimumRoasTarget: 5,
+      maximumCpaTarget: 75,
+      current: { spend: 120, revenue: 300, orders: 1, cpa: 120, roas: 2.5 },
+      optimized: { spend: 120, revenue: 900, orders: 3, cpa: 40, roas: 7.5 },
+      productAnalysis: analysis,
+    });
+    expect(Object.keys(source).sort()).toEqual([
+      "currencyCode",
+      "current",
+      "evidenceMonths",
+      "maximumCpaTarget",
+      "minimumRoasTarget",
+      "optimized",
+      "productAnalysis",
+    ]);
+    expect(source).not.toHaveProperty("website");
+    expect(source).not.toHaveProperty("refreshToken");
   });
 });

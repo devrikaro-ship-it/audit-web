@@ -16,18 +16,6 @@
       "cwd": ".",
       "estimated_minutes": 5
     },
-    "snapshot_update": {
-      "profile": "targeted_tests",
-      "command": [
-        "npx",
-        "vitest",
-        "run",
-        "app/google-ads/raport/page.test.tsx",
-        "--update"
-      ],
-      "cwd": ".",
-      "estimated_minutes": 5
-    },
     "typecheck": {
       "profile": "targeted_tests",
       "command": ["npx", "tsc", "--noEmit", "--incremental", "false", "--pretty", "false"],
@@ -66,7 +54,7 @@
       "statuses": ["A", "M"],
       "category": "frontend",
       "risk": "guarded",
-      "checks": ["focused_tests", "snapshot_update", "typecheck", "lint_changed"]
+      "checks": ["focused_tests", "typecheck", "lint_changed"]
     },
     {
       "id": "implementation_artifacts",

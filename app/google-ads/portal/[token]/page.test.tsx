@@ -27,6 +27,7 @@ const productAnalysis = {
 
 const snapshot = {
   generatedAt: "2026-08-27T08:00:00.000Z",
+  evidenceMonths: 12,
   website: "https://store.example",
   accountName: "Example Store",
   averageOrderValue: 500,
