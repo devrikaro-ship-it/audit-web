@@ -1,7 +1,7 @@
+// @vitest-environment jsdom
 import { mkdtemp, mkdir, writeFile, readFile, rm } from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
-import { JSDOM } from "jsdom";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type { GadsLead } from "@/lib/gads-leads";
@@ -13,6 +13,7 @@ vi.mock("next/navigation", () => ({ notFound: () => { throw new Error("NOT_FOUND
 
 let directory: string;
 let ledger: string;
+const parse = (html: string) => new DOMParser().parseFromString(html, "text/html");
 
 function fixtureSnapshot(revenue = 600): GadsReportSnapshot {
   return {
@@ -59,7 +60,7 @@ it("groups registered reports by account and uses the latest signed measured per
   await writeFile(ledger, contents);
   const Page = (await import("./page")).default;
   const html = renderToStaticMarkup(await Page());
-  const document = new JSDOM(html).window.document;
+  const document = parse(html);
   const rows = Array.from(document.querySelectorAll("tbody tr"));
   expect(rows).toHaveLength(2);
   expect(rows[0].textContent).toContain("Owner latest");
@@ -94,7 +95,7 @@ it("does not merge missing account identifiers or treat zero spend and invalid s
   await writeFile(invalid.snapshotPath!, "forged.snapshot");
   await writeFile(ledger, JSON.stringify([zero, invalid]));
   const Page = (await import("./page")).default;
-  const document = new JSDOM(renderToStaticMarkup(await Page())).window.document;
+  const document = parse(renderToStaticMarkup(await Page()));
   const rows = Array.from(document.querySelectorAll("tbody tr"));
   expect(rows).toHaveLength(2);
   expect(rows[0].textContent).toContain("Unknown");
@@ -109,7 +110,7 @@ it("compares unrounded measured ROAS against the signed target, including exact 
   const below = await record("fractional", "4444444444", 200, 499.999);
   await writeFile(ledger, JSON.stringify([equal, below]));
   const Page = (await import("./page")).default;
-  const rows = Array.from(new JSDOM(renderToStaticMarkup(await Page())).window.document.querySelectorAll("tbody tr"));
+  const rows = Array.from(parse(renderToStaticMarkup(await Page())).querySelectorAll("tbody tr"));
   expect(rows[0].textContent).toContain("At target");
   expect(rows[1].textContent).toContain("Below target");
 });
@@ -122,7 +123,7 @@ it("opens the exact account-scoped history and refuses cross-account, unknown, u
   const Page = (await import("./reports/[id]/page")).default;
   const open = (id: string, report?: string) => Page({ params: Promise.resolve({ id }), searchParams: Promise.resolve({ report }) });
   const html = renderToStaticMarkup(await open("latest", "older"));
-  const document = new JSDOM(html).window.document;
+  const document = parse(html);
   expect(Array.from(document.querySelectorAll("option")).map((option) => option.value)).toEqual(["latest", "older"]);
   expect(document.querySelector('option[selected]')?.getAttribute("value")).toBe("older");
   expect(document.querySelector(".targetTile strong")?.textContent).toBe("3×");
