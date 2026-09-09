@@ -306,3 +306,22 @@ application files.
 **Class.** Shared presentation constants do not imply a shared language contract. A scoped translation needs an
 explicit compatibility boundary, and generated release evidence needs a declared lint boundary that does not
 weaken checks on production or test code.
+
+## 2026-09-09 — Import identity did not match the signed report identity
+
+**Symptom.** The actual connected report failed with server error916538762 and
+`Signed V2 report snapshot validation failed`. The import allowed repeated performance item IDs
+and repeated inactive catalog IDs, while the signed report requires a unique product population.
+
+**Measured cause at the seam.** `buildProducts` appended every performance row and only marked
+performance IDs as seen. A repeated performance item remained duplicated, and a catalog-only item
+was appended repeatedly. The focused raw-import-to-signed-report control failed in both complete
+and partial catalog modes. The old synthetic portal witness bypassed this import seam.
+
+**Recognition signal.** Compare returned product count with the unique product-ID count before
+sealing. A successful small hand-authored snapshot does not exercise raw provider row multiplicity.
+
+**Repair.** Group performance rows by the existing product identity and sum every additive metric;
+admit each inactive catalog item once. Keep signed uniqueness and signature validation strict.
+Prove conserved spend, value, fractional conversions, clicks, impressions and unchanged inputs,
+then verify the actual connected route that failed before claiming the user incident resolved.

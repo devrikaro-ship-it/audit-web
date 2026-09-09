@@ -71,12 +71,22 @@ export function buildProducts(
 ): { products: Product[]; catalogComplete: boolean } {
   const products: Product[] = [];
   const seen = new Set<string>();
+  const performanceById = new Map<string, Product>();
   const typeById = new Map<string, string | undefined>();
   for (const c of catalogRows ?? []) typeById.set(c.itemId, c.category);
 
   for (const r of perfRows) {
+    const existing = performanceById.get(r.itemId);
+    if (existing) {
+      existing.cost += r.costMicros / 1_000_000;
+      existing.conversionValue += Number(r.conversionsValue) || 0;
+      existing.impressions += Number(r.impressions) || 0;
+      existing.clicks += Number(r.clicks) || 0;
+      existing.conversions += Number(r.conversions) || 0;
+      continue;
+    }
     seen.add(r.itemId);
-    products.push({
+    const product: Product = {
       productId: r.itemId,
       title: r.title || r.itemId,
       cost: r.costMicros / 1_000_000,
@@ -85,13 +95,16 @@ export function buildProducts(
       clicks: Number(r.clicks) || 0,
       conversions: Number(r.conversions) || 0,
       category: typeById.get(r.itemId),
-    });
+    };
+    performanceById.set(r.itemId, product);
+    products.push(product);
   }
 
   if (catalogRows === null) return { products, catalogComplete: false };
 
   for (const c of catalogRows) {
     if (seen.has(c.itemId)) continue;
+    seen.add(c.itemId);
     products.push({
       productId: c.itemId,
       title: c.title || c.itemId,
