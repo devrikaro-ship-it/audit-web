@@ -125,7 +125,7 @@ it("opens the exact account-scoped history and refuses cross-account, unknown, u
   const document = new JSDOM(html).window.document;
   expect(Array.from(document.querySelectorAll("option")).map((option) => option.value)).toEqual(["latest", "older"]);
   expect(document.querySelector('option[selected]')?.getAttribute("value")).toBe("older");
-  expect(html).toContain("3.00");
+  expect(document.querySelector(".targetTile strong")?.textContent).toBe("3×");
   expect(html).toContain("GBP");
   expect(html).not.toMatch(/private-report-token|private-portal-token|report-other/);
   await expect(open("latest", "other")).rejects.toThrow("NOT_FOUND");

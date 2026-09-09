@@ -325,3 +325,6 @@ sealing. A successful small hand-authored snapshot does not exercise raw provide
 admit each inactive catalog item once. Keep signed uniqueness and signature validation strict.
 Prove conserved spend, value, fractional conversions, clicks, impressions and unchanged inputs,
 then verify the actual connected route that failed before claiming the user incident resolved.
+# 2026-09-09 — Resolve manager population from the product workflow
+
+Symptom: discovery enumerated the agency Google Ads MCC when the operator wanted the reporting application's manager directory. Measured cause: the term MCC was interpreted as an external provider hierarchy before reconciling it with the requested registrant details and generated reports. Recognition signal: the proposed source includes accounts that never configured reporting in the application. Repair: use registered report records as the directory population, explicitly exclude external MCC and temporary staging data, and show absent contacts or unavailable reports truthfully. The operator corrected the interpretation before application changes; the discovery export is not an application input.
