@@ -79,10 +79,10 @@ describe("generated Google Ads report persistence", () => {
       nume: "",
       email: "",
       customerId: "123",
-      serviceReportsEnabled: undefined,
-      consentAt: undefined,
-      deliveryStatus: undefined,
     });
+    expect(first.lead).not.toHaveProperty("serviceReportsEnabled");
+    expect(first.lead).not.toHaveProperty("consentAt");
+    expect(first.lead).not.toHaveProperty("deliveryStatus");
     const { registeredReports, readManagerReport } = await import("./gads-manager");
     const reports = await registeredReports();
     expect(reports).toHaveLength(1);
