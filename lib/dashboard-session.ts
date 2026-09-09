@@ -7,6 +7,14 @@ export const DASHBOARD_COOKIE = "dashboard_session";
 export const DASHBOARD_MAX_AGE = 8 * 60 * 60;
 export const DASHBOARD_HOME = "/dashboard/google-ads";
 
+export function dashboardOrigin(request: { url: string }): string | null {
+  if (process.env.NODE_ENV !== "production") return new URL(request.url).origin;
+  try {
+    const configured = new URL(process.env.PUBLIC_URL || process.env.GADS_REDIRECT_URI || "");
+    return configured.protocol === "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(configured.hostname) ? configured.origin : null;
+  } catch { return null; }
+}
+
 function equal(left: string, right: string) {
   return timingSafeEqual(createHash("sha256").update(left).digest(), createHash("sha256").update(right).digest());
 }

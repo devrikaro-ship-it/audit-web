@@ -16,4 +16,6 @@ Login and logout accept same-origin form POSTs only, reject cross-site requests 
 
 ## Acceptance
 
+Production origin validation and redirects use the existing PUBLIC_URL configuration, with GADS_REDIRECT_URI as the configured fallback. Missing or invalid HTTPS origin fails closed. Never trust the backend localhost URL or caller-supplied forwarding headers. A witnessed proxy-origin regression failed before this correction and passed afterward; this reuses the deployment invariant documented in lib/public-url.ts.
+
 Verify a real production login page, valid login and session access, direct-link return, refresh, logout and replay refusal. Invalid credentials, forged/expired sessions, cross-origin POST, external return paths and missing configuration must not grant access; each guard has a passing counterpart. Use synthetic credentials only for local browser controls. Production verification uses configured credentials exclusively inside the server process and emits sanitized outcomes. Preserve existing manager grouping/report access and public reporting. Independent exact revision review and production verification are required before completion.

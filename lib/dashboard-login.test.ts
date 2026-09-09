@@ -86,3 +86,22 @@ it("bounds repeated login attempts while allowing the first valid login", async 
   expect(response!.status).toBe(429);
   expect(response!.headers.has("set-cookie")).toBe(false);
 });
+
+it("uses the configured public origin behind the production proxy and refuses spoofed origins", async () => {
+  vi.stubEnv("NODE_ENV", "production");
+  vi.stubEnv("PUBLIC_URL", origin);
+  const { proxy } = await import("../proxy");
+  const { POST: login } = await import("../app/dashboard/login/submit/route");
+  const { POST: logout } = await import("../app/dashboard/logout/route");
+  const backend = (route: string, body?: string, cookie?: string) => new NextRequest("http://localhost:3000" + route, { method: body ? "POST" : "GET", body, headers: { origin, "content-type": "application/x-www-form-urlencoded", "x-forwarded-host": "attacker.example", ...(cookie ? { cookie } : {}) } });
+  const anonymous = await proxy(backend("/dashboard/google-ads"));
+  expect(anonymous.headers.get("location")).toBe(origin + "/dashboard/login?next=%2Fdashboard%2Fgoogle-ads");
+  const response = await login(backend("/dashboard/login/submit", "username=manager&password=test-only%3Apassword"));
+  expect(response.status).toBe(303);
+  expect(response.headers.get("location")).toBe(origin + "/dashboard/google-ads");
+  expect(response.headers.get("set-cookie")).toMatch(/; Secure/i);
+  const cookie = response.headers.get("set-cookie")!.split(";")[0];
+  expect((await logout(backend("/dashboard/logout", "logout=1", cookie))).headers.get("location")).toBe(origin + "/dashboard/login");
+  vi.stubEnv("PUBLIC_URL", ""); vi.stubEnv("GADS_REDIRECT_URI", "");
+  expect((await login(backend("/dashboard/login/submit", "username=manager&password=test-only%3Apassword"))).status).toBe(503);
+});
