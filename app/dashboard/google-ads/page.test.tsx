@@ -14,7 +14,7 @@ vi.mock("next/navigation", () => ({ notFound: () => { throw new Error("NOT_FOUND
 let directory: string;
 let ledger: string;
 
-export function fixtureSnapshot(revenue = 600): GadsReportSnapshot {
+function fixtureSnapshot(revenue = 600): GadsReportSnapshot {
   return {
     generatedAt: "2026-08-31T12:00:00Z", website: "https://fixture.example", accountName: "Fixture store",
     averageOrderValue: 100, goodsCost: 60, breakEvenCpa: 20, breakEvenRoas: 5,
@@ -82,4 +82,57 @@ it("refuses manager access before reading a broken ledger, while valid access re
   await writeFile(ledger, "invalid-json");
   access.allowed = false;
   await expect(Page()).rejects.toThrow("NOT_FOUND");
+});
+
+it("does not merge missing account identifiers or treat zero spend and invalid signatures as below target", async () => {
+  const zero = await record("zero", "", 300, 0);
+  const invalid = await record("invalid", "", 200, 600);
+  const { sealReportSnapshot } = await import("@/lib/gads-report-delivery");
+  const snapshot = fixtureSnapshot(0);
+  snapshot.reportV2!.periods.selected.spend = 0;
+  await writeFile(zero.snapshotPath!, sealReportSnapshot(snapshot));
+  await writeFile(invalid.snapshotPath!, "forged.snapshot");
+  await writeFile(ledger, JSON.stringify([zero, invalid]));
+  const Page = (await import("./page")).default;
+  const document = new JSDOM(renderToStaticMarkup(await Page())).window.document;
+  const rows = Array.from(document.querySelectorAll("tbody tr"));
+  expect(rows).toHaveLength(2);
+  expect(rows[0].textContent).toContain("Unknown");
+  expect(rows[0].textContent).toContain("Available");
+  expect(rows[0].textContent).toContain("Unavailable");
+  expect(rows[1].textContent).toContain("Unavailable");
+  expect(rows.map((row) => row.textContent).join(" ")).not.toContain("Below target");
+});
+
+it("compares unrounded measured ROAS against the signed target, including exact equality", async () => {
+  const equal = await record("equal", "3333333333", 300, 500);
+  const below = await record("fractional", "4444444444", 200, 499.999);
+  await writeFile(ledger, JSON.stringify([equal, below]));
+  const Page = (await import("./page")).default;
+  const rows = Array.from(new JSDOM(renderToStaticMarkup(await Page())).window.document.querySelectorAll("tbody tr"));
+  expect(rows[0].textContent).toContain("At target");
+  expect(rows[1].textContent).toContain("Below target");
+});
+
+it("opens the exact account-scoped history and refuses cross-account, unknown, unauthorized and tampered report access", async () => {
+  const older = await record("older", "1111111111", 100, 300);
+  const latest = await record("latest", "1111111111", 300, 600);
+  const other = await record("other", "2222222222", 200, 900);
+  await writeFile(ledger, JSON.stringify([older, latest, other]));
+  const Page = (await import("./reports/[id]/page")).default;
+  const open = (id: string, report?: string) => Page({ params: Promise.resolve({ id }), searchParams: Promise.resolve({ report }) });
+  const html = renderToStaticMarkup(await open("latest", "older"));
+  const document = new JSDOM(html).window.document;
+  expect(Array.from(document.querySelectorAll("option")).map((option) => option.value)).toEqual(["latest", "older"]);
+  expect(document.querySelector('option[selected]')?.getAttribute("value")).toBe("older");
+  expect(html).toContain("3.00");
+  expect(html).toContain("GBP");
+  expect(html).not.toMatch(/private-report-token|private-portal-token|report-other/);
+  await expect(open("latest", "other")).rejects.toThrow("NOT_FOUND");
+  await expect(open("nonexistent")).rejects.toThrow("NOT_FOUND");
+  await writeFile(older.snapshotPath!, "forged.snapshot");
+  expect(renderToStaticMarkup(await open("older"))).toContain("Report unavailable");
+  await writeFile(ledger, "invalid-json");
+  access.allowed = false;
+  await expect(open("latest")).rejects.toThrow("NOT_FOUND");
 });
