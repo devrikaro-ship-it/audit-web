@@ -4,7 +4,7 @@ import { beforeEach, expect, it, vi } from "vitest";
 const requireManagerAccess = vi.hoisted(() => vi.fn());
 const registeredReports = vi.hoisted(() => vi.fn());
 const readManagerReport = vi.hoisted(() => vi.fn());
-const captured = vi.hoisted(() => ({ source: undefined as unknown }));
+const captured = vi.hoisted(() => ({ source: undefined as unknown, tracking: undefined as unknown }));
 
 vi.mock("@/lib/gads-manager", () => ({
   requireManagerAccess,
@@ -13,8 +13,9 @@ vi.mock("@/lib/gads-manager", () => ({
   managerAccountKey: (lead: { customerId: string }) => lead.customerId,
 }));
 vi.mock("@/app/google-ads/raport/ReportingDashboard", () => ({
-  default: ({ sourceSnapshot }: { sourceSnapshot?: unknown }) => {
+  default: ({ sourceSnapshot, tracking }: { sourceSnapshot?: unknown; tracking?: unknown }) => {
     captured.source = sourceSnapshot;
+    captured.tracking = tracking;
     return <div data-report-dashboard="v2" />;
   },
 }));
@@ -45,6 +46,7 @@ const productAnalysis = {
 beforeEach(() => {
   vi.clearAllMocks();
   captured.source = undefined;
+  captured.tracking = undefined;
   requireManagerAccess.mockResolvedValue(undefined);
   registeredReports.mockResolvedValue([lead]);
   readManagerReport.mockResolvedValue({
@@ -65,11 +67,19 @@ beforeEach(() => {
       opportunities: [],
       productAnalysis,
       reportV2: { currencyCode: "EUR" },
+      tracking: {
+        status: "OBSERVED",
+        observedAt: "2026-09-09T08:00:00.000Z",
+        actions: [{ name: "Purchase", category: "PURCHASE", primary: true }],
+        issues: [],
+        refreshToken: "must-not-cross-the-client-boundary",
+        sourceSession: { customerId: "customer-1" },
+      },
     },
   });
 });
 
-it("passes only the explicit before-and-after source into the manager renderer", async () => {
+it("passes only closed before-and-after and tracking projections into the manager renderer", async () => {
   const html = renderToStaticMarkup(await ManagerReportPage({
     params: Promise.resolve({ id: lead.id }),
     searchParams: Promise.resolve({}),
@@ -87,4 +97,12 @@ it("passes only the explicit before-and-after source into the manager renderer",
   });
   expect(captured.source).not.toHaveProperty("website");
   expect(captured.source).not.toHaveProperty("refreshToken");
+  expect(captured.tracking).toEqual({
+    status: "OBSERVED",
+    observedAt: "2026-09-09T08:00:00.000Z",
+    actions: [{ name: "Purchase", category: "PURCHASE", primary: true }],
+    issues: [],
+  });
+  expect(captured.tracking).not.toHaveProperty("refreshToken");
+  expect(captured.tracking).not.toHaveProperty("sourceSession");
 });
