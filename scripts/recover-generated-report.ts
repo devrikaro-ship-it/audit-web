@@ -1,5 +1,16 @@
 import { recoverPendingGeneratedReport } from "../lib/gads-generated-report";
 
+const HELP_TEXT = `Usage:
+  JITI_ALIAS='{"@":"/absolute/repository/root"}' ./node_modules/.bin/jiti scripts/recover-generated-report.ts \\
+    --pending-directory <absolute-path> \\
+    --expected-snapshot-digest <sha256> \\
+    --expected-website <website> \\
+    --expected-account-name <account-name> \\
+    [--customer-id <google-ads-customer-id>]
+
+Recover one verified pending Google Ads report without deleting or modifying its source snapshot.
+`;
+
 const VALUE_FLAGS = new Set([
   "--pending-directory",
   "--expected-snapshot-digest",
@@ -28,7 +39,13 @@ function required(argumentsMap: Map<string, string>, flag: string): string {
 }
 
 async function main(): Promise<void> {
-  const argumentsMap = parseArguments(process.argv.slice(2));
+  const values = process.argv.slice(2);
+  if (values.length === 1 && (values[0] === "--help" || values[0] === "-h")) {
+    process.stdout.write(HELP_TEXT);
+    return;
+  }
+
+  const argumentsMap = parseArguments(values);
   const recovered = await recoverPendingGeneratedReport({
     pendingDirectory: required(argumentsMap, "--pending-directory"),
     expectedSnapshotDigest: required(argumentsMap, "--expected-snapshot-digest"),
