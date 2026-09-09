@@ -51,6 +51,7 @@ import { ReportSurface, reportGuards, runReportStep } from "./report-contract";
 import { runGoogleAdsRead } from "@/lib/gads-read-disclosure";
 import {
   analyzeProducts,
+  beforeAfterSourceFromSnapshot,
   simulateOptimizedBudget,
 } from "@/lib/gads-product-simulation";
 import ReportingDashboard from "./ReportingDashboard";
@@ -757,6 +758,7 @@ export default async function Raport() {
         >
           <ReportingDashboard
             report={snapshotViewV2}
+            sourceSnapshot={beforeAfterSourceFromSnapshot(snapshot)}
             demo={demo}
           />
         </ReportSurface>

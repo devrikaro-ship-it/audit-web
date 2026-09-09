@@ -4,6 +4,7 @@ import { openReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-d
 import { readStoredReportSnapshot } from "@/lib/gads-report-snapshot";
 import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
 import ReportingDashboard from "@/app/google-ads/raport/ReportingDashboard";
+import { beforeAfterSourceFromSnapshot } from "@/lib/gads-product-simulation";
 import {
   buildGoogleAdsReportV2,
   type GoogleAdsReportV2ViewModel,
@@ -99,6 +100,7 @@ export default async function ClientReportPortal({ params, searchParams }: { par
     <main {...publicOAuthAttributes("client-portal")}>
       <ReportingDashboard
         report={report}
+        sourceSnapshot={beforeAfterSourceFromSnapshot(selected.snapshot)}
         periodSelector={{
           action: `/google-ads/portal/${encodeURIComponent(token)}`,
           selected: selected.lead.reportId!,
