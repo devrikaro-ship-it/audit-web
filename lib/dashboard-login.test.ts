@@ -105,3 +105,17 @@ it("uses the configured public origin behind the production proxy and refuses sp
   vi.stubEnv("PUBLIC_URL", ""); vi.stubEnv("GADS_REDIRECT_URI", "");
   expect((await login(backend("/dashboard/login/submit", "username=manager&password=test-only%3Apassword"))).status).toBe(503);
 });
+
+it("rejects explicit invalid authorization even with a valid cookie through proxy and the shared data guard", async () => {
+  const { createDashboardSession, dashboardAccessOk, DASHBOARD_COOKIE } = await import("./dashboard-session");
+  const { proxy } = await import("../proxy");
+  const token = await createDashboardSession();
+  const cookie = `${DASHBOARD_COOKIE}=${token}`;
+  expect(await dashboardAccessOk(new Headers({ cookie }))).toBe(true);
+  expect(await dashboardAccessOk(new Headers({ authorization: "Basic " + Buffer.from("manager:test-only:password").toString("base64") }))).toBe(true);
+  for (const authorization of ["Basic " + Buffer.from("manager:wrong-control").toString("base64"), "Basic ???", "Bearer unsupported", ""]) {
+    expect(await dashboardAccessOk(new Headers({ authorization }))).toBe(false);
+    expect(await dashboardAccessOk(new Headers({ authorization, cookie }))).toBe(false);
+    expect((await proxy(request("/dashboard/google-ads", "", { authorization, cookie }))).status).toBe(401);
+  }
+});

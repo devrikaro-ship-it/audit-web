@@ -62,7 +62,7 @@ export async function revokeDashboardSession(token: string | undefined) {
 }
 
 export async function dashboardAccessOk(headers: Headers) {
-  if (basicAuthOk(headers.get("authorization"), dashCredentials())) return true;
+  if (headers.has("authorization")) return basicAuthOk(headers.get("authorization"), dashCredentials());
   const raw = headers.get("cookie")?.split(";").map((part) => part.trim()).find((part) => part.startsWith(DASHBOARD_COOKIE + "="))?.slice(DASHBOARD_COOKIE.length + 1);
   return dashboardSessionOk(raw);
 }
