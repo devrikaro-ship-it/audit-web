@@ -26,6 +26,12 @@ Independent final local verification passed at the exact candidate. The actual F
 
 The delivery helper still rejects literal Next.js bracket filenames during administrative proof admission. Its existing incident remains recorded in the owning skill registry; no validator bypass or global tooling modification was made. Code and result proof files are preserved without claiming the administrative gate passed.
 
+## Verified local V2 presentation
+
+At source revision `cb9ffcf267d5099fb35355ddca45bbdb71a3ac1e`, `/google-ads/portal/local-fitness-review-v2` adds a separate local presentation while `/google-ads/portal/local-fitness-review` remains unchanged. The V2 route is presentation-only and preserves the same signed report fields, values, calculations, period choices, Products classifications, group controls and columns, Before & after result, and Tracking result. Verified desktop behavior includes a fixed Devrika sidebar, independently scrolling report content, and a capped vertically scrollable Products region. At a narrow viewport, the sidebar becomes compact top navigation; keyboard navigation activates each report view.
+
+Exact-token-first routing prevents suffix aliases. The V2 page uses the sidebar Fitness fallback only when no exact `local-fitness-review-v2` portal population exists, preventing the static route from shadowing an existing classic report. The final independent review and local desktop/mobile browser verification passed at `.superpowers/sdd/2026-09-10-report-design-v2/review-final/verdict.json` and `.superpowers/sdd/2026-09-10-report-design-v2/verification/verdict.json`. This remains local only, with no push or deployment. The known administrative proof-admission defect for literal Next.js bracket filenames remains tooling-only and was not bypassed.
+
 ## Inherited translation debt
 
 Inherited Romanian comments and identifiers remain in generation and tracking modules. New fields, copy, tests and comments use English; existing identifiers are not renamed incidentally.
