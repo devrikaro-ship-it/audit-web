@@ -86,6 +86,60 @@
       ],
       "cwd": ".",
       "estimated_minutes": 3
+    },
+    "client_authentication_http": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--config",
+        "tests/client-identity/http-auth.vitest.config.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "client_authentication_http_types": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--pretty",
+        "false",
+        "--strict",
+        "--skipLibCheck",
+        "--target",
+        "ES2022",
+        "--module",
+        "NodeNext",
+        "--moduleResolution",
+        "NodeNext",
+        "--esModuleInterop",
+        "lib/client-auth/http.ts",
+        "lib/client-auth/handlers.ts",
+        "app/client/api/auth/bootstrap/route.ts",
+        "app/client/api/auth/google/route.ts",
+        "app/client/api/auth/logout/route.ts",
+        "app/client/api/auth/otp/request/route.ts",
+        "app/client/api/auth/otp/verify/route.ts",
+        "app/client/api/auth/password/enroll/route.ts",
+        "app/client/api/auth/password/login/route.ts",
+        "tests/client-identity/http-auth.test.ts",
+        "tests/client-identity/http-auth.vitest.config.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "client_authentication_http_scope": {
+      "profile": "targeted_tests",
+      "command": [
+        "python3",
+        "-c",
+        "import hashlib, pathlib, subprocess\nbase='6dbe57e516ff9364ef09ac89a80eb3517dd0d68b'\nexpected={'.codex-delivery-checks.json','lib/client-auth/http.ts','lib/client-auth/handlers.ts','app/client/api/auth/bootstrap/route.ts','app/client/api/auth/google/route.ts','app/client/api/auth/logout/route.ts','app/client/api/auth/otp/request/route.ts','app/client/api/auth/otp/verify/route.ts','app/client/api/auth/password/enroll/route.ts','app/client/api/auth/password/login/route.ts','tests/client-identity/http-auth.test.ts','tests/client-identity/http-auth.vitest.config.ts'}\nactual=set(filter(None,subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines()))\nassert actual == expected, f'candidate scope mismatch: {sorted(actual ^ expected)}'\nfrozen_tracked=['lib/client-auth/config.ts','lib/client-auth/crypto.ts','lib/client-auth/adapters.ts','lib/client-auth/service.ts','lib/client-identity','lib/client-session','db/client-identity','app/google-ads/raport/ReportingDashboard.tsx','app/google-ads/portal/portal-report.tsx','lib/dashboard-session.ts','lib/gads-report-periods.ts']\nsubprocess.run(['git','diff','--quiet',base,'HEAD','--',*frozen_tracked],check=True)\nsubprocess.run(['git','diff','--quiet','HEAD','--',*frozen_tracked],check=True)\nui=['app/client/account-controls.tsx','app/client/login/login-form.tsx','app/client/login/page.tsx','app/client/page.tsx','app/client/reports/[reportId]/page.tsx','lib/client-report-access/index.ts','lib/client-report-access/report-view.ts','tests/client-identity/report-access.test.tsx','tests/client-identity/vitest.config.ts']\nmanifest=''.join(f'{item}\\t{hashlib.sha256(pathlib.Path(item).read_bytes()).hexdigest()}\\n' for item in sorted(ui))\ndigest=hashlib.sha256(manifest.encode()).hexdigest()\nassert digest == '1ad8afc0138202987b598e81ff0585afbfe164ac062344480ca20d17a1986907', digest\nprint(f'candidate_paths={len(actual)} frozen_ui_sha256={digest}')"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 1
     }
   },
   "rules": [
@@ -104,7 +158,9 @@
         "client_identity_core",
         "client_identity_core_types",
         "client_authentication_methods",
-        "client_authentication_methods_types"
+        "client_authentication_methods_types",
+        "client_authentication_http",
+        "client_authentication_http_types"
       ]
     },
     {
@@ -136,7 +192,10 @@
         "client_identity_core",
         "client_identity_core_types",
         "client_authentication_methods",
-        "client_authentication_methods_types"
+        "client_authentication_methods_types",
+        "client_authentication_http",
+        "client_authentication_http_types",
+        "client_authentication_http_scope"
       ]
     },
     {
@@ -149,7 +208,10 @@
         "client_identity_core",
         "client_identity_core_types",
         "client_authentication_methods",
-        "client_authentication_methods_types"
+        "client_authentication_methods_types",
+        "client_authentication_http",
+        "client_authentication_http_types",
+        "client_authentication_http_scope"
       ]
     },
     {
@@ -181,6 +243,37 @@
       "category": "test",
       "risk": "guarded",
       "checks": ["client_authentication_methods", "client_authentication_methods_types"]
+    },
+    {
+      "id": "client_authentication_http_runtime",
+      "patterns": [
+        "lib/client-auth/http.ts",
+        "lib/client-auth/handlers.ts",
+        "app/client/api/auth/**"
+      ],
+      "statuses": ["A", "M"],
+      "category": "runtime",
+      "risk": "critical",
+      "checks": [
+        "client_authentication_http",
+        "client_authentication_http_types",
+        "client_authentication_http_scope"
+      ]
+    },
+    {
+      "id": "client_authentication_http_tests",
+      "patterns": [
+        "tests/client-identity/http-auth.test.ts",
+        "tests/client-identity/http-auth.vitest.config.ts"
+      ],
+      "statuses": ["A", "M"],
+      "category": "test",
+      "risk": "guarded",
+      "checks": [
+        "client_authentication_http",
+        "client_authentication_http_types",
+        "client_authentication_http_scope"
+      ]
     }
   ]
 }
