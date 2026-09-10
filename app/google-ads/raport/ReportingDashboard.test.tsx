@@ -194,6 +194,10 @@ it("applies the checklist system only to the sidebar presentation without changi
   expect(css).toContain(".reportV2Sidebar>.accountSummary .targetTile[data-status=warning] strong{color:#B65357}");
   expect(css).toContain(".reportV2Sidebar>.accountSummary .targetTile[data-status=positive] strong{color:#087C72}");
   expect(css).toContain(".reportV2Sidebar>.accountSummary .targetTile[data-status=unavailable] strong{color:#A46A16}");
+  expect(css).toContain(".reportV2Sidebar .brandMark{border-radius:12px;background:#202B35}");
+  expect(css).toContain(".reportV2Sidebar>.brandHeader .periodForm button{border-color:#DCE3E4;border-radius:6px;background:#fff;color:#202B35}");
+  expect(css).toContain(".reportV2Sidebar>.accountSummary .targetTile small{color:#65717A;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}");
+  expect(css).toContain(".reportV2Sidebar .budgetControl input{accent-color:#087C72}");
 
   tabs[0].focus();
   fireEvent.keyDown(tabs[0], { key: "End" });
