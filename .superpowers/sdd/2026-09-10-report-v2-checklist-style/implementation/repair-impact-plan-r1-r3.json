@@ -1,0 +1,124 @@
+{
+  "base_revision": "9045e2f22e59f216d80f2097d30eae4430a50d50",
+  "changes": [
+    {
+      "category": "documentation",
+      "checks": [],
+      "path": ".superpowers/sdd/2026-09-10-report-v2-checklist-style/implementation/repair-checkpoint-r1-r3.json",
+      "risk": "fast",
+      "rule_id": "delivery_artifacts",
+      "status": "A"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "frontend_build"
+      ],
+      "path": "app/google-ads/raport/ReportingDashboard.test.tsx",
+      "risk": "guarded",
+      "rule_id": "reporting_dashboard_sidebar_style",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "frontend_build"
+      ],
+      "path": "app/google-ads/raport/ReportingDashboard.tsx",
+      "risk": "guarded",
+      "rule_id": "reporting_dashboard_sidebar_style",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/portal/[token]/page.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit-report-tabs",
+      "estimated_minutes": 5,
+      "id": "focused_tests",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build",
+        "--",
+        "--webpack"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit-report-tabs",
+      "estimated_minutes": 5,
+      "id": "frontend_build",
+      "profile": "frontend_build"
+    },
+    {
+      "command": [
+        "npx",
+        "eslint",
+        "app/google-ads/raport/ReportingDashboard.tsx",
+        "app/google-ads/raport/ReportingDashboard.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit-report-tabs",
+      "estimated_minutes": 3,
+      "id": "lint_changed",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "--pretty",
+        "false"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit-report-tabs",
+      "estimated_minutes": 4,
+      "id": "typecheck",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-v2-checklist-style/implementation/checks.json",
+  "declaration_sha256": "ead8f19dc632245d83d88a453ebace640c393904c63bfc930a21d0f229526589",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "1c892ec81d1d555ac8807d1afc98f71c43314d4a4b3d4c72ee4be4b4fae1d4c5",
+  "repo_root": "/Users/VladMoloso/seo-audit-report-tabs",
+  "revision": "c5694480484f7a2109530bcb17076d358abbb01f",
+  "risk": "guarded",
+  "schema_version": 1
+}
