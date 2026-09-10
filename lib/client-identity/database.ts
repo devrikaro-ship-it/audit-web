@@ -7,17 +7,32 @@ import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import {
   assertClientAuthConfig,
+  assertClientAuthenticationConfig,
   type ClientAuthConfig,
+  type ClientAuthenticationConfig,
 } from "../client-auth/config";
 
-const MIGRATION_VERSION = 1;
 const BUSY_TIMEOUT_MS = 5_000;
-const MIGRATION_PATH = path.join(process.cwd(), "db", "client-identity", "001_initial.sql");
+const CORE_MIGRATIONS = [
+  { version: 1, filename: "001_initial.sql" },
+] as const;
+const AUTHENTICATION_MIGRATIONS = [
+  ...CORE_MIGRATIONS,
+  { version: 2, filename: "002_auth_methods.sql" },
+] as const;
 
 export type ClientDatabase = DatabaseSync;
 
-function migrationSql(): string {
-  const sql = readFileSync(MIGRATION_PATH, "utf8");
+type Migration = Readonly<{ version: number; filename: string }>;
+
+function migrationSql(migration: Migration): string {
+  const migrationPath = path.join(
+    process.cwd(),
+    "db",
+    "client-identity",
+    migration.filename,
+  );
+  const sql = readFileSync(migrationPath, "utf8");
   if (!sql.trim()) throw new Error("Client identity migration is unavailable");
   return sql;
 }
@@ -30,32 +45,53 @@ function assertStorageParent(databasePath: string): void {
   }
 }
 
-export function openClientDatabase(config: ClientAuthConfig): ClientDatabase {
-  assertClientAuthConfig(config);
-  const sql = migrationSql();
+function applyMigrations(database: ClientDatabase, migrations: readonly Migration[]): void {
+  for (const migration of migrations) {
+    const migrationsExist = database.prepare(
+      "SELECT 1 AS present FROM sqlite_master WHERE type = 'table' AND name = 'client_schema_migrations'",
+    ).get() as { present: number } | undefined;
+    const applied = migrationsExist
+      ? database.prepare("SELECT version FROM client_schema_migrations WHERE version = ?")
+        .get(migration.version)
+      : undefined;
+    if (applied) continue;
+
+    const sql = migrationSql(migration);
+    inImmediateTransaction(database, () => {
+      database.exec(sql);
+      database.prepare("INSERT INTO client_schema_migrations(version, applied_at) VALUES (?, ?)")
+        .run(migration.version, Date.now());
+    });
+  }
+}
+
+function openDatabase(
+  config: ClientAuthConfig,
+  migrations: readonly Migration[],
+): ClientDatabase {
   assertStorageParent(config.databasePath);
 
   const database = new DatabaseSync(config.databasePath);
   try {
     database.exec(`PRAGMA foreign_keys = ON; PRAGMA busy_timeout = ${BUSY_TIMEOUT_MS};`);
-    const migrationsExist = database.prepare(
-      "SELECT 1 AS present FROM sqlite_master WHERE type = 'table' AND name = 'client_schema_migrations'",
-    ).get() as { present: number } | undefined;
-    const applied = migrationsExist
-      ? database.prepare("SELECT version FROM client_schema_migrations WHERE version = ?").get(MIGRATION_VERSION)
-      : undefined;
-    if (!applied) {
-      inImmediateTransaction(database, () => {
-        database.exec(sql);
-        database.prepare("INSERT INTO client_schema_migrations(version, applied_at) VALUES (?, ?)")
-          .run(MIGRATION_VERSION, Date.now());
-      });
-    }
+    applyMigrations(database, migrations);
     return database;
   } catch (error) {
     database.close();
     throw error;
   }
+}
+
+export function openClientDatabase(config: ClientAuthConfig): ClientDatabase {
+  assertClientAuthConfig(config);
+  return openDatabase(config, CORE_MIGRATIONS);
+}
+
+export function openClientAuthenticationDatabase(
+  config: ClientAuthenticationConfig,
+): ClientDatabase {
+  assertClientAuthenticationConfig(config);
+  return openDatabase(config, AUTHENTICATION_MIGRATIONS);
 }
 
 export function inImmediateTransaction<T>(database: ClientDatabase, operation: () => T): T {

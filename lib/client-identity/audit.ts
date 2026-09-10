@@ -6,7 +6,13 @@ import type { ClientDatabase } from "./database";
 export type SecurityAuditCategory =
   | "auth.flow.consumed"
   | "auth.flow.created"
+  | "auth.google.succeeded"
   | "auth.identity.created"
+  | "auth.otp.delivery_failed"
+  | "auth.otp.requested"
+  | "auth.otp.succeeded"
+  | "auth.password.changed"
+  | "auth.password.succeeded"
   | "auth.session.issued"
   | "auth.session.revoked"
   | "auth.session.rotated"

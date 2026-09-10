@@ -42,6 +42,50 @@
       ],
       "cwd": ".",
       "estimated_minutes": 2
+    },
+    "client_authentication_methods": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--config",
+        "tests/client-identity/authentication.vitest.config.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "client_authentication_methods_types": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--pretty",
+        "false",
+        "--strict",
+        "--skipLibCheck",
+        "--target",
+        "ES2022",
+        "--module",
+        "NodeNext",
+        "--moduleResolution",
+        "NodeNext",
+        "--esModuleInterop",
+        "lib/client-auth/config.ts",
+        "lib/client-auth/crypto.ts",
+        "lib/client-auth/adapters.ts",
+        "lib/client-auth/service.ts",
+        "lib/client-identity/audit.ts",
+        "lib/client-identity/database.ts",
+        "lib/client-identity/email.ts",
+        "lib/client-identity/index.ts",
+        "lib/client-session/index.ts",
+        "tests/client-identity/authentication.test.ts",
+        "tests/client-identity/authentication.vitest.config.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
     }
   },
   "rules": [
@@ -56,7 +100,12 @@
       "statuses": ["A", "M"],
       "category": "runtime",
       "risk": "critical",
-      "checks": ["client_identity_core", "client_identity_core_types"]
+      "checks": [
+        "client_identity_core",
+        "client_identity_core_types",
+        "client_authentication_methods",
+        "client_authentication_methods_types"
+      ]
     },
     {
       "id": "client_identity_core_migration",
@@ -83,7 +132,12 @@
       "statuses": ["A", "M"],
       "category": "dependency",
       "risk": "critical",
-      "checks": ["client_identity_core", "client_identity_core_types"]
+      "checks": [
+        "client_identity_core",
+        "client_identity_core_types",
+        "client_authentication_methods",
+        "client_authentication_methods_types"
+      ]
     },
     {
       "id": "client_identity_core_check_mapping",
@@ -91,7 +145,42 @@
       "statuses": ["A", "M"],
       "category": "build_config",
       "risk": "guarded",
-      "checks": ["client_identity_core", "client_identity_core_types"]
+      "checks": [
+        "client_identity_core",
+        "client_identity_core_types",
+        "client_authentication_methods",
+        "client_authentication_methods_types"
+      ]
+    },
+    {
+      "id": "client_authentication_methods_runtime",
+      "patterns": [
+        "lib/client-auth/adapters.ts",
+        "lib/client-auth/service.ts"
+      ],
+      "statuses": ["A", "M"],
+      "category": "runtime",
+      "risk": "critical",
+      "checks": ["client_authentication_methods", "client_authentication_methods_types"]
+    },
+    {
+      "id": "client_authentication_methods_migration",
+      "patterns": ["db/client-identity/002_auth_methods.sql"],
+      "statuses": ["A", "M"],
+      "category": "migration",
+      "risk": "critical",
+      "checks": ["client_authentication_methods", "client_authentication_methods_types"]
+    },
+    {
+      "id": "client_authentication_methods_tests",
+      "patterns": [
+        "tests/client-identity/authentication.test.ts",
+        "tests/client-identity/authentication.vitest.config.ts"
+      ],
+      "statuses": ["A", "M"],
+      "category": "test",
+      "risk": "guarded",
+      "checks": ["client_authentication_methods", "client_authentication_methods_types"]
     }
   ]
 }
