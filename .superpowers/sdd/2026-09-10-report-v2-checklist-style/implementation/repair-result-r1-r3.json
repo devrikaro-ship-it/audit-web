@@ -1,0 +1,24 @@
+{
+  "outcome": "TASK_SUCCEEDED",
+  "repair_candidate_revision": "c5694480484f7a2109530bcb17076d358abbb01f",
+  "review_findings_closed": ["R1", "R2", "R3"],
+  "summary": "Added final .reportV2Sidebar-scoped repairs for all review-named rendered selectors. Classic presentation remains outside the repair cascade.",
+  "repairs": {
+    "R1": "Explicit Sora declarations on rendered target values, conclusion values, group claims, Before & after and Tracking headings, and summary controls are overridden with Inter.",
+    "R2": "Real comparison, Before & after, and Tracking scroll/panel wrappers now use the white #E5E9EB bordered 10px system.",
+    "R3": "Warning, positive, unavailable, and neutral target-tile values retain distinct muted-red, teal, amber, and ink semantics through more specific sidebar selectors."
+  },
+  "negative_control": {
+    "plant": "Changed the positive target-tile color assertion from #087C72 to #087C73.",
+    "receipt": "The planned focused test command failed with one expected assertion failure and 22 passing controls.",
+    "restoration": "Restored #087C72 before all planned checks passed."
+  },
+  "checks": [
+    {"id": "focused_tests", "result": "passed", "detail": "2 files, 23 tests passed"},
+    {"id": "lint_changed", "result": "passed"},
+    {"id": "typecheck", "result": "passed"},
+    {"id": "frontend_build", "result": "passed", "detail": "Next.js webpack build completed"}
+  ],
+  "scope": {"classic_changed": false, "routing_changed": false, "data_changed": false, "external_mutation": "none", "publication": "none", "push": "none", "deployment": "none"},
+  "next_action": "Request fresh independent review of the exact repair candidate, followed by local browser verification."
+}
