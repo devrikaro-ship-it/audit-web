@@ -1,9 +1,9 @@
 {
-  "completed": ["Read the browser repair brief and web-operation instructions.", "Inspected the rendered selectors and prior V2 overrides.", "Added V2-only R4-R7 overrides and focused assertions."],
+  "completed": ["Read the browser repair brief and web-operation instructions.", "Inspected the rendered selectors and prior V2 overrides.", "Added V2-only R4-R7 overrides and focused assertions.", "Witnessed the required negative control and passed all planned checks."],
   "findings": ["The brand mark, period action, target metadata, and range input retained the four measured mismatches after R1-R3."],
   "decisions": ["Matched the four Chrome measurements with a final .reportV2Sidebar-only cascade."],
   "files": ["app/google-ads/raport/ReportingDashboard.tsx", "app/google-ads/raport/ReportingDashboard.test.tsx"],
-  "commands": ["rg -n brandMark periodForm targetTile budgetControl"],
+  "commands": ["rg -n brandMark periodForm targetTile budgetControl", "planned focused_tests", "planned lint_changed", "planned typecheck", "planned frontend_build"],
   "blockers": [],
-  "next_action": "Commit the repair candidate, derive a fresh change-impact plan, then run the negative control and all planned checks."
+  "next_action": "Commit the receipt and hand the immutable candidate to fresh independent review and browser verification."
 }
