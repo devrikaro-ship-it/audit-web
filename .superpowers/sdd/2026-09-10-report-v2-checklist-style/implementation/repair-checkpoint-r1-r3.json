@@ -1,9 +1,9 @@
 {
-  "completed": ["Read the repair brief and exact review findings.", "Inspected the real JSX classes and inherited CSS declarations.", "Added sidebar-only repairs for R1, R2, and R3 with focused selector assertions."],
+  "completed": ["Read the repair brief and exact review findings.", "Inspected the real JSX classes and inherited CSS declarations.", "Added sidebar-only repairs for R1, R2, and R3 with focused selector assertions.", "Witnessed the required negative control and passed all planned checks."],
   "findings": ["The first cascade missed real Before & after and Tracking wrapper classes and inherited explicit Sora declarations.", "The generic target value color rule had higher specificity than the inherited status rules."],
   "decisions": ["Used a final sidebar-only repair cascade so classic CSS remains unchanged.", "Covered every reviewer-named rendered Sora selector plus the remaining real target-tile Sora declaration."],
   "files": ["app/google-ads/raport/ReportingDashboard.tsx", "app/google-ads/raport/ReportingDashboard.test.tsx"],
-  "commands": ["rg -n rendered classes and explicit Sora rules"],
+  "commands": ["rg -n rendered classes and explicit Sora rules", "planned focused_tests", "planned lint_changed", "planned typecheck", "planned frontend_build"],
   "blockers": [],
-  "next_action": "Commit the repair candidate, derive a fresh change-impact plan, and run the required negative control and planned checks."
+  "next_action": "Commit the repair receipt and hand the new immutable candidate to fresh independent review."
 }
