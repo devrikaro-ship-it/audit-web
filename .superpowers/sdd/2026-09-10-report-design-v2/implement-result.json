@@ -1,15 +1,16 @@
 {
   "outcome": "TASK_SUCCEEDED",
-  "summary": "Repaired and committed the portal token ownership candidate at source revision 65c5b87badfd6bde87ada56583b25be0b3633ce6. The approved Fitness V2 presentation is now an explicit static route; arbitrary classic tokens, including tokens ending in -v2, retain exact-token classic ownership.",
+  "summary": "Repaired the static V2 route shadow at source revision cb9ffcf267d5099fb35355ddca45bbdb71a3ac1e. The approved V2 URL now resolves an exact local-fitness-review-v2 portal population as classic and uses the Fitness sidebar report only after exact-token absence.",
   "evidence": [
-    "Focused Vitest command passed: 2 files and 21 tests.",
+    "Focused Vitest command passed: 2 files and 22 tests.",
     "TypeScript and changed-file ESLint commands passed.",
     "Next.js 16.2.4 webpack production build passed.",
-    "The collision controls prove client and client-v2 render only their own classic signed report, while the explicit Fitness V2 route renders the Fitness base report with sidebar presentation.",
+    "The shadow collision controls prove a valid local-fitness-review-v2 token renders only its own classic signed report; its absent-token branch renders the Fitness base report with sidebar presentation.",
     "The bounded frontend build lists both /google-ads/portal/[token] and /google-ads/portal/local-fitness-review-v2 as dynamic routes."
   ],
   "artifacts": [
-    ".superpowers/sdd/2026-09-10-report-design-v2/implementation/repair-impact-plan.json",
+    ".superpowers/sdd/2026-09-10-report-design-v2/implementation/repair-shadow-impact-plan.json",
+    ".superpowers/sdd/2026-09-10-report-design-v2/implementation/repair-shadow-receipt.json",
     ".superpowers/sdd/2026-09-10-report-design-v2/implementation/implementation-receipt.json",
     ".superpowers/sdd/2026-09-10-report-design-v2/implement-result.json"
   ],
