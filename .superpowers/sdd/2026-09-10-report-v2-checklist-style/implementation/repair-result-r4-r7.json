@@ -1,0 +1,25 @@
+{
+  "outcome": "TASK_SUCCEEDED",
+  "repair_source_revision": "b25d8ccb3de12424caaffd2c5a0bcc2611155de5",
+  "review_findings_closed": ["R4", "R5", "R6", "R7"],
+  "summary": "Applied the four direct Chrome measurements with final selectors scoped to .reportV2Sidebar.",
+  "repairs": {
+    "R4": "The sidebar brand mark now has #202B35 background and 12px radius.",
+    "R5": "The V2 period action now has white background, #DCE3E4 border, 6px radius, and #202B35 text.",
+    "R6": "V2 target metadata now uses #65717A compact uppercase text on white.",
+    "R7": "The V2 Before & after range input now has #087C72 accent color."
+  },
+  "negative_control": {
+    "plant": "Changed the expected brand-mark radius from 12px to 13px.",
+    "receipt": "The planned focused test command failed with one expected assertion failure and 22 passing controls.",
+    "restoration": "Restored 12px before all planned checks passed."
+  },
+  "checks": [
+    {"id": "focused_tests", "result": "passed", "detail": "2 files, 23 tests passed"},
+    {"id": "lint_changed", "result": "passed"},
+    {"id": "typecheck", "result": "passed"},
+    {"id": "frontend_build", "result": "passed", "detail": "Next.js webpack build completed"}
+  ],
+  "scope": {"classic_changed": false, "routing_changed": false, "data_changed": false, "external_mutation": "none", "publication": "none", "push": "none", "deployment": "none"},
+  "next_action": "Request fresh independent review and direct local browser verification of the new exact candidate."
+}
