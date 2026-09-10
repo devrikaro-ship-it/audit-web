@@ -14,6 +14,7 @@ vi.mock("@/lib/gads-report-delivery", async (original) => ({
 vi.mock("next/navigation", () => ({ notFound: () => { throw new Error("NOT_FOUND"); } }));
 
 import ClientReportPortal from "./page";
+import LocalFitnessReportPortalV2 from "../local-fitness-review-v2/page";
 
 const productAnalysis = {
   breakEvenRoas: 5,
@@ -174,31 +175,83 @@ it("selects another report only when it belongs to the token-scoped portal popul
   expect(html).not.toContain("foreign-report");
 });
 
-it("renders the V2 portal as a sidebar presentation over the same signed report values", async () => {
-  const current = renderToStaticMarkup(await ClientReportPortal({
-    params: Promise.resolve({ token: "portal-token" }),
+it("keeps exact classic tokens separate from the explicit Fitness V2 route", async () => {
+  const clientSnapshot = {
+    ...v2Snapshot,
+    reportV2: {
+      ...v2Snapshot.reportV2,
+      products: [{ ...v2Snapshot.reportV2.products[0], title: "Client product" }],
+    },
+  };
+  const classicV2Snapshot = {
+    ...v2Snapshot,
+    reportV2: {
+      ...v2Snapshot.reportV2,
+      products: [{ ...v2Snapshot.reportV2.products[0], title: "Client V2 product" }],
+    },
+  };
+  const fitnessSnapshot = {
+    ...v2Snapshot,
+    reportV2: {
+      ...v2Snapshot.reportV2,
+      products: [{ ...v2Snapshot.reportV2.products[0], title: "Fitness product" }],
+    },
+  };
+  const clientReports = [{ ...portalReports[0], snapshotPath: "/data/client.snapshot" }];
+  const classicV2Reports = [{ ...portalReports[0], snapshotPath: "/data/client-v2.snapshot" }];
+  const fitnessReports = [{ ...portalReports[0], snapshotPath: "/data/fitness.snapshot" }];
+  listPortalReports.mockImplementation(async (token: string) => {
+    if (token === "client") return clientReports;
+    if (token === "client-v2") return classicV2Reports;
+    if (token === "local-fitness-review") return fitnessReports;
+    return [];
+  });
+  openReportSnapshot.mockImplementation((raw: string) => {
+    if (raw === "/data/client.snapshot") return clientSnapshot;
+    if (raw === "/data/client-v2.snapshot") return classicV2Snapshot;
+    if (raw === "/data/fitness.snapshot") return fitnessSnapshot;
+    return null;
+  });
+
+  const client = renderToStaticMarkup(await ClientReportPortal({
+    params: Promise.resolve({ token: "client" }),
     searchParams: Promise.resolve({}),
   }));
-  const v2 = renderToStaticMarkup(await ClientReportPortal({
-    params: Promise.resolve({ token: "portal-token-v2" }),
+  const classicV2 = renderToStaticMarkup(await ClientReportPortal({
+    params: Promise.resolve({ token: "client-v2" }),
+    searchParams: Promise.resolve({}),
+  }));
+  const fitnessClassic = renderToStaticMarkup(await ClientReportPortal({
+    params: Promise.resolve({ token: "local-fitness-review" }),
+    searchParams: Promise.resolve({}),
+  }));
+  const v2 = renderToStaticMarkup(await LocalFitnessReportPortalV2({
     searchParams: Promise.resolve({}),
   }));
 
-  expect(listPortalReports).toHaveBeenNthCalledWith(1, "portal-token");
-  expect(listPortalReports).toHaveBeenNthCalledWith(2, "portal-token");
-  expect(current).not.toContain('data-report-presentation="sidebar"');
+  expect(listPortalReports).toHaveBeenNthCalledWith(1, "client");
+  expect(listPortalReports).toHaveBeenNthCalledWith(2, "client-v2");
+  expect(listPortalReports).toHaveBeenNthCalledWith(3, "local-fitness-review");
+  expect(listPortalReports).toHaveBeenNthCalledWith(4, "local-fitness-review");
+  expect(client).not.toContain('data-report-presentation="sidebar"');
+  expect(client).toContain("Client product");
+  expect(classicV2).not.toContain('data-report-presentation="sidebar"');
+  expect(classicV2).toContain("Client V2 product");
+  expect(classicV2).not.toContain("Client product");
+  expect(classicV2).not.toContain("Fitness product");
+  expect(fitnessClassic).not.toContain('data-report-presentation="sidebar"');
   expect(v2).toContain('data-report-presentation="sidebar"');
   expect(v2).toContain('data-scroll-region="products"');
-  expect(v2).toContain('action="/google-ads/portal/portal-token-v2"');
+  expect(v2).toContain('action="/google-ads/portal/local-fitness-review-v2"');
 
   for (const signedValue of [
-    "Current loss product",
+    "Fitness product",
     "August 1–31, 2026",
     "€1,200",
     "Qualified lead",
     "Configuration observed",
   ]) {
-    expect(current).toContain(signedValue);
+    expect(fitnessClassic).toContain(signedValue);
     expect(v2).toContain(signedValue);
   }
 });
@@ -248,7 +301,7 @@ it("refuses unknown portal tokens and reports whose stored signature cannot be o
     params: Promise.resolve({ token: "unknown-token-v2" }),
     searchParams: Promise.resolve({}),
   })).rejects.toThrow("NOT_FOUND");
-  expect(listPortalReports).toHaveBeenLastCalledWith("unknown-token");
+  expect(listPortalReports).toHaveBeenLastCalledWith("unknown-token-v2");
 
   listPortalReports.mockResolvedValueOnce(portalReports);
   openReportSnapshot.mockReturnValue(null);
