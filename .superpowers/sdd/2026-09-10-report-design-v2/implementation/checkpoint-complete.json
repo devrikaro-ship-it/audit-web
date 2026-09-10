@@ -1,0 +1,34 @@
+{
+  "task_id": "report-design-v2-implement-20260910",
+  "role": "implementer",
+  "status": "complete",
+  "completed": [
+    "Committed the V2 presentation candidate.",
+    "Ran the exact-diff selected test, typecheck, lint, and build commands.",
+    "Recorded reproducible implementation evidence."
+  ],
+  "blockers": [],
+  "commands": [
+    "npx vitest run app/google-ads/raport/ReportingDashboard.test.tsx app/google-ads/portal/[token]/page.test.tsx",
+    "npx tsc --noEmit --incremental false --pretty false",
+    "npx eslint app/google-ads/raport/ReportingDashboard.tsx app/google-ads/raport/ReportingDashboard.test.tsx app/google-ads/portal/[token]/page.tsx app/google-ads/portal/[token]/page.test.tsx",
+    "npm run build -- --webpack"
+  ],
+  "decisions": [
+    "The V2 route removes only the -v2 suffix before protected portal lookup.",
+    "The renderer keeps classic presentation by default and applies sidebar styling only when requested."
+  ],
+  "files": [
+    "app/google-ads/portal/[token]/page.tsx",
+    "app/google-ads/portal/[token]/page.test.tsx",
+    "app/google-ads/raport/ReportingDashboard.tsx",
+    "app/google-ads/raport/ReportingDashboard.test.tsx"
+  ],
+  "findings": [
+    "The initial parity test referenced an account name that the signed renderer intentionally does not display; it was corrected to compare displayed signed values.",
+    "Focused tests, typecheck, lint, and frontend build passed on candidate 3eeaece95a29a0f6c22c7dae796162fbd5eaaf2a."
+  ],
+  "next_action": "Hand off candidate revision 3eeaece95a29a0f6c22c7dae796162fbd5eaaf2a to independent code review and desktop/mobile browser verification.",
+  "base_revision": "a124c5439e4aef017decedd443feebc7953efd14",
+  "candidate_revision": "3eeaece95a29a0f6c22c7dae796162fbd5eaaf2a"
+}
