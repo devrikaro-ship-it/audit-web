@@ -186,6 +186,14 @@ it("applies the checklist system only to the sidebar presentation without changi
   expect(css).toContain("button[aria-selected=true]{background:#E8F5F1;color:#087C72;box-shadow:none}");
   expect(css).toContain(".reportV2Sidebar .productTableScroll{max-height:22rem;overflow:auto}");
   expect(css).toContain(".reportV2Sidebar>.accountSummary .targetGrid{gap:0;margin-top:20px;overflow:hidden;border:1px solid #E5E9EB;border-radius:10px;background:#fff;box-shadow:none}");
+  expect(css).toContain(".reportV2Sidebar .comparisonScroll,.reportV2Sidebar .beforeAfterTableScroll,.reportV2Sidebar .trackingTableScroll{overflow:auto;border:1px solid #E5E9EB;border-radius:10px;background:#fff;box-shadow:none}");
+  expect(css).toContain(".reportV2Sidebar .targetSummary,.reportV2Sidebar .assumptionSummary,.reportV2Sidebar .budgetControl,.reportV2Sidebar .modelUnavailable,.reportV2Sidebar .trackingIssues,.reportV2Sidebar .trackingScope,.reportV2Sidebar .trackingEmpty{border:1px solid #E5E9EB;border-radius:10px;background:#fff;box-shadow:none}");
+  expect(css).toContain(".reportV2Sidebar .conclusionValue");
+  expect(css).toContain(".reportV2Sidebar .trackingIssues h3");
+  expect(css).toContain(".reportV2Sidebar .budgetControl label strong{font-family:var(--font-inter),sans-serif}");
+  expect(css).toContain(".reportV2Sidebar>.accountSummary .targetTile[data-status=warning] strong{color:#B65357}");
+  expect(css).toContain(".reportV2Sidebar>.accountSummary .targetTile[data-status=positive] strong{color:#087C72}");
+  expect(css).toContain(".reportV2Sidebar>.accountSummary .targetTile[data-status=unavailable] strong{color:#A46A16}");
 
   tabs[0].focus();
   fireEvent.keyDown(tabs[0], { key: "End" });
