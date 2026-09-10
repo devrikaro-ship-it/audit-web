@@ -1,26 +1,24 @@
 {
-  "task_id": "report-design-v2-repair-token-alias-20260910",
+  "task_id": "report-design-v2-repair-static-shadow-20260910",
   "role": "implementer",
-  "base_revision": "555e763c29453e05f2dbd78283876dc0d2877476",
-  "previous_source_candidate_revision": "3eeaece95a29a0f6c22c7dae796162fbd5eaaf2a",
-  "candidate_revision": "65c5b87badfd6bde87ada56583b25be0b3633ce6",
+  "base_revision": "4aecaa43f7d28a4adc8edb758b7964e42dd7107f",
+  "previous_source_candidate_revision": "65c5b87badfd6bde87ada56583b25be0b3633ce6",
+  "candidate_revision": "cb9ffcf267d5099fb35355ddca45bbdb71a3ac1e",
   "changed_paths": [
-    "app/google-ads/portal/[token]/page.tsx",
     "app/google-ads/portal/[token]/page.test.tsx",
     "app/google-ads/portal/local-fitness-review-v2/page.tsx",
-    "app/google-ads/portal/portal-report.tsx",
-    ".superpowers/sdd/2026-09-10-report-design-v2/implementation/checks.json"
+    "app/google-ads/portal/portal-report.tsx"
   ],
   "check_plan": {
-    "path": ".superpowers/sdd/2026-09-10-report-design-v2/implementation/repair-impact-plan.json",
-    "sha256": "1c1b0c3ef79f33eebdc2690c7f7a8067161207928e295b1dce7cc3e0c5b79809"
+    "path": ".superpowers/sdd/2026-09-10-report-design-v2/implementation/repair-shadow-impact-plan.json",
+    "sha256": "b061014bc2363770d9d8d3580cb8e1498640a8d81efc9b0991ced14aa3f43db2"
   },
   "check_results": [
     {
       "id": "focused_tests",
       "command": "npx vitest run app/google-ads/raport/ReportingDashboard.test.tsx app/google-ads/portal/[token]/page.test.tsx",
       "result": "passed",
-      "evidence": "2 files and 21 tests passed, including exact classic client-v2 ownership, explicit Fitness V2, and unknown-token refusal."
+      "evidence": "2 files and 22 tests passed, including exact local-fitness-review-v2 collision ownership and the absent-token Fitness sidebar fallback."
     },
     {
       "id": "typecheck",
@@ -40,12 +38,12 @@
     }
   ],
   "frozen_checks": {
-    "current_route_presentation": "Passed by exact classic renderer assertions for client, client-v2, and local-fitness-review.",
-    "signed_report_semantics": "Passed by rendering the exact Fitness base token in both the classic route and the explicit static V2 route with the same signed values.",
-    "protected_portal_access": "Passed by exact-token list assertions, client/client-v2 content isolation, and refusal of unknown-token and unknown-token-v2.",
+    "current_route_presentation": "Passed by proving an exact local-fitness-review-v2 population renders only its own classic presentation, while the absent-token fallback renders sidebar.",
+    "signed_report_semantics": "Passed by proving the static V2 route resolves the exact token first and uses Fitness only after exact-token absence.",
+    "protected_portal_access": "Passed by exact-token list assertions and distinct signed product content for the local-fitness-review-v2 collision and Fitness fallback populations.",
     "historical_tracking_honesty": "Passed by the existing signed-observation renderer controls without changing report data or calculations.",
     "no_external_mutation": "Passed by limiting changes to local source, tests, and delivery artifacts."
   },
-  "repair": "The unsafe terminal suffix rewrite was removed. The approved V2 presentation is now served only by the explicit static local-fitness-review-v2 route.",
+  "repair": "The static V2 route now resolves local-fitness-review-v2 exactly in classic mode and falls back to local-fitness-review/sidebar only when no exact population exists.",
   "known_follow_up": "Independent review and local desktop/mobile browser verification remain separate sequential roles."
 }

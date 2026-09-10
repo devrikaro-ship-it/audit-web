@@ -1,0 +1,133 @@
+{
+  "base_revision": "4aecaa43f7d28a4adc8edb758b7964e42dd7107f",
+  "changes": [
+    {
+      "category": "frontend",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "frontend_build"
+      ],
+      "path": "app/google-ads/portal/[token]/page.test.tsx",
+      "risk": "guarded",
+      "rule_id": "reporting_v2_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "frontend_build"
+      ],
+      "path": "app/google-ads/portal/local-fitness-review-v2/page.tsx",
+      "risk": "guarded",
+      "rule_id": "reporting_v2_surface",
+      "status": "M"
+    },
+    {
+      "category": "frontend",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "frontend_build"
+      ],
+      "path": "app/google-ads/portal/portal-report.tsx",
+      "risk": "guarded",
+      "rule_id": "reporting_v2_surface",
+      "status": "M"
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/portal/[token]/page.test.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit-report-tabs",
+      "estimated_minutes": 5,
+      "id": "focused_tests",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build",
+        "--",
+        "--webpack"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit-report-tabs",
+      "estimated_minutes": 5,
+      "id": "frontend_build",
+      "profile": "frontend_build"
+    },
+    {
+      "command": [
+        "npx",
+        "eslint",
+        "app/google-ads/raport/ReportingDashboard.tsx",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/portal/[token]/page.tsx",
+        "app/google-ads/portal/[token]/page.test.tsx",
+        "app/google-ads/portal/local-fitness-review-v2/page.tsx",
+        "app/google-ads/portal/portal-report.tsx"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit-report-tabs",
+      "estimated_minutes": 3,
+      "id": "lint_changed",
+      "profile": "targeted_tests"
+    },
+    {
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "--pretty",
+        "false"
+      ],
+      "cwd": "/Users/VladMoloso/seo-audit-report-tabs",
+      "estimated_minutes": 4,
+      "id": "typecheck",
+      "profile": "targeted_tests"
+    }
+  ],
+  "declaration_path": "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-design-v2/implementation/checks.json",
+  "declaration_sha256": "72ea3f668336d0661811cb21b0655edc5dc8a11bf165e26a3ff31649c3a0f60b",
+  "events": [
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "classification"
+    },
+    {
+      "event": "stage_started",
+      "stage": "classification"
+    },
+    {
+      "estimated_minutes": 1,
+      "event": "duration_estimate",
+      "message": "Estimated duration: at most 1 minute.",
+      "stage": "planning"
+    },
+    {
+      "event": "stage_started",
+      "stage": "planning"
+    }
+  ],
+  "outcome": "READY",
+  "plan_sha256": "b061014bc2363770d9d8d3580cb8e1498640a8d81efc9b0991ced14aa3f43db2",
+  "repo_root": "/Users/VladMoloso/seo-audit-report-tabs",
+  "revision": "cb9ffcf267d5099fb35355ddca45bbdb71a3ac1e",
+  "risk": "guarded",
+  "schema_version": 1
+}

@@ -1,0 +1,25 @@
+{
+  "run_path": "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-design-v2/delivery-run",
+  "contract_path": "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-design-v2/delivery-run/contract.md",
+  "contract_sha256": "a8f342ee66adddb00b20101ead8e56e05a5fe0bf97444f4169385399d9a6822d",
+  "point_id": "1",
+  "repo_root": "/Users/VladMoloso/seo-audit-report-tabs",
+  "revision": "cb9ffcf267d5099fb35355ddca45bbdb71a3ac1e",
+  "allowed_paths": [
+    "app/google-ads/portal",
+    "app/google-ads/raport",
+    ".superpowers/sdd/2026-09-10-report-design-v2"
+  ],
+  "target_environment": "local",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "medium",
+  "context": {
+    "documents": [
+      "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-design-v2/repair-shadow-brief.md",
+      "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-design-v2/review-repair/verdict.json"
+    ],
+    "dependency_results": [],
+    "source_candidate_revision": "cb9ffcf267d5099fb35355ddca45bbdb71a3ac1e",
+    "exact_next_action": "Review the immutable candidate for exact-token-first resolution, absent-only Fitness fallback, collision controls, and preserved V2 presentation semantics."
+  }
+}
