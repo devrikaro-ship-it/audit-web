@@ -1,0 +1,21 @@
+{
+  "task_id": "report-design-v2-repair-static-shadow-20260910",
+  "reviewed_revision": "d2ab33d392abf2a58c92c8bb714baa49b3680af3",
+  "source_candidate_revision": "cb9ffcf267d5099fb35355ddca45bbdb71a3ac1e",
+  "finding": "PORTAL-V2-STATIC-ROUTE-SHADOW",
+  "root_cause": "The literal Next.js route selected the static V2 page before the dynamic token route, and that page resolved the Fitness base token without an exact-token lookup.",
+  "repair": "PortalReport supports a fallback only after its initial exact token has no population. The V2 page starts with local-fitness-review-v2/classic and uses local-fitness-review/sidebar solely as that fallback.",
+  "collision_controls": [
+    "an existing local-fitness-review-v2 population renders only its classic signed report",
+    "an absent local-fitness-review-v2 token falls back to local-fitness-review with sidebar presentation",
+    "both exact and fallback branches preserve the approved V2 period-selector URL"
+  ],
+  "checks": {
+    "focused_tests": "passed: 2 files, 22 tests",
+    "typecheck": "passed",
+    "lint_changed": "passed",
+    "frontend_build": "passed"
+  },
+  "external_mutation": "none",
+  "next_role": "independent reviewer"
+}

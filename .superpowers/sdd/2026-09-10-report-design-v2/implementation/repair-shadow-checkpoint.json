@@ -1,0 +1,31 @@
+{
+  "task_id": "report-design-v2-repair-static-shadow-20260910",
+  "role": "implementer",
+  "status": "complete",
+  "base_revision": "4aecaa43f7d28a4adc8edb758b7964e42dd7107f",
+  "completed": [
+    "Read the repair brief, reviewer verdict, reporting standards, and existing portal implementation.",
+    "Reproduced the route-selection cause from the static segment and hard-coded Fitness token."
+  ],
+  "findings": [
+    "Next.js selects the literal local-fitness-review-v2 segment before the dynamic token page, so the static page must perform exact-token-first resolution itself.",
+    "Fallback is safe only when the exact token population is absent; an existing population with an invalid signed snapshot must remain refused."
+  ],
+  "decisions": [
+    "Extend the shared PortalReport loader with an optional fallback used only after an exact listPortalReports lookup returns no population.",
+    "The static V2 page starts with local-fitness-review-v2 in classic mode and supplies local-fitness-review/sidebar only as that absence fallback."
+  ],
+  "files": [
+    "app/google-ads/portal/portal-report.tsx",
+    "app/google-ads/portal/local-fitness-review-v2/page.tsx",
+    "app/google-ads/portal/[token]/page.test.tsx"
+  ],
+  "commands": [
+    "focused_tests: passed (2 files, 22 tests)",
+    "typecheck: passed",
+    "lint_changed: passed",
+    "frontend_build: passed"
+  ],
+  "blockers": [],
+  "next_action": "Commit the repair evidence, update the exact handoff, and submit the immutable candidate for independent review."
+}
