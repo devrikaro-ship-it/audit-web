@@ -35,7 +35,9 @@
         "app/google-ads/raport/ReportingDashboard.tsx",
         "app/google-ads/raport/ReportingDashboard.test.tsx",
         "app/google-ads/portal/[token]/page.tsx",
-        "app/google-ads/portal/[token]/page.test.tsx"
+        "app/google-ads/portal/[token]/page.test.tsx",
+        "app/google-ads/portal/local-fitness-review-v2/page.tsx",
+        "app/google-ads/portal/portal-report.tsx"
       ],
       "cwd": ".",
       "estimated_minutes": 3
