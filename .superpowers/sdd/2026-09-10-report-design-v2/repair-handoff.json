@@ -1,0 +1,26 @@
+{
+  "run_path": "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-design-v2/delivery-run",
+  "contract_path": "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-design-v2/delivery-run/contract.md",
+  "contract_sha256": "a8f342ee66adddb00b20101ead8e56e05a5fe0bf97444f4169385399d9a6822d",
+  "point_id": "1",
+  "repo_root": "/Users/VladMoloso/seo-audit-report-tabs",
+  "revision": "d2ab33d392abf2a58c92c8bb714baa49b3680af3",
+  "allowed_paths": [
+    "app/google-ads/portal",
+    "app/google-ads/raport",
+    ".superpowers/sdd/2026-09-10-report-design-v2"
+  ],
+  "target_environment": "local",
+  "model": "gpt-5.6-terra",
+  "reasoning_effort": "medium",
+  "context": {
+    "documents": [
+      "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-design-v2/repair-brief.md",
+      "/Users/VladMoloso/seo-audit-report-tabs/.superpowers/sdd/2026-09-10-report-design-v2/review/verdict.json"
+    ],
+    "dependency_results": [],
+    "source_candidate_revision": "65c5b87badfd6bde87ada56583b25be0b3633ce6",
+    "evidence_revision": "d2ab33d392abf2a58c92c8bb714baa49b3680af3",
+    "exact_next_action": "Review the immutable repair candidate for exact classic-token ownership, explicit V2 routing, and preservation of report semantics."
+  }
+}
