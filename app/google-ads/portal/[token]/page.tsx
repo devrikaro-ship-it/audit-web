@@ -17,6 +17,21 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const V2_PORTAL_SUFFIX = "-v2";
+
+function portalPresentation(token: string): {
+  reportToken: string;
+  presentation: "classic" | "sidebar";
+} {
+  if (token.endsWith(V2_PORTAL_SUFFIX) && token.length > V2_PORTAL_SUFFIX.length) {
+    return {
+      reportToken: token.slice(0, -V2_PORTAL_SUFFIX.length),
+      presentation: "sidebar",
+    };
+  }
+  return { reportToken: token, presentation: "classic" };
+}
+
 const reportTimestamp = (snapshot: GadsReportSnapshot, legacyCreatedAt: number) => snapshot.generatedAt ?? new Date(legacyCreatedAt).toISOString();
 
 function legacyProducts(snapshot: GadsReportSnapshot): ReportProductInputV2[] {
@@ -82,7 +97,8 @@ function reportViewFromSnapshot(
 export default async function ClientReportPortal({ params, searchParams }: { params: Promise<{ token: string }>; searchParams: Promise<{ report?: string }> }) {
   const { token } = await params;
   const { report: requestedReportId } = await searchParams;
-  const leads = await listPortalReports(token);
+  const { reportToken, presentation } = portalPresentation(token);
+  const leads = await listPortalReports(reportToken);
   if (!leads.length) notFound();
 
   const reports = (await Promise.all(leads.map(async (lead) => {
@@ -104,6 +120,7 @@ export default async function ClientReportPortal({ params, searchParams }: { par
     <main {...publicOAuthAttributes("client-portal")}>
       <ReportingDashboard
         report={report}
+        presentation={presentation}
         sourceSnapshot={beforeAfterSourceFromSnapshot(selected.snapshot)}
         tracking={trackingObservationFromSnapshot(selected.snapshot)}
         periodSelector={{

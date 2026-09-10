@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "focused_tests": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/portal/[token]/page.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 5
+    },
+    "typecheck": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "--pretty",
+        "false"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 4
+    },
+    "lint_changed": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "eslint",
+        "app/google-ads/raport/ReportingDashboard.tsx",
+        "app/google-ads/raport/ReportingDashboard.test.tsx",
+        "app/google-ads/portal/[token]/page.tsx",
+        "app/google-ads/portal/[token]/page.test.tsx"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 3
+    },
+    "frontend_build": {
+      "profile": "frontend_build",
+      "command": [
+        "npm",
+        "run",
+        "build",
+        "--",
+        "--webpack"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 5
+    }
+  },
+  "rules": [
+    {
+      "id": "reporting_v2_surface",
+      "patterns": [
+        "app/google-ads/raport/**",
+        "app/google-ads/portal/**"
+      ],
+      "statuses": [
+        "A",
+        "M"
+      ],
+      "category": "frontend",
+      "risk": "guarded",
+      "checks": [
+        "focused_tests",
+        "typecheck",
+        "lint_changed",
+        "frontend_build"
+      ]
+    },
+    {
+      "id": "implementation_artifacts",
+      "patterns": [
+        ".superpowers/sdd/2026-09-10-report-design-v2/**"
+      ],
+      "statuses": [
+        "A",
+        "M"
+      ],
+      "category": "documentation",
+      "risk": "fast",
+      "checks": [],
+      "allow_no_checks": true
+    }
+  ]
+}
