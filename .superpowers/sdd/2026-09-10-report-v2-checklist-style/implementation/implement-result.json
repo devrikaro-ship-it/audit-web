@@ -1,0 +1,28 @@
+{
+  "outcome": "TASK_SUCCEEDED",
+  "candidate_revision_before_receipts": "31fec789460031c20f576a80e2a18b3a79ec054b",
+  "summary": "Implemented the checklist visual system through selectors scoped to .reportV2Sidebar. The classic root remains .reportV2 without a sidebar marker.",
+  "changes": [
+    "Applied Inter 14px, checklist palette, 252px white sidebar, 33px by 22px padding, 46px navigation rows, compact workspace heading, target panel, and shadow-free 10px panels to the sidebar presentation only.",
+    "Added focused assertions for measured sidebar tokens, the capped product scroller, keyboard activation, and the classic presentation boundary."
+  ],
+  "negative_control": {
+    "plant": "Changed the expected sidebar width from 252px to 253px in the focused style assertion.",
+    "receipt": "The planned focused test command failed with one expected assertion failure and 22 passing controls; its received stylesheet contained 252px.",
+    "restoration": "Restored the exact 252px assertion before the successful planned verification run."
+  },
+  "checks": [
+    {"id": "focused_tests", "result": "passed", "detail": "2 files, 23 tests passed"},
+    {"id": "lint_changed", "result": "passed"},
+    {"id": "typecheck", "result": "passed"},
+    {"id": "frontend_build", "result": "passed", "detail": "Next.js webpack build compiled and generated all routes"}
+  ],
+  "scope": {
+    "external_mutation": "none",
+    "publication": "none",
+    "push": "none",
+    "deployment": "none",
+    "credential_operation": "none"
+  },
+  "next_action": "Run independent code review against the final immutable candidate, then independently verify desktop and narrow local route witnesses."
+}

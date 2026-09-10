@@ -166,7 +166,7 @@ it("adds accessible report tabs and compares the existing model over one explici
   expect(panel.textContent).not.toMatch(/NaN|Infinity/);
 });
 
-it("uses the sidebar presentation without changing report views, keyboard controls, or product data", () => {
+it("applies the checklist system only to the sidebar presentation without changing report views, keyboard controls, or product data", () => {
   const { container } = render(
     <ReportingDashboard report={createReport()} presentation="sidebar" />,
   );
@@ -177,12 +177,15 @@ it("uses the sidebar presentation without changing report views, keyboard contro
   expect(root?.getAttribute("data-report-presentation")).toBe("sidebar");
   expect(root?.classList.contains("reportV2Sidebar")).toBe(true);
   expect(container.querySelector('[data-scroll-region="products"]')).toBeTruthy();
-  expect(container.querySelector("style")?.textContent).toContain(
-    ".reportV2Sidebar{display:grid",
-  );
-  expect(container.querySelector("style")?.textContent).toContain(
-    ".reportV2Sidebar .productTableScroll{max-height:22rem",
-  );
+  const css = container.querySelector("style")?.textContent ?? "";
+  expect(css).toContain(".reportV2Sidebar{--ink:#202B35");
+  expect(css).toContain("grid-template-columns:252px minmax(0,1fr)");
+  expect(css).toContain("background:#F6F8F8;color:#202B35;font-family:var(--font-inter),sans-serif;font-size:14px");
+  expect(css).toContain(".reportV2Sidebar>.brandHeader{gap:18px;padding:33px 22px");
+  expect(css).toContain(".reportV2Sidebar>.reportViewTabs button{display:flex;align-items:center;min-height:46px");
+  expect(css).toContain("button[aria-selected=true]{background:#E8F5F1;color:#087C72;box-shadow:none}");
+  expect(css).toContain(".reportV2Sidebar .productTableScroll{max-height:22rem;overflow:auto}");
+  expect(css).toContain(".reportV2Sidebar>.accountSummary .targetGrid{gap:0;margin-top:20px;overflow:hidden;border:1px solid #E5E9EB;border-radius:10px;background:#fff;box-shadow:none}");
 
   tabs[0].focus();
   fireEvent.keyDown(tabs[0], { key: "End" });
@@ -193,6 +196,17 @@ it("uses the sidebar presentation without changing report views, keyboard contro
   fireEvent.keyDown(tabs[2], { key: "Home" });
   expect(tabs[0].getAttribute("aria-selected")).toBe("true");
   expect(screen.getByText("loss-product")).toBeTruthy();
+});
+
+it("keeps the classic presentation outside the sidebar-only checklist selectors", () => {
+  const { container } = render(<ReportingDashboard report={createReport()} />);
+  const root = container.querySelector('[data-report-dashboard="v2"]');
+
+  expect(root?.getAttribute("data-report-presentation")).toBeNull();
+  expect(root?.classList.contains("reportV2Sidebar")).toBe(false);
+  expect(root?.className).toBe("reportV2");
+  expect(screen.getByRole("tabpanel", { name: "Products" })).toBeTruthy();
+  expect(screen.getByRole("tablist", { name: "Report views" })).toBeTruthy();
 });
 
 it("renders the saved tracking observation as escaped text with its original roles and timestamp", () => {
