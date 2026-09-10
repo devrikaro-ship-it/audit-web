@@ -1,0 +1,46 @@
+{
+  "task_id": "report-design-v2-implement-20260910",
+  "role": "implementer",
+  "status": "candidate_ready",
+  "blockers": [],
+  "commands": [
+    "git diff --check"
+  ],
+  "decisions": [
+    "Use an opt-in presentation prop so the existing portal route remains classic.",
+    "Resolve the V2 suffix before token-scoped report lookup so access remains protected."
+  ],
+  "files": [
+    "app/google-ads/portal/[token]/page.tsx",
+    "app/google-ads/portal/[token]/page.test.tsx",
+    "app/google-ads/raport/ReportingDashboard.tsx",
+    "app/google-ads/raport/ReportingDashboard.test.tsx",
+    ".superpowers/sdd/2026-09-10-report-design-v2/implementation/checks.json"
+  ],
+  "findings": [
+    "The working tree contains unrelated changes in docs/dev/mistakes.md; they remain excluded."
+  ],
+  "next_action": "Commit the scoped candidate, derive the impact plan from its exact revision, and run the selected commands.",
+  "base_revision": "a124c5439e4aef017decedd443feebc7953efd14",
+  "completed": [
+    "Added token-scoped V2 presentation routing.",
+    "Added opt-in desktop sidebar and mobile top-navigation styles.",
+    "Added semantic-parity, V2 navigation, keyboard, and unknown-token tests.",
+    "Declared exact-diff checks for the frontend surface."
+  ],
+  "changed_paths": [
+    "app/google-ads/portal/[token]/page.tsx",
+    "app/google-ads/portal/[token]/page.test.tsx",
+    "app/google-ads/raport/ReportingDashboard.tsx",
+    "app/google-ads/raport/ReportingDashboard.test.tsx",
+    ".superpowers/sdd/2026-09-10-report-design-v2/implementation/checks.json"
+  ],
+  "frozen_checks": {
+    "current_route_presentation": "The optional presentation defaults to classic.",
+    "signed_report_semantics": "V2 resolves its base token and reuses the signed report pipeline.",
+    "protected_portal_access": "An unknown V2 base token resolves to not found.",
+    "historical_tracking_honesty": "Tracking data remains sourced from the signed snapshot.",
+    "no_external_mutation": "Only local source, test, and delivery files were changed."
+  },
+  "exact_next_action": "Commit the scoped candidate, derive the impact plan from its exact revision, and run the selected commands."
+}
