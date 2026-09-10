@@ -68,8 +68,16 @@ function validTimestamp(value: number): boolean {
 
 function canonicalSourceIp(value: string): string | null {
   if (typeof value !== "string" || value.length === 0 || value.length > 128) return null;
-  if (value !== value.trim() || isIP(value) === 0) return null;
-  return value;
+  if (value !== value.trim()) return null;
+  const version = isIP(value);
+  if (version === 4) return value;
+  if (version !== 6) return null;
+  try {
+    const hostname = new URL(`http://[${value}]/`).hostname;
+    return hostname.slice(1, -1);
+  } catch {
+    return null;
+  }
 }
 
 function canonicalEmailOrNull(value: string): string | null {
@@ -343,7 +351,8 @@ export async function authenticatePassword(
         "SELECT password_hash FROM client_password_credentials WHERE client_id = ?",
       ).get(identity.id) as { password_hash: string } | undefined
       : undefined;
-    const passwordHash = credential?.password_hash ?? await dummyHash();
+    const initializedDummyHash = await dummyHash();
+    const passwordHash = credential?.password_hash ?? initializedDummyHash;
     const candidate = typeof input.password === "string" && input.password.length <= 1_024
       ? input.password
       : DUMMY_PASSWORD;
@@ -357,7 +366,17 @@ export async function authenticatePassword(
       return null;
     }
 
+    const verifiedCredentialHash = credential.password_hash;
     return inImmediateTransaction(database, () => {
+      const currentCredential = database.prepare(
+        "SELECT password_hash FROM client_password_credentials WHERE client_id = ?",
+      ).get(identity.id) as { password_hash: string } | undefined;
+      if (
+        !currentCredential
+        || !safeEqual(currentCredential.password_hash, verifiedCredentialHash)
+      ) {
+        return null;
+      }
       const session = issueSession(database, config, identity.id, now);
       recordSecurityAuditEvent(database, "auth.password.succeeded", identity.id, now);
       return { clientId: identity.id, session };

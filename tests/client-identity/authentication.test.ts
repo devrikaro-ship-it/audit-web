@@ -6,6 +6,11 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const googleVerifyIdToken = vi.hoisted(() => vi.fn());
+const argonInstrumentation = vi.hoisted(() => ({
+  hashCalls: 0,
+  verifyCalls: 0,
+  verificationGate: null as (() => Promise<void>) | null,
+}));
 
 vi.mock("google-auth-library", () => ({
   OAuth2Client: class {
@@ -16,6 +21,35 @@ vi.mock("google-auth-library", () => ({
     }
   },
 }));
+
+vi.mock("argon2", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("argon2")>();
+  const implementation = (actual as unknown as { default: typeof actual }).default;
+  return {
+    ...actual,
+    default: {
+      ...implementation,
+      async hash(
+        password: Parameters<typeof implementation.hash>[0],
+        options?: Parameters<typeof implementation.hash>[1],
+      ) {
+        argonInstrumentation.hashCalls += 1;
+        return implementation.hash(password, options);
+      },
+      async verify(
+        digest: Parameters<typeof implementation.verify>[0],
+        password: Parameters<typeof implementation.verify>[1],
+        options?: Parameters<typeof implementation.verify>[2],
+      ) {
+        argonInstrumentation.verifyCalls += 1;
+        const result = await implementation.verify(digest, password, options);
+        const gate = argonInstrumentation.verificationGate;
+        if (gate) await gate();
+        return result;
+      },
+    },
+  };
+});
 
 import {
   createTestGoogleCredential,
@@ -140,13 +174,28 @@ function expectedDomainHash(domain: string, ...values: string[]): string {
     .digest("base64url");
 }
 
+function resetArgonInstrumentation(): void {
+  argonInstrumentation.hashCalls = 0;
+  argonInstrumentation.verifyCalls = 0;
+  argonInstrumentation.verificationGate = null;
+}
+
+function argonWork(): { hashCalls: number; verifyCalls: number } {
+  return {
+    hashCalls: argonInstrumentation.hashCalls,
+    verifyCalls: argonInstrumentation.verifyCalls,
+  };
+}
+
 beforeEach(() => {
   temporaryRoot = mkdtempSync(path.join(tmpdir(), "client-authentication-"));
   environment = testEnvironment(path.join(temporaryRoot, "identity.sqlite"));
   googleVerifyIdToken.mockReset();
+  resetArgonInstrumentation();
 });
 
 afterEach(() => {
+  resetArgonInstrumentation();
   vi.unstubAllGlobals();
   rmSync(temporaryRoot, { recursive: true, force: true });
 });
@@ -639,6 +688,53 @@ describe("OTP refusal, throttling, and delivery controls", () => {
     database.close();
   });
 
+  it("binds equivalent IPv6 spellings to one challenge source and one rolling-hour limit", async () => {
+    const now = 5_000_000;
+    const compactIpv6 = "2001:db8::1";
+    const expandedIpv6 = "2001:0db8:0:0:0:0:0:1";
+
+    await requestEmailOtp({
+      email: "ipv6-continuity@example.com",
+      sourceIp: compactIpv6,
+      now,
+    }, environment);
+    expect(verifyEmailOtp({
+      email: "ipv6-continuity@example.com",
+      code: OTP_CODE,
+      sourceIp: expandedIpv6,
+      now: now + 1,
+    }, environment)).not.toBeNull();
+
+    for (let send = 1; send < OTP_MAX_SENDS_PER_WINDOW; send += 1) {
+      await requestEmailOtp({
+        email: `ipv6-rate-${send}@example.com`,
+        sourceIp: send % 2 === 0 ? compactIpv6 : expandedIpv6,
+        now: now + send + 1,
+      }, environment);
+    }
+
+    let database = openAuthenticationDatabase();
+    const sendsAtLimit = count(database, "client_otp_send_events");
+    expect(database.prepare(
+      "SELECT COUNT(DISTINCT source_ip_hash) AS count FROM client_otp_send_events",
+    ).get()).toEqual({ count: 1 });
+    expect(database.prepare(
+      "SELECT source_ip_hash FROM client_otp_send_events LIMIT 1",
+    ).get()).toEqual({
+      source_ip_hash: expectedDomainHash("otp-ip-rate", compactIpv6),
+    });
+    database.close();
+
+    expect(await requestEmailOtp({
+      email: "ipv6-rate-blocked@example.com",
+      sourceIp: expandedIpv6,
+      now: now + OTP_MAX_SENDS_PER_WINDOW + 1,
+    }, environment)).toEqual({ accepted: true });
+    database = openAuthenticationDatabase();
+    expect(count(database, "client_otp_send_events")).toBe(sendsAtLimit);
+    database.close();
+  });
+
   it("returns the neutral accepted response and atomically consumes a challenge when delivery is unavailable", async () => {
     const productionEmailEnvironment = { ...environment };
     delete productionEmailEnvironment.CLIENT_AUTH_TEST_EMAIL_ADAPTER;
@@ -745,6 +841,130 @@ describe("password and configuration refusals", () => {
       now: now + 4,
     }, environment)).toBeNull();
     expect(databaseState()).toBe(beforeFailedLogins);
+  });
+
+  it("refuses an obsolete password when its credential changes during verification", async () => {
+    const now = 9_000_000;
+    await requestEmailOtp({
+      email: "password-race@example.com",
+      sourceIp: "203.0.113.90",
+      now,
+    }, environment);
+    const verified = verifyEmailOtp({
+      email: "password-race@example.com",
+      code: OTP_CODE,
+      sourceIp: "203.0.113.90",
+      now: now + 1,
+    }, environment)!;
+    await setPasswordCredential({
+      clientId: verified.clientId,
+      password: "original password value",
+      now: now + 2,
+    }, environment);
+
+    let releaseVerification!: () => void;
+    const verificationRelease = new Promise<void>((resolve) => {
+      releaseVerification = resolve;
+    });
+    let markVerificationComplete!: () => void;
+    const verificationComplete = new Promise<void>((resolve) => {
+      markVerificationComplete = resolve;
+    });
+    argonInstrumentation.verificationGate = async () => {
+      markVerificationComplete();
+      await verificationRelease;
+    };
+
+    const obsoleteLogin = authenticatePassword({
+      email: "password-race@example.com",
+      password: "original password value",
+      now: now + 3,
+    }, environment);
+    await verificationComplete;
+    const replacement = await setPasswordCredential({
+      clientId: verified.clientId,
+      password: "replacement password value",
+      now: now + 4,
+    }, environment);
+    argonInstrumentation.verificationGate = null;
+    releaseVerification();
+
+    expect(await obsoleteLogin).toBeNull();
+    expect(await authenticatePassword({
+      email: "password-race@example.com",
+      password: "replacement password value",
+      now: now + 5,
+    }, environment)).toMatchObject({ clientId: verified.clientId });
+
+    const database = openAuthenticationDatabase();
+    try {
+      expect(authenticateSession(database, loadClientAuthenticationConfig(environment), replacement.token, now + 5))
+        .toMatchObject({ clientId: verified.clientId });
+      expect(database.prepare(
+        "SELECT COUNT(*) AS count FROM client_sessions WHERE revoked_at IS NULL AND expires_at > ?",
+      ).get(now + 5)).toEqual({ count: 2 });
+    } finally {
+      database.close();
+    }
+  });
+
+  it("performs equal cold and warm Argon2 work for known and unknown wrong-password checks", async () => {
+    const now = 10_000_000;
+    await requestEmailOtp({
+      email: "argon-work@example.com",
+      sourceIp: "203.0.113.100",
+      now,
+    }, environment);
+    const verified = verifyEmailOtp({
+      email: "argon-work@example.com",
+      code: OTP_CODE,
+      sourceIp: "203.0.113.100",
+      now: now + 1,
+    }, environment)!;
+    await setPasswordCredential({
+      clientId: verified.clientId,
+      password: "known account password",
+      now: now + 2,
+    }, environment);
+
+    vi.resetModules();
+    const coldKnownService = await import("../../lib/client-auth/service.js");
+    resetArgonInstrumentation();
+    expect(await coldKnownService.authenticatePassword({
+      email: "argon-work@example.com",
+      password: "wrong password value",
+      now: now + 3,
+    }, environment)).toBeNull();
+    const coldKnownWork = argonWork();
+
+    vi.resetModules();
+    const coldUnknownService = await import("../../lib/client-auth/service.js");
+    resetArgonInstrumentation();
+    expect(await coldUnknownService.authenticatePassword({
+      email: "unknown-argon-work@example.com",
+      password: "wrong password value",
+      now: now + 4,
+    }, environment)).toBeNull();
+    const coldUnknownWork = argonWork();
+    expect(coldKnownWork).toEqual({ hashCalls: 1, verifyCalls: 1 });
+    expect(coldUnknownWork).toEqual(coldKnownWork);
+
+    resetArgonInstrumentation();
+    expect(await coldUnknownService.authenticatePassword({
+      email: "argon-work@example.com",
+      password: "wrong password value",
+      now: now + 5,
+    }, environment)).toBeNull();
+    const warmKnownWork = argonWork();
+    resetArgonInstrumentation();
+    expect(await coldUnknownService.authenticatePassword({
+      email: "another-unknown-argon-work@example.com",
+      password: "wrong password value",
+      now: now + 6,
+    }, environment)).toBeNull();
+    const warmUnknownWork = argonWork();
+    expect(warmKnownWork).toEqual({ hashCalls: 0, verifyCalls: 1 });
+    expect(warmUnknownWork).toEqual(warmKnownWork);
   });
 
   it("fails closed before storage mutation for missing or invalid authentication configuration", () => {
