@@ -17,11 +17,18 @@ import { notFound } from "next/navigation";
 
 export type PortalSearchParams = Promise<{ report?: string }>;
 
+export type PortalReportFallback = {
+  token: string;
+  presentation: "classic" | "sidebar";
+  portalPath: string;
+};
+
 export type PortalReportProps = {
   token: string;
   presentation: "classic" | "sidebar";
   portalPath: string;
   searchParams: PortalSearchParams;
+  fallback?: PortalReportFallback;
 };
 
 const reportTimestamp = (snapshot: GadsReportSnapshot, legacyCreatedAt: number) => snapshot.generatedAt ?? new Date(legacyCreatedAt).toISOString();
@@ -91,9 +98,13 @@ export async function PortalReport({
   presentation,
   portalPath,
   searchParams,
+  fallback,
 }: PortalReportProps) {
   const { report: requestedReportId } = await searchParams;
   const leads = await listPortalReports(token);
+  if (!leads.length && fallback) {
+    return PortalReport({ ...fallback, searchParams });
+  }
   if (!leads.length) notFound();
 
   const reports = (await Promise.all(leads.map(async (lead) => {
