@@ -1,0 +1,38 @@
+{
+  "task_id": "report-design-v2-repair-token-alias-20260910",
+  "role": "implementer",
+  "status": "complete",
+  "base_revision": "555e763c29453e05f2dbd78283876dc0d2877476",
+  "candidate_revision": "65c5b87badfd6bde87ada56583b25be0b3633ce6",
+  "completed": [
+    "Recovered the reviewer finding and verified the suffix rewrite as the root cause.",
+    "Replaced the suffix alias with an explicit static V2 route.",
+    "Moved the shared portal report loader into a normal module accepted by Next page-module typing.",
+    "Added collision coverage for exact classic tokens, explicit V2, and exact unknown-token refusal.",
+    "Generated the declared repair impact plan."
+  ],
+  "findings": [
+    "The prior dynamic route removed every -v2 suffix before lookup, so a legitimate classic token ending in -v2 could disclose another report or be refused.",
+    "Next page modules may not export the shared PortalReport component; portal-report.tsx is the non-route module for that shared code."
+  ],
+  "decisions": [
+    "The only V2 route is the explicit static /google-ads/portal/local-fitness-review-v2 segment.",
+    "All dynamic tokens retain exact-token lookup and classic presentation."
+  ],
+  "files": [
+    "app/google-ads/portal/[token]/page.tsx",
+    "app/google-ads/portal/[token]/page.test.tsx",
+    "app/google-ads/portal/local-fitness-review-v2/page.tsx",
+    "app/google-ads/portal/portal-report.tsx",
+    ".superpowers/sdd/2026-09-10-report-design-v2/implementation/checks.json",
+    ".superpowers/sdd/2026-09-10-report-design-v2/implementation/repair-impact-plan.json"
+  ],
+  "commands": [
+    "focused_tests: passed (2 files, 21 tests)",
+    "typecheck: passed",
+    "lint_changed: passed",
+    "frontend_build: passed"
+  ],
+  "blockers": [],
+  "next_action": "Commit the repair evidence, close the checkpoint, and hand the immutable candidate to independent review."
+}

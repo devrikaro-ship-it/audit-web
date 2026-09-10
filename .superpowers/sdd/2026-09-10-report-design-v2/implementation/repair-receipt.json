@@ -1,0 +1,22 @@
+{
+  "task_id": "report-design-v2-repair-token-alias-20260910",
+  "reviewed_revision": "555e763c29453e05f2dbd78283876dc0d2877476",
+  "source_candidate_revision": "65c5b87badfd6bde87ada56583b25be0b3633ce6",
+  "finding": "PORTAL-V2-SUFFIX-ALIAS",
+  "root_cause": "The dynamic route removed a terminal -v2 suffix before resolving the signed report token.",
+  "repair": "The dynamic route now resolves every token exactly. The approved Fitness V2 view is an explicit static route backed by the same portal report loader.",
+  "collision_controls": [
+    "client is rendered as its own classic report",
+    "client-v2 is rendered as its own classic report",
+    "the explicit Fitness V2 route renders the local-fitness-review report with sidebar presentation",
+    "unknown-token and unknown-token-v2 are refused after exact lookup"
+  ],
+  "checks": {
+    "focused_tests": "passed: 2 files, 21 tests",
+    "typecheck": "passed",
+    "lint_changed": "passed",
+    "frontend_build": "passed"
+  },
+  "external_mutation": "none",
+  "next_role": "independent reviewer"
+}
