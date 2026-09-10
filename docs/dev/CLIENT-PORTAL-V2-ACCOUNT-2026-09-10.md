@@ -1,59 +1,64 @@
-# Client identity and report access
+# Client identity and session core
 
-## Document status and authority
+## Status and authority
 
-This is the pre-implementation component document for contract point 1. It records the measured local baseline separately from the approved change. It does not claim that client account authentication or owner-bound report access is implemented.
+Contract point 1 is implemented and independently verified in the local environment at exact revision `098f82153175bc47583239a7c39c6d9987fdba22`. This document records only the completed identity/session core. It does not claim that authentication methods, client-facing account behavior, report authorization, billing, subscriptions, reporting periods, or deployment are implemented.
 
-The product authority is [Client Portal V2 Account, Billing, and Reporting Design](../superpowers/specs/2026-09-10-client-portal-v2-account-design.md), approved on 2026-09-10 as `client-portal-v2-account-design@2026-09-10` with SHA-256 `1eeec4d1ef904948e2db7f799c80a057e14856b6cb85eb68922b31bc9225fde5`. The frozen delivery contract remains the implementation authority for this increment.
+The product authority remains [Client Portal V2 Account, Billing, and Reporting Design](../superpowers/specs/2026-09-10-client-portal-v2-account-design.md), approved on 2026-09-10 as `client-portal-v2-account-design@2026-09-10` with SHA-256 `1eeec4d1ef904948e2db7f799c80a057e14856b6cb85eb68922b31bc9225fde5`. The frozen implementation authority for this increment is `/Users/VladMoloso/.codex/runs/client-identity-core-20260910/contract.md`, SHA-256 `5da633b46a0cc3e02f12222f702288e57c2111c624238aaa23c6a24a884b5bd6`.
 
-## Measured current state
+## Verified local core
 
-The local baseline at revision `071c8be27d52edc015d0f355dcf0dd5a3ddb166c` is **CONFORMANT**. Component-governance assessment identity: `137ef393dcd8704f3f822c09c1b28150ec58306c3c07dc6a82c48bfa8b4ca896`.
+### Canonical identity and migration
 
-The assessment passed all three existing-standard checks:
+1. Email identity normalization applies Unicode NFC, trims surrounding whitespace, and lowercases the result before lookup or insertion.
+2. SQLite migration `db/client-identity/001_initial.sql` is versioned as migration `001`, is safe to apply repeatedly, and records one applied schema version.
+3. The canonical email has a unique constraint, and an inserted identity row is immutable. Case, whitespace, and equivalent Unicode variants therefore resolve to the same opaque client identity instead of creating duplicates.
+4. The database is opened only from an explicit absolute `CLIENT_IDENTITY_DB_PATH`. Configuration also requires an exact HTTP(S) `CLIENT_APP_ORIGIN` and a bounded `CLIENT_SESSION_SECRET`; missing or invalid core configuration fails before database creation or mutation.
 
-1. `existing-report-contract-remains-unchanged` — the handed-off revision has no baseline difference in the existing report and portal trees, report-period code, or declared regression sources. Both the token portal and internal saved-report route still delegate to the existing `ReportingDashboard`, so current routes, rendering, fields, calculations, and snapshot behavior remain the measured baseline. Missing future client-account behavior was not counted as a baseline defect.
-2. `existing-manager-session-remains-internal-only` — `dashboard_session` is a separate server-side manager session bound to manager credentials. Its cookie path and proxy guard are limited to `/dashboard`, protected manager routes require manager access before reading data, and client portal routes do not consume this session.
-3. `existing-portal-token-does-not-authorize-client-profile-mutation` — the current opaque token selects token-scoped report records, opens signed stored snapshots, and renders the existing report. The portal exposes no write endpoint or client-profile mutation authority. This is current read-only token portal behavior, not future client authentication.
+### Sessions, rotation, revocation, and cookies
 
-## Planned local change
+1. A session token contains 32 cryptographically random bytes, or 256 bits. Raw session and CSRF tokens are returned only to the caller; SQLite stores secret-keyed HMAC-SHA-256 hashes.
+2. Sessions expire after 24 hours. Rotation is eligible after 12 hours and can be forced for a later authentication or security change. Successful rotation revokes the old row and issues a replacement in one transaction.
+3. The core exposes single-session and all-client revocation operations. Logout and password-change routes are not part of this revision, so those future routes must call the appropriate revocation operation rather than treating revocation as already wired.
+4. The session cookie options are `HttpOnly`, `SameSite=Lax`, `Path=/client`, 24-hour `Max-Age`, and `Secure` outside local development. The client CSRF cookie is intentionally readable by the client, remains `SameSite=Lax` and scoped to `/client`, and uses the same 24-hour bound. The opaque authentication-flow cookie is `HttpOnly`, `SameSite=Lax`, scoped to `/client`, and limited to 10 minutes.
+5. Revision `098f82153175bc47583239a7c39c6d9987fdba22` provides cookie option builders only. No login route or deployed response is claimed to set these cookies yet.
 
-This increment will add a new client identity and report-access foundation on the new client application surface:
+### CSRF and authentication flows
 
-1. One verified email will resolve to one immutable client identity. Google sign-in, an emailed one-time code, and email with password will all authenticate that same identity; changing methods must not create a duplicate client.
-2. Account linking will require verified ownership of the shared email. Passwords will use a memory-hard hash. One-time codes will be short-lived, single-use, attempt-limited, and stored only as hashes.
-3. Client sessions will use secure, HttpOnly cookies with bounded expiration and rotation. Authentication failures will not disclose whether an account exists, and invalid or expired one-time codes will create no session.
-4. Every client-owned report resource will carry an immutable client owner identifier. Every server-side report read will validate both the authenticated client identity and the resource owner. A report link, opaque token, route parameter, or other client-supplied identifier will remain a selector and will never grant authority by itself.
-5. Sensitive mutations added by this increment will require the authenticated owner and CSRF protection. Secrets, raw passwords, raw one-time codes, and Google refresh tokens must not appear in logs, reports, source control, or client-visible errors.
+1. Each issued session has a synchronizer CSRF value whose raw form is not stored. Session CSRF verification accepts only the matching secret-keyed hash for an active, unexpired session.
+2. An authentication flow uses separate 256-bit opaque flow and CSRF values. The server-side row stores only keyed hashes and binds the proof to the configured exact origin and a validated source IP.
+3. Authentication flows expire after 10 minutes and are consumed atomically once. Forged values, expiry, origin or IP mismatch, and replay are refused without a successful state mutation.
 
-## Required negative controls
+### Audit redaction, configuration, and dependencies
 
-Local verification must prove both authorized access and refusal behavior:
+1. Security audit rows contain only an opaque event ID, a closed event category, an optional opaque identity ID, and a timestamp.
+2. Audit rows do not contain raw email, session token, CSRF value, authentication-flow token, origin, source IP, password, one-time code, or configuration secret. Session and flow tables likewise contain hashes rather than raw credentials.
+3. The fail-closed configuration boundary is part of the public core behavior: invalid database paths, origins, secret bounds, or cookie configuration are rejected before an authentication mutation proceeds.
+4. `argon2@^0.45.1` is the only new top-level runtime dependency. It is reserved for the future password unit; this revision does not implement password enrollment, hashing, or login. `@types/node` remains on major version 20.
+5. The project-owned check map defines focused real-SQLite behavior and strict scoped TypeScript checks for this core.
 
-1. All three sign-in methods for the same verified email produce the same client identity.
-2. A valid client session can open a report owned by that client.
-3. A planted second-client report identifier reveals zero Google Ads fields and creates no mutation.
-4. Forged, expired, and logged-out sessions each reveal zero Google Ads fields and create no mutation.
-5. Invalid and expired one-time codes create no session. Missing or invalid authentication configuration must fail closed.
-6. A current opaque portal token does not authorize client-profile or account-owned resource mutation.
-7. Each refusal control has a valid passing counterpart, and refusal verification includes a known-positive Google Ads field control so that an absence claim cannot pass against an empty fixture.
+## Independent evidence
 
-## Frozen behavior
+1. Code proof: `/Users/VladMoloso/.codex/runs/client-identity-core-20260910/code-proof.json`. It binds the passing focused check, its witnessed negative control, the independent review verdict, and frozen-path receipts to revision `098f82153175bc47583239a7c39c6d9987fdba22`.
+2. Independent code review: `/Users/VladMoloso/.codex/task-runs/tasks/client-identity-core-review/task.json`. The reviewer returned `TASK_SUCCEEDED`, reproduced 5/5 focused real-SQLite tests and the strict TypeScript check through the bounded plan, and reported no repository mutation.
+3. Direct result proof: `/Users/VladMoloso/.codex/runs/client-identity-core-20260910/result-proof.json`. It records the positive and negative directions exercised through the public TypeScript APIs against a newly created temporary SQLite database.
+4. Independent verifier artifact: `/Users/VladMoloso/.codex/task-runs/tasks/client-identity-core-verify/task.json`. The verifier returned `TASK_SUCCEEDED` for the exact local revision and reported no repository mutation.
+5. The verifier's positive direction applied the migration twice, resolved case, whitespace, and Unicode email variants to one immutable identity, authenticated a valid 32-byte session, rotated it at 12 hours, revoked it, and consumed one valid origin/IP-bound flow exactly once.
+6. The verifier refused 11 forged, expired, revoked, rotated, wrong-origin, wrong-IP, and replayed session or flow cases. Mutation counts and state digests remained unchanged for the refusal cases. Missing or invalid configuration failed before database creation or mutation.
+7. Read-only database inspection found only 43-character keyed hashes in sensitive session and flow columns and only the redacted audit columns described above. The real local witness locator and its SHA-256 are retained in the verifier artifact; the stable result proof above is the authoritative summary.
 
-This increment must preserve the existing report renderers, calculations, signed report snapshots, manager authentication, and current token portal behavior. The existing V1 and current V2 report routes, fields, formulas, labels, values, period semantics, product classifications, and snapshots must remain byte-for-byte or behaviorally unchanged under their declared regression checks.
+## Preserved behavior and worktree boundaries
 
-The protected implementation paths are:
+1. The verified revision is a direct child of baseline `8d6c5300ce0295fb2425545ac86f681239f28e67` and changes exactly the 13 declared core paths.
+2. The committed existing report, token portal, manager session, period implementation, renderers, fields, formulas, labels, values, and snapshots have an empty base-to-candidate diff. The current manager session remains internal to manager routes, and the current portal token still does not authorize client-profile mutation.
+3. Partial non-core files under `app/client`, `lib/client-auth`, `lib/client-report-access`, and the broader authentication/report-access tests remain uncommitted, untouched by the core revision, and unclaimed. Their preserved aggregate SHA-256 through implementation, review, and verification was `b22a41f23a9d18d5c880846538a212ee155128f52168f2e013f5b47b78feff8b`.
+4. The pre-implementation documentation receipt remains at `/Users/VladMoloso/.codex/runs/client-identity-core-20260910/docs-before-receipt.json`. It is historical evidence for the earlier current-versus-planned phase, not evidence that the future work below has shipped.
 
-1. `app/google-ads/raport/ReportingDashboard.tsx`
-2. `app/google-ads/raport/ReportingDashboard.test.tsx`
-3. `app/google-ads/portal/portal-report.tsx`
-4. `lib/dashboard-session.ts`
-5. `lib/gads-report-periods.ts`
+## Future work
 
-Completion requires the report regression suite, manager authentication regression suite, and current V2 render witness to remain unchanged and passing.
-
-## Increment boundary
-
-The target environment is **local only**. This documentation phase changes no application code. The later implementation for this point is limited to client identity, credentials, secure sessions, account linking, owner-bound report authorization, login UI, route guards, local migrations, tests, dependency declarations, and the project-owned check mapping named by the frozen contract.
-
-This increment excludes deployment, publication, production data or configuration changes, billing-profile editing, payment details, subscription checkout, trials, entitlement lifecycle, fiscal invoicing, dynamic reporting ranges, and report redesign. Those remain separate dependency-ordered increments under the approved design. The current manager session remains an internal manager mechanism; it must not be repurposed as client authentication. The current portal token may later support migration or a one-time claim, but it must not become authority for authenticated client report access or mutable account data.
+1. Google sign-in, emailed one-time-code request and verification, password enrollment and login, verified account linking, authentication handlers, logout wiring, and password-change revocation remain unimplemented.
+2. Client login and account UI, route guards, account controls, and all client-facing cookie issuance remain unimplemented.
+3. Immutable report ownership, authenticated owner checks, cross-client refusal, and server-side report access remain unimplemented. The current opaque portal token remains a read-only report selector and is not authority for client-profile mutation or future authenticated report access.
+4. The Romanian billing profile, payment-provider integration, subscription checkout, seven-day trial, entitlement, cancellation, reactivation, fiscal invoicing, and billing history remain unimplemented.
+5. The period pill, its seven approved choices, immutable on-demand report snapshots, and dynamic reporting ranges remain unimplemented.
+6. No deployment, publication, production migration, production configuration, provider call, message, credential operation, payment action, or report regeneration was performed or verified by this increment.
