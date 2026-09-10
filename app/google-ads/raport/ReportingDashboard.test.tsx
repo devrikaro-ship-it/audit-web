@@ -166,6 +166,35 @@ it("adds accessible report tabs and compares the existing model over one explici
   expect(panel.textContent).not.toMatch(/NaN|Infinity/);
 });
 
+it("uses the sidebar presentation without changing report views, keyboard controls, or product data", () => {
+  const { container } = render(
+    <ReportingDashboard report={createReport()} presentation="sidebar" />,
+  );
+  const root = container.querySelector('[data-report-dashboard="v2"]');
+  const tablist = screen.getByRole("tablist", { name: "Report views" });
+  const tabs = within(tablist).getAllByRole("tab");
+
+  expect(root?.getAttribute("data-report-presentation")).toBe("sidebar");
+  expect(root?.classList.contains("reportV2Sidebar")).toBe(true);
+  expect(container.querySelector('[data-scroll-region="products"]')).toBeTruthy();
+  expect(container.querySelector("style")?.textContent).toContain(
+    ".reportV2Sidebar{display:grid",
+  );
+  expect(container.querySelector("style")?.textContent).toContain(
+    ".reportV2Sidebar .productTableScroll{max-height:22rem",
+  );
+
+  tabs[0].focus();
+  fireEvent.keyDown(tabs[0], { key: "End" });
+  expect(tabs[2].getAttribute("aria-selected")).toBe("true");
+  expect(document.activeElement).toBe(tabs[2]);
+  expect(screen.getByRole("tabpanel", { name: "Tracking" })).toBeTruthy();
+
+  fireEvent.keyDown(tabs[2], { key: "Home" });
+  expect(tabs[0].getAttribute("aria-selected")).toBe("true");
+  expect(screen.getByText("loss-product")).toBeTruthy();
+});
+
 it("renders the saved tracking observation as escaped text with its original roles and timestamp", () => {
   const { container } = render(
     <ReportingDashboard

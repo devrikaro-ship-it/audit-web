@@ -174,6 +174,35 @@ it("selects another report only when it belongs to the token-scoped portal popul
   expect(html).not.toContain("foreign-report");
 });
 
+it("renders the V2 portal as a sidebar presentation over the same signed report values", async () => {
+  const current = renderToStaticMarkup(await ClientReportPortal({
+    params: Promise.resolve({ token: "portal-token" }),
+    searchParams: Promise.resolve({}),
+  }));
+  const v2 = renderToStaticMarkup(await ClientReportPortal({
+    params: Promise.resolve({ token: "portal-token-v2" }),
+    searchParams: Promise.resolve({}),
+  }));
+
+  expect(listPortalReports).toHaveBeenNthCalledWith(1, "portal-token");
+  expect(listPortalReports).toHaveBeenNthCalledWith(2, "portal-token");
+  expect(current).not.toContain('data-report-presentation="sidebar"');
+  expect(v2).toContain('data-report-presentation="sidebar"');
+  expect(v2).toContain('data-scroll-region="products"');
+  expect(v2).toContain('action="/google-ads/portal/portal-token-v2"');
+
+  for (const signedValue of [
+    "Current loss product",
+    "August 1–31, 2026",
+    "€1,200",
+    "Qualified lead",
+    "Configuration observed",
+  ]) {
+    expect(current).toContain(signedValue);
+    expect(v2).toContain(signedValue);
+  }
+});
+
 it("renders a legacy signed report with unavailable currency and comparison rows instead of zero values", async () => {
   const legacySnapshot = {
     ...snapshot,
@@ -210,6 +239,13 @@ it("refuses unknown portal tokens and reports whose stored signature cannot be o
   listPortalReports.mockResolvedValueOnce([]);
   await expect(ClientReportPortal({
     params: Promise.resolve({ token: "unknown-token" }),
+    searchParams: Promise.resolve({}),
+  })).rejects.toThrow("NOT_FOUND");
+  expect(listPortalReports).toHaveBeenLastCalledWith("unknown-token");
+
+  listPortalReports.mockResolvedValueOnce([]);
+  await expect(ClientReportPortal({
+    params: Promise.resolve({ token: "unknown-token-v2" }),
     searchParams: Promise.resolve({}),
   })).rejects.toThrow("NOT_FOUND");
   expect(listPortalReports).toHaveBeenLastCalledWith("unknown-token");
