@@ -232,7 +232,8 @@ it("keeps exact classic tokens separate from the explicit Fitness V2 route", asy
   expect(listPortalReports).toHaveBeenNthCalledWith(1, "client");
   expect(listPortalReports).toHaveBeenNthCalledWith(2, "client-v2");
   expect(listPortalReports).toHaveBeenNthCalledWith(3, "local-fitness-review");
-  expect(listPortalReports).toHaveBeenNthCalledWith(4, "local-fitness-review");
+  expect(listPortalReports).toHaveBeenNthCalledWith(4, "local-fitness-review-v2");
+  expect(listPortalReports).toHaveBeenNthCalledWith(5, "local-fitness-review");
   expect(client).not.toContain('data-report-presentation="sidebar"');
   expect(client).toContain("Client product");
   expect(classicV2).not.toContain('data-report-presentation="sidebar"');
@@ -254,6 +255,57 @@ it("keeps exact classic tokens separate from the explicit Fitness V2 route", asy
     expect(fitnessClassic).toContain(signedValue);
     expect(v2).toContain(signedValue);
   }
+});
+
+it("keeps a local-fitness-review-v2 population classic and falls back to Fitness only when that exact token is absent", async () => {
+  const fitnessSnapshot = {
+    ...v2Snapshot,
+    reportV2: {
+      ...v2Snapshot.reportV2,
+      products: [{ ...v2Snapshot.reportV2.products[0], title: "Fitness fallback product" }],
+    },
+  };
+  const shadowSnapshot = {
+    ...v2Snapshot,
+    reportV2: {
+      ...v2Snapshot.reportV2,
+      products: [{ ...v2Snapshot.reportV2.products[0], title: "Exact V2 token product" }],
+    },
+  };
+  const fitnessReports = [{ ...portalReports[0], snapshotPath: "/data/fitness-fallback.snapshot" }];
+  const shadowReports = [{ ...portalReports[0], snapshotPath: "/data/exact-v2.snapshot" }];
+  let hasExactV2Population = true;
+  listPortalReports.mockImplementation(async (token: string) => {
+    if (token === "local-fitness-review-v2") return hasExactV2Population ? shadowReports : [];
+    if (token === "local-fitness-review") return fitnessReports;
+    return [];
+  });
+  openReportSnapshot.mockImplementation((raw: string) => {
+    if (raw === "/data/exact-v2.snapshot") return shadowSnapshot;
+    if (raw === "/data/fitness-fallback.snapshot") return fitnessSnapshot;
+    return null;
+  });
+
+  const exact = renderToStaticMarkup(await LocalFitnessReportPortalV2({
+    searchParams: Promise.resolve({}),
+  }));
+  expect(listPortalReports).toHaveBeenCalledTimes(1);
+  expect(listPortalReports).toHaveBeenLastCalledWith("local-fitness-review-v2");
+  expect(exact).not.toContain('data-report-presentation="sidebar"');
+  expect(exact).toContain("Exact V2 token product");
+  expect(exact).not.toContain("Fitness fallback product");
+  expect(exact).toContain('action="/google-ads/portal/local-fitness-review-v2"');
+
+  hasExactV2Population = false;
+  const fallback = renderToStaticMarkup(await LocalFitnessReportPortalV2({
+    searchParams: Promise.resolve({}),
+  }));
+  expect(listPortalReports).toHaveBeenNthCalledWith(2, "local-fitness-review-v2");
+  expect(listPortalReports).toHaveBeenNthCalledWith(3, "local-fitness-review");
+  expect(fallback).toContain('data-report-presentation="sidebar"');
+  expect(fallback).toContain("Fitness fallback product");
+  expect(fallback).not.toContain("Exact V2 token product");
+  expect(fallback).toContain('action="/google-ads/portal/local-fitness-review-v2"');
 });
 
 it("renders a legacy signed report with unavailable currency and comparison rows instead of zero values", async () => {
