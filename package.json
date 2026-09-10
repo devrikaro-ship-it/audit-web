@@ -11,6 +11,7 @@
     "test:public-output-coverage": "vitest run --config vitest.public-output.config.ts --coverage"
   },
   "dependencies": {
+    "argon2": "^0.45.1",
     "next": "16.2.4",
     "pdfkit": "^0.20.1",
     "playwright-core": "^1.61.1",

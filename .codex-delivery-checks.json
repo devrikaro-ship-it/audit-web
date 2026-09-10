@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "client_identity_core": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--config",
+        "tests/client-identity/core.vitest.config.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 2
+    },
+    "client_identity_core_types": {
+      "profile": "targeted_tests",
+      "command": [
+        "npx",
+        "tsc",
+        "--noEmit",
+        "--pretty",
+        "false",
+        "--strict",
+        "--skipLibCheck",
+        "--target",
+        "ES2022",
+        "--module",
+        "NodeNext",
+        "--moduleResolution",
+        "NodeNext",
+        "--esModuleInterop",
+        "lib/client-auth/config.ts",
+        "lib/client-auth/crypto.ts",
+        "lib/client-identity/audit.ts",
+        "lib/client-identity/database.ts",
+        "lib/client-identity/email.ts",
+        "lib/client-identity/index.ts",
+        "lib/client-session/index.ts",
+        "tests/client-identity/core.test.ts",
+        "tests/client-identity/core.vitest.config.ts"
+      ],
+      "cwd": ".",
+      "estimated_minutes": 2
+    }
+  },
+  "rules": [
+    {
+      "id": "client_identity_core_runtime",
+      "patterns": [
+        "lib/client-auth/config.ts",
+        "lib/client-auth/crypto.ts",
+        "lib/client-identity/**",
+        "lib/client-session/**"
+      ],
+      "statuses": ["A", "M"],
+      "category": "runtime",
+      "risk": "critical",
+      "checks": ["client_identity_core", "client_identity_core_types"]
+    },
+    {
+      "id": "client_identity_core_migration",
+      "patterns": ["db/client-identity/001_initial.sql"],
+      "statuses": ["A", "M"],
+      "category": "migration",
+      "risk": "critical",
+      "checks": ["client_identity_core", "client_identity_core_types"]
+    },
+    {
+      "id": "client_identity_core_tests",
+      "patterns": [
+        "tests/client-identity/core.test.ts",
+        "tests/client-identity/core.vitest.config.ts"
+      ],
+      "statuses": ["A", "M"],
+      "category": "test",
+      "risk": "guarded",
+      "checks": ["client_identity_core", "client_identity_core_types"]
+    },
+    {
+      "id": "client_identity_core_dependency",
+      "patterns": ["package.json", "package-lock.json"],
+      "statuses": ["A", "M"],
+      "category": "dependency",
+      "risk": "critical",
+      "checks": ["client_identity_core", "client_identity_core_types"]
+    },
+    {
+      "id": "client_identity_core_check_mapping",
+      "patterns": [".codex-delivery-checks.json"],
+      "statuses": ["A", "M"],
+      "category": "build_config",
+      "risk": "guarded",
+      "checks": ["client_identity_core", "client_identity_core_types"]
+    }
+  ]
+}
