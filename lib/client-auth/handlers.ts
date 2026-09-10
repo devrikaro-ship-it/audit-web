@@ -27,7 +27,6 @@ import {
   rejectedResponse,
   requestSourceIp,
   sessionToken,
-  trustedProxyHops,
   unavailableResponse,
 } from "./http";
 import { openClientDatabase } from "../client-identity/database";
@@ -232,7 +231,7 @@ export async function passwordEnrollHandler(
 ): Promise<NextResponse> {
   try {
     const config = loadClientAuthenticationConfig(environment);
-    trustedProxyHops(config, environment);
+    if (!requestSourceIp(request, config, environment)) return rejectedResponse();
     if (!exactRequestOrigin(request, config)) return rejectedResponse();
 
     const token = sessionToken(request);
@@ -265,7 +264,7 @@ export async function logoutHandler(
 ): Promise<NextResponse> {
   try {
     const config = loadClientAuthConfig(environment);
-    trustedProxyHops(config, environment);
+    if (!requestSourceIp(request, config, environment)) return rejectedResponse();
     if (!exactRequestOrigin(request, config)) return rejectedResponse();
 
     const token = sessionToken(request);

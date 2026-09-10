@@ -673,6 +673,84 @@ describe("neutral refusals, session CSRF, and unavailable configuration", () => 
     expect(activeClientId(authenticated.sessionToken)).not.toBeNull();
   });
 
+  it("rejects password enrollment with a missing forwarding chain before mutation", async () => {
+    const authenticated = await otpLogin("enroll-missing-forwarding@example.com");
+    const before = databaseState();
+    const clientId = activeClientId(authenticated.sessionToken);
+    process.env.CLIENT_TRUSTED_PROXY_HOPS = "1";
+
+    const response = await passwordEnrollRoute.POST(request(
+      "/client/api/auth/password/enroll",
+      {
+        body: { password: PASSWORD },
+        cookies: { [CLIENT_SESSION_COOKIE]: authenticated.sessionToken },
+        csrfToken: authenticated.csrfToken,
+        forwardedFor: null,
+      },
+    ));
+
+    await expectJsonResponse(response, 401, { authenticated: false }, []);
+    expect(databaseState()).toBe(before);
+    expect(rowCount("client_password_credentials")).toBe(0);
+    expect(activeClientId(authenticated.sessionToken)).toBe(clientId);
+  });
+
+  it("rejects password enrollment with a malformed forwarding chain before mutation", async () => {
+    const authenticated = await otpLogin("enroll-malformed-forwarding@example.com");
+    const before = databaseState();
+    const clientId = activeClientId(authenticated.sessionToken);
+    process.env.CLIENT_TRUSTED_PROXY_HOPS = "1";
+
+    const response = await passwordEnrollRoute.POST(request(
+      "/client/api/auth/password/enroll",
+      {
+        body: { password: PASSWORD },
+        cookies: { [CLIENT_SESSION_COOKIE]: authenticated.sessionToken },
+        csrfToken: authenticated.csrfToken,
+        forwardedFor: `${CLIENT_IP}, unknown`,
+      },
+    ));
+
+    await expectJsonResponse(response, 401, { authenticated: false }, []);
+    expect(databaseState()).toBe(before);
+    expect(rowCount("client_password_credentials")).toBe(0);
+    expect(activeClientId(authenticated.sessionToken)).toBe(clientId);
+  });
+
+  it("rejects logout with a missing forwarding chain before mutation", async () => {
+    const authenticated = await otpLogin("logout-missing-forwarding@example.com");
+    const before = databaseState();
+    const clientId = activeClientId(authenticated.sessionToken);
+    process.env.CLIENT_TRUSTED_PROXY_HOPS = "1";
+
+    const response = await logoutRoute.POST(request("/client/api/auth/logout", {
+      cookies: { [CLIENT_SESSION_COOKIE]: authenticated.sessionToken },
+      csrfToken: authenticated.csrfToken,
+      forwardedFor: null,
+    }));
+
+    await expectJsonResponse(response, 401, { authenticated: false }, []);
+    expect(databaseState()).toBe(before);
+    expect(activeClientId(authenticated.sessionToken)).toBe(clientId);
+  });
+
+  it("rejects logout with a malformed forwarding chain before mutation", async () => {
+    const authenticated = await otpLogin("logout-malformed-forwarding@example.com");
+    const before = databaseState();
+    const clientId = activeClientId(authenticated.sessionToken);
+    process.env.CLIENT_TRUSTED_PROXY_HOPS = "1";
+
+    const response = await logoutRoute.POST(request("/client/api/auth/logout", {
+      cookies: { [CLIENT_SESSION_COOKIE]: authenticated.sessionToken },
+      csrfToken: authenticated.csrfToken,
+      forwardedFor: `${CLIENT_IP}, unknown`,
+    }));
+
+    await expectJsonResponse(response, 401, { authenticated: false }, []);
+    expect(databaseState()).toBe(before);
+    expect(activeClientId(authenticated.sessionToken)).toBe(clientId);
+  });
+
   it("returns the exact unavailable response without cookies or mutation when HTTP configuration is missing", async () => {
     const before = databaseState();
     delete process.env.CLIENT_TRUSTED_PROXY_HOPS;
