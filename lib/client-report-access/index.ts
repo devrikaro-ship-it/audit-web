@@ -8,6 +8,7 @@ import { openReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-d
 import { authenticateSession, type ClientSession } from "@/lib/client-session";
 import {
   findOwnedReport,
+  isValidReportId,
   listOwnedReportRecords,
   openClientReportDatabase,
   provisionReportOwnerForTest,
@@ -57,15 +58,18 @@ function isBeneath(root: string, target: string): boolean {
 }
 
 async function resolveSafeSnapshotPath(
+  reportId: string,
   snapshotPath: string,
   environment: NodeJS.ProcessEnv,
 ): Promise<string | null> {
   const root = configuredReportRoot(environment);
   if (
     !root
+    || !isValidReportId(reportId)
     || !path.isAbsolute(snapshotPath)
     || path.normalize(snapshotPath) !== snapshotPath
     || path.extname(snapshotPath) !== ".snapshot"
+    || path.resolve(snapshotPath) !== path.resolve(root, `${reportId}.snapshot`)
     || !isBeneath(root, snapshotPath)
   ) {
     return null;
@@ -105,7 +109,11 @@ async function openOwnedSnapshot(
   environment: NodeJS.ProcessEnv,
 ): Promise<GadsReportSnapshot | null> {
   try {
-    const safePath = await resolveSafeSnapshotPath(record.snapshotPath, environment);
+    const safePath = await resolveSafeSnapshotPath(
+      record.reportId,
+      record.snapshotPath,
+      environment,
+    );
     if (!safePath) return null;
     const rawSnapshot = await readSafeSnapshot(safePath);
     return rawSnapshot === null ? null : openReportSnapshot(rawSnapshot);

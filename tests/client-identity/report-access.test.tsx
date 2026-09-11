@@ -150,9 +150,14 @@ afterEach(() => {
   }
 });
 
-function createVerifiedClient(email: string, subject: string, now: number): string {
+function createVerifiedClient(
+  email: string,
+  subject: string,
+  now: number,
+  targetEnvironment: NodeJS.ProcessEnv = environment,
+): string {
   const database = openClientAuthenticationDatabase(
-    loadClientAuthenticationConfig(environment),
+    loadClientAuthenticationConfig(targetEnvironment),
   );
   try {
     return resolveVerifiedGoogleIdentity(database, { email, subject }, now).id;
@@ -161,8 +166,12 @@ function createVerifiedClient(email: string, subject: string, now: number): stri
   }
 }
 
-function createSession(clientId: string, now: number): IssuedSession {
-  const config = loadClientAuthConfig(environment);
+function createSession(
+  clientId: string,
+  now: number,
+  targetEnvironment: NodeJS.ProcessEnv = environment,
+): IssuedSession {
+  const config = loadClientAuthConfig(targetEnvironment);
   const database = openClientReportDatabase(config);
   try {
     return issueSession(database, config, clientId, now);
@@ -171,8 +180,11 @@ function createSession(clientId: string, now: number): IssuedSession {
   }
 }
 
-function writeSignedSnapshot(snapshotPath: string): void {
-  writeFileSync(snapshotPath, sealReportSnapshot(snapshot), {
+function writeSignedSnapshot(
+  snapshotPath: string,
+  reportSnapshot: GadsReportSnapshot = snapshot,
+): void {
+  writeFileSync(snapshotPath, sealReportSnapshot(reportSnapshot), {
     encoding: "utf8",
     mode: 0o600,
   });
@@ -202,6 +214,18 @@ function provisionPath(
     { reportId, clientId, snapshotPath, createdAt },
     environment,
   );
+}
+
+function snapshotWithKnownField(field: string): GadsReportSnapshot {
+  return {
+    ...snapshot,
+    accountName: field,
+    losses: snapshot.losses.map((product) => ({ ...product, title: field })),
+    reportProducts: snapshot.reportProducts?.map((product) => ({
+      ...product,
+      title: field,
+    })),
+  };
 }
 
 function databaseState(): Record<string, unknown[]> {
@@ -384,6 +408,135 @@ it("reads and renders an active owner's signed report and lists owned metadata i
     now: 1_001,
   }, environment);
   expect(otherList?.reports).toEqual([{ reportId: "other-new", createdAt: 400 }]);
+});
+
+it("rejects crossed valid snapshot associations and accepts restored canonical associations", async () => {
+  const firstField = "FIRST-CLIENT-GOOGLE-ADS-FIELD";
+  const secondField = "SECOND-CLIENT-GOOGLE-ADS-FIELD";
+  const firstClientId = createVerifiedClient(
+    "first@example.com",
+    "google-first",
+    100,
+  );
+  const secondClientId = createVerifiedClient(
+    "second@example.com",
+    "google-second",
+    101,
+  );
+  const firstSession = createSession(firstClientId, 1_000);
+  const secondSession = createSession(secondClientId, 1_000);
+  const firstSnapshotPath = path.join(
+    environment.GADS_REPORTS_DIR!,
+    "first-report.snapshot",
+  );
+  const secondSnapshotPath = path.join(
+    environment.GADS_REPORTS_DIR!,
+    "second-report.snapshot",
+  );
+  writeSignedSnapshot(firstSnapshotPath, snapshotWithKnownField(firstField));
+  writeSignedSnapshot(secondSnapshotPath, snapshotWithKnownField(secondField));
+  provisionPath("first-report", firstClientId, secondSnapshotPath, 300);
+  provisionPath("second-report", secondClientId, firstSnapshotPath, 301);
+
+  const databaseBefore = databaseState();
+  const filesystemBefore = filesystemState();
+  const crossedReads = await Promise.all([
+    readOwnedReport({
+      sessionToken: firstSession.token,
+      reportId: "first-report",
+      entitlement: ACTIVE_ENTITLEMENT,
+      now: 1_001,
+    }, environment),
+    readOwnedReport({
+      sessionToken: secondSession.token,
+      reportId: "second-report",
+      entitlement: ACTIVE_ENTITLEMENT,
+      now: 1_001,
+    }, environment),
+  ]);
+  const crossedLists = await Promise.all([
+    listOwnedReports({
+      sessionToken: firstSession.token,
+      entitlement: ACTIVE_ENTITLEMENT,
+      now: 1_001,
+    }, environment),
+    listOwnedReports({
+      sessionToken: secondSession.token,
+      entitlement: ACTIVE_ENTITLEMENT,
+      now: 1_001,
+    }, environment),
+  ]);
+
+  expect(crossedReads).toEqual([null, null]);
+  expect(crossedLists.map((result) => result?.reports)).toEqual([[], []]);
+  expect(JSON.stringify({ crossedReads, crossedLists })).not.toContain(firstField);
+  expect(JSON.stringify({ crossedReads, crossedLists })).not.toContain(secondField);
+  expect(databaseState()).toEqual(databaseBefore);
+  expect(filesystemState()).toEqual(filesystemBefore);
+
+  const restoredRoot = path.join(temporaryRoot, "restored");
+  const restoredReportsRoot = path.join(restoredRoot, "reports");
+  mkdirSync(restoredReportsRoot, { recursive: true });
+  const restoredEnvironment = {
+    ...environment,
+    CLIENT_IDENTITY_DB_PATH: path.join(restoredRoot, "identity.sqlite"),
+    GADS_REPORTS_DIR: restoredReportsRoot,
+  };
+  const restoredFirstClientId = createVerifiedClient(
+    "first@example.com",
+    "google-first",
+    200,
+    restoredEnvironment,
+  );
+  const restoredSecondClientId = createVerifiedClient(
+    "second@example.com",
+    "google-second",
+    201,
+    restoredEnvironment,
+  );
+  const restoredFirstSession = createSession(
+    restoredFirstClientId,
+    2_000,
+    restoredEnvironment,
+  );
+  const restoredSecondSession = createSession(
+    restoredSecondClientId,
+    2_000,
+    restoredEnvironment,
+  );
+  const restoredFirstPath = path.join(restoredReportsRoot, "first-report.snapshot");
+  const restoredSecondPath = path.join(restoredReportsRoot, "second-report.snapshot");
+  writeSignedSnapshot(restoredFirstPath, snapshotWithKnownField(firstField));
+  writeSignedSnapshot(restoredSecondPath, snapshotWithKnownField(secondField));
+  provisionReportOwnerForTest({
+    reportId: "first-report",
+    clientId: restoredFirstClientId,
+    snapshotPath: restoredFirstPath,
+    createdAt: 400,
+  }, restoredEnvironment);
+  provisionReportOwnerForTest({
+    reportId: "second-report",
+    clientId: restoredSecondClientId,
+    snapshotPath: restoredSecondPath,
+    createdAt: 401,
+  }, restoredEnvironment);
+
+  const restoredReads = await Promise.all([
+    readOwnedReport({
+      sessionToken: restoredFirstSession.token,
+      reportId: "first-report",
+      entitlement: ACTIVE_ENTITLEMENT,
+      now: 2_001,
+    }, restoredEnvironment),
+    readOwnedReport({
+      sessionToken: restoredSecondSession.token,
+      reportId: "second-report",
+      entitlement: ACTIVE_ENTITLEMENT,
+      now: 2_001,
+    }, restoredEnvironment),
+  ]);
+  expect(restoredReads[0]?.snapshot.accountName).toBe(firstField);
+  expect(restoredReads[1]?.snapshot.accountName).toBe(secondField);
 });
 
 it("returns one absence result for every refused read and list without database or filesystem mutation", async () => {
