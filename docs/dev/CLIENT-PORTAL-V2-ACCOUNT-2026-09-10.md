@@ -183,8 +183,8 @@ Revision `31872105dec19a79820d028e03e98add2a13eb1f` repairs both handlers by req
 
 1. Report-access revision `ed4823bf1c71575665f4ef75c4393d5e05e3def9` changes exactly the eight declared report-access implementation and check paths from documentation baseline `c1edafcf2bbb45f3bf3d231c114d4143aa22b8c7`; it changes zero forbidden paths.
 2. The verified identity, session, authentication-service, and authentication HTTP boundaries remain unchanged. Their focused suites reproduced 5, 14, and 20 passing tests respectively as part of the nine-check impact plan.
-3. The existing report renderers, report fields and formulas, Before & after source, Tracking observation, token portal, manager report, billing, subscriptions, reporting periods, and every client UI path outside the authenticated report route remain unchanged by the report-access candidate. The frozen report-path manifest remained `90a18c4b71b0be53761a001bfb86280a4f89c87d087783e28768bb37ae75d7a4`.
-4. Existing partial client account UI remains uncommitted and unclaimed. Its preserved aggregate SHA-256 is `4f3fe7372ae673c44cc36524eed22b7c8dce33ee43feae75b7f2f73b0d6d61bb`.
+3. The existing report renderers, report fields and formulas, Before & after source, Tracking observation, token portal, manager report, billing, subscriptions, reporting periods, and every client UI path outside the authenticated report route remain unchanged by the report-access candidate. The frozen report-path manifest remained `90a18c83ca99c31af47e049c7ede6d0af237b958f5f4f4e78b90f561cd719542`.
+4. Existing partial client account UI remains uncommitted and unclaimed. Its preserved aggregate SHA-256 is `4f3fe129784c78e4ec5d563dfc01ea1137b9967c6c6aa10ee4cbbc58fe5d90f0`.
 5. The historical pre-implementation documentation receipt is `/Users/VladMoloso/.codex/runs/client-auth-methods-20260910/docs-before-receipt.json`. It records an earlier state in which only the identity/session core was verified; it is not the current authentication, HTTP, or report-access status.
 
 ## Future work
