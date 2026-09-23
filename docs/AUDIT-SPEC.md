@@ -4,7 +4,7 @@
 > (sau schimbam fisierul explicit, nu codul pe furis).
 > **Se citeste INAINTE** de a atinge raportul: `components/report-renderer.tsx`,
 > `lib/audit-engine.ts`, `lib/css-detect.ts`.
-> **Ultima actualizare:** 2026-07-06 — landing pe ton NEUTRU (nu vinde), funnel post-click (scan rapid + "uite ce am gasit" + 5 pasi) si simulare de venit (ROAS acum vs posibil). Vezi partea 11 (de construit).
+> **Last update:** 2026-09-23 — the cold audit analyses the site only: two rubrics, SEO and UX/UI (operator decision). Tracking, Google Ads and the revenue simulation are removed; see `docs/superpowers/specs/2026-09-23-site-audit-only-design.md`. <!-- LANG: pending full translation to EN -->
 
 ---
 
@@ -18,15 +18,9 @@ Raport de audit pentru un **prospect ecom netehnic**. E instrument de **vanzare*
 
 **Scope: ECOM-ONLY (all-in).** Auditul, **landing-ul si toata comunicarea** sunt orientate 100% pe magazine online — Devrika merge all-in pe ecom. Non-ecom **nu** e acoperit: nu construim varianta separata. Un URL non-ecom primeste un raport degradat (fara rubrica Google Ads, tracking doar din HTML) — acceptat, nu-l optimizam. Landing (`app/audit-seo`) + copy + CTA = mesaj ecom.
 
-**Principiu strategic (nordul auditului):** raportul e construit ca problemele gasite sa mapeze EXACT pe solutiile Devrika de optimizare pe Google. Fiecare finding relevant duce spre unul din 3 servicii — prospectul trebuie sa iasa cu senzatia *"problema mea = fix ce rezolva solutiile lor"*:
+**Strategic principle (2026-09-23):** the report shows what is wrong on the site itself — how Google finds the pages and how easily a visitor buys. Findings lead to fixing the site (SEO, speed, category and product pages); the report does not sell ads services.
 
-| Finding | Serviciul vandut |
-|---|---|
-| CSS (Google / custom / fara) | **ProductHero** — CSS partener, -~20% CPC |
-| Produse neoptimizate (titluri/descrieri/feed) | **Catamo** — optimizarea SEO a produselor |
-| Concurenti, prezenta Shopping, tracking | **Management campanii** (Google/Meta) |
-
-> **Unde apare maparea (decis 2026-07-06):** tabelul asta e **INTERN raportului** — findingurile duc spre servicii in interiorul raportului `/r/<id>`. **Landing-ul (`app/audit-seo`) si funnel-ul sunt NEUTRE/diagnostic** — nu numesc niciun serviciu, nu spun "ce reparam" / "de ce noi", ci "unde pierzi bani si clienti". Un pitch pe landing sperie; o unealta neutra convinge sa completeze. Detaliile: **partea 11**.
+> The landing page and the funnel stay neutral and diagnostic; the CTA lives in the report.
 
 ## 2. Doua moduri
 
@@ -40,17 +34,9 @@ Detaliile de orchestrare: `skill/SKILL.md`. Acest spec descrie **structura rapor
 
 ---
 
-## 3. RECE — structura raportului: EXACT 4 rubrici, in ordine
+## 3. Cold report structure: EXACTLY 2 rubrics, in order
 
-### 3.1 Tracking
-**Campuri (fix acestea, nimic in plus):** GA4 · Google Ads conversii · Meta Pixel · TikTok Pixel · Consent Mode v2
-**Detectie:** runtime in **browser real** (BrightData) — `window.google_tag_manager` (expune GTM/GA4/AW) + `fbq`/`ttq` + host CMP. **NU** din HTML brut (tag-urile prin GTM nu apar in sursa).
-> Nota: **Consent Mode v2** = detectam *prezenta unui CMP* + semnal `gcs=` (proxy), nu ca e corect legat la gtag. Cand incert -> "de verificat".
-**Auto-accept cookies (2026-07-07):** browserul real apasa singur "Accept" pe bannerul de consent INAINTE sa citeasca tag-urile (`acceptCookies` in `css-detect.ts`: selectoare CMP cunoscute — OneTrust/Cookiebot/CookieYes/Complianz/etc. — + fallback pe text, in pagina si iframe-uri). Multe tag-uri (GA4/Pixel) sunt gated pe consent si nu se declanseaza pana la accept; fara pas, ar iesi fals neconfirmate. Best-effort: fara banner, merge mai departe.
-**Fallback / invariant (intarit 2026-07-07):** din HTML brut NU se poate dovedi absenta unui tag → `veil` in `computeConversieAudit` returneaza **"da" (confirmat) sau "necunoscut" (de verificat), NICIODATA "nu"/lipsa** (§5.1 universal, raport public). Pe ecom, `applyLiveTracking` face upgrade la "da" ce vede runtime-ul.
-**Cod:** `lib/css-detect.ts` (`analyzeProspectLive`, `detectTrackingOnPage`, `acceptCookies`) + `lib/audit-engine.ts` (`computeConversieAudit`, `applyLiveTracking`); render `TrackingSection`.
-
-### 3.2 SEO
+### 3.1 SEO
 **5 sub-sectiuni** (definite de Vlad):
 1. **SEO Tehnic (On-page):** Title, Meta description, H1, Canonical, structura URL
 2. **Calitatea Continutului:** text subtire, duplicat, ierarhie H2/H3, lizibilitate, keyword principal
@@ -58,9 +44,10 @@ Detaliile de orchestrare: `skill/SKILL.md`. Acest spec descrie **structura rapor
 4. **Structura Site-ului:** robots.txt + crawlere AI, sitemap, breadcrumbs, linkuri rupte, internal linking
 5. **Schema Markup:** JSON-LD, tipuri, validare, breadcrumb, rating
 **Verificat pe** home + categorii + produse.
+**Product pages (2026-09-23):** a card at the top of the rubric reports, from the product pages actually read, how many have short or generic titles and how many lack a meta description (`computeProductSignal`, `ProductContentCard`); when no product page was read it says "de verificat", never a generic claim.
 **Cod:** `computeSeoChecks/Continut/Keywords/Structura` + `computeSchemaChecks`; render `SectionBlock` x5.
 
-### 3.3 UX / UI
+### 3.2 UX / UI
 **Campuri (fix acestea, 5 — decis 2026-07-01):**
 1. **Viteza** — scor de incarcare pe mobil
 2. **Analiza homepage** — hero/mesaj clar, meniu + categorii vizibile, cale spre produse, mobil OK
@@ -69,21 +56,6 @@ Detaliile de orchestrare: `skill/SKILL.md`. Acest spec descrie **structura rapor
 5. **Filtre & sortare** — marime / culoare / pret / brand + optiuni de sortare
 Fiecare camp: status bun/partial/slab (necunoscut cand tipul de pagina lipseste din crawl, exclus din medie) + semnale gasit/lipsa in limbaj de client. Scor rubrica = media campurilor cu status != necunoscut.
 **Cod:** `lib/audit-engine.ts` (`computeUxAudit` + detectori) -> `UxAudit`/`UxField` in `lib/types.ts`; render `UxCard`/`UxUiSection` (`components/report-renderer.tsx`). ✅ construit.
-
-### 3.4 Google Ads
-**Scope decis 2026-07-02** — 4 campuri, fiecare cu carligul lui de vanzare:
-1. **CSS** (primar) — Google / partener / custom / nu ruleaza Shopping. Fara CSS partener ("By Google") -> "platesti pana la ~20% mai mult pe click". **Carlig: ProductHero.** ✅ construit
-2. **Concurenti Shopping** — cine liciteaza pe produsele tale + CSS-ul lor + pret. **Carlig: management campanii.** ✅ construit
-3. **Prezenta in Shopping** — apari sau nu pe produsele tale. **Carlig: management.** ✅ construit
-4. **Semnal produse (Catamo)** — constatare standard, mereu-prezenta pe ecom: produsele nu-s optimizate pentru Shopping/cautare (titluri/descrieri/feed) -> se pot optimiza. Ancorat in numere reale cand prindem pagini de produs (titluri scurte/generice, meta lipsa), altfel generic. **Carlig: Catamo.** ✅ construit (`computeProductSignal` -> `ProductSignal`; bloc OPTIMIZARE PRODUSE in `GoogleAdsSection`; se randeaza pe ecom chiar si fara BrightData).
-
-**Detectie:** browser real cu IP **EEA** (BrightData) — citeste caruselul "Sponsored products" pe Google. Vezi `reference_css_detection_method` (memorie).
-Cand CSS iese **"nedeterminat"** (carusel dinamic / interogari slabe): arata "de verificat" (invariant), nu un scor fals de rau.
-> **FIABILITATE:** ✅ imbunatatita. Titlurile de produs pt interogari se iau din pagini detectate pe **continut** (`isProductPage`: schema Product / og:type=product / pret+cos), nu pe adancimea URL (nu mai baga Contact/Blog). `deriveProductQueries` taie sufixul de site/brand + boilerplate. Poate cadea inca pe "nedeterminat" cand caruselul e gol/dinamic — atunci "de verificat".
-**FAZA 2** ✅ construita (best-effort, degradare gratioasa): **pozitionare pret** (`analyzePricePosition` din caruselul Shopping, orientativ — nu strict acelasi-produs), **aparare brand** (`collectBrandIntelOn`: concurenti pe SERP-ul de brand -> campanie de brand), **recenzii GBP** (knowledge panel: rating + nr recenzii -> Seller Ratings). O singura navigare extra (brand) acopera brand+GBP.
-**Cod:** `lib/css-detect.ts` — `analyzeProspectLive` (tracking + Shopping + faza brand; folosit in `audit-engine.ts`; `analyzeGoogleShopping` e superseded); render `GoogleAdsSection` (`AdsFindingCard`).
-
----
 
 ## 4. EXCLUS explicit (NU apar in raport)
 
@@ -94,6 +66,9 @@ Cand CSS iese **"nedeterminat"** (carusel dinamic / interogari slabe): arata "de
 - **"Top probleme"** (mix pe toate zonele)
 - **"Raportul complet"** pe 8 zone
 - **social** / **securitate** ca sectiuni de sine statatoare
+- **Tracking** (GA4, Google Ads conversions, Meta/TikTok pixels, Consent Mode) — removed 2026-09-23
+- **Google Ads** (CSS, Shopping, price position, brand defence, Google Business reviews) — removed 2026-09-23
+- **Revenue simulation** and the funnel questions that fed it — removed 2026-09-23
 
 ## 5. Reguli / invariante
 
@@ -106,19 +81,19 @@ Cand CSS iese **"nedeterminat"** (carusel dinamic / interogari slabe): arata "de
 
 Scor per rubrica 0-100. Verdict: **>=70 Bun** (verde) · **>=40 De reglat** (galben) · **<40 Slab** (rosu). (decis 2026-07-02)
 
-Scor per rubrica: Tracking = % campuri prezente (necunoscut exclus); SEO = media celor 5 sub-sectiuni; UX/UI = media celor 5 campuri (viteza + 3 tipuri de pagini + filtre); Google Ads = mapare pe status CSS.
+Scor per rubrica: SEO = media celor 5 sub-sectiuni; UX/UI = media celor 5 campuri (viteza + 3 tipuri de pagini + filtre).
 
 **Scor global (gauge hero) — 2026-07-07:** doar componentele VIZIBILE in raport (`computeOverallScore`: viteza 0.17 + seo 0.24 + continut 0.20 + keywords 0.16 + structura 0.13 + schema 0.10 = 1.00). Social + securitate **NU** intra in nota (nu-s rubrici, §4) — inainte ponderau 10% ascuns; scoase ca nota sa reflecte exact ce se afiseaza. (`social`/`securitate` raman calculate in `checksRezultate` dar neafisate — cod mort inofensiv.)
 
-## 7. Wrapper de persuasiune (fix, in afara celor 4 rubrici)
+## 7. Persuasion wrapper (fixed, outside the 2 rubrics)
 
-Hero (domeniu + gauge scor global) · "Ce te costa asta" · **simulare de venit** (ROAS acum vs posibil — vezi 11.3) · "De ce Devrika" · CTA + contact. Raportul e locul unde se face vanzarea (dupa ce vede scorul slab), deci CTA + maparea pe servicii raman aici; simularea se adauga.
+Hero (domain + overall score gauge) · "Ce te costa asta" · "De ce Devrika" · CTA + contact. The CTA speaks about fixing the site.
 
 ## 8. Parametri de detectie
 
 - **Pages analysed (2026-09-23):** budget 60 including the homepage, target at least 50 (`PAGE_BUDGET`, `MIN_PAGES`). The pages that sell come first, never sitemap order: 15 categories + 35 products + at most 5 other pages; unused space goes to products, then categories, then other. Child sitemaps are typed by name (product / category / other), products are sampled evenly across the catalogue, and a page counts as a product only by its content; a category-sitemap URL stays a category. Code: `lib/page-selection.ts`. Design: `docs/superpowers/specs/2026-09-23-site-audit-page-selection-design.md`.
 - **Platform reading profiles (2026-09-23):** the platform is detected from the homepage first; its curated profile (`lib/platform-knowledge/<platform>.json`: sitemap entry points, sitemap and URL signals per page type, site-language sitemaps, polite concurrency, traps, observed problems) decides how the site is read. Unknown platforms use `generic.json`. Dead pages (404) are replaced by untried URLs of the same type. Shops that refuse the server (homepage 403/challenge, or 30%+ of pages 403/429) are read through the BrightData browser (`lib/browser-fetch.ts`); page fetching is bounded to 30 s (`PAGE_FETCH_BUDGET_MS`). Design: `docs/superpowers/specs/2026-09-23-platform-knowledge-base-design.md`.
-- **Tracking + CSS:** runtime, browser real EEA (BrightData), doar pe **ecom**.
+- **BrightData browser:** used only to read shops that refuse the server (see Platform reading profiles below).
 - **Crawl:** fetch + PageSpeed; fallback link-crawl daca sitemap slab.
 
 ## 9. CALD — pe scurt (NU redefini aici)
@@ -152,48 +127,10 @@ Cod atins la partea 11: `app/audit-seo/page.tsx`, `app/start/page.tsx`, `app/api
 
 ---
 
-## 11. Landing + funnel + simulare (RECE) — decis 2026-07-06
+## 11. Landing + funnel (cold) — updated 2026-09-23
 
-**Ton: neutru, diagnostic.** Landing-ul NU vinde. Nu spune "ce reparam" / "de ce noi", ci "unde pierzi bani si clienti". Maparea pe servicii (partea 1) ramane INTERNA raportului; pe landing nu apare niciun serviciu.
-
-### 11.1 Landing (`app/audit-seo`) — 7 sectiuni, in ordine
-1. **Hero** — titlu diagnostic ("Afla unde pierde bani magazinul tau online"), subcopy (ce verificam + in cat timp), UN singur CTA, reasigurare "fara card, fara cont, doar adresa". Butonul porneste scanarea (11.2).
-2. **Banda de trust** — 4 cifre (magazine analizate · probleme gasite · buget gestionat · nota clienti). Cifre orientative de marketing (aprobate).
-3. **Problema** — scurt, context: "primesti vizite, dar putine devin comenzi; de obicei nu e traficul, e masurarea / produsele / experienta". Nu pitch.
-4. **Ce analizam — 4 zone** — Tracking · SEO · UX/UI · Google Ads. Fiecare zona = card care se **deschide la click/hover** cu exact ce verificam acolo, in limbaj de client (nu lista tehnica).
-5. **Cum functioneaza** — 3 pasi (adresa -> analizam -> raport).
-6. **Ce castigi daca repari (simulare)** — inlocuieste "de ce noi". Teaser al simularii de venit (11.3). Ton neutru, orientat pe rezultatul lui.
-7. **CTA final** — repeta accesul la raport + contact real. Fara limbaj de vanzare.
-
-### 11.2 Funnel post-click — scan + 5 pasi
-La click pe CTA (adresa data in hero):
-1. **Scan rapid** (~2-5s, din HTML): platforma (WooCommerce / Shopify / ...), nr. produse, tracking din HTML -> card **"Uite ce am gasit"** (efect "deja imi cunoaste magazinul").
-2. **Detectia grea ruleaza in FUNDAL** (CSS / Shopping / tracking runtime prin BrightData, ~40-80s) cat timp userul raspunde la intrebari -> se termina taman la raport. (Umple timpul de asteptare cu intrebarile.)
-3. **5 pasi cu intrebari** (ce scanul nu poate sti):
-   1. **Rata de conversie medie** — cu optiunea "nu stiu" (fallback pe media pietei ~1.3%)
-   2. **Comanda medie (AOV)** — in moneda magazinului + **selector de moneda** (RON/EUR/USD/GBP). Moneda e auto-detectata din site la scan (`detectCurrency`: cod ISO din schema/config -> simbol/text -> TLD; `lei` WooCommerce RO normalizat la RON) si pre-selectata; userul poate corecta.
-   3. **Buget lunar de reclame** — in aceeasi moneda ca AOV (aproximativ, "doar pentru simulare")
-   4. **Ce te preocupa cel mai mult** — viteza / Google / conversii...
-   5. **Contact** — nume, email, telefon (ULTIMUL pas, dupa ce e implicat)
-4. **Raport + simulare** — combina scanul cu raspunsurile.
-
-### 11.3 Simulare de venit (RECE)
-**Scop:** in loc de "de ce noi", arata in bani ce inseamna reparatul.
-**Inputuri:** buget lunar ads + AOV (in moneda magazinului) + moneda + rata de conversie (pasul 1; "nu stiu" -> media pietei).
-**Moneda:** toate sumele (buget/AOV/venit) sunt in moneda userului (`lib/currency.ts` = sursa unica cod+simbol), INCLUSIV CPC-ul de referinta — valoare NATIVA pe moneda (`CPC_BENCH` in `roi-sim.ts`, RON ~2.2 lei/click ca moneda primara), nu convertita din EUR. Simbolul se afiseaza in raport din `roiSim.currency`.
-**Formula:** `ROAS = AOV / CPA`. La acelasi buget:
-- `ROAS_posibil = ROAS_acum × (conv_nou / conv_acum) × 1/(1 − reducere_CPC)`
-- `Venit_extra_luna = (ROAS_posibil − ROAS_acum) × buget`
-
-**Ipoteze (conservatoare, plafonate, LEGATE de audit):**
-- **conv_nou:** tinta ~2.0% doar daca UX/tracking ies slabe in audit; daca magazinul e deja ok, uplift mic. Plafon ferm (nu promite 3×).
-- **reducere_CPC:** −10..15% **DOAR** daca nu are CSS partener ("By Google"); daca are deja partener -> 0.
-- **conv_acum:** raspunsul userului; doar "nu stiu" cade pe media pietei.
-
-**Onestitate (invariant):** afiseaza clar **"estimare orientativa"**; cifra exacta doar cu acces la cont (GA4/Ads) = CALD. Nu prezenta estimarea drept cifra reala.
-**Cod:** input in funnel `app/start`, moneda in `lib/currency.ts`, calcul in `lib/roi-sim.ts`, afisare in raport (`report-renderer.tsx`) + teaser pe landing.
-
----
+**Tone: neutral, diagnostic.** The landing page (`app/audit-seo`) presents two areas, SEO and UX/UI, as interactive cards; no revenue simulation.
+**Funnel (`app/start`):** URL → quick scan (platform, shop or not) → "here is what we found" card → 2 steps: what worries you (site-related options only) and contact. The full audit runs in the background from the scan.
 
 ## 12. Refactor calitate cod (2026-07-07) — module noi + teste
 
@@ -214,22 +151,6 @@ Audit de calitate (skill `improve-codebase-architecture` + ESLint). Aplicate TOA
 
 ---
 
-## 13. DE CONSTRUIT (urmatoarea sesiune) — Sanatate tracking + indicator consent
+## 13. Cancelled 2026-09-23 — tracking health and consent indicator
 
-> Status: DISCUTAT + APROBAT 2026-07-07, NEIMPLEMENTAT. Motorul deja capteaza TOATE
-> request-urile de retea in browserul real BrightData (`lib/css-detect.ts`,
-> `detectTrackingOnPage` -> `hits.push(u)`). Acum le folosim doar ca boolean da/nu.
-> Fiecare request de tracking cara in URL evenimentul + semnalul de consent — le parsam.
-
-**Ce se poate detecta din afara (RECE, fara acces la cont):**
-- **Evenimente pe pagina:** Pixel `ev=PageView/ViewContent/AddToCart/Purchase`, GA4 `en=page_view/view_item/add_to_cart`, TikTok event params. Vedem exact ce trage pe fiecare pagina crawlata.
-- **Retargeting pregatit:** Pixel + `PageView` pe toate paginile = audiente de baza; `ViewContent`+`AddToCart` cu `content_ids`/`content_type` pe pagina de produs = retargeting dinamic (DPA) posibil. Semafor verde/galben.
-- **Indicator consent (⭐ prioritar):** marcam momentul cand apasam Accept (in `acceptCookies`), bucketam `hits` in **pre-accept** vs **post-accept**, citim `gcs=` (Google Consent Signal: G100=refuzat, G111=acordat) + prezenta CMP. Semafor:
-  - 🟢 **Corect** — CMP prezent, tag-urile NU trag pre-accept (sau trag cu `gcs=denied`), trag cu `gcs=G111` post-accept -> Consent Mode v2 chiar e cablat.
-  - 🟡 **De reglat** — tag-urile trag complet INAINTE de accept (fara `gcs`) -> risc GDPR + pierdere date UE.
-  - 🔴 **Lipsa** — niciun banner / niciun semnal.
-  - Eficient: UN singur page-load (bucketare pe timestamp fata de click-ul de accept), NU al doilea load.
-
-**BOUNDARY onestitate — NU se poate din afara (doar CALD, acces la cont):** daca ID-ul Pixel/GA4 e AL LOR (nu rest de la alta agentie); CAPI / deduplicare / EMQ; daca conversiile se inregistreaza efectiv in cont; daca audientele se populeaza. In RECE => "setat / de reglat / de verificat cu acces", NICIODATA "gresit" categoric.
-
-**Plan implementare (pe rand, cu confirmare):** (1) indicator consent (parse `gcs` + bucket pre/post accept in `detectTrackingOnPage`, camp nou pe `LiveTracking`); (2) panou "Sanatate tracking" in raport (evenimente detectate + retargeting-ready) — rubrica Tracking din §3.1. Modificare motor (`css-detect.ts` + `audit-engine.ts`) + renderer + acest spec.
+The cold audit no longer covers tracking (section 4).

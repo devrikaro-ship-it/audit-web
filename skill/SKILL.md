@@ -1,6 +1,6 @@
 ---
 name: audit-devrika
-description: "Skill UNIC de audit client Devrika (ecom), cu 2 moduri. (1) RECE / lead-magnet: pornind DOAR de la URL, fara acces la cont — raport pe 4 rubrici (Tracking · SEO · UX/UI · Google Ads), superficial cat sa agate, ambalat persuasiv pt un decident netehnic, cu CTA Devrika; structura = docs/AUDIT-SPEC.md. (2) CALD / intern: cand avem acces la conturile clientului (Google Ads, Meta, GA4, GSC, GMC, site) — trage date REALE si face audit profund pe toate canalele, cu cross-check intre instrumente. Foloseste cand userul zice: audit client, audit prospect, raport audit, agata client (RECE) SAU audit intern, avem acces, audit cont, audit client existent (CALD)."
+description: "Skill UNIC de audit client Devrika (ecom), cu 2 moduri. (1) RECE / lead-magnet: pornind DOAR de la URL, fara acces la cont — raport doar pe site, 2 rubrici (SEO · UX/UI), superficial cat sa agate, ambalat persuasiv pt un decident netehnic, cu CTA Devrika; structura = docs/AUDIT-SPEC.md. (2) CALD / intern: cand avem acces la conturile clientului (Google Ads, Meta, GA4, GSC, GMC, site) — trage date REALE si face audit profund pe toate canalele, cu cross-check intre instrumente. Foloseste cand userul zice: audit client, audit prospect, raport audit, agata client (RECE) SAU audit intern, avem acces, audit cont, audit client existent (CALD)."
 user-invokable: true
 argument-hint: "[url] [nume-client] [--intern]"
 license: MIT
@@ -57,7 +57,7 @@ Ambiguu → intreaba o singura data: *"Avem acces la conturile lor sau e audit l
 # MOD RECE (lead-magnet) — proces
 
 > Principiu: **superficial si rapid**, pentru un magazin online (ecom-only). Scopul nu e exhaustivitate, e sa agate. Fara date de cont.
-> **Structura raportului = `docs/AUDIT-SPEC.md` (SURSA UNICA).** Cele **4 rubrici** (Tracking · SEO · UX/UI · Google Ads), campurile exacte, ce e EXCLUS si regulile de detectie sunt acolo. Citeste-o inainte sa atingi raportul; nu adauga/scoate rubrici.
+> **Structura raportului = `docs/AUDIT-SPEC.md` (SURSA UNICA).** Cele **2 rubrici** (SEO · UX/UI; site only since 2026-09-23), campurile exacte, ce e EXCLUS si regulile de detectie sunt acolo. Citeste-o inainte sa atingi raportul; nu adauga/scoate rubrici.
 
 ## Principii
 Invariantii modului RECE (input = doar URL · "de verificat" niciodata "lipsa" · limbaj de client ·
@@ -67,9 +67,9 @@ CTA · fara diacritice · maparea findings-urilor pe cele 3 servicii) sunt in **
 ## Calea principala = app-ul web (motorul). NU rula Python ca prima optiune.
 1. Porneste din UI (`/start`) sau `POST /api/audit` `{url, tipBusiness, platforma, nume, email, telefon}`.
 2. Raport la `/r/<id>`, PDF la `/r/<id>/pdf`, lead-uri in `/dashboard`.
-3. Motorul acopera deja crawl (~50 pagini) + PageSpeed, cele 4 rubrici, tracking **la runtime**
-   (browser real BrightData, nu HTML brut), CSS + peisaj Shopping EEA, semnal produse (Catamo),
-   si simularea de venit multi-moneda din funnel. Detalii: `docs/AUDIT-SPEC.md` §8 si §11.
+3. The engine reads up to 60 pages that sell (categories and products, per platform profile) + PageSpeed and
+   builds the 2 rubrics, SEO (with product-page titles and descriptions) and UX/UI. No tracking, Google Ads or
+   revenue simulation in the cold report (removed 2026-09-23). Details: `docs/AUDIT-SPEC.md` §3, §8 and §11.
 
 ## Reading rules per platform
 The web engine reads each shop by its platform profile: `lib/platform-knowledge/<platform>.json` (WooCommerce,

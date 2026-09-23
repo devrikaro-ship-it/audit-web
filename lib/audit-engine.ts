@@ -1,6 +1,5 @@
-import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona, ProductSignal, UxAudit, UxField } from "./types";
-import { analyzeProspectLive, deriveProductQueries, type GoogleShoppingIntel, type LiveTracking } from "./css-detect";
-import { detectEcom, detectHtmlTracking, detectPlatform } from "./site-signals";
+import type { AuditData, CheckResult, PageCheck, StatusCheck, ProductSignal, UxAudit, UxField } from "./types";
+import { detectEcom, detectPlatform } from "./site-signals";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
 import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
@@ -667,161 +666,27 @@ function computeProductSignal(pages: PageData[], productUrls: string[], hasProdu
     if (!parseMeta(p.html, "description")) missingMeta++;
   }
   const checked = prods.length;
-  const headline = "Produsele tale nu sunt optimizate pentru Google Shopping si cautare";
-
-  const feedFraza = hasProductFeed
-    ? "Ai un feed de produse, dar titlurile si descrieriile din el conteaza la fel de mult ca existenta lui."
-    : "Fara un feed de produse optimizat nici nu poti rula Google Shopping la potential.";
-
+  // Only what was measured on the product pages read; never a generic claim (the report is public).
+  let headline: string;
   let message: string;
   if (checked > 0 && (weakTitles > 0 || missingMeta > 0)) {
     const parti: string[] = [];
     if (weakTitles > 0) parti.push(`${weakTitles} au titluri scurte sau generice`);
-    if (missingMeta > 0) parti.push(`${missingMeta} nu au descriere`);
-    message = `Am verificat ${checked} pagini de produs si ${parti.join(" iar ")} — exact textele pe care Google le foloseste ca sa decida pe ce cautari iti arata produsele. Titlurile si descrierile slabe inseamna ca produsele apar mai rar in Shopping si in cautare decat ar putea, chiar cu buget de reclama. ${feedFraza} Cu titluri, descrieri si feed optimizate acelasi catalog aduce mai multe afisari si clicuri, fara buget suplimentar.`;
+    if (missingMeta > 0) parti.push(`${missingMeta} nu au descriere pentru Google`);
+    headline = "Paginile de produs pot fi gasite mai usor in Google";
+    message = `Am verificat ${checked} pagini de produs si ${parti.join(" iar ")}. Titlul si descrierea sunt textele pe care Google le citeste ca sa decida pe ce cautari iti arata produsul. Scrise complet, cu numele produsului, marca si detaliile cautate, acelasi catalog apare pe mai multe cautari, fara buget suplimentar.`;
+  } else if (checked > 0) {
+    headline = "Paginile de produs au titluri si descrieri completate";
+    message = `Am verificat ${checked} pagini de produs: titlurile sunt suficient de descriptive si fiecare are descriere pentru Google.`;
   } else {
-    message = `Titlurile, descrierile si feed-ul produselor sunt textele pe care Google le foloseste ca sa decida pe ce cautari apari in Shopping si in cautare. In majoritatea magazinelor acestea raman needitate (numele scurt din platforma), asa ca produsele apar mai rar decat ar putea. ${feedFraza} Optimizate, acelasi catalog aduce mai multe afisari si clicuri, fara buget suplimentar de reclama.`;
+    headline = "Paginile de produs — de verificat";
+    message = "Nu am putut citi pagini de produs in aceasta analiza, asa ca titlurile si descrierile lor raman de verificat.";
   }
 
   return { checked, weakTitles, missingMeta, hasFeed: hasProductFeed, headline, message };
 }
 
 // ── Conversie / bani pierduti (PPC) ──────────────────────────────────────────
-
-function computeConversieAudit(pages: PageData[], mobile: PSIResult | null, hasProductFeed: boolean): ConversieAudit {
-  const homepage = pages[0];
-  const corpus = pages.map(p => p.html).join("\n").toLowerCase();
-  const has = (...n: string[]) => n.some(x => corpus.includes(x));
-
-  // amprenta platforma/ecom din modulul partajat (aceeasi ca in scanul din funnel)
-  const isEcom = detectEcom(corpus);
-
-  const leaks: MoneyLeak[] = [];
-  const add = (id: string, label: string, zona: ConvZona, present: Presence, pierdere: string, fix: string, positiv?: string) =>
-    leaks.push({ id, label, zona, present, pierdere, fix, positiv });
-
-  // ---- TRACKING & PPC (carligul de vanzare) ----
-  // Din HTML brut NU putem dovedi absenta unui tag (poate fi injectat prin GTM sau
-  // alt loader, sau gated pe consent). Pe raport public (invariant spec §5.1):
-  // neconfirmat -> "necunoscut" (= de verificat), NICIODATA "nu"/lipsa. Pe ecom,
-  // browserul BrightData confirma la runtime ce e prezent (applyLiveTracking -> "da").
-  const track = detectHtmlTracking(corpus);
-  const hasGTM = track.gtm;
-  const hasGA4 = track.ga4;
-  const hasAds = /aw-\d{6,}/i.test(corpus) || has("google_conversion", "googleads.g.doubleclick", "gtag_report_conversion");
-  const hasPixel = track.metaPixel;
-  const hasTikTok = track.tiktok;
-  const hasConsent = has("gtag('consent'", 'gtag("consent"', "'consent', 'default'", "cookiebot", "onetrust", "cookieyes", "complianz", "consentmanager");
-  const veil = (found: boolean): Presence => found ? "da" : "necunoscut";
-
-  add("ga4", "Google Analytics 4", "Tracking & PPC", veil(hasGA4),
-    "Fara analytics nu stii ce pagini si ce reclame aduc vanzari — optimizezi pe ghicit, nu pe date.",
-    "Instalam GA4 cu evenimente ecommerce (view_item, add_to_cart, purchase).",
-    "Detectat activ — masori traficul si comportamentul pe site.");
-  add("ads_conv", "Google Ads — urmarire conversii", "Tracking & PPC", veil(hasAds),
-    "Daca dai bani pe Google Ads fara urmarirea conversiilor, Google liciteaza orb — ajungi sa platesti de 2-3x mai mult per vanzare.",
-    "Conectam conversiile reale (Purchase) la Google Ads si licitam pe valoare, nu pe clicuri.",
-    "Detectat activ — Google Ads liciteaza pe vanzari reale, nu pe clicuri.");
-  add("pixel", "Meta Pixel", "Tracking & PPC", veil(hasPixel),
-    "Fara Pixel, reclamele Meta nu pot gasi cumparatori si nu poti face retargeting — cea mai profitabila audienta a ta.",
-    "Instalam Meta Pixel + evenimente standard + audiente de retargeting.",
-    "Detectat activ — poti masura si face retargeting pe Meta.");
-  add("tiktok", "TikTok Pixel", "Tracking & PPC", veil(hasTikTok),
-    "Fara TikTok Pixel nu poti masura sau optimiza reclamele TikTok — un canal in crestere rapida pentru ecommerce.",
-    "Instalam TikTok Pixel + evenimente standard pentru campanii TikTok.",
-    "Detectat activ — poti masura si optimiza reclamele TikTok.");
-  add("capi", "Meta Conversion API (server-side)", "Tracking & PPC", "necunoscut",
-    "Fara CAPI se pierd ~10-30% din conversii (iOS, blocare cookies) → Meta optimizeaza pe date incomplete si arde buget.",
-    "Configuram CAPI cu deduplicare web + server pentru date complete.");
-  add("consent", "Consent Mode v2", "Tracking & PPC", veil(hasConsent),
-    "Fara Consent Mode v2 pierzi date de conversie din UE, iar reclamele Google pierd din eficienta (si e obligatoriu legal).",
-    "Implementam banner de consimtamant conectat la Consent Mode v2.",
-    "Detectat activ — pastrezi datele de conversie conform GDPR.");
-
-  // ---- INCREDERE ----
-  const hasReviews = has("aggregaterating", "trustpilot", "yotpo", "judge.me", "stamped.io", "reviews.io", "okendo", '"reviewcount"', "stele verificate");
-  const hasPolicies = ["retur", "return", "livrare", "shipping", "termeni", "terms", "confidentialitate", "privacy", "gdpr", "anpc"]
-    .filter(k => corpus.includes(k)).length >= 3;
-  const hasPay = has("visa", "mastercard", "netopia", "paypal", "stripe", "mobilpay", "plata securizata", "apple pay", "google pay");
-  add("reviews", "Recenzii / dovada sociala", "Incredere", hasReviews ? "da" : "necunoscut",
-    "92% dintre cumparatori citesc recenzii inainte sa comande. Fara ele, traficul (inclusiv cel platit) pleaca fara sa cumpere.",
-    "Activam recenzii pe produse + cerere automata dupa livrare + afisare rating in Google.");
-  add("policies", "Pagini Retur / Livrare / Termeni", "Incredere", hasPolicies ? "da" : "nu",
-    "Lipsa politicilor clare = neincredere + risc legal (ANPC). Vizitatorul nu cumpara daca nu vede cum returneaza.",
-    "Adaugam pagini de Retur, Livrare, Termeni si Confidentialitate vizibile in footer.");
-  add("pay", "Metode de plata vizibile", "Incredere", hasPay ? "da" : "necunoscut",
-    "Cand metodele de plata (card, ramburs, rate) nu sunt vizibile, o parte din cumparatori abandoneaza din nesiguranta.",
-    "Afisam clar metodele de plata + badge de plata securizata langa butonul de comanda.");
-
-  // ---- FUNCTII MAGAZIN (doar ecom) ----
-  if (isEcom) {
-    const hasSearch = /type=["']search["']/i.test(corpus) || /role=["']search["']/i.test(corpus) || has("search-field", "/?s=", "search-form", "cauta produse");
-    const hasFilters = has("woocommerce-widget-layered-nav", "wc-block-attribute-filter", "yith-wcan", "filtreaza", "facet", "filter-options", "price_slider");
-    const hasStock = has("in stoc", "in stock", "schema.org/instock", "stoc epuizat", "out of stock", "disponibilitate");
-    const hasRelated = has("produse similare", "related", "s-ar putea sa-ti placa", "recomandate", "you may also like", "complete the look");
-    add("search", "Cautare pe site", "Functii magazin", hasSearch ? "da" : "necunoscut",
-      "Vizitatorii care folosesc cautarea convertesc de pana la 2x mai mult. Fara ea, cei care nu gasesc rapid pleaca.",
-      "Adaugam cautare cu sugestii instant pe produse.");
-    add("filters", "Filtre produse (marime/culoare/pret)", "Functii magazin", hasFilters ? "da" : "necunoscut",
-      "Catalog mare fara filtre = frustrare si abandon. Clientul nu sapa prin 20 de pagini ca sa-si gaseasca marimea.",
-      "Implementam filtre pe categorii (marime, culoare, pret, brand).");
-    add("product_info", "Pagina produs completa (stoc, livrare, recenzii)", "Functii magazin", hasStock ? "da" : "necunoscut",
-      "Pagina de produs e locul deciziei. Fara stoc, estimare livrare si recenzii, cumparatorul ezita si pleaca.",
-      "Completam pagina de produs: stoc, estimare livrare, recenzii, ghid marimi.");
-    add("related", "Produse similare / recomandate", "Functii magazin", hasRelated ? "da" : "necunoscut",
-      "Recomandarile cresc valoarea cosului cu 10-30%. Fara ele, lasi bani pe masa la fiecare comanda.",
-      "Adaugam blocuri de produse similare si 'cumparate impreuna'.");
-    add("feed", "Feed de produse (Shopping / Catalog Meta)", "Functii magazin", hasProductFeed ? "da" : "necunoscut",
-      "Fara un feed de produse nu poti rula Google Shopping sau reclame de catalog Meta — cele mai profitabile formate pentru ecommerce. Concurentii cu feed apar cu poza si pret direct in cautare.",
-      "Generam si conectam un feed de produse la Google Merchant Center si la catalogul Meta.");
-    add("shopping_segmentare", "Segmentare produse in Google Shopping", "Functii magazin", "necunoscut",
-      "Daca rulezi Shopping fara separare pe performanta, bugetul se imparte aproape egal pe tot catalogul — produsele care nu vand mananca bani degeaba. Un sistem de etichetare pe performanta muta banii pe produsele care aduc comenzi, cu aceeasi investitie.",
-      "Implementam segmentare pe performanta a feed-ului (Heroes / Sidekicks / Villains / Zombies) + structura de campanii pe etichete.");
-  }
-
-  // ---- UX & MOBIL ----
-  const hasViewport = /<meta[^>]+name=["']viewport["']/i.test(homepage?.html ?? "");
-  const speedSlow = mobile != null && mobile.score < 50;
-  add("mobile", "Optimizare mobil", "UX & Mobil", hasViewport ? "da" : "nu",
-    "~70% din trafic e pe telefon. Un site care nu e gandit pentru mobil pierde majoritatea cumparatorilor — si a bugetului de reclama.",
-    "Optimizam experienta pe mobil: layout, butoane, viteza de incarcare.");
-  add("speed", "Viteza pe mobil", "UX & Mobil", mobile == null ? "necunoscut" : (speedSlow ? "nu" : "da"),
-    "Fiecare secunda de incarcare in plus inseamna pana la -7% conversii. Pe trafic platit, asta e buget aruncat direct.",
-    "Optimizam imaginile, scripturile si serverul pentru incarcare sub 2.5s.");
-
-  // ---- COS & CHECKOUT ----
-  const hasFreeShip = has("livrare gratuita", "transport gratuit", "livrare gratis", "free shipping");
-  add("freeship", "Prag livrare gratuita afisat", "Cos & checkout", hasFreeShip ? "da" : "necunoscut",
-    "Costurile-surpriza de livrare sunt motivul #1 de abandon al cosului. Un prag de livrare gratuita afisat creste si valoarea comenzii.",
-    "Afisam o bara de progres spre livrarea gratuita (ex: 'mai ai 40 lei pana la livrare gratuita').");
-
-  const scorPpc = computePpcScore(leaks);
-
-  return { isEcom, ruleazaReclame: (hasAds || hasPixel) ? "da" : (hasGTM ? "necunoscut" : "nu"), scorPpc, leaks };
-}
-
-// scor PPC: ponderam tracking-ul (vinde PPC), ignoram necunoscut
-function computePpcScore(leaks: MoneyLeak[]): number {
-  const w = (l: MoneyLeak) => (l.zona === "Tracking & PPC" ? 2 : 1);
-  let num = 0, den = 0;
-  for (const l of leaks) {
-    if (l.present === "necunoscut") continue;
-    den += w(l);
-    if (l.present === "da") num += w(l);
-  }
-  return den ? Math.round((num / den) * 100) : 0;
-}
-
-// Suprascrie detectia statica cu adevarul din browser (runtime). Doar upgrade la
-// "da" — absenta la runtime nu dovedeste lipsa (consent gating, tag pe alte pagini).
-function applyLiveTracking(c: ConversieAudit, t: LiveTracking): ConversieAudit {
-  const seen: Record<string, boolean> = { ga4: t.ga4, ads_conv: t.googleAds, pixel: t.metaPixel, tiktok: t.tiktok, consent: t.consent };
-  const leaks = c.leaks.map((l) => (seen[l.id] && l.present !== "da" ? { ...l, present: "da" as Presence } : l));
-  const ruleazaReclame: Presence = (t.googleAds || t.metaPixel || t.ga4) ? "da" : c.ruleazaReclame;
-  return { ...c, leaks, scorPpc: computePpcScore(leaks), ruleazaReclame };
-}
-
-// ── Main entry point ─────────────────────────────────────────────────────────
 
 export async function runAudit(rawUrl: string): Promise<AuditData> {
   let url = rawUrl.trim();
@@ -929,39 +794,9 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const securitate = computeSecurityChecks(homepageData);
 
   const scor = computeOverallScore(viteza, seoChecks, continutChecks, keywordsChecks, structuraChecks, schema);
-  let conversie = computeConversieAudit(analyzedPages, mobile, hasProductFeed);
-  const productSignal = conversie.isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
-  const ux = conversie.isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
-
-  // Phase 5: browser real (BrightData) — tracking la runtime + CSS + peisaj Shopping.
-  // Doar ecom. Tracking-ul via GTM nu se vede in HTML brut; il citim la runtime.
-  let googleAds: GoogleShoppingIntel | undefined;
-  if (conversie.isEcom && process.env.BRIGHTDATA_CDP) {
-    // Titlurile pt interogarile Shopping vin din paginile clasificate produs; altfel din restul paginilor.
-    const titlesFrom = (ps: PageData[]) => ps.map((p) => parseTitle(p.html)).filter(Boolean);
-    const productSet = new Set(products);
-    const productTitles = titlesFrom(analyzedPages.filter((p) => productSet.has(normUrl(p.url))));
-    const bestTitles = productTitles.length ? productTitles : titlesFrom(analyzedPages.slice(1));
-    const brand = domain.replace(/^www\./, "").split(".")[0];
-    const queries = deriveProductQueries(brand, bestTitles);
-    try {
-      // safety cap: navigatia BrightData poate fi lenta; nu blocam auditul.
-      // 4 faze secventiale (tracking + Shopping + brand) -> plafon 82s.
-      const live = await Promise.race([
-        analyzeProspectLive(domain, origin, queries, { maxQueries: 3, brand }),
-        new Promise<undefined>((r) => setTimeout(() => r(undefined), 82000)),
-      ]);
-      if (live) {
-        googleAds = { css: live.css, shopping: live.shopping, pricePosition: live.pricePosition, brandDefense: live.brandDefense, gbpReviews: live.gbpReviews };
-        if (live.tracking?.ok) conversie = applyLiveTracking(conversie, live.tracking);
-      }
-    } catch {
-      googleAds = undefined;
-    }
-  }
-
-  // Nota: simularea de venit (roiSim) se calculeaza in lib/audit-store (tryFinalize),
-  // cand sosesc inputurile din funnel — nu aici. runAudit produce doar semnalele.
+  const isEcom = detectEcom(analyzedPages.map((p) => p.html).join("\n").toLowerCase());
+  const productSignal = isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
+  const ux = isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
 
   return {
     url: origin,
@@ -974,8 +809,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     continutChecks,
     keywordsChecks,
     structuraChecks,
-    conversie,
-    googleAds,
+    isEcom,
     productSignal,
     ux,
   };

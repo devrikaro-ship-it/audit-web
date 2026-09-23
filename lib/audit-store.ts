@@ -2,12 +2,11 @@ import { randomUUID } from "crypto";
 import type { AuditJob } from "./types";
 import type { StartMeta, FinalizeInput } from "./audit-request";
 import { runAudit } from "./audit-engine";
-import { computeRoiSim } from "./roi-sim";
 import { saveAudit, getAudit } from "./leads-store";
 
 // Modul care detine CICLUL DE VIATA al unui audit-job, in spatele a 3 operatii:
-// startJob (creeaza + ruleaza in fundal), finalizeJob (contact + inputuri -> roiSim + persista),
-// getJobView (memorie viu sau store durabil). Race-ul audit/finalize + calculul roiSim +
+// startJob (creeaza + ruleaza in fundal), finalizeJob (contact -> persista),
+// getJobView (memorie viu sau store durabil). Race-ul audit/finalize +
 // persistenta traiesc AICI, nu in ruta. Map-ul in-memory e implementarea privata.
 
 declare global {
@@ -55,23 +54,10 @@ export async function getJobView(id: string): Promise<JobView | null> {
   return null;
 }
 
-// Calculeaza roiSim (cand avem inputuri + date) si persista durabil o singura data,
-// cand auditul e gata SI funnel-ul a trimis finalize. Ruleaza dupa ambele evenimente.
+// Persists the audit once, when the audit is done AND the funnel sent finalize; runs after both events.
 async function tryFinalize(id: string): Promise<void> {
   const job = store.get(id);
   if (!job || !job.data) return;
-
-  if (!job.data.roiSim && job.aov && job.adBudget && job.data.conversie?.isEcom) {
-    const roiSim = computeRoiSim(
-      { adBudget: job.adBudget, aov: job.aov, convRatePct: job.convRate ?? null, currency: job.currency ?? "RON" },
-      {
-        uxWeak: job.data.ux ? job.data.ux.scor < 55 : true,
-        trackingWeak: (job.data.conversie?.scorPpc ?? 0) < 60,
-        hasPartnerCss: job.data.googleAds?.css.status === "third_party_css",
-      },
-    ) ?? undefined;
-    if (roiSim) { job.data.roiSim = roiSim; update(id, { data: job.data }); }
-  }
 
   if (job.finalizeRequested && !job.saved) {
     update(id, { saved: true });

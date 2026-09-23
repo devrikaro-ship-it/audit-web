@@ -13,10 +13,10 @@ Skill UNIC de audit client **ecom**, cu 2 moduri. Face parte din repo-ul `audit-
 | Adancime | Superficial, cat sa agate | Profund, cross-check intre tool-uri |
 | Iesire | `/r/<id>` (+ PDF) | `/cald/<slug>` (+ PDF) |
 
-## RECE — 4 rubrici (ecom-only)
-Raportul are **strict 4 rubrici**, in ordine: **Tracking · SEO · UX/UI · Google Ads**. Structura exacta (campuri, ce e EXCLUS, reguli de detectie, praguri) = **`docs/AUDIT-SPEC.md`** (sursa unica). Findings mapeaza pe 3 servicii Devrika: CSS → ProductHero, produse neoptimizate → Catamo, restul → management campanii.
+## RECE — 2 rubrici, doar site (ecom-only)
+Raportul are **strict 2 rubrici**, in ordine: **SEO · UX/UI** (site only, 2026-09-23). Structura exacta (campuri, ce e EXCLUS, reguli de detectie, praguri) = **`docs/AUDIT-SPEC.md`** (sursa unica).
 
-Detectie cheie: **tracking la runtime** (browser real BrightData — GA4/Ads/Pixel/TikTok/Consent, nu din HTML brut) + **CSS + peisaj Shopping EEA** + semnal produse (Catamo).
+Detectie cheie: paginile care vand (categorii + produse) citite dupa fisa platformei (`lib/platform-knowledge/`); magazinele care blocheaza serverul se citesc prin browserul real BrightData.
 
 ## Cum se ruleaza
 Skill-ul e deja instalat ca symlink in `~/.claude/skills/audit-devrika` → `~/seo-audit/skill/`. In Claude Code:

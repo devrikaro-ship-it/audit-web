@@ -1,6 +1,3 @@
-import type { GoogleShoppingIntel } from "./css-detect";
-import type { RoiSim } from "./roi-sim";
-
 export type StatusCheck = "ok" | "atentie" | "critic";
 export type AuditStatus = "pending" | "running" | "done" | "error";
 
@@ -27,11 +24,9 @@ export type AuditData = {
   continutChecks: PageCheck[];
   keywordsChecks: PageCheck[];
   structuraChecks: PageCheck[];
-  conversie?: ConversieAudit;
-  googleAds?: GoogleShoppingIntel; // CSS + peisaj Shopping (doar ecom, via BrightData)
-  productSignal?: ProductSignal;   // semnal optimizare produse (carlig Catamo, doar ecom)
-  ux?: UxAudit;                    // UX/UI pe tipuri de pagina (doar ecom)
-  roiSim?: RoiSim;                 // simulare venit (ROAS acum vs posibil) — din inputurile funnel-ului
+  isEcom?: boolean;
+  productSignal?: ProductSignal;   // product titles and descriptions, shown in the SEO rubric (shops only)
+  ux?: UxAudit;                    // UX/UI by page type (shops only)
 };
 
 // ── UX / UI — analiza pe tipuri de pagina (spec 3.3): viteza + home + categorie + produs + filtre ──
@@ -63,25 +58,6 @@ export type ProductSignal = {
   message: string;
 };
 
-// ── Conversie / bani pierduti (instrument de vanzare PPC) ──
-export type Presence = "da" | "nu" | "necunoscut";
-export type ConvZona = "Tracking & PPC" | "Incredere" | "Functii magazin" | "UX & Mobil" | "Cos & checkout";
-export type MoneyLeak = {
-  id: string;
-  label: string;
-  zona: ConvZona;
-  present: Presence;
-  pierdere: string; // ce te costa (benchmark de industrie)
-  fix: string;
-  positiv?: string; // ce iti aduce cand E prezent (afisat pe cardul verde)
-};
-export type ConversieAudit = {
-  isEcom: boolean;
-  ruleazaReclame: Presence; // detectat tag Ads/Pixel
-  scorPpc: number;          // 0-100 pregatire PPC
-  leaks: MoneyLeak[];
-};
-
 export type AuditJob = {
   id: string;
   url: string;
@@ -91,11 +67,7 @@ export type AuditJob = {
   email?: string;
   telefon?: string;
   probleme?: string[];
-  convRate?: number | null; // rata de conversie declarata (%), null = "nu stiu"
-  aov?: number;             // comanda medie (in moneda magazinului)
-  adBudget?: number;        // buget lunar de reclame (in moneda magazinului)
-  currency?: string;        // cod ISO moneda (RON/EUR/...) detectat/ales in funnel
-  finalizeRequested?: boolean; // funnel a trimis contactul + inputurile (finalize)
+  finalizeRequested?: boolean; // the funnel sent the contact (finalize)
   saved?: boolean;             // persistat durabil (evita salvare dubla la race)
   status: AuditStatus;
   createdAt: number;

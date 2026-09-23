@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import type { AuditRequestBody } from "@/lib/audit-request";
-import { CURRENCIES, symOf } from "@/lib/currency";
 
 const TARI = [
   { code: "+40", flag: "🇷🇴", name: "Romania" },
@@ -29,23 +28,12 @@ function isValidPhone(v: string) {
   return /^[0-9\s\-]{6,15}$/.test(v.trim());
 }
 
-const TOTAL_STEPS = 5;
-
-// Rata de conversie pe intervale usoare (owner netehnic). value = mijloc reprezentativ; null = "nu stiu".
-const CONV_BUCKETS: { label: string; sub: string; value: number | null }[] = [
-  { label: "Sub 1%", sub: "din 100 de vizitatori, sub 1 cumpara", value: 0.7 },
-  { label: "1 - 2%", sub: "cam 1-2 din 100", value: 1.5 },
-  { label: "2 - 3%", sub: "cam 2-3 din 100", value: 2.5 },
-  { label: "Peste 3%", sub: "3 sau mai multi din 100", value: 3.5 },
-  { label: "Nu stiu", sub: "folosim media pietei in simulare", value: null },
-];
-
+const TOTAL_STEPS = 2;
 const PROBLEME = [
-  { label: "Am trafic, dar putine vanzari", sub: "Multi vizitatori, rata mica de conversie" },
-  { label: "Platesc prea mult pe o vanzare", sub: "Costul pe achizitie (CPA) e prea mare" },
-  { label: "Reclamele nu ating ROAS-ul dorit", sub: "Bani investiti in Google / Meta, randament sub tinta" },
+  { label: "Am trafic, dar putine vanzari", sub: "Multi vizitatori, putini cumparatori" },
   { label: "Nu apar organic in Google", sub: "Vizibilitate SEO slaba pe cautarile tale" },
   { label: "Nu apar in cautarile AI", sub: "Lipsesti din ChatGPT / AI Overviews (LLM / GEO)" },
+  { label: "Site-ul se incarca greu", sub: "Mai ales pe telefon" },
   { label: "Nu stiu care e problema", sub: "Vreau imaginea completa a magazinului" },
 ];
 
@@ -105,28 +93,10 @@ function PrimaryButton({ children, onClick, disabled = false }: { children: Reac
   );
 }
 
-function CurrencyInput({ value, onChange, placeholder, sym }: { value: string; onChange: (v: string) => void; placeholder: string; sym: string }) {
-  return (
-    <div className="mb-2 flex items-center rounded-xl border border-gray-200 transition-colors focus-within:border-[#47499E]">
-      <span className="shrink-0 pl-4 pr-1.5 text-sm font-semibold text-gray-400">{sym}</span>
-      <input
-        type="text" inputMode="decimal" placeholder={placeholder} value={value}
-        onChange={(e) => onChange(e.target.value.replace(/[^0-9.,]/g, ""))}
-        className="w-full bg-transparent py-3.5 pr-4 text-sm outline-none"
-      />
-    </div>
-  );
-}
 
-type ScanResult = { origin: string; reachable: boolean; platform: string | null; isEcom: boolean | null; tracking: { gtm?: boolean; ga4?: boolean; metaPixel?: boolean; tiktok?: boolean }; currency?: string | null };
+type ScanResult = { origin: string; reachable: boolean; platform: string | null; isEcom: boolean | null };
 
 function ScanCard({ scan }: { scan: ScanResult }) {
-  const trackers = [
-    { k: "ga4", label: "Google Analytics 4", on: scan.tracking.ga4 },
-    { k: "metaPixel", label: "Meta Pixel", on: scan.tracking.metaPixel },
-    { k: "tiktok", label: "TikTok Pixel", on: scan.tracking.tiktok },
-    { k: "gtm", label: "Google Tag Manager", on: scan.tracking.gtm },
-  ];
   const row = (label: string, val: React.ReactNode) => (
     <div className="flex items-center justify-between py-2.5 border-b" style={{ borderColor: "#f1f5f9" }}>
       <span className="text-sm text-gray-500">{label}</span>
@@ -137,19 +107,8 @@ function ScanCard({ scan }: { scan: ScanResult }) {
     <div className="rounded-xl border p-5 mb-6" style={{ borderColor: "#e2e8f0", background: "#fafbff" }}>
       {row("Platforma", scan.platform ?? "o detectam in analiza")}
       {row("Tip site", scan.isEcom ? "Magazin online" : "Site")}
-      <div className="pt-3">
-        <span className="text-sm text-gray-500">Masuratori vazute deja in cod</span>
-        <div className="flex flex-wrap gap-2 mt-2">
-          {trackers.map((t) => (
-            <span key={t.k} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium"
-              style={{ background: t.on ? "#ecfdf5" : "#f8fafc", color: t.on ? "#047857" : "#64748b", border: `1px solid ${t.on ? "#a7f3d0" : "#e2e8f0"}` }}>
-              {t.on ? <span>✓</span> : null}{t.label}{!t.on ? <span className="opacity-70">· in analiza</span> : null}
-            </span>
-          ))}
-        </div>
-      </div>
       <p className="text-xs text-gray-400 mt-4 leading-relaxed">
-        E doar o privire rapida in cod. Multe masuratori (GA4, Pixel) se incarca prin Google Tag Manager sau abia dupa ce accepti cookies — nu apar aici, dar nu inseamna ca lipsesc. In analiza completa deschidem magazinul intr-un browser real, dam accept si verificam ce se declanseaza cu adevarat, plus prezenta ta in Google Shopping.
+        E doar o privire rapida. In analiza completa citim paginile care vand — categorii si produse — si verificam cum te gaseste Google si cat de usor cumpara un vizitator.
       </p>
     </div>
   );
@@ -164,10 +123,6 @@ export default function StartPage() {
   const [scan, setScan] = useState<ScanResult | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
 
-  const [convValue, setConvValue] = useState<number | null | undefined>(undefined); // undefined = neatins
-  const [aov, setAov] = useState("");
-  const [adBudget, setAdBudget] = useState("");
-  const [currency, setCurrency] = useState("RON"); // detectata din scan; userul poate schimba
   const [probleme, setProbleme] = useState<string[]>([]);
 
   const [nume, setNume] = useState("");
@@ -197,10 +152,8 @@ export default function StartPage() {
       });
       const data = await res.json();
       setScan(data as ScanResult);
-      // doar coduri din picker, ca un chip sa fie mereu activ; altfel ramane default RON
-      if (data?.currency && CURRENCIES.some((c) => c.code === data.currency)) setCurrency(data.currency);
     } catch {
-      setScan({ origin: url, reachable: false, platform: null, isEcom: null, tracking: {} });
+      setScan({ origin: url, reachable: false, platform: null, isEcom: null });
     }
     setScreen("found");
   }
@@ -213,19 +166,18 @@ export default function StartPage() {
 
   async function handleSubmit() {
     setSubmitting(true);
-    const convRate = convValue === undefined ? null : convValue;
     try {
       let id = jobId;
       if (id) {
         await fetch("/api/audit", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phase: "finalize", id, nume, email, telefon, probleme, convRate, aov, adBudget, currency } satisfies AuditRequestBody),
+          body: JSON.stringify({ phase: "finalize", id, nume, email, telefon, probleme } satisfies AuditRequestBody),
         });
       } else {
         // fallback: auditul nu s-a pornit la scan -> submit intr-un pas
         const res = await fetch("/api/audit", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url, tipBusiness: "magazin", platforma: scan?.platform ?? undefined, nume, email, telefon, probleme, convRate, aov, adBudget, currency } satisfies AuditRequestBody),
+          body: JSON.stringify({ url, tipBusiness: "magazin", platforma: scan?.platform ?? undefined, nume, email, telefon, probleme } satisfies AuditRequestBody),
         });
         id = (await res.json())?.id;
       }
@@ -278,7 +230,7 @@ export default function StartPage() {
               <div className="mx-auto mb-6 h-14 w-14 rounded-full border-4 animate-spin"
                 style={{ borderColor: "#e2e8f0", borderTopColor: "#47499E" }} />
               <h1 className="text-xl font-black text-gray-900 mb-1">Scanam magazinul tau...</h1>
-              <p className="text-sm text-gray-400">Ne uitam la platforma, masuratori si structura. Dureaza cateva secunde.</p>
+              <p className="text-sm text-gray-400">Ne uitam la platforma si la structura. Dureaza cateva secunde.</p>
             </div>
           )}
 
@@ -290,7 +242,7 @@ export default function StartPage() {
                 <span>✓</span> Analiza a pornit
               </div>
               <h1 className="text-2xl font-black text-gray-900 mb-1">Uite ce am gasit</h1>
-              <p className="text-sm text-gray-400 mb-5">Analizam magazinul in fundal chiar acum. Pana e gata, raspunde la cateva intrebari ca sa-ti facem si o estimare de venit.</p>
+              <p className="text-sm text-gray-400 mb-5">Analizam magazinul in fundal chiar acum. Pana e gata, spune-ne ce te preocupa si unde trimitem raportul.</p>
               <ScanCard scan={scan} />
               <PrimaryButton onClick={() => { setScreen("q"); setQstep(1); }}>Continua →</PrimaryButton>
               <button onClick={() => setScreen("url")} className="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-3">
@@ -299,69 +251,8 @@ export default function StartPage() {
             </div>
           )}
 
-          {/* Q1 — conversie */}
+          {/* Q1 — preocupare */}
           {screen === "q" && qstep === 1 && (
-            <div>
-              <BackButton onClick={qBack} />
-              <h1 className="text-2xl font-black text-gray-900 mb-1">Ce rata de conversie ai?</h1>
-              <p className="text-sm text-gray-400 mb-6">Din vizitatori, cati cumpara. Daca nu stii, alege ultima varianta — folosim media pietei.</p>
-              <div className="flex flex-col gap-2 mb-6">
-                {CONV_BUCKETS.map((b) => {
-                  const selected = convValue === b.value && !(b.value === null && convValue === undefined);
-                  return (
-                    <button key={b.label}
-                      onClick={() => { setConvValue(b.value); qNext(); }}
-                      className="flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all hover:border-[#47499E]"
-                      style={{ borderColor: selected ? "#47499E" : "#e2e8f0", background: selected ? "#f0f4ff" : "white" }}>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-800">{b.label}</p>
-                        <p className="text-xs text-gray-400">{b.sub}</p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Q2 — AOV */}
-          {screen === "q" && qstep === 2 && (
-            <div>
-              <BackButton onClick={qBack} />
-              <h1 className="text-2xl font-black text-gray-900 mb-1">Cat e comanda medie?</h1>
-              <p className="text-sm text-gray-400 mb-4">Valoarea medie a unei comenzi (AOV), aproximativ.</p>
-              <div className="mb-3 flex items-center gap-2">
-                <span className="text-xs text-gray-400">Moneda:</span>
-                {CURRENCIES.map((c) => (
-                  <button key={c.code} type="button" onClick={() => setCurrency(c.code)}
-                    className="min-h-[40px] rounded-lg border px-3.5 py-2 text-sm font-semibold transition-all"
-                    style={{ background: currency === c.code ? "#f0f4ff" : "white", borderColor: currency === c.code ? "#47499E" : "#e2e8f0", color: currency === c.code ? "#47499E" : "#64748b" }}>
-                    {c.code}
-                  </button>
-                ))}
-              </div>
-              <CurrencyInput value={aov} onChange={setAov} placeholder="ex: 200" sym={symOf(currency)} />
-              <p className="text-xs text-gray-400 mb-6">Cat cheltuie in medie un client cand comanda.</p>
-              <PrimaryButton onClick={qNext}>Continua →</PrimaryButton>
-              <button onClick={qNext} className="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-3">Nu stiu / sari peste</button>
-            </div>
-          )}
-
-          {/* Q3 — buget ads */}
-          {screen === "q" && qstep === 3 && (
-            <div>
-              <BackButton onClick={qBack} />
-              <h1 className="text-2xl font-black text-gray-900 mb-1">Buget lunar de reclame?</h1>
-              <p className="text-sm text-gray-400 mb-6">Aproximativ, cat investesti pe luna in Google / Meta. Doar pentru simulare.</p>
-              <CurrencyInput value={adBudget} onChange={setAdBudget} placeholder="ex: 5000" sym={symOf(currency)} />
-              <p className="text-xs text-gray-400 mb-6">Daca nu faci reclame acum, lasa gol.</p>
-              <PrimaryButton onClick={qNext}>Continua →</PrimaryButton>
-              <button onClick={qNext} className="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-3">Nu fac reclame / sari peste</button>
-            </div>
-          )}
-
-          {/* Q4 — preocupare */}
-          {screen === "q" && qstep === 4 && (
             <div>
               <BackButton onClick={qBack} />
               <h1 className="text-2xl font-black text-gray-900 mb-1">Ce te preocupa cel mai mult?</h1>
@@ -394,8 +285,8 @@ export default function StartPage() {
             </div>
           )}
 
-          {/* Q5 — contact */}
-          {screen === "q" && qstep === 5 && (() => {
+          {/* Q2 — contact */}
+          {screen === "q" && qstep === 2 && (() => {
             const isOther = prefix === "other";
             const emailErr = emailTouched && !isValidEmail(email);
             const telErr = telefonTouched && !isValidPhone(telefon);
@@ -406,7 +297,7 @@ export default function StartPage() {
               <div>
                 <BackButton onClick={qBack} />
                 <h1 className="text-2xl font-black text-gray-900 mb-1">Unde trimitem raportul?</h1>
-                <p className="text-sm text-gray-400 mb-6">Iti trimitem raportul complet + simularea pe email in cateva minute.</p>
+                <p className="text-sm text-gray-400 mb-6">Iti trimitem raportul complet pe email in cateva minute.</p>
                 <div className="flex flex-col gap-4 mb-6">
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 mb-1.5">Numele tau</label>

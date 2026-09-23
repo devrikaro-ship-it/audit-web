@@ -5,7 +5,6 @@
 // that page, with the same IP and cookies.
 
 import type { PageData } from "./net";
-import { withCountry } from "./css-detect";
 
 export type PageFetcher = {
   fetchText: (url: string) => Promise<string>;
@@ -13,6 +12,12 @@ export type PageFetcher = {
   homeHtml: string;
   close: () => Promise<void>;
 };
+
+// BrightData zone credentials take the exit country as a zone suffix (zone-name-country-ro).
+function withCountry(cdp: string, country: string): string {
+  if (!country || cdp.includes("-country-")) return cdp;
+  return cdp.replace(/(zone-[a-z0-9_]+)(:)/i, `$1-country-${country}$2`);
+}
 
 type InPageResult = { status: number; ok: boolean; html: string; headers: Record<string, string> };
 

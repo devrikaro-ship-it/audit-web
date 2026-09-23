@@ -62,50 +62,7 @@ const MOCK_DATA: AuditData = {
     { id: "broken_links",    label: "Linkuri broken",            correctCount: 48, total: 50, problema: "2 pagini contin linkuri interne 404.", fix: "Corecteaza sau redirectioneaza (301) linkurile rupte." },
     { id: "internal_linking",label: "Internal linking",          correctCount: 31, total: 50, problema: "19 pagini nu primesc suficiente linkuri interne.", fix: "Adauga 3-5 linkuri interne relevante pe fiecare pagina importanta." },
   ],
-  conversie: {
-    isEcom: true,
-    ruleazaReclame: "da",
-    scorPpc: 60,
-    leaks: [
-      { id: "ga4",      label: "Google Analytics 4",   zona: "Tracking & PPC", present: "da",  pierdere: "Fara GA4 nu stii ce pagini aduc vanzari.", fix: "Instalam GA4 cu evenimente de ecommerce.", positiv: "Detectat activ — masori traficul si comportamentul pe site." },
-      { id: "ads_conv", label: "Google Ads conversii",  zona: "Tracking & PPC", present: "nu",  pierdere: "Fara conversii, Google liciteaza orbeste — irosesti buget.", fix: "Conectam conversia de achizitie in Google Ads." },
-      { id: "pixel",    label: "Meta Pixel",            zona: "Tracking & PPC", present: "da",  pierdere: "Fara Pixel nu poti face remarketing pe Facebook/Instagram.", fix: "Instalam Meta Pixel + Conversions API.", positiv: "Detectat activ — poti masura si face retargeting pe Meta." },
-      { id: "tiktok",   label: "TikTok Pixel",          zona: "Tracking & PPC", present: "necunoscut", pierdere: "Nu am putut confirma TikTok Pixel.", fix: "Verificam si instalam TikTok Pixel daca lipseste." },
-      { id: "consent",  label: "Consent Mode v2",       zona: "Tracking & PPC", present: "nu",  pierdere: "Fara Consent Mode pierzi date de conversie in UE.", fix: "Configuram Consent Mode v2 cu bannerul de cookies." },
-      { id: "mobile",   label: "Experienta pe mobil",   zona: "UX & Mobil",     present: "nu",  pierdere: "70% din trafic e pe mobil — un mobil greoi pierde vanzari.", fix: "Optimizam viteza si layout-ul pe mobil." },
-      { id: "filters",  label: "Filtre pe categorii",   zona: "Functii magazin",present: "nu",  pierdere: "Fara filtre, clientul nu gaseste rapid produsul si pleaca.", fix: "Implementam filtre (marime, culoare, pret, brand)." },
-      { id: "search",   label: "Cautare pe site",       zona: "Functii magazin",present: "da",  pierdere: "Cautarea slaba inseamna cosuri abandonate.", fix: "Imbunatatim cautarea cu sugestii." },
-      { id: "related",  label: "Produse similare",      zona: "Functii magazin",present: "nu",  pierdere: "Fara produse similare pierzi vanzari incrucisate.", fix: "Adaugam sectiune de produse similare pe pagina produs." },
-      { id: "product_info", label: "Info produs complet", zona: "Functii magazin", present: "da", pierdere: "Info incomplet = incredere scazuta = mai putine comenzi.", fix: "Completam pret, stoc, descriere, recenzii." },
-    ],
-  },
-  googleAds: {
-    css: { status: "google_css", provider: "Google", matchedSeller: "diente.ro", tilesSeen: 6, message: "Rulezi Google Shopping prin CSS-ul Google, nu printr-un partener CSS. In practica platesti pana la ~20% mai mult pe fiecare click decat un concurent care ruleaza printr-un CSS partener." },
-    shopping: {
-      present: true,
-      prospectPrice: 139,
-      currency: "RON",
-      totalAdvertisers: 4,
-      competitors: [
-        { seller: "emag.ro",      css: "smec",   price: 129 },
-        { seller: "farmacia-x.ro",css: "Google", price: 149 },
-        { seller: "dentmarket.ro",css: "Kelkoo", price: 119 },
-      ],
-      message: "Apari in Google Shopping alaturi de 3 concurenti pe produsele tale. Doi dintre ei ruleaza printr-un CSS partener — deci platesc mai putin pe click decat tine.",
-    },
-    pricePosition: {
-      status: "pricier", prospectPrice: 139, competitorAvg: 129, currency: "RON", deltaPct: 8,
-      message: "Pe produsele verificate esti orientativ cu ~8% mai scump decat media concurentei din Shopping (~129 RON). La cautari unde cumparatorul compara pretul, pierzi clicul catre cel mai ieftin.",
-    },
-    brandDefense: {
-      status: "contested", competitors: ["farmacia-x.ro", "dentmarket.ro"],
-      message: "Am gasit 2 concurenti care apar pe cautarea numelui tau de brand (farmacia-x.ro, dentmarket.ro). Iti iau clicuri de la clienti care te cautau pe tine — iti aperi brandul cu o campanie de brand.",
-    },
-    gbpReviews: {
-      status: "found", rating: 4.1, count: 87,
-      message: "Profilul tau Google are 4.1 stele (87 recenzii) — sub pragul care inspira incredere. Recenziile slabe scad rata de click, inclusiv la reclame.",
-    },
-  },
+  isEcom: true,
   ux: {
     scor: 58,
     fields: [
@@ -121,31 +78,10 @@ const MOCK_DATA: AuditData = {
     weakTitles: 17,
     missingMeta: 20,
     hasFeed: true,
-    headline: "Produsele tale nu sunt optimizate pentru Google Shopping si cautare",
-    message: "Am verificat 24 pagini de produs si 17 au titluri scurte sau generice iar 20 nu au descriere — exact textele pe care Google le foloseste ca sa decida pe ce cautari iti arata produsele. Titlurile si descrierile slabe inseamna ca produsele apar mai rar in Shopping si in cautare decat ar putea, chiar cu buget de reclama. Ai un feed de produse, dar titlurile si descrieriile din el conteaza la fel de mult ca existenta lui. Cu titluri, descrieri si feed optimizate acelasi catalog aduce mai multe afisari si clicuri, fara buget suplimentar.",
+    headline: "Paginile de produs pot fi gasite mai usor in Google",
+    message: "Am verificat 24 pagini de produs si 17 au titluri scurte sau generice iar 20 nu au descriere pentru Google. Titlul si descrierea sunt textele pe care Google le citeste ca sa decida pe ce cautari iti arata produsul. Scrise complet, cu numele produsului, marca si detaliile cautate, acelasi catalog apare pe mai multe cautari, fara buget suplimentar.",
   },
-  roiSim: {
-    input: { adBudget: 7500, aov: 275, convRatePct: 1.5, currency: "RON" },
-    currency: "RON",
-    usedMarketAverage: false,
-    convNowPct: 1.5,
-    convGoalPct: 2.2,
-    cpcReductionPct: 12,
-    roasNow: 1.8,
-    roasGoal: 3,
-    cpaNow: 150,
-    cpaGoal: 90,
-    revenueNow: 13750,
-    revenueGoal: 22900,
-    extraRevenueMonth: 9150,
-    extraRevenueYear: 109800,
-    assumptions: [
-      "Cost pe click de referinta ~2.2 lei (medie ecom).",
-      "Conversie de pornire = ce ai raspuns (1.5%).",
-      "Reducere de cost pe click ~12% presupusa dintr-un CSS partener.",
-      "Estimare orientativa. Cifra exacta doar cu acces la cont (GA4 / Google Ads).",
-    ],
-  },
+
 };
 
 export default function ReportPreview() {

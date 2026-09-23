@@ -14,42 +14,20 @@ describe("parseAuditRequest", () => {
     if (r.kind === "start") expect(r.meta.finalizeRequested).toBe(false);
   });
 
-  it("finalize: cere id + coerce numere din string", () => {
+  it("finalize: cere id si pastreaza contactul", () => {
     expect(parseAuditRequest({ phase: "finalize" })).toMatchObject({ kind: "error", status: 400 });
-    const r = parseAuditRequest({ phase: "finalize", id: "abc", aov: "55", adBudget: "1.500", convRate: "1,5" });
-    expect(r.kind).toBe("finalize");
-    if (r.kind === "finalize") {
-      expect(r.input.aov).toBe(55);
-      expect(r.input.adBudget).toBe(1.5); // "1.500" -> parseFloat 1.5 (fara separator de mii)
-      expect(r.input.convRate).toBe(1.5); // virgula -> punct
-    }
+    const r = parseAuditRequest({ phase: "finalize", id: "abc", nume: "Ion", email: "i@i.ro", probleme: ["Nu apar organic in Google"] });
+    expect(r).toMatchObject({ kind: "finalize", id: "abc", input: { nume: "Ion", email: "i@i.ro", probleme: ["Nu apar organic in Google"] } });
   });
 
-  it("finalize: currency valid -> uppercase; invalid -> undefined", () => {
-    const ok = parseAuditRequest({ phase: "finalize", id: "x", currency: "ron" });
-    const bad = parseAuditRequest({ phase: "finalize", id: "x", currency: "euro" });
-    const unsupported = parseAuditRequest({ phase: "finalize", id: "x", currency: "PLN" });
-    const none = parseAuditRequest({ phase: "finalize", id: "x" });
-    if (ok.kind === "finalize") expect(ok.input.currency).toBe("RON");
-    if (bad.kind === "finalize") expect(bad.input.currency).toBeUndefined();
-    // cod ISO valid dar din afara celor 4 suportate -> respins (nu doar validare de format)
-    if (unsupported.kind === "finalize") expect(unsupported.input.currency).toBeUndefined();
-    if (none.kind === "finalize") expect(none.input.currency).toBeUndefined();
-  });
-
-  it("finalize: convRate gol / lipsa -> null (nu stiu)", () => {
-    const a = parseAuditRequest({ phase: "finalize", id: "x", convRate: "" });
-    const b = parseAuditRequest({ phase: "finalize", id: "x" });
-    if (a.kind === "finalize") expect(a.input.convRate).toBeNull();
-    if (b.kind === "finalize") expect(b.input.convRate).toBeNull();
+  it("finalize: ads inputs sent by an old client are not kept", () => {
+    const r = parseAuditRequest({ phase: "finalize", id: "x", aov: "55", adBudget: "1500", convRate: "1,5", currency: "RON" });
+    expect(r.kind === "finalize" && Object.keys(r.input).some((k) => ["aov", "adBudget", "convRate", "currency"].includes(k))).toBe(false);
   });
 
   it("legacy (fara phase, cu contact) -> start cu finalizeRequested=true", () => {
-    const r = parseAuditRequest({ url: "veryfix.ro", nume: "Ion", email: "i@i.ro", aov: "40", adBudget: "800" });
+    const r = parseAuditRequest({ url: "veryfix.ro", nume: "Ion", email: "i@i.ro" });
     expect(r.kind).toBe("start");
-    if (r.kind === "start") {
-      expect(r.meta.finalizeRequested).toBe(true);
-      expect(r.meta.aov).toBe(40);
-    }
+    if (r.kind === "start") expect(r.meta.finalizeRequested).toBe(true);
   });
 });

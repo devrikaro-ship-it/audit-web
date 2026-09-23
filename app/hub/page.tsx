@@ -30,8 +30,8 @@ const audituri = [
     eticheta: "Available",
     titlu: "Online store audit",
     text:
-      "Starting only from your store address, we show where you lose buyers: sales tracking, "
-      + "Google visibility, the shopping experience, and how your products appear in Google Shopping.",
+      "Starting only from your store address, we show where you lose buyers: how Google finds your "
+      + "pages and how easily a visitor can buy, checked on the category and product pages.",
     date: "Requires no account access — it analyzes only public website content.",
     activ: true,
     icon: <><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></>,

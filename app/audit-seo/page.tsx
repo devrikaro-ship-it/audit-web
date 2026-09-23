@@ -3,20 +3,8 @@ import Link from "next/link";
 const sora = "var(--font-sora), system-ui, sans-serif";
 const inter = "var(--font-inter), system-ui, sans-serif";
 
-// Cele 4 zone — apar O SINGURA data, interactive (click = ce verificam acolo). Ton neutru/diagnostic.
+// The 2 areas (SEO, UX/UI) — shown once, interactive (click = ce verificam acolo). Ton neutru/diagnostic.
 const zones = [
-  {
-    bg: "#eef0ff", stroke: "#47499E",
-    title: "Tracking & masurare",
-    hook: "Nu stii sigur de unde vin vanzarile.",
-    icon: <><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></>,
-    checks: [
-      "Ai GA4, conversii Google Ads, Meta Pixel, TikTok?",
-      "Masori corect ce platesti pe reclame si ce aduc inapoi?",
-      "Consimtamant cookie (Consent Mode) pus corect?",
-    ],
-    why: "Fara masurare, arunci bani pe reclame pe orb.",
-  },
   {
     bg: "#e0f9fb", stroke: "#0ABECF",
     title: "SEO",
@@ -41,32 +29,13 @@ const zones = [
     ],
     why: "Fiecare pas greu = comenzi pierdute.",
   },
-  {
-    bg: "#e0f9fb", stroke: "#0ABECF",
-    title: "Google Ads & Shopping",
-    hook: "Cat platesti in plus si cine iti fura clientii.",
-    icon: <><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></>,
-    checks: [
-      "Ce tip de CSS folosesti (poti plati pana la ~20% mai mult pe click)",
-      "Cine liciteaza pe produsele tale in Shopping",
-      "Apari sau nu pe propriile produse",
-    ],
-    why: "Cost pe click mai mic = mai multe vanzari la acelasi buget.",
-  },
 ];
 
 const mockBars = [
-  { label: "Tracking", pct: 50, color: "#ef4444" },
   { label: "SEO", pct: 61, color: "#47499E" },
   { label: "UX / UI", pct: 58, color: "#47499E" },
-  { label: "Google Ads", pct: 45, color: "#ef4444" },
 ];
 
-const simRows = [
-  { k: "Rata de conversie", now: "1.3%", goal: "2.0%" },
-  { k: "Cost pe achizitie", now: "reper", goal: "−15%" },
-  { k: "ROAS", now: "2.8×", goal: "~4.9×" },
-];
 
 export default function AuditSEO() {
   return (
@@ -112,7 +81,7 @@ export default function AuditSEO() {
         </h1>
 
         <p className="mx-auto mb-10 max-w-[560px] text-lg leading-relaxed" style={{ color: "#64748b" }}>
-          Dai adresa magazinului, il scanam pe loc si vezi in cateva minute unde pierzi cumparatori si unde arzi bani pe reclame — masurare, SEO, experienta de cumparare si Google Shopping.
+          Dai adresa magazinului, il scanam pe loc si vezi in cateva minute unde pierzi cumparatori — cum te gaseste Google si cat de usor cumpara un vizitator.
         </p>
 
         <Link href="/audit"
@@ -170,7 +139,7 @@ export default function AuditSEO() {
           {[
             { n: "180+", l: "Magazine analizate" },
             { n: "3.100+", l: "Probleme gasite" },
-            { n: "40.000€/luna", l: "Buget de reclame gestionat" },
+            { n: "60", l: "Pagini citite per audit" },
             { n: "4.8/5", l: "Nota medie clienti" },
           ].map((s) => (
             <div key={s.l}>
@@ -197,10 +166,10 @@ export default function AuditSEO() {
           </p>
           <ul className="mx-auto flex max-w-[520px] flex-col gap-3.5 text-left">
             {[
-              "Masurare care nu prinde toate vanzarile",
               "Produse care nu apar in cautari",
+              "Pagini care se incarca greu pe telefon",
               "Pasi greoi pana la cumparare",
-              "Clicuri platite mai scump decat trebuie",
+              "Categorii fara filtre si fara text",
             ].map((t) => (
               <li key={t} className="flex items-center gap-3 rounded-xl border bg-white px-4 py-3 text-[15px]"
                 style={{ borderColor: "#e8eaf5", color: "#334155" }}>
@@ -218,12 +187,12 @@ export default function AuditSEO() {
         </div>
       </section>
 
-      {/* 4 · CE ANALIZAM — 4 zone interactive */}
+      {/* 4 · CE ANALIZAM — 2 zone interactive */}
       <section className="bg-white px-8 py-24">
         <p className="mb-3 text-center text-[13px] font-bold uppercase tracking-[2px]" style={{ color: "#0ABECF" }}>Ce analizam</p>
         <h2 className="mb-4 text-center font-extrabold leading-[1.15] tracking-[-1px]"
           style={{ fontFamily: sora, fontSize: "clamp(28px,4vw,42px)", color: "#0f172a" }}>
-          4 zone unde un magazin pierde bani
+          2 zone unde un magazin pierde clienti
         </h2>
         <p className="mx-auto mb-14 max-w-[520px] text-center text-base leading-relaxed" style={{ color: "#64748b" }}>
           Apasa pe fiecare zona ca sa vezi exact ce verificam acolo — in limbaj clar, nu tehnic.
@@ -277,9 +246,9 @@ export default function AuditSEO() {
           <div className="pointer-events-none absolute inset-x-[15%] top-7 hidden h-px md:block"
             style={{ background: "linear-gradient(90deg,transparent,#e2e8f0 20%,#e2e8f0 80%,transparent)" }} />
           {[
-            { n: "1", t: "Dai adresa magazinului", d: "Il scanam pe loc si iti aratam ce am gasit — platforma, masuratori, structura." },
-            { n: "2", t: "Raspunzi la cateva intrebari", d: "Comanda medie, buget de reclame, ce te preocupa. Cat timp analizam magazinul in fundal." },
-            { n: "3", t: "Primesti raportul", d: "Scor pe cele 4 zone, unde pierzi bani si o estimare de cat ai putea castiga in plus." },
+            { n: "1", t: "Dai adresa magazinului", d: "Il scanam pe loc si iti aratam ce am gasit — platforma si structura." },
+            { n: "2", t: "Ne spui ce te preocupa", d: "Si unde trimitem raportul. Cat timp analizam magazinul in fundal." },
+            { n: "3", t: "Primesti raportul", d: "Scor pe SEO si UX/UI si exact ce e de reparat, pe paginile care vand." },
           ].map((s) => (
             <div key={s.n} className="relative z-10 text-center">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full text-xl font-extrabold text-white"
@@ -290,43 +259,6 @@ export default function AuditSEO() {
               <p className="text-[13px] leading-relaxed" style={{ color: "#64748b" }}>{s.d}</p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* 6 · SIMULARE — ce castigi daca repari */}
-      <section className="bg-white px-8 py-24">
-        <p className="mb-3 text-center text-[13px] font-bold uppercase tracking-[2px]" style={{ color: "#0ABECF" }}>Estimare de venit</p>
-        <h2 className="mb-4 text-center font-extrabold leading-[1.15] tracking-[-1px]"
-          style={{ fontFamily: sora, fontSize: "clamp(28px,4vw,42px)", color: "#0f172a" }}>
-          Vezi cat ai putea castiga daca repari
-        </h2>
-        <p className="mx-auto mb-12 max-w-[560px] text-center text-base leading-relaxed" style={{ color: "#64748b" }}>
-          In timpul analizei iti punem cateva intrebari (buget de reclame, comanda medie), iar raportul estimeaza cat ai putea aduce in plus la acelasi buget — daca creste rata de conversie si scade costul pe click. Asa arata rezultatul:
-        </p>
-        <div className="mx-auto max-w-[640px] rounded-2xl border p-6 md:p-8" style={{ background: "#fafbff", borderColor: "#e2e8f0" }}>
-          <div className="overflow-x-auto rounded-xl border" style={{ borderColor: "#e2e8f0" }}>
-            <table className="w-full text-sm" style={{ borderCollapse: "collapse", fontVariantNumeric: "tabular-nums" }}>
-              <thead>
-                <tr style={{ background: "#fff" }}>
-                  <th className="px-4 py-2.5 text-left text-[11px] font-bold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Indicator</th>
-                  <th className="px-4 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Acum</th>
-                  <th className="px-4 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide" style={{ color: "#47499E" }}>Posibil</th>
-                </tr>
-              </thead>
-              <tbody>
-                {simRows.map((r, i) => (
-                  <tr key={r.k} style={{ borderTop: i === 0 ? "none" : "1px solid #eef1f7" }}>
-                    <td className="px-4 py-2.5 text-left" style={{ color: "#64748b" }}>{r.k}</td>
-                    <td className="px-4 py-2.5 text-right" style={{ color: "#64748b" }}>{r.now}</td>
-                    <td className="px-4 py-2.5 text-right font-bold" style={{ color: "#47499E" }}>{r.goal}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-3 text-[12px] leading-relaxed" style={{ color: "#94a3b8" }}>
-            Cifre exemplu, orientative. In raport o vezi pe cifrele tale. Estimarea exacta iese cu acces la cont (GA4 / Google Ads).
-          </p>
         </div>
       </section>
 

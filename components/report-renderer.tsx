@@ -1,10 +1,9 @@
 "use client";
 
 import { CHECKS, SECTIUNI_CONFIG, CHECK_TO_PROBLEM, PROBLEMS, type StatusCheck, type Sectiune } from "@/lib/problems-db";
-import type { AuditData, CheckResult, PageCheck, MoneyLeak, UxField } from "@/lib/types";
+import type { AuditData, CheckResult, PageCheck, UxField } from "@/lib/types";
 import { statusScore, scoreToStatus, VERDICT_GOOD, VERDICT_MID } from "@/lib/scoring";
 import { C, sora, inter } from "@/lib/theme";
-import { symOf } from "@/lib/currency";
 
 export type { AuditData };
 
@@ -67,15 +66,12 @@ function countAllProblems(data: AuditData): { total: number; critice: number } {
     if (f.status === "slab") { total++; critice++; }
     else if (f.status === "partial") { total++; }
   }
-  // Tracking: campurile confirmate lipsa (nu "de verificat") = critice
-  const trackIds = ["ga4", "ads_conv", "pixel", "tiktok", "consent"];
-  for (const l of data.conversie?.leaks ?? []) {
-    if (trackIds.includes(l.id) && l.present === "nu") { total++; critice++; }
-  }
+  const ps = data.productSignal;
+  if (ps && (ps.weakTitles > 0 || ps.missingMeta > 0)) total++;
   return { total, critice };
 }
 
-/* ---------- 4 categorii raport: Tracking · SEO · UX/UI · Trust ---------- */
+/* ---------- the two report rubrics: SEO · UX/UI ---------- */
 function catVerdict(s: number) {
   if (s >= VERDICT_GOOD) return { w: "Bun",       fg: C.green,  bg: C.greenBg };
   if (s >= VERDICT_MID)  return { w: "De reglat", fg: C.yellow, bg: C.yellowBg };
@@ -85,38 +81,10 @@ function sectionAvg(data: AuditData, sections: Sectiune[]): number {
   const s = sections.map(x => splitSection(x, data).scor);
   return s.reduce((a, b) => a + b, 0) / (s.length || 1);
 }
-// scor pe baza prezentei unor semnale din ConversieAudit (tracking, incredere, ux)
-function leakScore(data: AuditData, ids: string[]): number | null {
-  const rel = (data.conversie?.leaks ?? []).filter(l => ids.includes(l.id) && l.present !== "necunoscut");
-  if (!rel.length) return null;
-  return (rel.filter(l => l.present === "da").length / rel.length) * 100;
-}
-function avgDefined(...vals: (number | null)[]): number {
-  const v = vals.filter((x): x is number => x != null);
-  return Math.round(v.reduce((a, b) => a + b, 0) / (v.length || 1));
-}
-function googleAdsScore(g: NonNullable<AuditData["googleAds"]>): number {
-  if (g.css.status === "third_party_css") return 100;
-  if (g.css.status === "google_css") return 45;
-  if (g.shopping.present) return 60;
-  if (g.css.status === "not_in_shopping") return 25;
-  return 50;
-}
-function googleAdsSub(g: NonNullable<AuditData["googleAds"]>): string {
-  if (g.css.status === "google_css") return "Fara CSS partener — CPC ~20% mai mare";
-  if (g.css.status === "third_party_css") return `CSS partener (${g.css.provider}) — optimizat`;
-  if (g.css.status === "not_in_shopping") return "Nu rulezi Google Shopping";
-  return "CSS · Shopping · concurenta";
-}
 function CategoriiSummary({ data }: { data: AuditData }) {
-  const gAds = data.googleAds
-    ? { label: "Google Ads", sub: googleAdsSub(data.googleAds), scor: googleAdsScore(data.googleAds) }
-    : { label: "Google Ads", sub: "Verificare CSS + Shopping", scor: 50 };
   const cards = [
-    { label: "Tracking",          sub: "Google, Meta, TikTok + Consent Mode", scor: avgDefined(leakScore(data, ["ga4", "ads_conv", "pixel", "tiktok", "consent"])) },
     { label: "SEO",               sub: "On-page · Continut · Keywords · Structura · Schema", scor: Math.round(sectionAvg(data, ["seo", "continut", "keywords", "structura", "schema"])) },
     { label: "UX / UI",           sub: "Viteza + homepage, categorie, produs, filtre", scor: data.ux ? data.ux.scor : Math.round(sectionAvg(data, ["viteza"])) },
-    gAds,
   ];
   return (
     <section style={{ maxWidth: 920, margin: "0 auto", padding: "40px 24px 0" }}>
@@ -251,33 +219,6 @@ function SectionBlock({ sectiune, data }: { sectiune: Sectiune; data: AuditData 
 }
 
 /* ---------- Conversie / bani pierduti (PPC) — acelasi card pt prezent / de verificat / lipsa ---------- */
-function LeakCard({ l }: { l: MoneyLeak }) {
-  const present = l.present === "da";
-  const unknown = l.present === "necunoscut";
-  const fg = present ? C.green : unknown ? C.yellow : C.red;
-  const bg = present ? C.greenBg : unknown ? C.yellowBg : C.redBg;
-  const lab = present ? "PREZENT" : unknown ? "DE VERIFICAT" : "LIPSESTE";
-  return (
-    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: present ? 0 : 7 }}>
-        <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: fg, background: bg }}>{lab}</span>
-        <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{l.label}</h4>
-      </div>
-      {present ? (
-        <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "7px 0 0" }}>{l.positiv ?? "Detectat activ pe site."}</p>
-      ) : (
-        <>
-          <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "0 0 9px" }}>{l.pierdere}</p>
-          <p style={{ fontSize: 13, color: C.gray800, lineHeight: 1.5, margin: 0 }}>
-            <span style={{ fontWeight: 700, color: C.indigo }}>Ce facem: </span>{l.fix}
-          </p>
-        </>
-      )}
-    </div>
-  );
-}
-
-/* ---------- header rubrica: titlu + scor + subtitlu ---------- */
 function RubricHead({ title, sub, scor }: { title: string; sub: string; scor: number }) {
   const color = scoreColor(scor);
   return (
@@ -291,23 +232,6 @@ function RubricHead({ title, sub, scor }: { title: string; sub: string; scor: nu
   );
 }
 
-/* ---------- Rubrica 1: Tracking (strict tracking) ---------- */
-function TrackingSection({ data }: { data: AuditData }) {
-  const trackIds = ["ga4", "ads_conv", "pixel", "tiktok", "consent"];
-  const leaks = (data.conversie?.leaks ?? []).filter(l => trackIds.includes(l.id));
-  const gaps = leaks.filter(l => l.present !== "da");
-  const have = leaks.filter(l => l.present === "da");
-  // Toate itemii in acelasi format de card: intai ce lipseste/de verificat, apoi ce e prezent.
-  const ordered = [...gaps, ...have];
-  return (
-    <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
-      <RubricHead title="Tracking" sub="Google (Analytics + Ads), Meta, TikTok si Consent Mode v2 — masurarea pe care se bazeaza orice reclama profitabila." scor={avgDefined(leakScore(data, ["ga4", "ads_conv", "pixel", "tiktok", "consent"]))} />
-      {ordered.length > 0 && <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{ordered.map(l => <LeakCard key={l.id} l={l} />)}</div>}
-    </section>
-  );
-}
-
-/* ---------- Rubrica 3: UX / UI (analiza pe tipuri de pagina) ---------- */
 function UxCard({ f }: { f: UxField }) {
   const v =
     f.status === "bun"        ? { fg: C.green,  bg: C.greenBg,  lab: "BUN" } :
@@ -358,161 +282,23 @@ function UxUiSection({ data }: { data: AuditData }) {
   );
 }
 
-function AdsFindingCard({ fg, bg, lab, title, message }: { fg: string; bg: string; lab: string; title: string; message: string }) {
+function ProductContentCard({ data }: { data: AuditData }) {
+  const ps = data.productSignal;
+  if (!ps) return null;
+  const weak = ps.weakTitles > 0 || ps.missingMeta > 0;
+  const fg = ps.checked === 0 ? C.gray500 : weak ? C.orange : C.green;
   return (
-    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
+    <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", margin: "8px 0 22px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
-        <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: fg, background: bg }}>{lab}</span>
-        <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{title}</h4>
+        <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: C.indigo, background: "rgba(71,73,158,0.10)" }}>PAGINI DE PRODUS</span>
+        <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{ps.headline}</h4>
       </div>
-      <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: 0 }}>{message}</p>
+      <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: 0 }}>{ps.message}</p>
     </div>
   );
 }
 
-function GoogleAdsSection({ data }: { data: AuditData }) {
-  const g = data.googleAds;
-  const ps = data.productSignal;
-  const price = g?.pricePosition, brand = g?.brandDefense, gbp = g?.gbpReviews;
-  const priceV = price && price.status !== "unknown" && (
-    price.status === "pricier" ? { fg: C.orange, bg: C.yellowBg, lab: "PRET PESTE PIATA", title: "Esti mai scump decat media concurentei pe produsele verificate" } :
-    price.status === "cheaper" ? { fg: C.green, bg: C.greenBg, lab: "AVANTAJ DE PRET", title: "Esti mai ieftin decat media concurentei — foloseste-l in reclame" } :
-                                 { fg: C.gray500, bg: C.slate, lab: "PRET LA NIVELUL PIETEI", title: "Esti aproximativ la nivelul pretului mediu din Shopping" });
-  const gbpV = gbp && (
-    gbp.status === "found"
-      ? (gbp.rating != null && gbp.rating >= 4.3 ? { fg: C.green, bg: C.greenBg, lab: "RECENZII GOOGLE" } : { fg: C.orange, bg: C.yellowBg, lab: "RECENZII GOOGLE" })
-      : { fg: C.yellow, bg: C.yellowBg, lab: "DE VERIFICAT" });
-  const css = g?.css, shop = g?.shopping;
-  const v = css && (
-    css.status === "third_party_css" ? { fg: C.green, bg: C.greenBg, lab: "AI CSS PARTENER", title: `Rulezi Google Shopping printr-un CSS partener (${css.provider})` } :
-    css.status === "google_css"      ? { fg: C.red, bg: C.redBg, lab: "PLATESTI IN PLUS", title: "Rulezi prin CSS-ul Google — CPC pana la ~20% mai mare" } :
-    css.status === "not_in_shopping" ? { fg: C.orange, bg: C.yellowBg, lab: "OPORTUNITATE", title: "Nu apari in Google Shopping pe produsele tale" } :
-                                       { fg: C.gray500, bg: C.slate, lab: "NEDETERMINAT", title: "Nu am putut verifica statusul in Google Shopping" });
-  return (
-    <section style={{ maxWidth: 920, margin: "0 auto", padding: "8px 24px 12px" }}>
-      <h2 style={{ fontFamily: sora, fontSize: 28, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Google Ads — Shopping &amp; CSS</h2>
-      <p style={{ color: C.gray500, margin: "0 0 22px", fontSize: 15.5 }}>{g ? "Am cautat produsele tale pe Google si am citit reclamele Shopping reale — exact ce vede un cumparator." : "Cum stai pe Google Shopping si cat de pregatite sunt produsele tale pentru reclame."}</p>
-
-      {css && v && (
-      <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${v.fg}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
-          <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: v.fg, background: v.bg }}>{v.lab}</span>
-          <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{v.title}</h4>
-        </div>
-        <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: 0 }}>{css.message}</p>
-      </div>
-      )}
-
-      {price && priceV && <AdsFindingCard fg={priceV.fg} bg={priceV.bg} lab={priceV.lab} title={priceV.title} message={price.message} />}
-
-      {ps && (
-        <div style={{ background: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.indigo}`, borderRadius: 14, padding: "18px 22px", boxShadow: "0 6px 24px rgba(19,22,58,0.05)", marginBottom: 22 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 7 }}>
-            <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 11, letterSpacing: "0.06em", padding: "3px 9px", borderRadius: 6, color: C.indigo, background: "rgba(71,73,158,0.10)" }}>OPTIMIZARE PRODUSE</span>
-            <h4 style={{ fontFamily: sora, fontSize: 16, fontWeight: 700, color: C.gray800, margin: 0 }}>{ps.headline}</h4>
-          </div>
-          <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: 0 }}>{ps.message}</p>
-        </div>
-      )}
-
-      {shop && shop.competitors.length > 0 && (
-        <div style={{ background: C.slate, border: `1px solid ${C.border}`, borderRadius: 16, padding: "20px 24px" }}>
-          <h3 style={{ fontFamily: sora, fontSize: 17, fontWeight: 800, color: C.navy, margin: "0 0 6px" }}>Cine liciteaza pe produsele tale ({shop.competitors.length})</h3>
-          <p style={{ fontSize: 14, color: C.gray600, lineHeight: 1.55, margin: "0 0 14px" }}>{shop.message}</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {shop.competitors.slice(0, 8).map((c, i) => {
-              const gCss = /^google$/i.test(c.css);
-              return (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, background: C.white, border: `1px solid ${C.border}`, borderRadius: 10, padding: "10px 14px" }}>
-                  <span style={{ fontFamily: sora, fontWeight: 800, fontSize: 12, color: C.gray400, minWidth: 18 }}>{i + 1}</span>
-                  <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: C.gray800 }}>{c.seller}</span>
-                  <span style={{ fontSize: 11.5, fontWeight: 700, padding: "3px 8px", borderRadius: 6, color: gCss ? C.gray500 : C.green, background: gCss ? C.slate : C.greenBg }}>{gCss ? "CSS Google" : `CSS ${c.css}`}</span>
-                  {c.price != null && <span style={{ fontFamily: sora, fontSize: 13.5, fontWeight: 700, color: C.navy, minWidth: 72, textAlign: "right" }}>{c.price.toLocaleString("ro-RO")} {shop.currency || "RON"}</span>}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {brand && brand.status === "contested" && (
-        <div style={{ marginTop: 22 }}>
-          <AdsFindingCard fg={C.red} bg={C.redBg} lab="APARARE BRAND" title="Concurentii apar pe cautarea numelui tau de brand" message={brand.message} />
-        </div>
-      )}
-
-      {gbp && gbpV && (gbp.status === "found" || gbp.status === "unknown") && (
-        <div style={{ marginTop: brand && brand.status === "contested" ? 0 : 22 }}>
-          <AdsFindingCard fg={gbpV.fg} bg={gbpV.bg} lab={gbpV.lab}
-            title={gbp.status === "found"
-              ? (gbp.rating != null ? `Profil Google: ${gbp.rating} stele${gbp.count != null ? ` (${gbp.count} recenzii)` : ""}` : "Ai recenzii pe profilul Google")
-              : "Profil Google Business cu recenzii — de verificat"}
-            message={gbp.message} />
-        </div>
-      )}
-    </section>
-  );
-}
-
 /* ============================ RAPORT ============================ */
-function RoiSimSection({ data }: { data: AuditData }) {
-  const r = data.roiSim;
-  if (!r) return null;
-  // Auditurile persistate inainte de feature-ul de moneda nu au r.currency si erau calculate
-  // in EUR (CPC 0.45 EUR) -> pastreaza "€" pt ele; cele noi au mereu currency setat (default RON).
-  const sym = symOf(r.currency ?? "EUR");
-  const money = (n: number) => n.toLocaleString("ro-RO") + " " + sym;
-  const rows = [
-    { k: "Rata de conversie", now: r.convNowPct + "%", goal: r.convGoalPct + "%" },
-    { k: "Cost pe achizitie", now: money(r.cpaNow), goal: money(r.cpaGoal) },
-    { k: "ROAS (venit / buget)", now: r.roasNow + "×", goal: r.roasGoal + "×" },
-    { k: "Venit din reclame / luna", now: money(r.revenueNow), goal: money(r.revenueGoal) },
-  ];
-  return (
-    <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
-      <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 18, overflow: "hidden" }}>
-        <div style={{ background: "linear-gradient(135deg, rgba(71,73,158,0.06), rgba(10,190,207,0.06))", padding: "26px 30px", borderBottom: `1px solid ${C.border}` }}>
-          <div style={{ fontFamily: sora, fontSize: 13, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: C.indigo, marginBottom: 8 }}>Ce castigi daca repari · estimare</div>
-          <div style={{ fontFamily: sora, fontSize: 26, fontWeight: 800, color: C.navy, lineHeight: 1.15 }}>
-            La acelasi buget, ai putea aduce in plus{" "}
-            <span style={{ color: C.indigo }}>~{money(r.extraRevenueMonth)}</span> pe luna
-          </div>
-          <p style={{ fontSize: 14.5, color: C.gray600, lineHeight: 1.55, margin: "10px 0 0" }}>
-            Adica ~<b style={{ color: C.gray800 }}>{money(r.extraRevenueYear)}</b> pe an — daca duci rata de conversie de la {r.convNowPct}% la {r.convGoalPct}%{r.cpcReductionPct > 0 ? ` si scazi costul pe click cu ~${r.cpcReductionPct}%` : ""}.
-          </p>
-        </div>
-
-        <div style={{ padding: "8px 30px 4px", overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14.5, fontVariantNumeric: "tabular-nums" }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: "left", padding: "12px 8px", fontFamily: sora, fontSize: 12, letterSpacing: "0.04em", textTransform: "uppercase", color: C.gray400, fontWeight: 700 }}>Indicator</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontFamily: sora, fontSize: 12, letterSpacing: "0.04em", textTransform: "uppercase", color: C.gray400, fontWeight: 700 }}>Acum</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontFamily: sora, fontSize: 12, letterSpacing: "0.04em", textTransform: "uppercase", color: C.indigo, fontWeight: 700 }}>Posibil</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, i) => (
-                <tr key={row.k} style={{ borderTop: i === 0 ? "none" : "1px solid #EEF1F7" }}>
-                  <td style={{ textAlign: "left", padding: "12px 8px", color: C.gray600 }}>{row.k}</td>
-                  <td style={{ textAlign: "right", padding: "12px 8px", color: C.gray400 }}>{row.now}</td>
-                  <td style={{ textAlign: "right", padding: "12px 8px", color: C.indigo, fontWeight: 700 }}>{row.goal}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div style={{ padding: "14px 30px 24px", borderTop: "1px solid #EEF1F7", marginTop: 6 }}>
-          <p style={{ fontSize: 12.5, color: C.gray400, lineHeight: 1.6, margin: 0 }}>
-            {r.assumptions.join(" ")}
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export function ReportRenderer({ data }: { data: AuditData }) {
   const seoSub: Sectiune[] = ["seo", "continut", "keywords", "structura", "schema"];
   const { total, critice } = countAllProblems(data);
@@ -555,7 +341,7 @@ export function ReportRenderer({ data }: { data: AuditData }) {
         </section>
       )}
 
-      {/* ---------- 4 CATEGORII (grijile din funnel) ---------- */}
+      {/* ---------- 2 RUBRICI ---------- */}
       <CategoriiSummary data={data} />
 
       {/* ---------- CE TE COSTA ---------- */}
@@ -574,23 +360,15 @@ export function ReportRenderer({ data }: { data: AuditData }) {
         </div>
       </section>
 
-      {/* ---------- RUBRICA 1: TRACKING ---------- */}
-      {data.conversie && <TrackingSection data={data} />}
-
-      {/* ---------- RUBRICA 2: SEO ---------- */}
+      {/* ---------- RUBRICA 1: SEO ---------- */}
       <section style={{ maxWidth: 920, margin: "0 auto", padding: "44px 24px 12px" }}>
         <RubricHead title="SEO" sub="On-page, continut, cuvinte cheie, structura si date structurate — verificate pe home, categorii si produse." scor={Math.round(sectionAvg(data, seoSub))} />
+        <ProductContentCard data={data} />
         {seoSub.map(s => <SectionBlock key={s} sectiune={s} data={data} />)}
       </section>
 
-      {/* ---------- RUBRICA 3: UX / UI ---------- */}
+      {/* ---------- RUBRICA 2: UX / UI ---------- */}
       {data.ux && <UxUiSection data={data} />}
-
-      {/* ---------- RUBRICA 4: GOOGLE ADS ---------- */}
-      {(data.googleAds || data.productSignal) && <GoogleAdsSection data={data} />}
-
-      {/* ---------- SIMULARE DE VENIT (din inputurile funnel-ului) ---------- */}
-      {data.roiSim && <RoiSimSection data={data} />}
 
       {/* ---------- DE CE DEVRIKA ---------- */}
       <section style={{ maxWidth: 920, margin: "20px auto 0", padding: "0 24px 0" }}>
@@ -599,7 +377,7 @@ export function ReportRenderer({ data }: { data: AuditData }) {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
           {[
             { t: "Implementam, nu doar raportam", d: "Reparam noi ce ai vazut aici — nu-ti lasam o lista de teme." },
-            { t: "Toate canalele, un singur partener", d: "SEO + Google Ads + Meta, optimizate pe vanzari reale, nu pe vanity metrics." },
+            { t: "SEO si experienta pe site, impreuna", d: "Vizibilitate in Google si pagini care transforma vizitatorii in cumparatori, lucrate impreuna." },
             { t: "Specializati pe ecommerce", d: "Zeci de magazine optimizate, pe orice platforma — stim exact ce misca acul." },
           ].map((x, i) => (
             <div key={i} style={{ background: C.white, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.cyan}`, borderRadius: 14, padding: "18px 20px" }}>
@@ -613,9 +391,9 @@ export function ReportRenderer({ data }: { data: AuditData }) {
       {/* ---------- CTA ---------- */}
       <section style={{ maxWidth: 920, margin: "28px auto 0", padding: "0 24px 56px" }}>
         <div style={{ borderRadius: 24, overflow: "hidden", background: `linear-gradient(135deg, ${C.indigo}, ${C.cyan})`, color: C.white, padding: "52px 32px", textAlign: "center" }}>
-          <h2 style={{ fontFamily: sora, fontSize: 32, fontWeight: 800, margin: "0 0 12px" }}>Hai sa transformam traficul in vanzari</h2>
+          <h2 style={{ fontFamily: sora, fontSize: 32, fontWeight: 800, margin: "0 0 12px" }}>Hai sa reparam ce am gasit</h2>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.92)", maxWidth: 640, margin: "0 auto 28px", lineHeight: 1.55 }}>
-            Reparam fundatia (site + masurare) si iti gestionam reclamele pe Google si Meta, ca fiecare leu de buget sa aduca vanzari. Prima discutie e gratuita, fara obligatii.
+            Reparam SEO-ul, viteza si paginile de categorie si produs, ca oamenii care te cauta sa te gaseasca si sa cumpere. Prima discutie e gratuita, fara obligatii.
           </p>
           <a href="https://devrika.ro/contact" style={{ display: "inline-block", background: C.white, color: C.indigo, fontFamily: sora, fontWeight: 700, fontSize: 17, padding: "16px 34px", borderRadius: 12, textDecoration: "none", boxShadow: "0 12px 30px rgba(0,0,0,0.18)" }}>
             Vreau o discutie gratuita

@@ -3,46 +3,27 @@
 // ruta (detectie din prezenta campurilor). Aici traieste o data: tipul wire + parserul.
 // Pur (fara retea, fara audit-store runtime) -> testabil si sigur de importat din client.
 
-import { CURRENCIES } from "./currency";
-const CUR_CODES = new Set<string>(CURRENCIES.map((c) => c.code));
-
 // ── Inputurile pe care le consuma modulul de job (audit-store) ──
 export type StartMeta = {
   tipBusiness?: string; platforma?: string;
   nume?: string; email?: string; telefon?: string; probleme?: string[];
-  convRate?: number | null; aov?: number; adBudget?: number; currency?: string;
   finalizeRequested?: boolean;
 };
 export type FinalizeInput = {
   nume?: string; email?: string; telefon?: string; probleme?: string[];
-  convRate?: number | null; aov?: number; adBudget?: number; currency?: string;
 };
 
-// ── Forma pe fir (ce trimite clientul). Numerele pot veni ca string din formular. ──
-type Num = string | number | null | undefined;
+// ── Forma pe fir (ce trimite clientul) ──
 export type AuditRequestBody =
   | { phase: "start"; url: string; tipBusiness?: string; platforma?: string }
-  | { phase: "finalize"; id: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num; currency?: string }
-  | { phase?: undefined; url: string; tipBusiness?: string; platforma?: string; nume?: string; email?: string; telefon?: string; probleme?: string[]; convRate?: Num; aov?: Num; adBudget?: Num; currency?: string };
+  | { phase: "finalize"; id: string; nume?: string; email?: string; telefon?: string; probleme?: string[] }
+  | { phase?: undefined; url: string; tipBusiness?: string; platforma?: string; nume?: string; email?: string; telefon?: string; probleme?: string[] };
 
 // ── Comanda parsata (ce executa ruta) ──
 export type ParsedRequest =
   | { kind: "start"; url: string; meta: StartMeta }
   | { kind: "finalize"; id: string; input: FinalizeInput }
   | { kind: "error"; status: number; error: string };
-
-const num = (v: Num): number | undefined => {
-  const n = typeof v === "string" ? parseFloat(v.replace(",", ".")) : (v as number);
-  return Number.isFinite(n) ? n : undefined;
-};
-const convRateOf = (v: Num): number | null => (v == null || v === "" ? null : (num(v) ?? null));
-// Acceptam DOAR codurile suportate (nu orice 3 litere): altfel o moneda din afara
-// picker-ului (ex "PLN" pe apel API direct) ar cadea pe CPC-ul RON dar afisat cu simbol PLN.
-const curOf = (v: unknown): string | undefined => {
-  if (typeof v !== "string") return undefined;
-  const c = v.toUpperCase();
-  return CUR_CODES.has(c) ? c : undefined;
-};
 
 export function parseAuditRequest(body: unknown): ParsedRequest {
   if (!body || typeof body !== "object") return { kind: "error", status: 400, error: "Body invalid" };
@@ -54,7 +35,6 @@ export function parseAuditRequest(body: unknown): ParsedRequest {
       kind: "finalize", id: b.id,
       input: {
         nume: b.nume as string, email: b.email as string, telefon: b.telefon as string, probleme: b.probleme as string[],
-        aov: num(b.aov as Num), adBudget: num(b.adBudget as Num), convRate: convRateOf(b.convRate as Num), currency: curOf(b.currency),
       },
     };
   }
@@ -67,7 +47,6 @@ export function parseAuditRequest(body: unknown): ParsedRequest {
     meta: {
       tipBusiness: b.tipBusiness as string, platforma: b.platforma as string,
       nume: b.nume as string, email: b.email as string, telefon: b.telefon as string, probleme: b.probleme as string[],
-      aov: num(b.aov as Num), adBudget: num(b.adBudget as Num), convRate: convRateOf(b.convRate as Num), currency: curOf(b.currency),
       finalizeRequested: hasContact, // legacy = contactul vine odata cu URL-ul
     },
   };
