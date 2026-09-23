@@ -9,10 +9,11 @@ export type HostDecision =
 
 type Env = Record<string, string | undefined>;
 
-// Everything the website-audit funnel needs: landing, funnel, processing, report, its APIs and static assets.
+// Everything the website-audit funnel needs (landing, funnel, processing, report, their APIs, static assets) plus the
+// agency dashboard with every audit and report (operator, 2026-09-23).
 const SITE_AUDIT_PATHS = [
   /^\/audituri(\/|$)/, /^\/audit-seo(\/|$)/, /^\/audit(\/|$)/, /^\/start(\/|$)/, /^\/processing\//, /^\/r\//,
-  /^\/api\/scan(\/|$)/, /^\/api\/audit(\/|$)/,
+  /^\/api\/scan(\/|$)/, /^\/api\/audit(\/|$)/, /^\/dashboard(\/|$)/,
   /^\/_next\//, /^\/fonts\//, /^\/devrika-logo\.svg$/, /^\/logo-devrika\.png$/, /^\/favicon\.ico$/,
 ];
 

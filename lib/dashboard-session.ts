@@ -5,14 +5,28 @@ import { basicAuthOk, dashCredentials, type DashCred } from "./dash-auth";
 
 export const DASHBOARD_COOKIE = "dashboard_session";
 export const DASHBOARD_MAX_AGE = 8 * 60 * 60;
-export const DASHBOARD_HOME = "/dashboard/google-ads";
+export const DASHBOARD_HOME = "/dashboard";
 
-export function dashboardOrigin(request: { url: string }): string | null {
+// The dashboard answers on our configured origins only (PUBLIC_URL, and SITE_AUDIT_ORIGIN since the .ro host serves
+// the dashboard too). The forwarded host picks among them; a host outside the list falls back to the first one, so a
+// spoofed header can never choose where we redirect or which Origin the login form must come from.
+function configuredOrigins(): string[] {
+  const out: string[] = [];
+  for (const value of [process.env.PUBLIC_URL || process.env.GADS_REDIRECT_URI, process.env.SITE_AUDIT_ORIGIN]) {
+    try {
+      const u = new URL(value || "");
+      if (u.protocol === "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(u.hostname) && !out.includes(u.origin)) out.push(u.origin);
+    } catch { /* not configured */ }
+  }
+  return out;
+}
+
+export function dashboardOrigin(request: { url: string; headers?: Headers }): string | null {
   if (process.env.NODE_ENV !== "production") return new URL(request.url).origin;
-  try {
-    const configured = new URL(process.env.PUBLIC_URL || process.env.GADS_REDIRECT_URI || "");
-    return configured.protocol === "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(configured.hostname) ? configured.origin : null;
-  } catch { return null; }
+  const origins = configuredOrigins();
+  if (origins.length === 0) return null;
+  const host = request.headers?.get("x-forwarded-host")?.split(",")[0].trim().toLowerCase();
+  return origins.find((o) => new URL(o).host === host) ?? origins[0];
 }
 
 function equal(left: string, right: string) {

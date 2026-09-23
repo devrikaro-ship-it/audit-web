@@ -8,14 +8,13 @@ describe("routeForHost", () => {
     expect(routeForHost("audit.devrika.ro", "/", "", env)).toEqual({ kind: "rewrite", path: "/audituri" });
   });
   it("keeps the funnel, reports and their APIs on .ro", () => {
-    for (const p of ["/audituri", "/audit-seo", "/start", "/processing/abc", "/r/abc", "/r/abc/pdf", "/api/scan", "/api/audit", "/audit", "/fonts/shadeerah-soft.ttf", "/_next/static/x.js"]) {
+    for (const p of ["/audituri", "/audit-seo", "/dashboard", "/dashboard/google-ads/reports/x", "/dashboard/login", "/start", "/processing/abc", "/r/abc", "/r/abc/pdf", "/api/scan", "/api/audit", "/audit", "/fonts/shadeerah-soft.ttf", "/_next/static/x.js"]) {
       expect(routeForHost("audit.devrika.ro", p, "", env)).toEqual({ kind: "next" });
     }
   });
   it("sends every other .ro path to the main origin with its path and query", () => {
     expect(routeForHost("audit.devrika.ro", "/confidentialitate", "?x=1", env)).toEqual({ kind: "redirect", location: "https://audit.devrika.io/confidentialitate?x=1" });
     expect(routeForHost("audit.devrika.ro", "/api/google-ads/callback", "?code=c", env)).toEqual({ kind: "redirect", location: "https://audit.devrika.io/api/google-ads/callback?code=c" });
-    expect(routeForHost("audit.devrika.ro", "/dashboard", "", env).kind).toBe("redirect");
   });
   it("leaves the main origin untouched", () => {
     expect(routeForHost("audit.devrika.io", "/", "", env)).toEqual({ kind: "next" });

@@ -56,7 +56,7 @@ it("refuses bad credentials and cross-site forms without granting a cookie, and 
   expect(huge.status).toBe(413);
   for (const next of ["https://attacker.example", "//attacker.example", "/dashboard/../google-ads", "/dashboard/login", "/dashboard/logout", "/dashboard\\evil"]) {
     const response = await POST(request("/dashboard/login/submit", good + "&next=" + encodeURIComponent(next)));
-    expect(response.headers.get("location")).toBe(origin + "/dashboard/google-ads");
+    expect(response.headers.get("location")).toBe(origin + "/dashboard");
   }
 });
 
@@ -98,12 +98,25 @@ it("uses the configured public origin behind the production proxy and refuses sp
   expect(anonymous.headers.get("location")).toBe(origin + "/dashboard/login?next=%2Fdashboard%2Fgoogle-ads");
   const response = await login(backend("/dashboard/login/submit", "username=manager&password=test-only%3Apassword"));
   expect(response.status).toBe(303);
-  expect(response.headers.get("location")).toBe(origin + "/dashboard/google-ads");
+  expect(response.headers.get("location")).toBe(origin + "/dashboard");
   expect(response.headers.get("set-cookie")).toMatch(/; Secure/i);
   const cookie = response.headers.get("set-cookie")!.split(";")[0];
   expect((await logout(backend("/dashboard/logout", "logout=1", cookie))).headers.get("location")).toBe(origin + "/dashboard/login");
   vi.stubEnv("PUBLIC_URL", ""); vi.stubEnv("GADS_REDIRECT_URI", "");
   expect((await login(backend("/dashboard/login/submit", "username=manager&password=test-only%3Apassword"))).status).toBe(503);
+});
+
+it("serves the dashboard on the second configured origin when the request comes from it", async () => {
+  vi.stubEnv("NODE_ENV", "production");
+  vi.stubEnv("PUBLIC_URL", origin);
+  const second = "https://audit.second.test";
+  vi.stubEnv("SITE_AUDIT_ORIGIN", second);
+  const { POST: login } = await import("../app/dashboard/login/submit/route");
+  const from = (host: string, originHeader: string) => new NextRequest("http://localhost:3000/dashboard/login/submit", { method: "POST", body: "username=manager&password=test-only%3Apassword", headers: { origin: originHeader, "content-type": "application/x-www-form-urlencoded", "x-forwarded-host": host } });
+  const ok = await login(from("audit.second.test", second));
+  expect(ok.status).toBe(303);
+  expect(ok.headers.get("location")).toBe(second + "/dashboard");
+  expect((await login(from("attacker.example", second))).status).toBe(403);
 });
 
 it("rejects explicit invalid authorization even with a valid cookie through proxy and the shared data guard", async () => {
