@@ -1,5 +1,13 @@
 # seo-audit — dev mistakes
 
+## 2026-09-23 — Platform detection called almost every shop Magento or WooCommerce
+
+Symptom: the scan reported pcgarage, dedeman and flanco as Magento, MerchantPro stores (invictusmedical, modlet) as WooCommerce, apivitalis (GoMag) as WooCommerce and zevo (OpenCart) as Magento. Measured cause: the Magento pattern contained bare `mage/`, which matches every `image/` path, and the WooCommerce pattern contained `add-to-cart`, a button name every platform uses; WooCommerce was also tested before the hosted platforms. Recognition signal: a platform marker that is a generic word or a substring of a common path. Repair: each platform is recognised by markers specific to it (its CDN host, module prefix or route), hosted-CDN platforms first; checked live on 11 stores.
+
+## 2026-09-23 — Shopify and GoMag/PrestaShop sitemaps were read empty
+
+Symptom: on diente.ro only the product sitemap was read, collections and pages came back empty; GoMag and PrestaShop sitemaps yielded no URLs to the old parser. Measured cause: Shopify answers 429 to bursts (4 simultaneous requests: 23 of 24 refused; 2: 3 of 24), its child URLs carry an XML-escaped `&amp;` query, and GoMag/PrestaShop wrap every `<loc>` in CDATA. Recognition signal: a typed sitemap that returns zero URLs while the same URL fetched alone returns hundreds. Repair: bounded 429 retry in `lib/net.ts`, XML-unescaping and CDATA stripping of `<loc>`, and per-platform concurrency from the reading profile (Shopify 2).
+
 ## 2026-09-23 — The cold audit analysed the blog instead of the shop
 
 Symptom: the production cold audit of magazinfitness.ro (61 pages) reported "product page: not caught in crawl", scored the category page on blog posts, counted 0 product titles for the Catamo signal, and every Google Ads field said "could not verify". Measured cause: pages were taken in sitemap order up to 60, and the sitemap index listed 63 blog posts first; URLs were typed by path depth, so one-segment WooCommerce product URLs counted as categories; only the first 5 child sitemaps were read, so `product_cat` (6th) was never seen. The Shopping queries were then built from blog titles. Recognition signal: an ecom audit with `productSignal.checked = 0` or a product UX field "necunoscut" on a store that has products. Repair: `lib/page-selection.ts` types child sitemaps by name, reads every product and category sitemap, applies per-type quotas with even sampling, and confirms products by content; category-sitemap URLs stay categories because WooCommerce category grids carry add-to-cart buttons.

@@ -20,7 +20,7 @@ netehnic, fara diacritice), livrarea si sinteza multi-canal.
 | Canal | Skill specific | Ce ii dai |
 |---|---|---|
 | **Google Ads** | `audit-google-ads` | contul + tipul + targetul din fisa |
-| Meta | `meta-ads-optimize` (pana are skill de audit propriu) | act_id + token |
+| Meta | `meta-ads-dvk` (pana are skill de audit propriu) | act_id + token |
 | SEO / site | `devrika-seo` | domeniul |
 
 **Regula:** doctrina unui canal traieste in skill-ul lui. Aici NU se copiaza praguri de canal —
@@ -70,6 +70,12 @@ CTA · fara diacritice · maparea findings-urilor pe cele 3 servicii) sunt in **
 3. Motorul acopera deja crawl (~50 pagini) + PageSpeed, cele 4 rubrici, tracking **la runtime**
    (browser real BrightData, nu HTML brut), CSS + peisaj Shopping EEA, semnal produse (Catamo),
    si simularea de venit multi-moneda din funnel. Detalii: `docs/AUDIT-SPEC.md` §8 si §11.
+
+## Reading rules per platform
+The web engine reads each shop by its platform profile: `lib/platform-knowledge/<platform>.json` (WooCommerce,
+Shopify, MerchantPro, GoMag, PrestaShop, OpenCart, Magento, generic) — sitemap signals, pace, traps and observed
+problems, each with its test store. Adding a platform = adding a profile file. Design:
+`docs/superpowers/specs/2026-09-23-platform-knowledge-base-design.md`.
 
 ## Fallback Python (DOAR cand web-ul nu poate crawla — ex: Cloudflare/anti-bot)
 Pasii + limitele: **[references/note-tehnice.md](references/note-tehnice.md)**.

@@ -1,0 +1,52 @@
+{
+  "platform": "WooCommerce",
+  "testStore": "https://www.magazinfitness.ro",
+  "concurrency": 8,
+  "sitemapEntryPoints": [
+    "/sitemap_index.xml",
+    "/wp-sitemap.xml",
+    "/sitemap.xml"
+  ],
+  "sitemapSignals": {
+    "skip": [
+      "product_tag",
+      "attachment",
+      "author",
+      "image"
+    ],
+    "category": [
+      "product_cat",
+      "product-category",
+      "taxonomies-product_cat"
+    ],
+    "mixed": [],
+    "other": [
+      "post-sitemap",
+      "page-sitemap",
+      "brand",
+      "tag",
+      "category-sitemap"
+    ],
+    "product": [
+      "product"
+    ]
+  },
+  "urlSignals": {
+    "skip": [],
+    "product": [
+      "/produs/",
+      "/product/"
+    ],
+    "category": [
+      "/categorie-produs/",
+      "/product-category/"
+    ]
+  },
+  "languageSitemaps": false,
+  "traps": [
+    "Rank Math and Yoast often list the blog sitemap before the product sitemaps (magazinfitness.ro, 2026-09-23: 63 posts first).",
+    "Product URLs are often one path segment, so path depth cannot tell a product from a category.",
+    "Category grids carry add-to-cart buttons and prices."
+  ],
+  "typicalProblems": []
+}

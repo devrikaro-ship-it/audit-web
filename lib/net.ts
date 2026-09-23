@@ -131,9 +131,25 @@ async function fetchWithTimeout(url: string, timeout = FETCH_TIMEOUT): Promise<R
   }
 }
 
+// Shops rate-limit bursts (Shopify answers 429 to parallel sitemap and page requests). Wait what the server asks,
+// bounded, then retry; without this the audit silently reads empty sitemaps and skips pages.
+const RATE_LIMIT_RETRIES = 2;
+const RATE_LIMIT_MAX_WAIT_MS = 4000;
+
+async function fetchRespectingRateLimit(url: string, timeout = FETCH_TIMEOUT): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    const r = await fetchWithTimeout(url, timeout);
+    if (r.status !== 429 || attempt >= RATE_LIMIT_RETRIES) return r;
+    void r.body?.cancel();
+    const retryAfter = Number(r.headers.get("retry-after"));
+    const waitMs = Number.isFinite(retryAfter) && r.headers.has("retry-after") ? retryAfter * 1000 : 1000 * (attempt + 1);
+    await new Promise((done) => setTimeout(done, Math.min(Math.max(waitMs, 0), RATE_LIMIT_MAX_WAIT_MS)));
+  }
+}
+
 export async function fetchText(url: string): Promise<string> {
   try {
-    const r = await fetchWithTimeout(url);
+    const r = await fetchRespectingRateLimit(url);
     return r.ok ? r.text() : "";
   } catch { return ""; }
 }
@@ -148,7 +164,7 @@ export type PageData = {
 
 export async function fetchPage(url: string): Promise<PageData> {
   try {
-    const r = await fetchWithTimeout(url, 10000);
+    const r = await fetchRespectingRateLimit(url, 10000);
     const html = r.ok ? await r.text() : "";
     const headers: Record<string, string> = {};
     r.headers.forEach((v, k) => { headers[k.toLowerCase()] = v; });

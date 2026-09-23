@@ -1,0 +1,50 @@
+{
+  "platform": "OpenCart",
+  "testStore": "https://ledemag.ro",
+  "concurrency": 4,
+  "sitemapEntryPoints": [
+    "/index.php?route=extension/feed/google_sitemap",
+    "/sitemap.xml"
+  ],
+  "sitemapSignals": {
+    "skip": [
+      "image"
+    ],
+    "category": [
+      "categor"
+    ],
+    "mixed": [],
+    "other": [],
+    "product": [
+      "product"
+    ]
+  },
+  "urlSignals": {
+    "skip": [
+      "route=information",
+      "route=product/manufacturer",
+      "route=product/search",
+      "route=product/special"
+    ],
+    "product": [
+      "route=product/product"
+    ],
+    "category": [
+      "route=product/category"
+    ]
+  },
+  "languageSitemaps": false,
+  "traps": [
+    "Usually one flat sitemap with no index: products, categories and pages mixed (ledemag.ro: 1683 URLs; zevo.ro: 807).",
+    "With SEO URLs off, pages are index.php?route=... addresses."
+  ],
+  "typicalProblems": [
+    {
+      "id": "parameter-urls-in-sitemap",
+      "detectedBy": "sitemap URLs containing index.php?route=",
+      "explanation": "Produsele apar la Google cu adrese de tip index.php?route=product&product_id=513, fara niciun cuvant din numele produsului. Adresa nu ajuta la pozitionare si arata neincrezator in rezultate.",
+      "service": "SEO",
+      "source": "ledemag.ro sitemap.xml, 2026-09-23"
+    }
+  ]
+}

@@ -1,13 +1,13 @@
 import type { AuditData, CheckResult, PageCheck, StatusCheck, ConversieAudit, MoneyLeak, Presence, ConvZona, ProductSignal, UxAudit, UxField } from "./types";
 import { analyzeProspectLive, deriveProductQueries, type GoogleShoppingIntel, type LiveTracking } from "./css-detect";
-import { detectEcom, detectHtmlTracking } from "./site-signals";
+import { detectEcom, detectHtmlTracking, detectPlatform } from "./site-signals";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
-import { classifyFetchedPage, collectTypedUrls, hasAddToCart, PAGE_BUDGET, priceCount, selectPages, type TypedUrls } from "./page-selection";
+import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
+import { profileFor } from "./platform-knowledge";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
-const FETCH_CONCURRENCY = 8;
 const LLM_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "OAI-SearchBot", "CCBot", "Googlebot-Extended"];
 
 // ── HTML parsing utilities: in lib/parse-page (pur + testat) ──────────────────
@@ -829,31 +829,34 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const origin = new URL(url).origin;
   const domain = new URL(url).hostname;
 
-  // Phase 1: robots.txt + sitemap -> pages that sell first (lib/page-selection.ts)
-  const robotsTxt = await fetchText(`${origin}/robots.txt`);
+  // Phase 1: platform first (its profile says how to read the site), then robots.txt + sitemap -> pages that sell
   const homepage = origin + "/";
+  const homeHtmlEarly = await fetchText(homepage);
+  const profile = profileFor(detectPlatform(homeHtmlEarly.slice(0, 400000)));
+  const language = homeHtmlEarly.match(/<html[^>]*\blang=["']?([a-z]{2})/i)?.[1]?.toLowerCase() ?? null;
+  const robotsTxt = await fetchText(`${origin}/robots.txt`);
   const sitemapUrl = extractSitemapFromRobots(robotsTxt, origin);
   const sitemapXml = await fetchText(sitemapUrl);
-  const sitemapCandidates = [sitemapUrl, `${origin}/sitemap_index.xml`, `${origin}/sitemap.xml`];
+  const sitemapCandidates = [sitemapUrl, ...profile.sitemapEntryPoints.map((p) => origin + p)];
   let typed: TypedUrls = { product: [], category: [], other: [] };
   for (const sm of [...new Set(sitemapCandidates)]) {
     const xml = sm === sitemapUrl ? sitemapXml : await fetchText(sm);
     if (!xml) continue;
-    const found = await collectTypedUrls(xml, fetchText, sm);
+    const found = await collectTypedUrls(xml, fetchText, sm, { profile, language });
     const own: TypedUrls = { product: filterUrls(found.product, origin), category: filterUrls(found.category, origin), other: filterUrls(found.other, origin) };
     if (own.product.length + own.category.length + own.other.length > 0) { typed = own; break; }
   }
 
   // No typed sitemap: the homepage links (menu, featured products) come before untyped sitemap order.
   if (typed.product.length === 0 && typed.category.length === 0) {
-    const homeLinks = filterUrls(extractInternalLinks(await fetchText(homepage), origin), origin);
+    const homeLinks = filterUrls(extractInternalLinks(homeHtmlEarly, origin), origin);
     typed.other = [...homeLinks, ...typed.other];
   }
   let { urls: toAnalyze, planned } = selectPages(homepage, typed);
 
   // Fallback link-crawl: sitemap absent/blocat -> link-uri interne din primele pagini descoperite.
   if (toAnalyze.length < MIN_PAGES) {
-    let discovered = filterUrls(extractInternalLinks(await fetchText(homepage), origin), origin);
+    let discovered = filterUrls(extractInternalLinks(homeHtmlEarly, origin), origin);
     for (const seed of discovered.slice(0, 5)) {
       if (toAnalyze.length + discovered.length >= PAGE_BUDGET) break;
       discovered = discovered.concat(filterUrls(extractInternalLinks(await fetchText(seed), origin), origin));
@@ -862,12 +865,13 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     ({ urls: toAnalyze, planned } = selectPages(homepage, typed));
   }
 
-  // Phase 2: Fetch pages (concurenta FETCH_CONCURRENCY)
-  const pages: PageData[] = [];
-  for (let i = 0; i < toAnalyze.length; i += FETCH_CONCURRENCY) {
-    const batch = toAnalyze.slice(i, i + FETCH_CONCURRENCY);
-    const results = await Promise.all(batch.map(u => fetchPage(u)));
-    pages.push(...results);
+  // Phase 2: Fetch pages at the pace the platform accepts (profile.concurrency)
+  const pages: PageData[] = await mapWithConcurrency(toAnalyze, profile.concurrency, (u) => fetchPage(u));
+  const failedTypes = pages.slice(1).filter((p) => !p.ok).map((p) => planned.get(p.url) ?? "other");
+  if (failedTypes.length > 0) {
+    const refill = replacementsFor(failedTypes, typed, new Set(toAnalyze));
+    pages.push(...await mapWithConcurrency(refill.urls, profile.concurrency, (u) => fetchPage(u)));
+    refill.planned.forEach((t, u) => planned.set(u, t));
   }
 
   const analyzedPages = pages.filter(p => p.ok);

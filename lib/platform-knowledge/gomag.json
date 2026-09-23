@@ -1,0 +1,35 @@
+{
+  "platform": "GoMag",
+  "testStore": "https://www.mariart.ro",
+  "concurrency": 4,
+  "sitemapEntryPoints": [
+    "/sitemap.xml"
+  ],
+  "sitemapSignals": {
+    "skip": [
+      "image"
+    ],
+    "category": [
+      "categor"
+    ],
+    "mixed": [],
+    "other": [
+      "pages",
+      "blog"
+    ],
+    "product": [
+      "product"
+    ]
+  },
+  "urlSignals": {
+    "skip": [],
+    "product": [],
+    "category": []
+  },
+  "languageSitemaps": false,
+  "traps": [
+    "Sitemap URLs are wrapped in CDATA.",
+    "robots.txt can repeat the same Sitemap line."
+  ],
+  "typicalProblems": []
+}

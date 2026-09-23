@@ -117,6 +117,7 @@ Hero (domeniu + gauge scor global) · "Ce te costa asta" · **simulare de venit*
 ## 8. Parametri de detectie
 
 - **Pages analysed (2026-09-23):** budget 60 including the homepage, target at least 50 (`PAGE_BUDGET`, `MIN_PAGES`). The pages that sell come first, never sitemap order: 15 categories + 35 products + at most 5 other pages; unused space goes to products, then categories, then other. Child sitemaps are typed by name (product / category / other), products are sampled evenly across the catalogue, and a page counts as a product only by its content; a category-sitemap URL stays a category. Code: `lib/page-selection.ts`. Design: `docs/superpowers/specs/2026-09-23-site-audit-page-selection-design.md`.
+- **Platform reading profiles (2026-09-23):** the platform is detected from the homepage first; its curated profile (`lib/platform-knowledge/<platform>.json`: sitemap entry points, sitemap and URL signals per page type, site-language sitemaps, polite concurrency, traps, observed problems) decides how the site is read. Unknown platforms use `generic.json`. Dead pages (404) are replaced by untried URLs of the same type. Design: `docs/superpowers/specs/2026-09-23-platform-knowledge-base-design.md`.
 - **Tracking + CSS:** runtime, browser real EEA (BrightData), doar pe **ecom**.
 - **Crawl:** fetch + PageSpeed; fallback link-crawl daca sitemap slab.
 

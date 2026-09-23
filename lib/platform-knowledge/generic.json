@@ -1,0 +1,44 @@
+{
+  "platform": "generic",
+  "testStore": null,
+  "concurrency": 4,
+  "sitemapEntryPoints": [
+    "/sitemap_index.xml",
+    "/sitemap.xml"
+  ],
+  "sitemapSignals": {
+    "skip": [
+      "image",
+      "video"
+    ],
+    "category": [
+      "product_cat",
+      "collection",
+      "categor"
+    ],
+    "mixed": [],
+    "other": [
+      "tag",
+      "brand"
+    ],
+    "product": [
+      "product"
+    ]
+  },
+  "urlSignals": {
+    "skip": [],
+    "product": [
+      "/products/",
+      "/produs/",
+      "/product/"
+    ],
+    "category": [
+      "/collections/",
+      "/categorie-produs/",
+      "/product-category/"
+    ]
+  },
+  "languageSitemaps": false,
+  "traps": [],
+  "typicalProblems": []
+}

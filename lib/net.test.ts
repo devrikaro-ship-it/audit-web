@@ -27,6 +27,20 @@ describe("net", () => {
     expect(p.headers["content-type"]).toContain("text/html");
   });
 
+  it("fetchText and fetchPage retry after a 429 instead of returning an empty body", async () => {
+    let calls = 0;
+    mockFetch(() => (++calls % 2 === 1 ? new Response("", { status: 429, headers: { "Retry-After": "0" } }) : new Response("<urlset/>", { status: 200 })));
+    expect(await fetchText("https://x.ro/sitemap.xml")).toBe("<urlset/>");
+    expect(await fetchPage("https://x.ro/p")).toMatchObject({ ok: true, html: "<urlset/>" });
+  });
+
+  it("stops retrying a 429 after the bounded attempts", async () => {
+    const f = vi.fn(() => Promise.resolve(new Response("", { status: 429, headers: { "Retry-After": "0" } })));
+    vi.stubGlobal("fetch", f);
+    expect(await fetchText("https://x.ro")).toBe("");
+    expect(f).toHaveBeenCalledTimes(3);
+  });
+
   it("fetchPage: throw de retea -> ok=false, html gol, status 0", async () => {
     vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("timeout"))));
     const p = await fetchPage("https://x.ro");
