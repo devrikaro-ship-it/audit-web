@@ -1,6 +1,6 @@
 # Platform knowledge base for the site audit — design
 
-Status: approved by the operator on 2026-09-23 (learning with a safety gate, option 1). Scope: the cold website audit
+Status: approved by the operator on 2026-09-23 (learning with a safety gate, option 1). Built and live on 2026-09-23: stage 1 (reading profiles), stage 2 (lib/observations.ts, one line per audit in platform-knowledge/observations.jsonl, per-platform summary in the dashboard) and stage 3 (lib/learning.ts: bounded pace, URL-prefix rules promoted at 5 domains or approved in the dashboard, approved.json). Scope: the cold website audit
 (lead magnet). Follows `2026-09-23-site-audit-page-selection-design.md`.
 
 ## Goal

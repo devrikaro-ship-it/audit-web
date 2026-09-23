@@ -49,6 +49,14 @@ remove rubrics or fields on your own.
 4. Builds the two rubrics: SEO (on-page, content, keywords, structure, schema, product-page titles and
    descriptions) and UX/UI (speed, homepage, category page, product page, filters).
 
+5. Learns per platform from every audit: one observation per audit, learned reading pace and URL rules behind a
+   5-domain safety gate, pending rules approved in the dashboard (`lib/observations.ts`, `lib/learning.ts`).
+
+## Where the team works
+
+https://audit.devrika.ro/dashboard (login): every audit (website and Google Ads) as a prospect with a sales status,
+the report link, a per-platform summary and what the audit learned. Every finished audit is saved, contact or not.
+
 Designs: `docs/superpowers/specs/2026-09-23-*.md`. Engine lessons: `docs/dev/mistakes.md`.
 
 ## Report rules

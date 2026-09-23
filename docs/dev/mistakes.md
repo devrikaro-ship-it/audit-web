@@ -1,5 +1,13 @@
 # seo-audit — dev mistakes
 
+## 2026-09-23 — The report PDF printed an error page and returned 200
+
+Symptom: after Chromium was installed, "Descarca PDF" answered 200 with a one-page PDF showing "ERR_SSL_PROTOCOL_ERROR". Measured cause: the route asked Chrome for req.nextUrl.origin, which behind the proxy is https://localhost:3000, while the container serves plain HTTP; the route never checked what it printed. Recognition signal: a report PDF of one page or ~20 KB. Repair: Chrome reads http://127.0.0.1:<PORT>/r/<id>?print=1 and the route checks the report answers before printing (502 otherwise).
+
+## 2026-09-23 — One failed remote-browser open cost a whole audit
+
+Symptom: spishop.ro (refuses the server) read 6 pages instead of 45 and was not recognised as PrestaShop. Measured cause: the first BrightData open failed, so detection, robots and the sitemap used the 403 page; the browser opened only later. Repair: openWithRetry (two attempts). Still open: later the same day the store also refused in-page requests from production after about ten test audits; local reads through the same browser returned 200.
+
 ## 2026-09-23 — The public report said "BreadcrumbList / Organization missing" on sites that have them
 
 Symptom: magazinfitness.ro was reported without BreadcrumbList and without Organization schema; diente.ro and mariart.ro without Organization. Measured cause: the checks read only the homepage (BreadcrumbList lives on category and product pages, rating on product pages), read only the top-level `@type` (Rank Math, Yoast and Shopify put entities in `@graph`; `@type` can be an array; AggregateRating is nested in Product), and accepted only three exact organization names (OnlineStore was missed). A check with no key was also shown as OK. Recognition signal: a schema finding that contradicts a JSON-LD block visible in the page source of a category or product page. Repair: `schemaTypes` walks the whole JSON-LD; each element is checked on the page type where it belongs, as coverage (80%+ good, some = partial, none = missing) with real counts; organization subtypes by schema.org naming; a check whose page type was not read is left out and the renderer no longer shows a missing check as OK.
