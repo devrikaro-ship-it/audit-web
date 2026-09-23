@@ -17,6 +17,8 @@ export type Observation = {
   products: number;
   categories: number;
   failedChecks: string[];    // check ids not ok
+  productPrefixes?: string[];  // first path segment of confirmed product pages that have a deeper path ("/cumpara/")
+  categoryPrefixes?: string[]; // same for confirmed category pages
   durationMs: number;
 };
 
@@ -62,4 +64,18 @@ export function summarizeByPlatform(obs: Observation[]): PlatformSummary[] {
       topFailed: [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([c]) => c),
     };
   }).sort((a, b) => b.audits - a.audits);
+}
+
+// "/cumpara/9218-maner" -> "/cumpara/"; one-segment URLs carry no prefix to learn from.
+export function pathPrefixes(urls: string[], max = 5): string[] {
+  const seen = new Map<string, number>();
+  for (const u of urls) {
+    try {
+      const segs = new URL(u).pathname.split("/").filter(Boolean);
+      if (segs.length < 2) continue;
+      const p = `/${segs[0].toLowerCase()}/`;
+      seen.set(p, (seen.get(p) ?? 0) + 1);
+    } catch { /* not a URL */ }
+  }
+  return [...seen.entries()].sort((a, b) => b[1] - a[1]).slice(0, max).map(([p]) => p);
 }

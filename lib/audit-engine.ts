@@ -3,8 +3,9 @@ import { detectEcom, detectPlatform } from "./site-signals";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
 import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
-import { profileFor } from "./platform-knowledge";
-import { appendObservation } from "./observations";
+import { PROFILES, profileFor } from "./platform-knowledge";
+import { computeLearning, effectiveProfile, readApprovals } from "./learning";
+import { appendObservation, pathPrefixes, readObservations } from "./observations";
 import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
 
@@ -715,7 +716,9 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const readText = (u: string) => (browserFetcher ? browserFetcher.fetchText(u) : fetchText(u));
   const readPage = (u: string) => (browserFetcher ? browserFetcher.fetchPage(u) : fetchPage(u));
   const homeHtmlEarly = browserFetcher ? (browserFetcher as PageFetcher).homeHtml : homeDirect.html;
-  const profile = profileFor(detectPlatform(homeHtmlEarly.slice(0, 400000)));
+  // Curated profile + what the audits learned and passed the safety gate (lib/learning.ts).
+  const learning = computeLearning(await readObservations(), PROFILES, await readApprovals());
+  const profile = effectiveProfile(profileFor(detectPlatform(homeHtmlEarly.slice(0, 400000))), learning);
   const language = homeHtmlEarly.match(/<html[^>]*\blang=["']?([a-z]{2})/i)?.[1]?.toLowerCase() ?? null;
   const robotsTxt = await readText(`${origin}/robots.txt`);
   const sitemapUrl = extractSitemapFromRobots(robotsTxt, origin);
@@ -813,6 +816,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     refused: pages.filter((p) => p.status === 403 || p.status === 429).length,
     usedBrowser: usedBrowser || !!browserFetcher, blocked: analyzedPages.length === 0,
     products: products.length, categories: categories.length,
+    productPrefixes: pathPrefixes(products), categoryPrefixes: pathPrefixes(categories),
     failedChecks: [...Object.entries(checksRezultate).filter(([, r]) => r.status !== "ok").map(([k]) => k), ...failedPageChecks],
     durationMs: Date.now() - startedAt,
   }).catch(() => { /* the audit result never depends on the log */ });

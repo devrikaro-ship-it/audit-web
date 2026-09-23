@@ -4,6 +4,9 @@ import { listAudits } from "@/lib/leads-store";
 import { managerAccounts, requireManagerAccess } from "@/lib/gads-manager";
 import { listStatuses } from "@/lib/dashboard-status";
 import { readObservations, summarizeByPlatform } from "@/lib/observations";
+import { candidateKey, computeLearning, readApprovals, MIN_DOMAINS } from "@/lib/learning";
+import { PROFILES } from "@/lib/platform-knowledge";
+import { approveLearning } from "./actions";
 import { buildRows, dashboardKpis, type DashboardRow } from "@/lib/dashboard-rows";
 import StatusSelect from "./StatusSelect";
 import "../dvk.css";
@@ -33,6 +36,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const filter: FilterId = FILTERS.some((f) => f.id === tip) ? (tip as FilterId) : "toate";
   const [audits, accounts, statuses, observations] = await Promise.all([listAudits(), managerAccounts(), listStatuses(), readObservations()]);
   const platforms = summarizeByPlatform(observations);
+  const learning = computeLearning(observations, PROFILES, await readApprovals());
+  const curated = Object.fromEntries(PROFILES.map((p) => [p.platform, p.concurrency]));
   const all = buildRows(audits, accounts, statuses);
   const rows = buildRows(audits, accounts, statuses, filter);
   const kpis = await loadKpis(all);
@@ -113,6 +118,40 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 </tbody>
               </table>
             </div>
+          </section>
+        )}
+
+        {(learning.candidates.length > 0 || Object.keys(learning.concurrency).length > 0) && (
+          <section className="platforms">
+            <div className="eyebrow">Invatare</div>
+            <h2 className="dash-sub">Ce a invatat auditul</h2>
+            <p className="dash-intro">O regula noua de citire intra singura doar dupa {MIN_DOMAINS} magazine diferite fara contrazicere; altfel asteapta aprobarea ta. Ritmul de citire se ajusteaza singur, intre 1 si 8 cereri simultane.</p>
+            <div className="table-wrap">
+              <table>
+                <thead><tr><th>Platforma</th><th>Ritm (fisa → invatat)</th></tr></thead>
+                <tbody>{Object.entries(learning.concurrency).map(([p, c]) => <tr key={p}><td><b>{p}</b></td><td>{curated[p]} → {c}</td></tr>)}</tbody>
+              </table>
+            </div>
+            {learning.candidates.length > 0 && (
+              <div className="table-wrap" style={{ marginTop: 16 }}>
+                <table>
+                  <thead><tr><th>Platforma</th><th>Regula</th><th>Magazine</th><th>Stare</th><th></th></tr></thead>
+                  <tbody>
+                    {learning.candidates.map((c) => (
+                      <tr key={candidateKey(c.platform, c.kind, c.signal)}>
+                        <td><b>{c.platform}</b></td>
+                        <td>{c.kind === "product" ? "Produsele" : "Categoriile"} stau sub <code>{c.signal}</code></td>
+                        <td>{c.domains}</td>
+                        <td>{{ promoted: "Activa (automat)", approved: "Activa (aprobata)", pending: "Asteapta aprobarea", rejected: "Respinsa (contrazisa)" }[c.status]}</td>
+                        <td>{c.status === "pending" && (
+                          <form action={approveLearning.bind(null, candidateKey(c.platform, c.kind, c.signal))}><button type="submit" className="btn-indigo" style={{ border: 0, cursor: "pointer" }}>Aproba</button></form>
+                        )}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </section>
         )}
       </main>
