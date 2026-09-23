@@ -4,7 +4,7 @@ import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
 import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
 import { profileFor } from "./platform-knowledge";
-import { looksBlocked, openBrowserFetcher, type PageFetcher } from "./browser-fetch";
+import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
@@ -749,16 +749,13 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   // Phase 2: Fetch pages at the pace the platform accepts (profile.concurrency)
   const fetchDeadline = Date.now() + PAGE_FETCH_BUDGET_MS;
   const fetched = (list: (PageData | undefined)[]) => list.filter((p): p is PageData => !!p);
-  const pages: PageData[] = fetched(await mapWithConcurrency(toAnalyze, profile.concurrency, readPage, fetchDeadline));
-  if (!browserFetcher && looksBlocked(true, "", pages.map((p) => p.status))) {
-    const fetcher = await openFetcher();
-    if (fetcher) {
-      const refused = pages.filter((p) => p.status === 403 || p.status === 429);
-      const again = fetched(await mapWithConcurrency(refused.map((p) => p.url), profile.concurrency, (u) => fetcher.fetchPage(u), Date.now() + PAGE_FETCH_BUDGET_MS));
-      const byUrl = new Map(again.map((p) => [p.url, p]));
-      pages.forEach((p, i) => { const r = byUrl.get(p.url); if (r) pages[i] = r; });
-    }
-  }
+  const viaBrowser = (fetcher: PageFetcher) => async (urls: string[]) =>
+    fetched(await mapWithConcurrency(urls, profile.concurrency, (u) => fetcher.fetchPage(u), Date.now() + PAGE_FETCH_BUDGET_MS));
+  const { pages } = await fetchPagesWithProbe<PageData>(
+    toAnalyze,
+    async (urls) => fetched(await mapWithConcurrency(urls, profile.concurrency, readPage, fetchDeadline)),
+    async () => { const f = await openFetcher(); return f ? viaBrowser(f) : null; },
+  );
   const failedTypes = pages.slice(1).filter((p) => !p.ok).map((p) => planned.get(p.url) ?? "other");
   if (failedTypes.length > 0 && Date.now() < fetchDeadline) {
     const refill = replacementsFor(failedTypes, typed, new Set(toAnalyze));

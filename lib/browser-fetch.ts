@@ -59,3 +59,27 @@ export function looksBlocked(homeOk: boolean, homeHtml: string, statuses: number
   const refused = statuses.filter((s) => s === 403 || s === 429).length;
   return statuses.length >= 5 && refused / statuses.length >= 0.3;
 }
+
+export const PROBE_PAGES = 8;
+
+// Reads a small probe first: when it is already refused, every remaining page goes through the browser at once
+// instead of spending the time budget on refused requests (invictusmedical.ro from the server: 2 requests per 7 s).
+export async function fetchPagesWithProbe<T extends { url: string; status: number }>(
+  urls: string[],
+  direct: (urls: string[]) => Promise<T[]>,
+  openBrowser: () => Promise<((urls: string[]) => Promise<T[]>) | null>,
+): Promise<{ pages: T[]; usedBrowser: boolean }> {
+  const probe = await direct(urls.slice(0, PROBE_PAGES));
+  const blockedEarly = looksBlocked(true, "", probe.map((p) => p.status));
+  const browser = blockedEarly ? await openBrowser() : null;
+  const rest = urls.slice(PROBE_PAGES);
+  const pages = [...probe, ...(browser ? await browser(rest) : await direct(rest))];
+  const lateBlocked = !browser && looksBlocked(true, "", pages.map((p) => p.status));
+  const retry = browser ?? (lateBlocked ? await openBrowser() : null);
+  if (retry) {
+    const refused = pages.filter((p) => p.status === 403 || p.status === 429);
+    const again = new Map((await retry(refused.map((p) => p.url))).map((p) => [p.url, p]));
+    pages.forEach((p, i) => { const r = again.get(p.url); if (r) pages[i] = r; });
+  }
+  return { pages, usedBrowser: !!retry };
+}
