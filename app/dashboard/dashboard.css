@@ -25,3 +25,5 @@
 .dvk .status.failed{border-color:#c0392b}
 .dvk .logout{background:none;border:0;font:inherit;color:var(--text);cursor:pointer;font-family:var(--light)}
 @media (max-width:760px){.dvk .kpis{grid-template-columns:1fr 1fr}}
+.dvk .platforms{margin-top:48px}
+.dvk .dash-sub{font-size:clamp(24px,2.6vw,32px);margin:8px 0 16px}

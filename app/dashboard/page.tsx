@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { listAudits } from "@/lib/leads-store";
 import { managerAccounts, requireManagerAccess } from "@/lib/gads-manager";
 import { listStatuses } from "@/lib/dashboard-status";
+import { readObservations, summarizeByPlatform } from "@/lib/observations";
 import { buildRows, dashboardKpis, type DashboardRow } from "@/lib/dashboard-rows";
 import StatusSelect from "./StatusSelect";
 import "../dvk.css";
@@ -30,7 +31,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   await requireManagerAccess();
   const { tip } = await searchParams;
   const filter: FilterId = FILTERS.some((f) => f.id === tip) ? (tip as FilterId) : "toate";
-  const [audits, accounts, statuses] = await Promise.all([listAudits(), managerAccounts(), listStatuses()]);
+  const [audits, accounts, statuses, observations] = await Promise.all([listAudits(), managerAccounts(), listStatuses(), readObservations()]);
+  const platforms = summarizeByPlatform(observations);
   const all = buildRows(audits, accounts, statuses);
   const rows = buildRows(audits, accounts, statuses, filter);
   const kpis = await loadKpis(all);
@@ -93,6 +95,26 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             </tbody>
           </table>
         </div>
+
+        {platforms.length > 0 && (
+          <section className="platforms">
+            <div className="eyebrow">Baza de cunostinte</div>
+            <h2 className="dash-sub">Ce vedem pe fiecare platforma</h2>
+            <div className="table-wrap">
+              <table>
+                <thead><tr><th>Platforma</th><th>Audituri</th><th>Pagini citite (medie)</th><th>Produse (medie)</th><th>Prin browser</th><th>Blocate</th><th>Probleme frecvente</th></tr></thead>
+                <tbody>
+                  {platforms.map((p) => (
+                    <tr key={p.platform}>
+                      <td><b>{p.platform}</b></td><td>{p.audits}</td><td>{p.avgPages}</td><td>{p.avgProducts}</td>
+                      <td>{p.browserPct}%</td><td>{p.blockedPct}%</td><td className="muted">{p.topFailed.join(", ") || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );

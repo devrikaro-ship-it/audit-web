@@ -4,6 +4,7 @@ import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
 import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
 import { profileFor } from "./platform-knowledge";
+import { appendObservation } from "./observations";
 import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
 
@@ -694,6 +695,7 @@ function computeProductSignal(pages: PageData[], productUrls: string[], hasProdu
 // ── Conversie / bani pierduti (PPC) ──────────────────────────────────────────
 
 export async function runAudit(rawUrl: string): Promise<AuditData> {
+  const startedAt = Date.now();
   let url = rawUrl.trim();
   if (!url.startsWith("http")) url = "https://" + url;
   url = url.replace(/\/$/, "");
@@ -751,7 +753,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const fetched = (list: (PageData | undefined)[]) => list.filter((p): p is PageData => !!p);
   const viaBrowser = (fetcher: PageFetcher) => async (urls: string[]) =>
     fetched(await mapWithConcurrency(urls, profile.concurrency, (u) => fetcher.fetchPage(u), Date.now() + PAGE_FETCH_BUDGET_MS));
-  const { pages } = await fetchPagesWithProbe<PageData>(
+  const { pages, usedBrowser } = await fetchPagesWithProbe<PageData>(
     toAnalyze,
     async (urls) => fetched(await mapWithConcurrency(urls, profile.concurrency, readPage, fetchDeadline)),
     async () => { const f = await openFetcher(); return f ? viaBrowser(f) : null; },
@@ -800,13 +802,28 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const productSignal = isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
   const ux = isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
 
+  const checksRezultate = { ...viteza, ...schema, ...social, ...securitate };
+  const failedPageChecks = [...seoChecks, ...continutChecks, ...keywordsChecks, ...structuraChecks]
+    .filter((c) => c.correctCount < c.total * 0.7).map((c) => c.id);
+  await appendObservation({
+    at: Date.now(), domain, platform: profile.platform,
+    sitemap: typed.product.length + typed.category.length + typed.other.length > 0 ? sitemapUrl : "",
+    urls: { product: typed.product.length, category: typed.category.length, other: typed.other.length },
+    fetched: pages.length, ok: analyzedPages.length,
+    refused: pages.filter((p) => p.status === 403 || p.status === 429).length,
+    usedBrowser: usedBrowser || !!browserFetcher, blocked: analyzedPages.length === 0,
+    products: products.length, categories: categories.length,
+    failedChecks: [...Object.entries(checksRezultate).filter(([, r]) => r.status !== "ok").map(([k]) => k), ...failedPageChecks],
+    durationMs: Date.now() - startedAt,
+  }).catch(() => { /* the audit result never depends on the log */ });
+
   return {
     url: origin,
     domain,
     pagesAnalyzed: analyzedPages.length,
     scor,
     avertisment,
-    checksRezultate: { ...viteza, ...schema, ...social, ...securitate },
+    checksRezultate,
     seoChecks,
     continutChecks,
     keywordsChecks,
