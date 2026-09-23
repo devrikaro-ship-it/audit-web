@@ -13,14 +13,17 @@ export type HtmlTracking = { gtm: boolean; ga4: boolean; metaPixel: boolean; tik
 // Ordinea conteaza: platformele ecom specifice inaintea celor generice
 // (WooCommerce inaintea WordPress; Shopify are markere proprii).
 const PLATFORM_PATTERNS: { id: Platform; re: RegExp }[] = [
-  { id: "Shopify", re: /cdn\.shopify\.com|myshopify\.com|Shopify\.theme|shopify-section|\/cart\.js/i },
-  { id: "WooCommerce", re: /woocommerce|wp-content\/plugins\/woocommerce|wc-block|add[_-]to[_-]cart/i },
-  { id: "PrestaShop", re: /prestashop/i },
-  { id: "Magento", re: /Magento|mage\/|mage-cache|static\/version\d/i },
-  { id: "OpenCart", re: /route=common\/home|catalog\/view\/theme|opencart/i },
+  // Each marker must be specific to its platform. Measured 2026-09-23: bare `mage/` matched every `image/` path
+  // (pcgarage, dedeman and flanco came out "Magento") and `add-to-cart` matched every shop (MerchantPro stores came
+  // out "WooCommerce"). Platforms with a hosted CDN come first because their CDN host is unambiguous.
+  { id: "Shopify", re: /cdn\.shopify\.com|myshopify\.com|Shopify\.theme|shopify-section/i },
+  { id: "MerchantPro", re: /cdnmp\.net|merchantpro/i },
+  { id: "GoMag", re: /gomagcdn\.ro|Gomag\.bind|GomagListing/i },
+  { id: "WooCommerce", re: /wp-content\/plugins\/woocommerce|woocommerce|wc-block/i },
+  { id: "PrestaShop", re: /prestashop|\/modules\/ps_/i },
+  { id: "OpenCart", re: /catalog\/view\/(theme|javascript)|index\.php\?route=(common|product)\/|opencart/i },
+  { id: "Magento", re: /Magento_[A-Z][A-Za-z]+|mage\/cookies|mage-cache-storage|static\/version\d+\/frontend/ },
   { id: "BigCommerce", re: /bigcommerce|stencil-utils/i },
-  { id: "GoMag", re: /gomag/i },
-  { id: "MerchantPro", re: /merchantpro/i },
   { id: "Wix", re: /wix\.com|_wixCssImports|wixstatic/i },
   { id: "Squarespace", re: /squarespace/i },
   { id: "WordPress", re: /wp-content|wp-json|wp-includes/i },
