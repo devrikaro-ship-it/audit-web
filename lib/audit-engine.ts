@@ -3,9 +3,9 @@ import { analyzeProspectLive, deriveProductQueries, type GoogleShoppingIntel, ty
 import { detectEcom, detectHtmlTracking } from "./site-signals";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
+import { classifyFetchedPage, collectTypedUrls, hasAddToCart, PAGE_BUDGET, priceCount, selectPages, type TypedUrls } from "./page-selection";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
 
-const MAX_PAGES = 60;        // candidati (buffer peste minimul de 50 pt paginile care pica)
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
 const FETCH_CONCURRENCY = 8;
 const LLM_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "OAI-SearchBot", "CCBot", "Googlebot-Extended"];
@@ -43,36 +43,6 @@ function detectBlocker(homepageHtml: string): string | null {
 function extractSitemapFromRobots(robotsTxt: string, origin: string): string {
   const m = robotsTxt.match(/^Sitemap:\s*(.+)$/im);
   return m?.[1]?.trim() ?? `${origin}/sitemap.xml`;
-}
-
-async function parseSitemapXml(xml: string): Promise<string[]> {
-  const urls: string[] = [];
-  // Sitemap index: find <sitemap><loc>URL</loc></sitemap>
-  const indexRe = /<sitemap>[\s\S]*?<loc>([\s\S]*?)<\/loc>/gi;
-  let m: RegExpExecArray | null;
-  const childSitemaps: string[] = [];
-  while ((m = indexRe.exec(xml)) !== null) {
-    childSitemaps.push(m[1].trim());
-  }
-  if (childSitemaps.length > 0) {
-    // Fetch each child sitemap (limit to first 5)
-    const children = await Promise.all(
-      childSitemaps.slice(0, 5).map(u => fetchText(u))
-    );
-    for (const childXml of children) {
-      const locRe = /<url>[\s\S]*?<loc>([\s\S]*?)<\/loc>/gi;
-      while ((m = locRe.exec(childXml)) !== null) {
-        urls.push(m[1].trim());
-      }
-    }
-  } else {
-    // Regular sitemap
-    const locRe = /<url>[\s\S]*?<loc>([\s\S]*?)<\/loc>/gi;
-    while ((m = locRe.exec(xml)) !== null) {
-      urls.push(m[1].trim());
-    }
-  }
-  return urls;
 }
 
 const EXCLUDE_PATTERNS = [
@@ -118,20 +88,6 @@ function extractInternalLinks(html: string, origin: string): string[] {
     } catch { /* skip */ }
   }
   return out;
-}
-
-function segmentUrls(urls: string[], origin: string): { homepage: string; categories: string[]; products: string[] } {
-  const homepage = origin + "/";
-  const categories: string[] = [];
-  const products: string[] = [];
-  for (const u of urls) {
-    if (u === homepage || u === origin) continue;
-    const path = new URL(u).pathname.replace(/\/$/, "");
-    const segs = path.split("/").filter(Boolean);
-    if (segs.length === 1) categories.push(u);
-    else products.push(u);
-  }
-  return { homepage, categories, products };
 }
 
 // ── PageSpeed scoring: fetchPSI in lib/net; aici doar maparea la status ────────
@@ -571,12 +527,6 @@ function computeOverallScore(
 // Semnale euristice din HTML-ul fiecarui tip de pagina (home / categorie / produs).
 // Cand nu prindem un tip de pagina in crawl -> status "necunoscut" (exclus din medie).
 
-function priceCount(html: string): number {
-  return (html.match(/\d[\d.\s]*[.,]?\d*\s*(lei|ron|€|eur)\b/gi) ?? []).length;
-}
-function hasAddToCart(html: string): boolean {
-  return /add[-_ ]?to[-_ ]?cart|adaug[aă]\s+[iî]n\s+co[sș]|single_add_to_cart|comanda\s+rapida|cumpar[aă]\s+acum|buy\s+now/i.test(html);
-}
 function hasPaginationUi(html: string): boolean {
   return /page\/\d|[?&]paged?=|rel=["']next["']|page-numbers|pagination|nav-links/i.test(html);
 }
@@ -605,13 +555,6 @@ function contentImageCount(html: string): number {
 function hasStockSignal(html: string): boolean {
   return /in stoc|in stock|schema\.org\/instock|stoc epuizat|out of stock|disponibil|availability/i.test(html);
 }
-// Pagina de produs reala (nu Contact/Blog/Categorie) — pe semnale de continut, nu pe adancimea URL.
-function isProductPage(html: string): boolean {
-  const hasProductSchema = /"@type"\s*:\s*"Product"/i.test(html) || /schema\.org\/Product\b/i.test(html) || /property=["']og:type["'][^>]*content=["']product/i.test(html);
-  const hasPrice = /itemprop=["']price["']|"price"\s*:|\d[\d.\s]*[.,]?\d*\s*(lei|ron|€)/i.test(html);
-  return hasProductSchema || (hasPrice && hasAddToCart(html));
-}
-
 function uxField(id: string, label: string, checks: { ok: boolean; g: string; l: string }[], problema: string, fix: string): UxField {
   const gasit = checks.filter(c => c.ok).map(c => c.g);
   const lipsa = checks.filter(c => !c.ok).map(c => c.l);
@@ -886,57 +829,38 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const origin = new URL(url).origin;
   const domain = new URL(url).hostname;
 
-  // Phase 1: robots.txt + sitemap
+  // Phase 1: robots.txt + sitemap -> pages that sell first (lib/page-selection.ts)
   const robotsTxt = await fetchText(`${origin}/robots.txt`);
+  const homepage = origin + "/";
   const sitemapUrl = extractSitemapFromRobots(robotsTxt, origin);
   const sitemapXml = await fetchText(sitemapUrl);
-  let pageUrls = await parseSitemapXml(sitemapXml);
-
-  // Fallback: try /sitemap_index.xml then /sitemap.xml
-  if (pageUrls.length === 0) {
-    const alt1 = await fetchText(`${origin}/sitemap_index.xml`);
-    if (alt1) pageUrls = await parseSitemapXml(alt1);
-  }
-  if (pageUrls.length === 0) {
-    const alt2 = await fetchText(`${origin}/sitemap.xml`);
-    if (alt2) pageUrls = await parseSitemapXml(alt2);
+  const sitemapCandidates = [sitemapUrl, `${origin}/sitemap_index.xml`, `${origin}/sitemap.xml`];
+  let typed: TypedUrls = { product: [], category: [], other: [] };
+  for (const sm of [...new Set(sitemapCandidates)]) {
+    const xml = sm === sitemapUrl ? sitemapXml : await fetchText(sm);
+    if (!xml) continue;
+    const found = await collectTypedUrls(xml, fetchText, sm);
+    const own: TypedUrls = { product: filterUrls(found.product, origin), category: filterUrls(found.category, origin), other: filterUrls(found.other, origin) };
+    if (own.product.length + own.category.length + own.other.length > 0) { typed = own; break; }
   }
 
-  let filtered = filterUrls(pageUrls, origin);
-
-  // Fallback: sitemap declared in robots.txt pointeaza la alt domeniu (ex: brisa.ro)
-  // In acest caz, incarcam direct sitemap-ul propriu al domeniului
-  if (filtered.length === 0) {
-    const own1 = await fetchText(`${origin}/sitemap_index.xml`);
-    const own1urls = own1 ? await parseSitemapXml(own1) : [];
-    filtered = filterUrls(own1urls, origin);
+  // No typed sitemap: the homepage links (menu, featured products) come before untyped sitemap order.
+  if (typed.product.length === 0 && typed.category.length === 0) {
+    const homeLinks = filterUrls(extractInternalLinks(await fetchText(homepage), origin), origin);
+    typed.other = [...homeLinks, ...typed.other];
   }
-  if (filtered.length === 0) {
-    const own2 = await fetchText(`${origin}/sitemap.xml`);
-    const own2urls = own2 ? await parseSitemapXml(own2) : [];
-    filtered = filterUrls(own2urls, origin);
-  }
+  let { urls: toAnalyze, planned } = selectPages(homepage, typed);
 
-  const { homepage, categories, products } = segmentUrls(filtered, origin);
-
-  // Select pages to analyze — homepage + mix categorii/produse, umplut pana la MAX_PAGES
-  const uniq = (arr: string[]) => [...new Set(arr.map(u => u.replace(/\/$/, "")))];
-  let toAnalyze = uniq([homepage, ...categories, ...products]).slice(0, MAX_PAGES);
-
-  // Fallback link-crawl: daca sitemap-ul a dat prea putine pagini (ex: sitemap absent/blocat),
-  // extrage link-uri interne din homepage + primele cateva categorii pana atingem tinta.
+  // Fallback link-crawl: sitemap absent/blocat -> link-uri interne din primele pagini descoperite.
   if (toAnalyze.length < MIN_PAGES) {
-    const homeHtml = await fetchText(homepage);
-    let discovered = filterUrls(extractInternalLinks(homeHtml, origin), origin);
+    let discovered = filterUrls(extractInternalLinks(await fetchText(homepage), origin), origin);
     for (const seed of discovered.slice(0, 5)) {
-      if (uniq([...toAnalyze, ...discovered]).length >= MAX_PAGES) break;
-      const seedHtml = await fetchText(seed);
-      discovered = discovered.concat(filterUrls(extractInternalLinks(seedHtml, origin), origin));
+      if (toAnalyze.length + discovered.length >= PAGE_BUDGET) break;
+      discovered = discovered.concat(filterUrls(extractInternalLinks(await fetchText(seed), origin), origin));
     }
-    toAnalyze = uniq([homepage, ...categories, ...products, ...discovered]).slice(0, MAX_PAGES);
+    typed.other = [...typed.other, ...discovered];
+    ({ urls: toAnalyze, planned } = selectPages(homepage, typed));
   }
-
-  if (!toAnalyze.includes(homepage)) toAnalyze.unshift(homepage);
 
   // Phase 2: Fetch pages (concurenta FETCH_CONCURRENCY)
   const pages: PageData[] = [];
@@ -947,6 +871,10 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   }
 
   const analyzedPages = pages.filter(p => p.ok);
+  const normUrl = (u: string) => u.replace(/\/$/, "");
+  const pageType = new Map(analyzedPages.slice(1).map((p) => [normUrl(p.url), classifyFetchedPage(p.html, planned.get(normUrl(p.url)) ?? "other")]));
+  const products = [...pageType].filter(([, t]) => t === "product").map(([u]) => u);
+  const categories = [...pageType].filter(([, t]) => t === "category").map(([u]) => u);
   const homepageData = analyzedPages[0] ?? pages[0] ?? { url: homepage, html: "", status: 0, headers: {}, ok: false };
 
   // Phase 3: PSI + TTFB + feed produse (parallel, homepage/origin only)
@@ -982,15 +910,11 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   // Doar ecom. Tracking-ul via GTM nu se vede in HTML brut; il citim la runtime.
   let googleAds: GoogleShoppingIntel | undefined;
   if (conversie.isEcom && process.env.BRIGHTDATA_CDP) {
-    // Selectia titlurilor de produs pt interogarile Shopping, in ordinea increderii:
-    // 1) pagini cu semnale reale de produs (schema/pret+cos), 2) segmentare pe URL, 3) restul.
-    const norm = (u: string) => u.replace(/\/$/, "");
-    const productSet = new Set(products.map(norm));
+    // Titlurile pt interogarile Shopping vin din paginile clasificate produs; altfel din restul paginilor.
     const titlesFrom = (ps: PageData[]) => ps.map((p) => parseTitle(p.html)).filter(Boolean);
-    const contentProducts = titlesFrom(analyzedPages.filter((p) => isProductPage(p.html)));
-    const urlProducts = titlesFrom(analyzedPages.filter((p) => productSet.has(norm(p.url))));
-    const fallbackTitles = titlesFrom(analyzedPages.slice(1));
-    const bestTitles = contentProducts.length >= 2 ? contentProducts : (urlProducts.length ? urlProducts : fallbackTitles);
+    const productSet = new Set(products);
+    const productTitles = titlesFrom(analyzedPages.filter((p) => productSet.has(normUrl(p.url))));
+    const bestTitles = productTitles.length ? productTitles : titlesFrom(analyzedPages.slice(1));
     const brand = domain.replace(/^www\./, "").split(".")[0];
     const queries = deriveProductQueries(brand, bestTitles);
     try {

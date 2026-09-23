@@ -116,7 +116,7 @@ Hero (domeniu + gauge scor global) · "Ce te costa asta" · **simulare de venit*
 
 ## 8. Parametri de detectie
 
-- **Pagini analizate:** tinta minim **50** (`MIN_PAGES=50`, `MAX_PAGES=60` candidati). Home + mix categorii/produse.
+- **Pages analysed (2026-09-23):** budget 60 including the homepage, target at least 50 (`PAGE_BUDGET`, `MIN_PAGES`). The pages that sell come first, never sitemap order: 15 categories + 35 products + at most 5 other pages; unused space goes to products, then categories, then other. Child sitemaps are typed by name (product / category / other), products are sampled evenly across the catalogue, and a page counts as a product only by its content; a category-sitemap URL stays a category. Code: `lib/page-selection.ts`. Design: `docs/superpowers/specs/2026-09-23-site-audit-page-selection-design.md`.
 - **Tracking + CSS:** runtime, browser real EEA (BrightData), doar pe **ecom**.
 - **Crawl:** fetch + PageSpeed; fallback link-crawl daca sitemap slab.
 
