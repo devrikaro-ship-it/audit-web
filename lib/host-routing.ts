@@ -1,4 +1,4 @@
-// audit.devrika.ro serves the website audit only (operator, 2026-09-23); every other path on it goes to the main
+// audit.devrika.ro serves the Romanian three-audit home page (/audituri) and the website audit (operator, 2026-09-23); every other path on it goes to the main
 // origin (PUBLIC_URL, audit.devrika.io), so privacy, terms and OAuth URLs registered on .ro keep working.
 // Hosts come from env: SITE_AUDIT_ORIGIN unset = no host routing at all.
 
@@ -11,7 +11,7 @@ type Env = Record<string, string | undefined>;
 
 // Everything the website-audit funnel needs: landing, funnel, processing, report, its APIs and static assets.
 const SITE_AUDIT_PATHS = [
-  /^\/audit-seo(\/|$)/, /^\/audit(\/|$)/, /^\/start(\/|$)/, /^\/processing\//, /^\/r\//,
+  /^\/audituri(\/|$)/, /^\/audit-seo(\/|$)/, /^\/audit(\/|$)/, /^\/start(\/|$)/, /^\/processing\//, /^\/r\//,
   /^\/api\/scan(\/|$)/, /^\/api\/audit(\/|$)/,
   /^\/_next\//, /^\/fonts\//, /^\/devrika-logo\.svg$/, /^\/logo-devrika\.png$/, /^\/favicon\.ico$/,
 ];
@@ -25,7 +25,7 @@ export function routeForHost(requestHost: string | null, path: string, search: s
   const siteHost = hostOf(env.SITE_AUDIT_ORIGIN);
   const host = requestHost?.split(",")[0].trim().toLowerCase() ?? "";
   if (!siteHost || host !== siteHost) return { kind: "next" };
-  if (path === "/") return { kind: "rewrite", path: "/audit-seo" };
+  if (path === "/") return { kind: "rewrite", path: "/audituri" };
   if (SITE_AUDIT_PATHS.some((re) => re.test(path))) return { kind: "next" };
   const main = hostOf(env.PUBLIC_URL) ? new URL(env.PUBLIC_URL as string).origin : null;
   if (!main || hostOf(main) === siteHost) return { kind: "next" };

@@ -50,7 +50,7 @@ export default function AuditSEO() {
     <div className="dvk">
       <header className="top">
         <div className="wrap">
-          <Link href="/audit-seo" className="brand">
+          <Link href="/" className="brand">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/devrika-logo.svg" alt="Devrika" width={142} height={34} />
           </Link>

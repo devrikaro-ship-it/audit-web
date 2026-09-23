@@ -4,11 +4,11 @@ import { routeForHost } from "./host-routing";
 const env = { SITE_AUDIT_ORIGIN: "https://audit.devrika.ro", PUBLIC_URL: "https://audit.devrika.io" };
 
 describe("routeForHost", () => {
-  it("serves the site-audit landing at the .ro home page", () => {
-    expect(routeForHost("audit.devrika.ro", "/", "", env)).toEqual({ kind: "rewrite", path: "/audit-seo" });
+  it("serves the Romanian three-audit page at the .ro home page", () => {
+    expect(routeForHost("audit.devrika.ro", "/", "", env)).toEqual({ kind: "rewrite", path: "/audituri" });
   });
   it("keeps the funnel, reports and their APIs on .ro", () => {
-    for (const p of ["/start", "/processing/abc", "/r/abc", "/r/abc/pdf", "/api/scan", "/api/audit", "/audit", "/fonts/shadeerah-soft.ttf", "/_next/static/x.js"]) {
+    for (const p of ["/audituri", "/audit-seo", "/start", "/processing/abc", "/r/abc", "/r/abc/pdf", "/api/scan", "/api/audit", "/audit", "/fonts/shadeerah-soft.ttf", "/_next/static/x.js"]) {
       expect(routeForHost("audit.devrika.ro", p, "", env)).toEqual({ kind: "next" });
     }
   });
