@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import type { AuditRequestBody } from "@/lib/audit-request";
+import { withCountryCode } from "@/lib/phone";
 
 const TARI = [
   { code: "+40", flag: "🇷🇴", name: "Romania" },
@@ -175,18 +176,19 @@ export default function StartPage() {
 
   async function handleSubmit() {
     setSubmitting(true);
+    const telefonComplet = withCountryCode(prefix === "other" ? prefixCustom : prefix, telefon);
     try {
       let id = jobId;
       if (id) {
         await fetch("/api/audit", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phase: "finalize", id, nume, email, telefon, probleme } satisfies AuditRequestBody),
+          body: JSON.stringify({ phase: "finalize", id, nume, email, telefon: telefonComplet, probleme } satisfies AuditRequestBody),
         });
       } else {
         // fallback: auditul nu s-a pornit la scan -> submit intr-un pas
         const res = await fetch("/api/audit", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url, tipBusiness: "magazin", platforma: scan?.platform ?? undefined, nume, email, telefon, probleme } satisfies AuditRequestBody),
+          body: JSON.stringify({ url, tipBusiness: "magazin", platforma: scan?.platform ?? undefined, nume, email, telefon: telefonComplet, probleme } satisfies AuditRequestBody),
         });
         id = (await res.json())?.id;
       }
