@@ -6,7 +6,7 @@ import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency
 import { PROFILES, profileFor } from "./platform-knowledge";
 import { computeLearning, effectiveProfile, readApprovals } from "./learning";
 import { appendObservation, pathPrefixes, readObservations } from "./observations";
-import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, type PageFetcher } from "./browser-fetch";
+import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, openWithRetry, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
@@ -709,7 +709,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   // A shop that blocks the server's datacenter IP is read through the real browser (lib/browser-fetch.ts).
   let browserFetcher: PageFetcher | null = null;
   const openFetcher = async () => {
-    if (!browserFetcher) browserFetcher = await openBrowserFetcher(origin).catch(() => null);
+    if (!browserFetcher) browserFetcher = await openWithRetry(() => openBrowserFetcher(origin));
     return browserFetcher;
   };
   if (looksBlocked(homeDirect.ok, homeDirect.html)) await openFetcher();

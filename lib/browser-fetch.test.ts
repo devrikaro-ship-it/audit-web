@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchPagesWithProbe, looksBlocked, PROBE_PAGES } from "./browser-fetch";
+import { fetchPagesWithProbe, looksBlocked, openWithRetry, PROBE_PAGES } from "./browser-fetch";
 
 describe("looksBlocked", () => {
   it("is blocked when the homepage does not come back (spishop.ro from the server: 403)", () => {
@@ -46,5 +46,19 @@ describe("fetchPagesWithProbe", () => {
       async () => async (u) => u.map((x) => page(x, 200)));
     expect(r.usedBrowser).toBe(true);
     expect(r.pages.filter((p) => p.status === 429)).toHaveLength(0);
+  });
+});
+
+describe("openWithRetry", () => {
+  it("retries once when the first browser open fails", async () => {
+    let calls = 0;
+    const r = await openWithRetry(async () => { calls++; if (calls === 1) throw new Error("timeout"); return "browser"; });
+    expect(r).toBe("browser");
+    expect(calls).toBe(2);
+  });
+  it("gives up after the bounded attempts", async () => {
+    let calls = 0;
+    expect(await openWithRetry(async () => { calls++; return null; })).toBeNull();
+    expect(calls).toBe(2);
   });
 });

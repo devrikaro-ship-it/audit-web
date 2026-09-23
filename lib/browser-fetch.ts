@@ -83,3 +83,13 @@ export async function fetchPagesWithProbe<T extends { url: string; status: numbe
   }
   return { pages, usedBrowser: !!retry };
 }
+
+// Opening the remote browser fails now and then (measured 2026-09-23: spishop.ro read 6 pages instead of 45 after one
+// failed open). One retry before giving up.
+export async function openWithRetry<T>(open: () => Promise<T | null>, attempts = 2): Promise<T | null> {
+  for (let i = 0; i < attempts; i++) {
+    const r = await open().catch(() => null);
+    if (r) return r;
+  }
+  return null;
+}
