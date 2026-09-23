@@ -43,7 +43,9 @@ function splitSection(sectiune: Sectiune, data: AuditData): { scor: number; prob
   } else {
     const ids = Object.entries(CHECKS).filter(([, c]) => c.sectiune === sectiune).map(([k]) => k);
     for (const id of ids) {
-      const r: CheckResult = data.checksRezultate[id] ?? { status: "ok", value: "—" };
+      // A check the audit could not run (its page type was not read) is not judged, neither OK nor missing.
+      const r: CheckResult | undefined = data.checksRezultate[id];
+      if (!r) continue;
       scores.push(statusScore(r.status));
       if (r.status === "ok") { oks.push({ label: CHECKS[id]?.label ?? id, value: r.value }); continue; }
       const probId = CHECK_TO_PROBLEM[id]?.[r.status];

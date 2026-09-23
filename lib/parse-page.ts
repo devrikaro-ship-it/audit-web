@@ -43,6 +43,22 @@ export function parseJsonLD(html: string): object[] {
   return results;
 }
 
+// Every schema.org @type in a page's JSON-LD, wherever it sits: top level, arrays, @graph (Rank Math/Yoast/Shopify
+// put all entities there), array-valued @type and nested entities (Product.aggregateRating).
+export function schemaTypes(html: string): Set<string> {
+  const types = new Set<string>();
+  const walk = (node: unknown): void => {
+    if (Array.isArray(node)) { node.forEach(walk); return; }
+    if (!node || typeof node !== "object") return;
+    for (const [k, v] of Object.entries(node as Record<string, unknown>)) {
+      if (k === "@type") (Array.isArray(v) ? v : [v]).forEach((t) => typeof t === "string" && types.add(t));
+      else walk(v);
+    }
+  };
+  parseJsonLD(html).forEach(walk);
+  return types;
+}
+
 export function parseImages(html: string): { src: string; alt: string }[] {
   const results: { src: string; alt: string }[] = [];
   const re = /<img([^>]*?)>/gi;

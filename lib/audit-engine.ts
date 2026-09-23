@@ -1,7 +1,7 @@
 import type { AuditData, CheckResult, PageCheck, StatusCheck, ProductSignal, UxAudit, UxField } from "./types";
 import { detectEcom, detectPlatform } from "./site-signals";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
-import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
+import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
 import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
 import { profileFor } from "./platform-knowledge";
 import { looksBlocked, openBrowserFetcher, type PageFetcher } from "./browser-fetch";
@@ -353,41 +353,46 @@ function computeStructuraChecks(
   ];
 }
 
-function computeSchemaChecks(pages: PageData[]): Record<string, CheckResult> {
-  const homepage = pages[0];
-  const rawSchemas = homepage ? parseJsonLD(homepage.html) : [];
-  const schemas = rawSchemas as Record<string, unknown>[];
-  const types = schemas.map(s => s["@type"] ?? "").filter(Boolean);
-  const hasOrgOrLocal = types.some(t => ["Organization", "LocalBusiness", "MedicalBusiness"].includes(t as string));
-  const hasProduct = types.some(t => t === "Product");
-  const hasBreadcrumb = types.some(t => t === "BreadcrumbList");
-  const hasRating = types.some(t => t === "AggregateRating") ||
-    schemas.some(s => "aggregateRating" in s);
+// Organization subtypes follow schema.org naming (OnlineStore, LocalBusiness, ClothingStore, MedicalBusiness...).
+const ORGANIZATION_TYPE = /Organization|Business|Store|Corporation/;
 
-  const availabilityOk = !hasProduct || pages.some(p => p.html.includes("schema.org/InStock"));
+// Each element is looked for where it belongs: the organization on any page, BreadcrumbList on category and product
+// pages, rating on product pages. A check whose pages were not read is left out, never reported as missing.
+export function computeSchemaChecks(pages: PageData[], seg: { categories: string[]; products: string[] }): Record<string, CheckResult> {
+  const norm = (u: string) => u.replace(/\/$/, "");
+  const typesOf = new Map(pages.map((p) => [norm(p.url), schemaTypes(p.html)]));
+  const union = new Set(pages.flatMap((p) => [...(typesOf.get(norm(p.url)) ?? [])]));
+  const inner = [...seg.categories, ...seg.products].map(norm).filter((u) => typesOf.has(u));
+  const productPages = seg.products.map(norm).filter((u) => typesOf.has(u));
 
-  return {
+  const hasOrg = [...union].some((t) => ORGANIZATION_TYPE.test(t));
+  const hasProduct = union.has("Product");
+  const availabilityOk = !hasProduct || pages.some((p) => /schema\.org\/(InStock|OutOfStock|PreOrder|BackOrder|LimitedAvailability)/.test(p.html));
+
+  const out: Record<string, CheckResult> = {
     schema_markup: {
-      status: schemas.length > 0 ? "ok" : "critic",
-      value: schemas.length > 0 ? types.join(", ") || "JSON-LD prezent" : "Nicio schema detectata",
+      status: union.size > 0 ? "ok" : "critic",
+      value: union.size > 0 ? [...union].slice(0, 8).join(", ") : "Nicio schema detectata",
     },
     schema_tipuri: {
-      status: hasOrgOrLocal ? "ok" : "atentie",
-      value: hasOrgOrLocal ? "Organization / LocalBusiness prezent" : "Lipseste schema Organization",
+      status: hasOrg ? "ok" : "atentie",
+      value: hasOrg ? "Organization / magazin prezent" : "Lipseste schema Organization",
     },
     schema_validare: {
       status: availabilityOk ? "ok" : "atentie",
       value: availabilityOk ? "Fara erori detectate" : "availability sau itemCondition incorecte",
     },
-    schema_breadcrumbs: {
-      status: hasBreadcrumb ? "ok" : "critic",
-      value: hasBreadcrumb ? "BreadcrumbList prezent" : "Lipseste BreadcrumbList",
-    },
-    schema_rating: {
-      status: hasRating ? "ok" : "critic",
-      value: hasRating ? "AggregateRating prezent" : "Nicio schema de rating",
-    },
   };
+  // Coverage over the pages of the right type that were read: 80%+ good, some = partial, none = missing.
+  const coverage = (id: string, urls: string[], test: (t: string) => boolean, what: string, where: string) => {
+    if (urls.length === 0) return;
+    const n = urls.filter((u) => [...(typesOf.get(u) ?? [])].some(test)).length;
+    const status: StatusCheck = n / urls.length >= 0.8 ? "ok" : n > 0 ? "atentie" : "critic";
+    out[id] = { status, value: `${what} pe ${n} din ${urls.length} ${where} verificate` };
+  };
+  coverage("schema_breadcrumbs", inner, (t) => t === "BreadcrumbList", "BreadcrumbList", "pagini de categorie si produs");
+  coverage("schema_rating", productPages, (t) => t === "AggregateRating" || t === "Review", "Rating", "pagini de produs");
+  return out;
 }
 
 function computeSocialChecks(homepage: PageData): Record<string, CheckResult> {
@@ -789,7 +794,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const continutChecks = computeContinutChecks(analyzedPages);
   const keywordsChecks = computeKeywordsChecks(analyzedPages);
   const structuraChecks = computeStructuraChecks(analyzedPages, robotsTxt, sitemapXml, sitemapUrl);
-  const schema = computeSchemaChecks(analyzedPages);
+  const schema = computeSchemaChecks(analyzedPages, { categories, products });
   const social = computeSocialChecks(homepageData);
   const securitate = computeSecurityChecks(homepageData);
 

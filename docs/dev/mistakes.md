@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-23 — The public report said "BreadcrumbList / Organization missing" on sites that have them
+
+Symptom: magazinfitness.ro was reported without BreadcrumbList and without Organization schema; diente.ro and mariart.ro without Organization. Measured cause: the checks read only the homepage (BreadcrumbList lives on category and product pages, rating on product pages), read only the top-level `@type` (Rank Math, Yoast and Shopify put entities in `@graph`; `@type` can be an array; AggregateRating is nested in Product), and accepted only three exact organization names (OnlineStore was missed). A check with no key was also shown as OK. Recognition signal: a schema finding that contradicts a JSON-LD block visible in the page source of a category or product page. Repair: `schemaTypes` walks the whole JSON-LD; each element is checked on the page type where it belongs, as coverage (80%+ good, some = partial, none = missing) with real counts; organization subtypes by schema.org naming; a check whose page type was not read is left out and the renderer no longer shows a missing check as OK.
+
 ## 2026-09-23 — Shops that block datacenter IPs produced near-empty reports
 
 Symptom: from production, spishop.ro read 0 pages and invictusmedical.ro 3-24 pages, while from a residential IP the same stores read 58-60 pages. Measured cause: spishop.ro and vegis.ro answer 403 to the Hetzner IP; invictusmedical.ro accepts about 2 requests per 7 s from it, with a browser identity too; most large Romanian Magento stores answer 403. Recognition signal: a production audit with far fewer pages than a local run of the same URL, or 403/429 on the homepage or on 30%+ of pages. Repair: `lib/browser-fetch.ts` opens the homepage once in the BrightData browser (residential EU IP) and fetches the rest from inside that page, only when `looksBlocked` says the server was refused.
