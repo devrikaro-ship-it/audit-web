@@ -1005,141 +1005,149 @@ root/div[0]/div[0]/div[0]/span[0]/text "No card · No subscription · Saved PDF 
 `;
 
 exports[`public Google Ads access boundary > renders the canonical contract on the hub surface > hub:normal 1`] = `
-"root/link[0] href="/logo-devrika.png"
+"root/link[0] href="/devrika-logo.svg"
 root/div[0] data-public-oauth-surface="hub:normal" data-provider-scope="adwords" data-permission-capability="broad" data-application-behavior="read-operations-only" data-mutation-behavior="none"
-root/div[0]/nav[0]
-root/div[0]/nav[0]/div[0]
-root/div[0]/nav[0]/div[0]/a[0] href="/"
-root/div[0]/nav[0]/div[0]/a[0]/img[0] alt="Audit Devrika"
-root/div[0]/nav[0]/div[0]/a[0]/span[0]
-root/div[0]/nav[0]/div[0]/a[0]/span[0]/text "Audit Devrika"
-root/div[0]/nav[0]/div[0]/a[1] href="https://devrika.ro"
-root/div[0]/nav[0]/div[0]/a[1]/text "devrika.ro →"
+root/div[0]/header[0]
+root/div[0]/header[0]/div[0]
+root/div[0]/header[0]/div[0]/a[0] href="/"
+root/div[0]/header[0]/div[0]/a[0]/img[0] alt="Devrika"
+root/div[0]/header[0]/div[0]/a[0]/span[0]
+root/div[0]/header[0]/div[0]/a[0]/span[0]/text "Audit Devrika"
+root/div[0]/header[0]/div[0]/nav[0] aria-label="Page"
+root/div[0]/header[0]/div[0]/nav[0]/a[0] href="#audits"
+root/div[0]/header[0]/div[0]/nav[0]/a[0]/text "What you can analyze"
+root/div[0]/header[0]/div[0]/nav[0]/a[1] href="#data"
+root/div[0]/header[0]/div[0]/nav[0]/a[1]/text "How we handle your data"
+root/div[0]/header[0]/div[0]/div[0]
+root/div[0]/header[0]/div[0]/div[0]/a[0] href="https://devrika.ro"
+root/div[0]/header[0]/div[0]/div[0]/a[0]/text "devrika.ro →"
 root/div[0]/section[0]
-root/div[0]/section[0]/div[0] aria-hidden="true"
-root/div[0]/section[0]/h1[0]
-root/div[0]/section[0]/h1[0]/text "Audit"
-root/div[0]/section[0]/h1[0]/em[0]
-root/div[0]/section[0]/h1[0]/em[0]/text "Devrika"
-root/div[0]/section[0]/p[0]
-root/div[0]/section[0]/p[0]/text "A web application that analyzes your store and advertising accounts and shows, using your numbers, where you are losing money."
-root/div[0]/section[0]/p[1]
-root/div[0]/section[0]/p[1]/text "Choose what you want analyzed and connect an advertising account only when the audit needs it. The application reads data, compares it with your business thresholds, and shows you the result immediately. We do not change anything in your account. You can revoke access at any time."
-root/div[0]/section[0]/div[1]
-root/div[0]/section[0]/div[1]/span[0]
-root/div[0]/section[0]/div[1]/span[0]/text "Free"
-root/div[0]/section[0]/div[1]/span[1]
-root/div[0]/section[0]/div[1]/span[1]/text "No payment card"
-root/div[0]/section[0]/div[1]/span[2]
-root/div[0]/section[0]/div[1]/span[2]/text "No account changes"
-root/div[0]/section[0]/div[1]/span[3]
-root/div[0]/section[0]/div[1]/span[3]/text "Immediate result"
+root/div[0]/section[0]/div[0]
+root/div[0]/section[0]/div[0]/div[0]
+root/div[0]/section[0]/div[0]/div[0]/text "Free audits for online stores"
+root/div[0]/section[0]/div[0]/h1[0]
+root/div[0]/section[0]/div[0]/h1[0]/text "Audit"
+root/div[0]/section[0]/div[0]/h1[0]/em[0]
+root/div[0]/section[0]/div[0]/h1[0]/em[0]/text "Devrika"
+root/div[0]/section[0]/div[0]/p[0]
+root/div[0]/section[0]/div[0]/p[0]/text "A web application that analyzes your store and advertising accounts and shows, using your numbers, where you are losing money."
+root/div[0]/section[0]/div[0]/p[1]
+root/div[0]/section[0]/div[0]/p[1]/text "Choose what you want analyzed and connect an advertising account only when the audit needs it. The application reads data, compares it with your business thresholds, and shows you the result immediately. We do not change anything in your account. You can revoke access at any time."
+root/div[0]/section[0]/div[0]/div[1]
+root/div[0]/section[0]/div[0]/div[1]/span[0]
+root/div[0]/section[0]/div[0]/div[1]/span[0]/text "Free"
+root/div[0]/section[0]/div[0]/div[1]/span[1]
+root/div[0]/section[0]/div[0]/div[1]/span[1]/text "No payment card"
+root/div[0]/section[0]/div[0]/div[1]/span[2]
+root/div[0]/section[0]/div[0]/div[1]/span[2]/text "No account changes"
+root/div[0]/section[0]/div[0]/div[1]/span[3]
+root/div[0]/section[0]/div[0]/div[1]/span[3]/text "Immediate result"
 root/div[0]/section[1]
-root/div[0]/section[1]/h2[0]
-root/div[0]/section[1]/h2[0]/text "What you can analyze"
-root/div[0]/section[1]/p[0]
-root/div[0]/section[1]/p[0]/text "Each audit tells you which data it needs before you start."
 root/div[0]/section[1]/div[0]
-root/div[0]/section[1]/div[0]/a[0] href="/google-ads"
-root/div[0]/section[1]/div[0]/a[0]/div[0]
-root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]
-root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]/svg[0]/circle[0]
-root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]/svg[0]/circle[1]
-root/div[0]/section[1]/div[0]/a[0]/div[0]/div[0]/svg[0]/circle[2]
-root/div[0]/section[1]/div[0]/a[0]/div[0]/h3[0]
-root/div[0]/section[1]/div[0]/a[0]/div[0]/h3[0]/text "Audit Google Ads"
-root/div[0]/section[1]/div[0]/a[0]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/a[0]/div[0]/span[0]/text "Available"
-root/div[0]/section[1]/div[0]/a[0]/p[0]
-root/div[0]/section[1]/div[0]/a[0]/p[0]/text "Connect your Google Ads account and use your real data from the last 365 days to see which products spend budget without selling and how your campaigns, tracking, and searches perform."
-root/div[0]/section[1]/div[0]/a[0]/p[1]
-root/div[0]/section[1]/div[0]/a[0]/p[1]/text "Connects to your Google Ads account."
-root/div[0]/section[1]/div[0]/a[0]/span[0]
-root/div[0]/section[1]/div[0]/a[0]/span[0]/text "Start the audit"
-root/div[0]/section[1]/div[0]/a[0]/span[0]/svg[0] aria-hidden="true"
-root/div[0]/section[1]/div[0]/a[0]/span[0]/svg[0]/path[0]
-root/div[0]/section[1]/div[0]/a[1] href="/audit-seo"
-root/div[0]/section[1]/div[0]/a[1]/div[0]
-root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]
-root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0]/path[0]
-root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0]/path[1]
-root/div[0]/section[1]/div[0]/a[1]/div[0]/div[0]/svg[0]/path[2]
-root/div[0]/section[1]/div[0]/a[1]/div[0]/h3[0]
-root/div[0]/section[1]/div[0]/a[1]/div[0]/h3[0]/text "Online store audit"
-root/div[0]/section[1]/div[0]/a[1]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/a[1]/div[0]/span[0]/text "Available"
-root/div[0]/section[1]/div[0]/a[1]/p[0]
-root/div[0]/section[1]/div[0]/a[1]/p[0]/text "Starting only from your store address, we show where you lose buyers: how Google finds your pages and how easily a visitor can buy, checked on the category and product pages."
-root/div[0]/section[1]/div[0]/a[1]/p[1]
-root/div[0]/section[1]/div[0]/a[1]/p[1]/text "Requires no account access — it analyzes only public website content."
-root/div[0]/section[1]/div[0]/a[1]/span[0]
-root/div[0]/section[1]/div[0]/a[1]/span[0]/text "Start the audit"
-root/div[0]/section[1]/div[0]/a[1]/span[0]/svg[0] aria-hidden="true"
-root/div[0]/section[1]/div[0]/a[1]/span[0]/svg[0]/path[0]
 root/div[0]/section[1]/div[0]/div[0]
 root/div[0]/section[1]/div[0]/div[0]/div[0]
-root/div[0]/section[1]/div[0]/div[0]/div[0]/div[0]
-root/div[0]/section[1]/div[0]/div[0]/div[0]/div[0]/svg[0] aria-hidden="true"
-root/div[0]/section[1]/div[0]/div[0]/div[0]/div[0]/svg[0]/path[0]
-root/div[0]/section[1]/div[0]/div[0]/div[0]/h3[0]
-root/div[0]/section[1]/div[0]/div[0]/div[0]/h3[0]/text "Audit Meta Ads"
-root/div[0]/section[1]/div[0]/div[0]/div[0]/span[0]
-root/div[0]/section[1]/div[0]/div[0]/div[0]/span[0]/text "Coming soon"
+root/div[0]/section[1]/div[0]/div[0]/div[0]/text "Audits"
+root/div[0]/section[1]/div[0]/div[0]/h2[0]
+root/div[0]/section[1]/div[0]/div[0]/h2[0]/text "What you can analyze"
 root/div[0]/section[1]/div[0]/div[0]/p[0]
-root/div[0]/section[1]/div[0]/div[0]/p[0]/text "The same analysis for Facebook and Instagram campaigns: which ads spend budget without generating sales and how reliable the platform&#x27;s reported figures are."
-root/div[0]/section[1]/div[0]/div[0]/p[1]
-root/div[0]/section[1]/div[0]/div[0]/p[1]/text "Connects to your Meta advertising account."
+root/div[0]/section[1]/div[0]/div[0]/p[0]/text "Each audit tells you which data it needs before you start."
+root/div[0]/section[1]/div[0]/div[1]
+root/div[0]/section[1]/div[0]/div[1]/a[0] href="/audit-seo"
+root/div[0]/section[1]/div[0]/div[1]/a[0]/div[0]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/div[0]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/div[0]/span[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/div[1]/a[0]/div[0]/span[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/div[0]/span[0]/svg[0]/path[1]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/div[0]/span[0]/svg[0]/path[2]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/div[0]/span[1]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/div[0]/span[1]/text "Available"
+root/div[0]/section[1]/div[0]/div[1]/a[0]/h3[0]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/h3[0]/text "Online store audit"
+root/div[0]/section[1]/div[0]/div[1]/a[0]/p[0]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/p[0]/text "Starting only from your store address, we show where you lose buyers: how Google finds your pages and how easily a visitor can buy, checked on the category and product pages."
+root/div[0]/section[1]/div[0]/div[1]/a[0]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/span[0]/text "Requires no account access — it analyzes only public website content."
+root/div[0]/section[1]/div[0]/div[1]/a[0]/span[1]
+root/div[0]/section[1]/div[0]/div[1]/a[0]/span[1]/text "Start the audit →"
+root/div[0]/section[1]/div[0]/div[1]/div[0]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/div[0]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/div[0]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/div[0]/span[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/div[1]/div[0]/div[0]/span[0]/svg[0]/circle[0]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/div[0]/span[0]/svg[0]/circle[1]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/div[0]/span[0]/svg[0]/circle[2]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/div[0]/span[1]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/div[0]/span[1]/text "Coming soon"
+root/div[0]/section[1]/div[0]/div[1]/div[0]/h3[0]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/h3[0]/text "Audit Google Ads"
+root/div[0]/section[1]/div[0]/div[1]/div[0]/p[0]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/p[0]/text "Connect your Google Ads account and use your real data from the last 365 days to see which products spend budget without selling and how your campaigns, tracking, and searches perform."
+root/div[0]/section[1]/div[0]/div[1]/div[0]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/div[0]/span[0]/text "Connects to your Google Ads account."
+root/div[0]/section[1]/div[0]/div[1]/div[1]
+root/div[0]/section[1]/div[0]/div[1]/div[1]/div[0]
+root/div[0]/section[1]/div[0]/div[1]/div[1]/div[0]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/div[1]/div[0]/span[0]/svg[0] aria-hidden="true"
+root/div[0]/section[1]/div[0]/div[1]/div[1]/div[0]/span[0]/svg[0]/path[0]
+root/div[0]/section[1]/div[0]/div[1]/div[1]/div[0]/span[1]
+root/div[0]/section[1]/div[0]/div[1]/div[1]/div[0]/span[1]/text "Coming soon"
+root/div[0]/section[1]/div[0]/div[1]/div[1]/h3[0]
+root/div[0]/section[1]/div[0]/div[1]/div[1]/h3[0]/text "Audit Meta Ads"
+root/div[0]/section[1]/div[0]/div[1]/div[1]/p[0]
+root/div[0]/section[1]/div[0]/div[1]/div[1]/p[0]/text "The same analysis for Facebook and Instagram campaigns: which ads spend budget without generating sales and how reliable the platform&#x27;s reported figures are."
+root/div[0]/section[1]/div[0]/div[1]/div[1]/span[0]
+root/div[0]/section[1]/div[0]/div[1]/div[1]/span[0]/text "Connects to your Meta advertising account."
 root/div[0]/section[2]
 root/div[0]/section[2]/div[0]
-root/div[0]/section[2]/div[0]/h2[0]
-root/div[0]/section[2]/div[0]/h2[0]/text "How we handle your data"
-root/div[0]/section[2]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/p[0]/text "When an audit needs access to an advertising account, we request it through the platform&#x27;s official authorization mechanism."
 root/div[0]/section[2]/div[0]/div[0]
 root/div[0]/section[2]/div[0]/div[0]/div[0]
-root/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]
-root/div[0]/section[2]/div[0]/div[0]/div[0]/p[0]/text "We read only what is needed"
-root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/div[0]/p[1]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. Nothing from Gmail, Drive, or other services."
-root/div[0]/section[2]/div[0]/div[0]/div[1]
-root/div[0]/section[2]/div[0]/div[0]/div[1]/p[0]
-root/div[0]/section[2]/div[0]/div[0]/div[1]/p[0]/text "No account changes"
-root/div[0]/section[2]/div[0]/div[0]/div[1]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/div[1]/p[1]/text "We cannot start or stop campaigns, change budgets, or spend money."
-root/div[0]/section[2]/div[0]/div[0]/div[2]
-root/div[0]/section[2]/div[0]/div[0]/div[2]/p[0]
-root/div[0]/section[2]/div[0]/div[0]/div[2]/p[0]/text "Requested report data is retained only for delivery and support."
-root/div[0]/section[2]/div[0]/div[0]/div[2]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/div[2]/p[1]/text "Your signed Google authorization expires after one hour and is not stored with your contact record. Requested PDFs and delivery context are retained so we can deliver and support them."
-root/div[0]/section[2]/div[0]/div[0]/div[3]
-root/div[0]/section[2]/div[0]/div[0]/div[3]/p[0]
-root/div[0]/section[2]/div[0]/div[0]/div[3]/p[0]/text "Revoke access whenever you want"
-root/div[0]/section[2]/div[0]/div[0]/div[3]/p[1]
-root/div[0]/section[2]/div[0]/div[0]/div[3]/p[1]/text "Use your Google account settings at any time; you do not need to contact us first."
-root/div[0]/section[2]/div[0]/p[1]
-root/div[0]/section[2]/div[0]/p[1]/text "Full details:"
-root/div[0]/section[2]/div[0]/p[1]/a[0] href="/confidentialitate"
-root/div[0]/section[2]/div[0]/p[1]/a[0]/text "privacy policy"
-root/div[0]/section[2]/div[0]/p[1]/text "·"
-root/div[0]/section[2]/div[0]/p[1]/a[1] href="/termeni"
-root/div[0]/section[2]/div[0]/p[1]/a[1]/text "terms and conditions"
+root/div[0]/section[2]/div[0]/div[0]/div[0]/text "Your data"
+root/div[0]/section[2]/div[0]/div[0]/h2[0]
+root/div[0]/section[2]/div[0]/div[0]/h2[0]/text "How we handle your data"
+root/div[0]/section[2]/div[0]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/div[0]/p[0]/text "When an audit needs access to an advertising account, we request it through the platform&#x27;s official authorization mechanism."
+root/div[0]/section[2]/div[0]/div[1]
+root/div[0]/section[2]/div[0]/div[1]/div[0]
+root/div[0]/section[2]/div[0]/div[1]/div[0]/b[0]
+root/div[0]/section[2]/div[0]/div[1]/div[0]/b[0]/text "We read only what is needed"
+root/div[0]/section[2]/div[0]/div[1]/div[0]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/div[0]/span[0]/text "The app reads the data required for the audit: accessible Google Ads accounts, including their identifier, name, manager status, and currency, the selected account time zone, products and their Shopping performance, conversion tracking configuration, campaign structure, Performance Max campaigns, Shopping campaigns, Search campaigns, negative keywords, search terms, and account totals for the last 365 days. Nothing from Gmail, Drive, or other services."
+root/div[0]/section[2]/div[0]/div[1]/div[1]
+root/div[0]/section[2]/div[0]/div[1]/div[1]/b[0]
+root/div[0]/section[2]/div[0]/div[1]/div[1]/b[0]/text "No account changes"
+root/div[0]/section[2]/div[0]/div[1]/div[1]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/div[1]/span[0]/text "We cannot start or stop campaigns, change budgets, or spend money."
+root/div[0]/section[2]/div[0]/div[1]/div[2]
+root/div[0]/section[2]/div[0]/div[1]/div[2]/b[0]
+root/div[0]/section[2]/div[0]/div[1]/div[2]/b[0]/text "Requested report data is retained only for delivery and support."
+root/div[0]/section[2]/div[0]/div[1]/div[2]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/div[2]/span[0]/text "Your signed Google authorization expires after one hour and is not stored with your contact record. Requested PDFs and delivery context are retained so we can deliver and support them."
+root/div[0]/section[2]/div[0]/div[1]/div[3]
+root/div[0]/section[2]/div[0]/div[1]/div[3]/b[0]
+root/div[0]/section[2]/div[0]/div[1]/div[3]/b[0]/text "Revoke access whenever you want"
+root/div[0]/section[2]/div[0]/div[1]/div[3]/span[0]
+root/div[0]/section[2]/div[0]/div[1]/div[3]/span[0]/text "Use your Google account settings at any time; you do not need to contact us first."
+root/div[0]/section[2]/div[0]/p[0]
+root/div[0]/section[2]/div[0]/p[0]/text "Full details:"
+root/div[0]/section[2]/div[0]/p[0]/a[0] href="/confidentialitate"
+root/div[0]/section[2]/div[0]/p[0]/a[0]/text "privacy policy"
+root/div[0]/section[2]/div[0]/p[0]/text "·"
+root/div[0]/section[2]/div[0]/p[0]/a[1] href="/termeni"
+root/div[0]/section[2]/div[0]/p[0]/a[1]/text "terms and conditions"
 root/div[0]/footer[0]
 root/div[0]/footer[0]/div[0]
-root/div[0]/footer[0]/div[0]/img[0] alt="Audit Devrika"
 root/div[0]/footer[0]/div[0]/span[0]
 root/div[0]/footer[0]/div[0]/span[0]/text "Audit Devrika"
-root/div[0]/footer[0]/p[0]
-root/div[0]/footer[0]/p[0]/a[0] href="/confidentialitate"
-root/div[0]/footer[0]/p[0]/a[0]/text "Privacy Policy"
-root/div[0]/footer[0]/p[0]/text "·"
-root/div[0]/footer[0]/p[0]/a[1] href="/termeni"
-root/div[0]/footer[0]/p[0]/a[1]/text "Terms and Conditions"
-root/div[0]/footer[0]/p[1]
-root/div[0]/footer[0]/p[1]/text "© 2026 Devrika ·"
-root/div[0]/footer[0]/p[1]/a[0] href="https://devrika.ro"
-root/div[0]/footer[0]/p[1]/a[0]/text "devrika.ro""
+root/div[0]/footer[0]/div[0]/span[1]
+root/div[0]/footer[0]/div[0]/span[1]/a[0] href="/confidentialitate"
+root/div[0]/footer[0]/div[0]/span[1]/a[0]/text "Privacy Policy"
+root/div[0]/footer[0]/div[0]/span[1]/text "·"
+root/div[0]/footer[0]/div[0]/span[1]/a[1] href="/termeni"
+root/div[0]/footer[0]/div[0]/span[1]/a[1]/text "Terms and Conditions"
+root/div[0]/footer[0]/div[0]/span[2]
+root/div[0]/footer[0]/div[0]/span[2]/text "© 2026 Devrika ·"
+root/div[0]/footer[0]/div[0]/span[2]/a[0] href="https://devrika.ro"
+root/div[0]/footer[0]/div[0]/span[2]/a[0]/text "devrika.ro""
 `;
 
 exports[`public Google Ads access boundary > renders the canonical contract on the landing surface > landing:normal 1`] = `

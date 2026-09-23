@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Sora, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Sora, Inter, DM_Sans } from "next/font/google";
 import { publicOAuthProjection } from "@/lib/gads-public-oauth-contract";
 import "./globals.css";
 
@@ -25,6 +25,13 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+// devrika.ro body font, used by the pages in the devrika.ro style (app/hub/hub.css).
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Free audit for online stores — Devrika",
   description: publicOAuthProjection.rootMetadata,
@@ -38,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} ${inter.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} ${inter.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
