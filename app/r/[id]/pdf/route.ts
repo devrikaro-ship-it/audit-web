@@ -5,30 +5,12 @@ import { readFile, unlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
-import { existsSync } from "node:fs";
 import { getAudit } from "@/lib/leads-store";
+import { findChrome } from "@/lib/find-chrome";
 
 export const runtime = "nodejs";
 
 const execFileAsync = promisify(execFile);
-
-// Chrome/Chromium/Edge
-// headless -> --print-to-pdf. Reutilizat aici peste raportul live, nu peste un HTML local.
-function findChrome(): string | null {
-  const fromEnv = process.env.CHROME_PATH;
-  if (fromEnv && existsSync(fromEnv)) return fromEnv;
-  const candidates = [
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    "/Applications/Chromium.app/Contents/MacOS/Chromium",
-    "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
-    "/usr/bin/google-chrome",
-    "/usr/bin/google-chrome-stable",
-    "/usr/bin/chromium",
-    "/usr/bin/chromium-browser",
-    "/snap/bin/chromium",
-  ];
-  return candidates.find((c) => existsSync(c)) ?? null;
-}
 
 export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const { id } = await ctx.params;

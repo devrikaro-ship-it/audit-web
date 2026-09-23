@@ -1,0 +1,4 @@
+# The site-audit report PDF (/r/<id>/pdf) prints the live report with headless Chromium; the base image has none.
+# "..." keeps nixpacks' default packages.
+[phases.setup]
+nixPkgs = ["...", "chromium", "dejavu_fonts"]
