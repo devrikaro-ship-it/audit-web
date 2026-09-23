@@ -1,5 +1,5 @@
 // Design tokens Devrika — paleta + fonturi, SURSA UNICA.
-// Inainte, aceleasi valori hex traiau in report-renderer, warm-report-renderer si
+// Inainte, aceleasi valori hex traiau in report-renderer si
 // hardcodate prin pagini. Aici o data: schimbi indigo o data, se schimba peste tot.
 // Valorile sunt identice cu paleta PDF-ului Devrika (nu schimba nimic vizual).
 

@@ -12,7 +12,7 @@ export const runtime = "nodejs";
 
 const execFileAsync = promisify(execFile);
 
-// Acelasi mecanism ca in skill-ul audit-devrika (html_to_pdf.py): Chrome/Chromium/Edge
+// Chrome/Chromium/Edge
 // headless -> --print-to-pdf. Reutilizat aici peste raportul live, nu peste un HTML local.
 function findChrome(): string | null {
   const fromEnv = process.env.CHROME_PATH;

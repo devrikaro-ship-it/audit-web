@@ -11,30 +11,26 @@
 ## 1. Scop (de ce)
 
 Raport de audit pentru un **prospect ecom netehnic**. E instrument de **vanzare**, nu document tehnic.
-- **RECE** (lead-magnet): pornind DOAR de la URL, fara acces la cont. Superficial, cat sa agate.
+- **Lead magnet:** starting ONLY from the URL, with no account access. Quick enough to hook.
 - Se vede **public** -> onestitate: nu marca "lipsa" ce nu putem confirma.
 - Fiecare problema in limbaj de client (clienti pierduti / bani / loc in Google), nu jargon.
 - Se termina cu **CTA Devrika**.
 
-**Scope: ECOM-ONLY (all-in).** Auditul, **landing-ul si toata comunicarea** sunt orientate 100% pe magazine online — Devrika merge all-in pe ecom. Non-ecom **nu** e acoperit: nu construim varianta separata. Un URL non-ecom primeste un raport degradat (fara rubrica Google Ads, tracking doar din HTML) — acceptat, nu-l optimizam. Landing (`app/audit-seo`) + copy + CTA = mesaj ecom.
+**Scope: ECOM-ONLY (all-in).** Auditul, **landing-ul si toata comunicarea** sunt orientate 100% pe magazine online — Devrika merge all-in pe ecom. Non-ecom **nu** e acoperit: nu construim varianta separata. Un URL non-ecom primeste un raport degradat (fara UX/UI pe tipuri de pagini) — acceptat, nu-l optimizam. Landing (`app/audit-seo`) + copy + CTA = mesaj ecom.
 
 **Strategic principle (2026-09-23):** the report shows what is wrong on the site itself — how Google finds the pages and how easily a visitor buys. Findings lead to fixing the site (SEO, speed, category and product pages); the report does not sell ads services.
 
 > The landing page and the funnel stay neutral and diagnostic; the CTA lives in the report.
 
-## 2. Doua moduri
+## 2. One product among two
 
-| | RECE (lead-magnet) | CALD (intern) |
-|---|---|---|
-| Cand | prospect, fara acces | client care ne-a dat acces la conturi |
-| Input | doar URL | URL + Google Ads / Meta / GA4 / GSC / GMC |
-| Iesire | `/r/<id>` (+ PDF) | `/cald/<slug>` (+ PDF) |
-
-Detaliile de orchestrare: `skill/SKILL.md`. Acest spec descrie **structura raportului RECE** (partea 3-8) si **leaga** partea CALD (partea 9).
+Devrika has two audit products (operator, 2026-09-23): this **website audit** (`/r/<id>` + PDF, skill
+`audit-devrika`) and the **Google Ads audit** (`/google-ads`, skill `audit-google-ads`). The former cold/warm
+modes and the `/cald` warm report are retired. Orchestration: `skill/SKILL.md`.
 
 ---
 
-## 3. Cold report structure: EXACTLY 2 rubrics, in order
+## 3. Report structure: EXACTLY 2 rubrics, in order
 
 ### 3.1 SEO
 **5 sub-sectiuni** (definite de Vlad):
@@ -96,12 +92,9 @@ Hero (domain + overall score gauge) · "Ce te costa asta" · "De ce Devrika" · 
 - **BrightData browser:** used only to read shops that refuse the server (see Platform reading profiles below).
 - **Crawl:** fetch + PageSpeed; fallback link-crawl daca sitemap slab.
 
-## 9. CALD — pe scurt (NU redefini aici)
+## 9. Retired 2026-09-23 — warm (CALD) report
 
-- Structura datelor: `lib/warm-report.ts` (`WarmReport`)
-- Playbook: `docs/ads-research/warm-audit.md`
-- Scoring: `docs/ads-research/scoring.md`
-- Iese la `/cald/<slug>` (+ PDF)
+Removed with `/cald`, `lib/warm-report.ts` and the `docs/ads-research/` playbooks.
 
 ## 10. Stare decizii + implementare
 

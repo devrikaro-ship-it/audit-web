@@ -15,7 +15,6 @@ export default async function DashboardGoogleAds() {
       <nav className={styles.nav} aria-label="Manager navigation">
         <a href="/dashboard/google-ads" aria-current="page">Reporting accounts</a>
         <a href="/dashboard">Website audits</a>
-        <a href="/dashboard/cald">Agency clients</a>
         <form action="/dashboard/logout" method="post"><button type="submit" style={{ cursor: "pointer", font: "inherit", color: "inherit", background: "none", border: 0 }}>Sign out</button></form>
       </nav>
     </div></header>

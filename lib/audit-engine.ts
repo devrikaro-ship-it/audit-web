@@ -29,7 +29,7 @@ function extractKeyword(title: string): string {
 // ── Fetch utilities: in lib/net (seam de retea, singurul loc cu fetch) ─────────
 
 // Site in spatele unei protectii anti-bot (Cloudflare/challenge) sau pagina goala:
-// crawler-ul nu primeste HTML real, deci auditul ar fi fals. Acelasi gard ca in collect.py.
+// crawler-ul nu primeste HTML real, deci auditul ar fi fals.
 function detectBlocker(homepageHtml: string): string | null {
   const blocked = /Just a moment|cf-mitigated|challenge-platform|Attention Required|_cf_chl|Enable JavaScript and cookies/i.test(homepageHtml);
   const empty = homepageHtml.replace(/\s+/g, "").length < 2000;

@@ -1,117 +1,57 @@
 ---
 name: audit-devrika
-description: "Skill UNIC de audit client Devrika (ecom), cu 2 moduri. (1) RECE / lead-magnet: pornind DOAR de la URL, fara acces la cont — raport doar pe site, 2 rubrici (SEO · UX/UI), superficial cat sa agate, ambalat persuasiv pt un decident netehnic, cu CTA Devrika; structura = docs/AUDIT-SPEC.md. (2) CALD / intern: cand avem acces la conturile clientului (Google Ads, Meta, GA4, GSC, GMC, site) — trage date REALE si face audit profund pe toate canalele, cu cross-check intre instrumente. Foloseste cand userul zice: audit client, audit prospect, raport audit, agata client (RECE) SAU audit intern, avem acces, audit cont, audit client existent (CALD)."
+description: "Devrika website audit for online stores (lead magnet): starting only from the store URL, with no account access, it reads the pages that sell and produces a public report with two rubrics, SEO and UX/UI, written for a non-technical decision maker and ending with the Devrika CTA. It audits the website only — no tracking, no Google Ads (the Google Ads audit is the separate `audit-google-ads` skill). Use when: site audit, website audit, audit a prospect's store, store audit report, run the audit tool on a URL."
 user-invokable: true
-argument-hint: "[url] [nume-client] [--intern]"
+argument-hint: "[url]"
 license: MIT
 metadata:
   author: Devrika
-  version: "2.0.0"
+  version: "3.0.0"
   category: audit
 ---
 
-# Audit Devrika — skill general de audit
+# Devrika website audit
 
-Skill-ul **general** de audit client: alege modul dupa acces, tine framing-ul comun (durere + bani,
-netehnic, fara diacritice), livrarea si sinteza multi-canal.
+Devrika has two audit products, and this skill is one of them:
 
-## Skill-uri specifice pe canal (auditul profund se DELEAGA)
-
-| Canal | Skill specific | Ce ii dai |
+| Product | What it audits | Skill |
 |---|---|---|
-| **Google Ads** | `audit-google-ads` | contul + tipul + targetul din fisa |
-| Meta | `meta-ads-dvk` (pana are skill de audit propriu) | act_id + token |
-| SEO / site | `devrika-seo` | domeniul |
+| **Website audit** (this skill) | the store's website: SEO and UX/UI, from the URL only | `audit-devrika` |
+| **Google Ads audit** | a connected Google Ads account | `audit-google-ads` |
 
-**Regula:** doctrina unui canal traieste in skill-ul lui. Aici NU se copiaza praguri de canal —
-daca scrii un prag de Google Ads in acest fisier, ai bifurcat doctrina.
+There are no other modes (the former "cold/warm" split was retired on 2026-09-23).
 
----
+## Where it lives
 
-**Doua moduri**, alese dupa cat acces ai: **RECE** (prospect, doar URL → `/r/<id>`) si **CALD**
-(client care ne-a dat acces la conturi → `/cald/<slug>`). Tabelul complet = `docs/AUDIT-SPEC.md` §2.
-Un skill de canal poate avea moduri in plus — ex `audit-google-ads` are **CONNECTED**, unde
-prospectul isi conecteaza singur contul: nici RECE, nici CALD.
+The engine, report, PDF route, funnel and landing page are the web app `audit-web` (`~/seo-audit`, repo
+`devrikaro-ship-it/audit-web`), live on https://audit.devrika.io. This skill is the app's `skill/` folder,
+symlinked into `~/.claude/skills/`. Nothing is duplicated outside the app.
 
-> **Granita cu specul** (declarata in `docs/AUDIT-SPEC.md`): acolo = **structura raportului**
-> (rubrici, campuri, invarianti, praguri de scor). Aici = **orchestrarea** (ce mod, ce canal,
-> ce rulez, unde livrez). Nu copia invarianti sau praguri in acest fisier.
+**The report structure has one source: `docs/AUDIT-SPEC.md`.** Read it before touching the report; do not add or
+remove rubrics or fields on your own.
 
-## ⚠️ Arhitectura — motorul traieste in app-ul web (`~/seo-audit`)
+## How to run an audit
 
-Skill-ul e un **wrapper** peste app-ul `audit-web` (repo `devrikaro-ship-it/audit-web`; acest skill
-= folderul `skill/` din el, symlink in `~/.claude/skills/`). Motorul, catalogul, scoringul, raportul
-si PDF-ul sunt **acolo**, intr-un singur loc — nu dublam logica in Python.
-Cai de rulare si publicare (WarmReport, post_cald, PDF local):
-**[references/note-tehnice.md](references/note-tehnice.md)**.
+1. From the UI: `/start` (landing page `/audit-seo`), or `POST /api/audit` with `{url}` (plus contact fields when
+   the funnel sends them).
+2. The report is at `/r/<id>`, the PDF at `/r/<id>/pdf`, leads in `/dashboard`.
 
-## Cum aleg modul (auto-detect)
+## What the engine does
 
-**CALD** daca: `--intern` in argumente · userul zice "audit intern / avem acces / audit cont" ·
-exista `clients/{client}/profile/accounts.json` sau ID-uri de cont · avem token Meta / MCC-ul
-contine clientul (aici confirma scurt ce conturi atingem). **Altfel RECE** (doar URL, fara acces).
-Ambiguu → intreaba o singura data: *"Avem acces la conturile lor sau e audit la rece?"*
+1. Detects the platform from the homepage (`lib/site-signals.ts`) and reads the site with that platform's
+   profile (`lib/platform-knowledge/<platform>.json`: WooCommerce, Shopify, MerchantPro, GoMag, PrestaShop,
+   OpenCart, Magento, generic) — sitemap signals, pace, traps and observed problems, each with its test store.
+   Adding a platform = adding a profile file.
+2. Selects up to 60 pages that sell: 15 categories + 35 products + at most 5 other pages, never sitemap order
+   (`lib/page-selection.ts`); dead pages are replaced by pages of the same type.
+3. When a shop refuses the server (403, challenge, or 30%+ of pages 403/429), reads it through the BrightData
+   browser (`lib/browser-fetch.ts`). Page fetching is bounded to 30 s.
+4. Builds the two rubrics: SEO (on-page, content, keywords, structure, schema, product-page titles and
+   descriptions) and UX/UI (speed, homepage, category page, product page, filters).
 
----
+Designs: `docs/superpowers/specs/2026-09-23-*.md`. Engine lessons: `docs/dev/mistakes.md`.
 
-# MOD RECE (lead-magnet) — proces
+## Report rules
 
-> Principiu: **superficial si rapid**, pentru un magazin online (ecom-only). Scopul nu e exhaustivitate, e sa agate. Fara date de cont.
-> **Structura raportului = `docs/AUDIT-SPEC.md` (SURSA UNICA).** Cele **2 rubrici** (SEO · UX/UI; site only since 2026-09-23), campurile exacte, ce e EXCLUS si regulile de detectie sunt acolo. Citeste-o inainte sa atingi raportul; nu adauga/scoate rubrici.
-
-## Principii
-Invariantii modului RECE (input = doar URL · "de verificat" niciodata "lipsa" · limbaj de client ·
-CTA · fara diacritice · maparea findings-urilor pe cele 3 servicii) sunt in **`docs/AUDIT-SPEC.md`
-§1 si §5** — sursa unica. Nu-i redeclara aici; daca se schimba, se schimba acolo.
-
-## Calea principala = app-ul web (motorul). NU rula Python ca prima optiune.
-1. Porneste din UI (`/start`) sau `POST /api/audit` `{url, tipBusiness, platforma, nume, email, telefon}`.
-2. Raport la `/r/<id>`, PDF la `/r/<id>/pdf`, lead-uri in `/dashboard`.
-3. The engine reads up to 60 pages that sell (categories and products, per platform profile) + PageSpeed and
-   builds the 2 rubrics, SEO (with product-page titles and descriptions) and UX/UI. No tracking, Google Ads or
-   revenue simulation in the cold report (removed 2026-09-23). Details: `docs/AUDIT-SPEC.md` §3, §8 and §11.
-
-## Reading rules per platform
-The web engine reads each shop by its platform profile: `lib/platform-knowledge/<platform>.json` (WooCommerce,
-Shopify, MerchantPro, GoMag, PrestaShop, OpenCart, Magento, generic) — sitemap signals, pace, traps and observed
-problems, each with its test store. Adding a platform = adding a profile file. Design:
-`docs/superpowers/specs/2026-09-23-platform-knowledge-base-design.md`.
-
-## Fallback Python (DOAR cand web-ul nu poate crawla — ex: Cloudflare/anti-bot)
-Pasii + limitele: **[references/note-tehnice.md](references/note-tehnice.md)**.
-
----
-
-# MOD CALD (intern) — proces
-
-> Avem acces la TOATE instrumentele. Trage date REALE, cross-check intre ele, raporteaza tot ce e in neregula. Ton direct, pentru echipa. **Citeste `references/warm-audit.md`** (playbook complet + reguli per canal + doctrina Devrika).
-
-## Pasi (rezumat — detaliu in warm-audit.md)
-1. **Identifica conturile** clientului: `clients/{client}/profile/accounts.json` (Google customer id, Meta act_, GA4 property, GSC, GMC). Daca lipseste fisa -> ruleaza intai `client-intake`.
-2. **Google Ads** (acces MCC) → **deleaga la `audit-google-ads`**
-   (SOP + agenti `audit-gads-collect` / `audit-gads-report`). Comenzile si pragurile stau acolo.
-3. **Meta** — `python scripts/meta_pull.py <act_id>` (obiective gresite, pixeli straini, atributie
-   umflata). Detaliu: `references/warm-audit.md`.
-4. **GA4 cross-check** (`clients/ga4_pull.py` / `ga4_ecom.py`) — adevarul pe canale: confrunta ROAS-ul
-   raportat de platforma cu purchase-ul pe `facebook/cpc` si `google/cpc`.
-5. **SEO/site**, daca e in scop: `/seo` engine + GSC + GMC.
-6. **Sinteza** — o concluzie care leaga tot (tipic: tracking poluat → ROAS fictiv → bidding pe
-   gunoi), apoi per canal problema → impact → fix, plan ordonat (tracking intai), plus ce NU s-a
-   putut verifica.
-7. **Salveaza** in `clients/{client}/AUDIT-{data}.md`; varianta de prezentat → `WarmReport` JSON
-   (vezi [references/note-tehnice.md](references/note-tehnice.md)).
-
-## Reguli mod cald
-- **Nu te incred in ROAS-ul raportat de platforme** pana nu validezi conversiile — regula generala.
-  Ce inseamna "conversie valida" e specific canalului si sta in skill-ul lui (Google →
-  `audit-google-ads`, SOP etapa 2).
-- **ECOM vs LEADS se trateaza separat** (alt obiectiv, alta metrica).
-- Zero inventat: ce n-ai putut trage = "de verificat", nu afirmat.
-- Reguli per canal + cross-check-uri: **`references/warm-audit.md`**.
-
----
-
-## Referinte
-- **[references/note-tehnice.md](references/note-tehnice.md)** — runtime, fallback Python, modele
-- **[references/warm-audit.md](references/warm-audit.md)** — playbook mod CALD (reguli per canal)
-- `docs/AUDIT-SPEC.md` — structura raportului RECE (sursa unica)
+The invariants (a public report says "de verificat", never "lipsa", for what it cannot confirm; client language;
+no diacritics; CTA) live in `docs/AUDIT-SPEC.md` §5 — do not restate them here.

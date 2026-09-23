@@ -172,7 +172,7 @@ export function suggestMargin(products: Product[]): {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Performance segmentation (house doctrine; see `references/google-ads-research.md`).
+ * Performance segmentation (house doctrine; see `~/.claude/skills/audit-google-ads/references/google-ads-research.md`).
  * It is controlled by TWO numbers: the target return and how much traffic a product must receive
  * before it can be judged.
  *
