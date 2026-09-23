@@ -5,6 +5,7 @@ import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
 import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
 import { profileFor } from "./platform-knowledge";
+import { looksBlocked, openBrowserFetcher, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
@@ -831,18 +832,28 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
 
   // Phase 1: platform first (its profile says how to read the site), then robots.txt + sitemap -> pages that sell
   const homepage = origin + "/";
-  const homeHtmlEarly = await fetchText(homepage);
+  const homeDirect = await fetchPage(homepage);
+  // A shop that blocks the server's datacenter IP is read through the real browser (lib/browser-fetch.ts).
+  let browserFetcher: PageFetcher | null = null;
+  const openFetcher = async () => {
+    if (!browserFetcher) browserFetcher = await openBrowserFetcher(origin).catch(() => null);
+    return browserFetcher;
+  };
+  if (looksBlocked(homeDirect.ok, homeDirect.html)) await openFetcher();
+  const readText = (u: string) => (browserFetcher ? browserFetcher.fetchText(u) : fetchText(u));
+  const readPage = (u: string) => (browserFetcher ? browserFetcher.fetchPage(u) : fetchPage(u));
+  const homeHtmlEarly = browserFetcher ? (browserFetcher as PageFetcher).homeHtml : homeDirect.html;
   const profile = profileFor(detectPlatform(homeHtmlEarly.slice(0, 400000)));
   const language = homeHtmlEarly.match(/<html[^>]*\blang=["']?([a-z]{2})/i)?.[1]?.toLowerCase() ?? null;
-  const robotsTxt = await fetchText(`${origin}/robots.txt`);
+  const robotsTxt = await readText(`${origin}/robots.txt`);
   const sitemapUrl = extractSitemapFromRobots(robotsTxt, origin);
-  const sitemapXml = await fetchText(sitemapUrl);
+  const sitemapXml = await readText(sitemapUrl);
   const sitemapCandidates = [sitemapUrl, ...profile.sitemapEntryPoints.map((p) => origin + p)];
   let typed: TypedUrls = { product: [], category: [], other: [] };
   for (const sm of [...new Set(sitemapCandidates)]) {
-    const xml = sm === sitemapUrl ? sitemapXml : await fetchText(sm);
+    const xml = sm === sitemapUrl ? sitemapXml : await readText(sm);
     if (!xml) continue;
-    const found = await collectTypedUrls(xml, fetchText, sm, { profile, language });
+    const found = await collectTypedUrls(xml, readText, sm, { profile, language });
     const own: TypedUrls = { product: filterUrls(found.product, origin), category: filterUrls(found.category, origin), other: filterUrls(found.other, origin) };
     if (own.product.length + own.category.length + own.other.length > 0) { typed = own; break; }
   }
@@ -859,7 +870,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     let discovered = filterUrls(extractInternalLinks(homeHtmlEarly, origin), origin);
     for (const seed of discovered.slice(0, 5)) {
       if (toAnalyze.length + discovered.length >= PAGE_BUDGET) break;
-      discovered = discovered.concat(filterUrls(extractInternalLinks(await fetchText(seed), origin), origin));
+      discovered = discovered.concat(filterUrls(extractInternalLinks(await readText(seed), origin), origin));
     }
     typed.other = [...typed.other, ...discovered];
     ({ urls: toAnalyze, planned } = selectPages(homepage, typed));
@@ -868,13 +879,23 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   // Phase 2: Fetch pages at the pace the platform accepts (profile.concurrency)
   const fetchDeadline = Date.now() + PAGE_FETCH_BUDGET_MS;
   const fetched = (list: (PageData | undefined)[]) => list.filter((p): p is PageData => !!p);
-  const pages: PageData[] = fetched(await mapWithConcurrency(toAnalyze, profile.concurrency, (u) => fetchPage(u), fetchDeadline));
+  const pages: PageData[] = fetched(await mapWithConcurrency(toAnalyze, profile.concurrency, readPage, fetchDeadline));
+  if (!browserFetcher && looksBlocked(true, "", pages.map((p) => p.status))) {
+    const fetcher = await openFetcher();
+    if (fetcher) {
+      const refused = pages.filter((p) => p.status === 403 || p.status === 429);
+      const again = fetched(await mapWithConcurrency(refused.map((p) => p.url), profile.concurrency, (u) => fetcher.fetchPage(u), Date.now() + PAGE_FETCH_BUDGET_MS));
+      const byUrl = new Map(again.map((p) => [p.url, p]));
+      pages.forEach((p, i) => { const r = byUrl.get(p.url); if (r) pages[i] = r; });
+    }
+  }
   const failedTypes = pages.slice(1).filter((p) => !p.ok).map((p) => planned.get(p.url) ?? "other");
   if (failedTypes.length > 0 && Date.now() < fetchDeadline) {
     const refill = replacementsFor(failedTypes, typed, new Set(toAnalyze));
-    pages.push(...fetched(await mapWithConcurrency(refill.urls, profile.concurrency, (u) => fetchPage(u), fetchDeadline)));
+    pages.push(...fetched(await mapWithConcurrency(refill.urls, profile.concurrency, readPage, fetchDeadline)));
     refill.planned.forEach((t, u) => planned.set(u, t));
   }
+  await (browserFetcher as PageFetcher | null)?.close();
 
   const analyzedPages = pages.filter(p => p.ok);
   const normUrl = (u: string) => u.replace(/\/$/, "");

@@ -290,7 +290,7 @@ export function analyzePricePosition(shopping: ShoppingIntel): PricePosition {
 
 // The "By X" CSS label only renders for an EEA visitor, so the residential exit
 // IP must be in the EEA. Inject BrightData's -country-<cc> into the zone username.
-function withCountry(cdp: string, country: string): string {
+export function withCountry(cdp: string, country: string): string {
   if (!country || cdp.includes("-country-")) return cdp;
   return cdp.replace(/(zone-[a-z0-9_]+)(:)/i, `$1-country-${country}$2`);
 }

@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-23 — Shops that block datacenter IPs produced near-empty reports
+
+Symptom: from production, spishop.ro read 0 pages and invictusmedical.ro 3-24 pages, while from a residential IP the same stores read 58-60 pages. Measured cause: spishop.ro and vegis.ro answer 403 to the Hetzner IP; invictusmedical.ro accepts about 2 requests per 7 s from it, with a browser identity too; most large Romanian Magento stores answer 403. Recognition signal: a production audit with far fewer pages than a local run of the same URL, or 403/429 on the homepage or on 30%+ of pages. Repair: `lib/browser-fetch.ts` opens the homepage once in the BrightData browser (residential EU IP) and fetches the rest from inside that page, only when `looksBlocked` says the server was refused.
+
 ## 2026-09-23 — Platform detection called almost every shop Magento or WooCommerce
 
 Symptom: the scan reported pcgarage, dedeman and flanco as Magento, MerchantPro stores (invictusmedical, modlet) as WooCommerce, apivitalis (GoMag) as WooCommerce and zevo (OpenCart) as Magento. Measured cause: the Magento pattern contained bare `mage/`, which matches every `image/` path, and the WooCommerce pattern contained `add-to-cart`, a button name every platform uses; WooCommerce was also tested before the hosted platforms. Recognition signal: a platform marker that is a generic word or a substring of a common path. Repair: each platform is recognised by markers specific to it (its CDN host, module prefix or route), hosted-CDN platforms first; checked live on 11 stores.
