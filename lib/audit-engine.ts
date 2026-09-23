@@ -3,7 +3,7 @@ import { analyzeProspectLive, deriveProductQueries, type GoogleShoppingIntel, ty
 import { detectEcom, detectHtmlTracking, detectPlatform } from "./site-signals";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
-import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
+import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
 import { profileFor } from "./platform-knowledge";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
 
@@ -866,11 +866,13 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   }
 
   // Phase 2: Fetch pages at the pace the platform accepts (profile.concurrency)
-  const pages: PageData[] = await mapWithConcurrency(toAnalyze, profile.concurrency, (u) => fetchPage(u));
+  const fetchDeadline = Date.now() + PAGE_FETCH_BUDGET_MS;
+  const fetched = (list: (PageData | undefined)[]) => list.filter((p): p is PageData => !!p);
+  const pages: PageData[] = fetched(await mapWithConcurrency(toAnalyze, profile.concurrency, (u) => fetchPage(u), fetchDeadline));
   const failedTypes = pages.slice(1).filter((p) => !p.ok).map((p) => planned.get(p.url) ?? "other");
-  if (failedTypes.length > 0) {
+  if (failedTypes.length > 0 && Date.now() < fetchDeadline) {
     const refill = replacementsFor(failedTypes, typed, new Set(toAnalyze));
-    pages.push(...await mapWithConcurrency(refill.urls, profile.concurrency, (u) => fetchPage(u)));
+    pages.push(...fetched(await mapWithConcurrency(refill.urls, profile.concurrency, (u) => fetchPage(u), fetchDeadline)));
     refill.planned.forEach((t, u) => planned.set(u, t));
   }
 

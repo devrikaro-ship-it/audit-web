@@ -1,7 +1,7 @@
 {
   "platform": "MerchantPro",
   "testStore": "https://www.invictusmedical.ro",
-  "concurrency": 4,
+  "concurrency": 2,
   "sitemapEntryPoints": [
     "/sitemap.xml"
   ],
@@ -34,7 +34,8 @@
   "languageSitemaps": false,
   "traps": [
     "sitemap_shop.xml mixes pages, categories and filter pages; only the URL path tells them apart (invictusmedical.ro, 2026-09-23: 1616 URLs).",
-    "Filter pages live under /catalog/<category>/filtru-... and are not categories."
+    "Filter pages live under /catalog/<category>/filtru-... and are not categories.",
+    "From a datacenter IP (Hetzner, 2026-09-23) the store accepted about 2 requests per 7 seconds, browser identity or not; from a residential IP 60 pages at 4 simultaneous requests passed. Expect a partial read inside the page-fetch time budget."
   ],
   "typicalProblems": [
     {

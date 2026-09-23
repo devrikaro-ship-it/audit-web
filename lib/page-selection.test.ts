@@ -158,4 +158,15 @@ describe("mapWithConcurrency", () => {
     });
     expect(peak).toBe(2);
   });
+
+  it("starts nothing after the deadline, so a rate-limiting site cannot stretch the audit", async () => {
+    const started: number[] = [];
+    const out = await mapWithConcurrency([1, 2, 3, 4, 5, 6], 1, async (i) => {
+      started.push(i);
+      await new Promise((r) => setTimeout(r, 25));
+      return i;
+    }, Date.now() + 60);
+    expect(started.length).toBeLessThan(6);
+    expect(out.filter((x) => x === undefined).length).toBe(6 - started.length);
+  });
 });

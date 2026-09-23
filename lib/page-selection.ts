@@ -46,13 +46,17 @@ function keepSiteLanguage(children: string[], language: string | null): string[]
   return children.filter((u) => languageOf(u) === keep);
 }
 
-export async function mapWithConcurrency<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
-  const out: R[] = new Array(items.length);
+// Items not started before `deadline` (epoch ms) are skipped and come back undefined: a site that rate-limits
+// must not make the prospect wait minutes (invictusmedical.ro from the server: about 2 requests per 7 s accepted).
+export async function mapWithConcurrency<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>, deadline = Infinity): Promise<(R | undefined)[]> {
+  const out: (R | undefined)[] = new Array(items.length).fill(undefined);
   let next = 0;
-  const worker = async () => { while (next < items.length) { const i = next++; out[i] = await fn(items[i]); } };
+  const worker = async () => { while (next < items.length && Date.now() < deadline) { const i = next++; out[i] = await fn(items[i]); } };
   await Promise.all(Array.from({ length: Math.max(1, Math.min(limit, items.length)) }, worker));
   return out;
 }
+
+export const PAGE_FETCH_BUDGET_MS = 30000;
 
 // Sitemap <loc> values are XML-escaped: Shopify writes `?from=1&amp;to=9`, which must be fetched as `&`.
 function decodeXml(s: string): string {
