@@ -1,6 +1,6 @@
 # Domain split — September 23, 2026
 
-Operator decision: audit.devrika.ro is the website audit; audit.devrika.io keeps the three-audit home page
+Operator decision: audit.devrika.ro opens on a Romanian three-audit page (`/audituri`, only the website audit open, with its own link to the landing `/audit-seo`); audit.devrika.io keeps the three-audit home page
 (only the website audit open; Google Ads and Meta Ads shown as coming soon).
 
 ## What changed
@@ -8,7 +8,7 @@ Operator decision: audit.devrika.ro is the website audit; audit.devrika.io keeps
 1. Coolify env `SITE_AUDIT_ORIGIN=https://audit.devrika.ro` (app `eywy2rjfyittg93wk2j3phco`).
 2. Traefik labels: the `audit-legacy-origin` middleware (a 308 of every .ro request to .io) was removed from the
    two .ro routers, `http-0-…` and `https-0-…`. The middleware definition itself is still declared, unused.
-3. `lib/host-routing.ts` (called from `proxy.ts`): on the .ro host, `/` shows `/audit-seo`; the funnel,
+3. `lib/host-routing.ts` (called from `proxy.ts`): on the .ro host, `/` shows `/audituri` (since commit 290df49; before it, `/audit-seo`); the funnel,
    processing, report, their APIs and static assets are served; every other path answers 308 to `PUBLIC_URL`
    with path and query, so privacy, terms and OAuth URLs registered on .ro keep working.
 
