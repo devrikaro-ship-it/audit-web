@@ -54,17 +54,14 @@ export async function getJobView(id: string): Promise<JobView | null> {
   return null;
 }
 
-// Persists the audit once, when the audit is done AND the funnel sent finalize; runs after both events.
+// Persists the audit as soon as it is done, contact or not, so a visitor who leaves before the contact step is still
+// a lead in the dashboard; when the funnel sends the contact later, the same record is updated (upsert by id).
 async function tryFinalize(id: string): Promise<void> {
   const job = store.get(id);
   if (!job || !job.data) return;
-
-  if (job.finalizeRequested && !job.saved) {
-    update(id, { saved: true });
-    await saveAudit({
-      id, url: job.url, domain: job.data.domain, scor: job.data.scor, createdAt: job.createdAt,
-      nume: job.nume, email: job.email, telefon: job.telefon,
-      tipBusiness: job.tipBusiness, platforma: job.platforma, probleme: job.probleme, data: job.data,
-    });
-  }
+  await saveAudit({
+    id, url: job.url, domain: job.data.domain, scor: job.data.scor, createdAt: job.createdAt,
+    nume: job.nume, email: job.email, telefon: job.telefon,
+    tipBusiness: job.tipBusiness, platforma: job.platforma, probleme: job.probleme, data: job.data,
+  });
 }

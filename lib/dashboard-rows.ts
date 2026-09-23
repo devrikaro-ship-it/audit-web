@@ -48,7 +48,11 @@ export function buildRows(
     nume: a.nume ?? "",
     email: a.email ?? "",
     telefon: a.telefon ?? "",
-    observatii: { rezultat: `Scor ${a.scor}/100`, preocupare: (a.probleme ?? []).join(", "), raport: `/r/${a.id}` },
+    observatii: {
+      rezultat: `Scor ${a.scor}/100`,
+      preocupare: a.email || a.telefon ? (a.probleme ?? []).join(", ") : "Nu a lasat date de contact",
+      raport: `/r/${a.id}`,
+    },
   }));
   const gads: DashboardRow[] = accounts.map((c) => ({
     key: `gads:${c.id}`,

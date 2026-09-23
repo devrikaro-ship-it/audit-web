@@ -28,6 +28,11 @@ describe("buildRows", () => {
     expect(g.observatii.raport).toBe("/dashboard/google-ads/reports/acc1");
   });
 
+  it("marks a website audit left without contact", () => {
+    const [b] = buildRows([audit("b", 1)], [], {});
+    expect(b.observatii.preocupare).toBe("Nu a lasat date de contact");
+  });
+
   it("uses the saved status and falls back to the first stage for unknown values", () => {
     const rows = buildRows(audits, [], { "site:a": "Oferta trimisa", "site:b": "made up" });
     expect(rows.map((r) => r.status)).toEqual(["Oferta trimisa", DEFAULT_STATUS]);

@@ -68,7 +68,6 @@ export type AuditJob = {
   telefon?: string;
   probleme?: string[];
   finalizeRequested?: boolean; // the funnel sent the contact (finalize)
-  saved?: boolean;             // persistat durabil (evita salvare dubla la race)
   status: AuditStatus;
   createdAt: number;
   data?: AuditData;
