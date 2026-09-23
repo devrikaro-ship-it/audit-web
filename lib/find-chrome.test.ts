@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { findChrome } from "./find-chrome";
+import { findChrome, internalReportUrl } from "./find-chrome";
 
 describe("findChrome", () => {
   it("finds Chromium on PATH, where the production image installs it", () => {
@@ -11,5 +11,12 @@ describe("findChrome", () => {
   });
   it("returns null when no browser exists", () => {
     expect(findChrome({ PATH: "/bin" }, () => false)).toBeNull();
+  });
+});
+
+describe("internalReportUrl", () => {
+  it("prints from inside the container over plain HTTP, never the public https origin", () => {
+    expect(internalReportUrl("abc", "3000", "")).toBe("http://127.0.0.1:3000/r/abc?print=1");
+    expect(internalReportUrl("abc", undefined, "3917")).toBe("http://127.0.0.1:3917/r/abc?print=1");
   });
 });

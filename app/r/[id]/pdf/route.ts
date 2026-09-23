@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { getAudit } from "@/lib/leads-store";
-import { findChrome } from "@/lib/find-chrome";
+import { findChrome, internalReportUrl } from "@/lib/find-chrome";
 
 export const runtime = "nodejs";
 
@@ -25,7 +25,14 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string 
     return new Response("Chrome/Chromium negasit pe server. Seteaza CHROME_PATH.", { status: 500 });
   }
 
-  const reportUrl = `${req.nextUrl.origin}/r/${id}?print=1`;
+  // Chrome reads the report from inside the container over plain HTTP on the app's own port. The public origin
+  // behind the proxy is https://localhost:3000 here, which Chrome cannot open (the first production PDFs were a
+  // printed ERR_SSL_PROTOCOL_ERROR page).
+  const reportUrl = internalReportUrl(id, process.env.PORT, req.nextUrl.port);
+  const probe = await fetch(reportUrl).catch(() => null);
+  if (!probe || !probe.ok) {
+    return new Response("Raportul nu a putut fi pregatit pentru PDF. Incearca din nou.", { status: 502 });
+  }
   const outPath = join(tmpdir(), `audit-${id}-${randomUUID()}.pdf`);
 
   try {
