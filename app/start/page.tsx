@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { AuditRequestBody } from "@/lib/audit-request";
 
 const TARI = [
@@ -135,9 +135,18 @@ export default function StartPage() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  // The landing's scan form sends ?url=; start the scan with it so the visitor does not type it twice.
+  useEffect(() => {
+    const fromLanding = new URLSearchParams(window.location.search).get("url")?.trim();
+    if (fromLanding) void startScan(fromLanding);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // URL -> porneste scanul rapid SI auditul complet in fundal (spec §11.2)
-  async function startScan() {
+  async function startScan(target: string = url) {
+    const url = target;
     if (!url.trim()) return;
+    setUrl(url);
     setScreen("scan");
     // auditul complet ruleaza cat timp userul raspunde la intrebari
     fetch("/api/audit", {
@@ -216,11 +225,11 @@ export default function StartPage() {
                 <input
                   type="url" placeholder="ex: magazinul-tau.ro" value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter") startScan(); }}
+                  onKeyDown={(e) => { if (e.key === "Enter") void startScan(); }}
                   className="w-full pl-10 pr-4 py-3.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#47499E] transition-colors"
                 />
               </div>
-              <PrimaryButton onClick={startScan} disabled={!url.trim()}>Scaneaza magazinul →</PrimaryButton>
+              <PrimaryButton onClick={() => void startScan()} disabled={!url.trim()}>Scaneaza magazinul →</PrimaryButton>
             </div>
           )}
 

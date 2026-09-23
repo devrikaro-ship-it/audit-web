@@ -25,7 +25,7 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-// devrika.ro body font, used by the pages in the devrika.ro style (app/hub/hub.css).
+// devrika.ro body font, used by the pages in the devrika.ro style (app/dvk.css).
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin", "latin-ext"],
