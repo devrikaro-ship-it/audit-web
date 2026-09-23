@@ -12,6 +12,13 @@ Operator decision: audit.devrika.ro opens on a Romanian three-audit page (`/audi
    processing, report, their APIs and static assets are served; every other path answers 308 to `PUBLIC_URL`
    with path and query, so privacy, terms and OAuth URLs registered on .ro keep working.
 
+## Dashboard on .ro (commit 17d7b4e)
+
+`/dashboard` (login, logout, unified list, Google Ads detail and reports) is served on .ro as well. `dashboardOrigin`
+picks among `PUBLIC_URL` and `SITE_AUDIT_ORIGIN` by the forwarded host; any other host falls back to `PUBLIC_URL`.
+Verified: .ro/dashboard redirects to .ro/dashboard/login; a wrong password stays on .ro; a cross-site login POST is
+refused (403); .io/dashboard unchanged. A session is per domain, so .ro and .io each need their own login.
+
 ## Verified on production (commit 80db82c)
 
 .ro `/` and `/audit-seo` show the landing; `/start`, `/r/*` are served; `/confidentialitate`, `/termeni`,
