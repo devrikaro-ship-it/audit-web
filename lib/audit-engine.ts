@@ -236,7 +236,46 @@ export function hasMixedContent(p: PageData): boolean {
   return /<(?:img|script|iframe|source|video|audio)[^>]+src=["']http:\/\//i.test(p.html) || /<link[^>]+rel=["']stylesheet["'][^>]+href=["']http:\/\//i.test(p.html);
 }
 
-function computeContinutChecks(pages: PageData[]): PageCheck[] {
+// Written text of a page: blocks of at least 10 words that end a sentence, outside scripts, styles and the navigation,
+// header and footer. Filter lists, menus, labels and product names on cards do not end with a full stop and are left out.
+function textBlocks(html: string): string[] {
+  return html
+    .replace(/<(script|style|nav|header|footer|noscript)[\s\S]*?<\/\1>/gi, " ")
+    .split(/<\/?(?:p|li|div|td|h[1-6]|br|section|article)\b[^>]*>/i)
+    .map((b) => b.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim().toLowerCase())
+    .filter((b) => b.length >= 60 && b.split(" ").length >= 10 && /[.!?]$/.test(b));
+}
+
+// Pages whose own text (blocks not repeated on most pages, i.e. not the site template) is at least half copied,
+// block for block, from another page read. Pages with under 200 characters of own text are left to the thin-text check.
+export function duplicateTextPages(pages: PageData[]): number {
+  const blocks = pages.map((p) => [...new Set(textBlocks(p.html))]);
+  const seenOn = new Map<string, number>();
+  for (const bs of blocks) for (const b of bs) seenOn.set(b, (seenOn.get(b) ?? 0) + 1);
+  const template = (b: string) => (seenOn.get(b) ?? 0) > Math.max(2, pages.length / 2);
+  return blocks.filter((bs) => {
+    const own = bs.filter((b) => !template(b));
+    const chars = own.reduce((n, b) => n + b.length, 0);
+    const copied = own.filter((b) => (seenOn.get(b) ?? 0) > 1).reduce((n, b) => n + b.length, 0);
+    return chars >= 200 && copied * 2 >= chars;
+  }).length;
+}
+
+// Pages whose main heading (the H1, or the title when there is no H1) is identical to another page's.
+export function sameHeadingPages(pages: PageData[]): number {
+  const heading = (p: PageData) => {
+    const h1 = p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "";
+    return (h1.replace(/<[^>]+>/g, " ").trim() || parseTitle(p.html)).replace(/\s+/g, " ").trim().toLowerCase();
+  };
+  const urls = new Map<string, Set<string>>();
+  for (const p of pages) {
+    const h = heading(p);
+    if (h) urls.set(h, (urls.get(h) ?? new Set()).add(p.url.replace(/\/$/, "")));
+  }
+  return [...urls.values()].filter((u) => u.size > 1).reduce((n, u) => n + u.size, 0);
+}
+
+export function computeContinutChecks(pages: PageData[]): PageCheck[] {
   const total = pages.length || 1;
   const wordOk = pages.filter(p => countWords(p.html) >= 400).length;
   const kwOk = pages.filter(p => {
@@ -247,7 +286,7 @@ function computeContinutChecks(pages: PageData[]): PageCheck[] {
   }).length;
   const headingsOk = pages.filter(p => hasH2(p.html)).length;
   const faqOk = pages.filter(p => hasFAQ(p.html)).length;
-  const uniqueOk = Math.max(0, total - Math.round(total * 0.08)); // assume 92% unique (placeholder)
+  const uniqueOk = total - duplicateTextPages(pages);
 
   return [
     {
@@ -277,18 +316,19 @@ function computeContinutChecks(pages: PageData[]): PageCheck[] {
     {
       id: "continut_unic", label: "Continut unic",
       correctCount: uniqueOk, total,
-      problema: `Unele pagini pot contine blocuri de text identice. Google penalizeaza continutul duplicat intern.`,
+      problema: `${total - uniqueOk} pagini au cel putin jumatate din textul propriu copiat identic de pe o alta pagina a magazinului.`,
       fix: "Rescrie descrierile duplicate, in special pentru pagini de categorii similare.",
     },
   ];
 }
 
-function computeKeywordsChecks(pages: PageData[]): PageCheck[] {
+export function computeKeywordsChecks(pages: PageData[]): PageCheck[] {
   const total = pages.length || 1;
+  const sameHeading = sameHeadingPages(pages);
   const kwResults = pages.map(p => {
     const title = parseTitle(p.html).toLowerCase();
     const kw = extractKeyword(title);
-    if (!kw) return { inTitle: false, inH1: false, inUrl: false, inCategory: false, canibalizare: false };
+    if (!kw) return { inTitle: false, inH1: false, inUrl: false, inCategory: false };
     const h1 = (p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").toLowerCase();
     const urlPath = new URL(p.url).pathname.toLowerCase();
     return {
@@ -296,7 +336,6 @@ function computeKeywordsChecks(pages: PageData[]): PageCheck[] {
       inH1: h1.includes(kw),
       inUrl: urlPath.replace(/-/g, " ").includes(kw),
       inCategory: urlPath.split("/").filter(Boolean).length === 1,
-      canibalizare: false, // simplified
     };
   });
 
@@ -327,8 +366,8 @@ function computeKeywordsChecks(pages: PageData[]): PageCheck[] {
     },
     {
       id: "kw_fara_canibalizare", label: "Fara canibalizare kw", unit: "kw",
-      correctCount: Math.round(total * 0.84), total,
-      problema: "Unele cuvinte cheie sunt targetate simultan de 2+ pagini. Google fluctueaza intre ele, reducand pozitia ambelor.",
+      correctCount: total - sameHeading, total,
+      problema: `${sameHeading} pagini au exact acelasi titlu ca o alta pagina a magazinului, deci concureaza in Google pe aceeasi cautare.`,
       fix: "Identifica paginile care concureaza pe acelasi keyword. Alege una principala si diferentiaza continutul celorlalte.",
     },
   ];

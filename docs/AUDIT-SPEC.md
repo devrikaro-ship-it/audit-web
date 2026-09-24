@@ -49,6 +49,7 @@ Design: `docs/superpowers/specs/2026-09-24-report-deck-design.md`.
 5. **Schema Markup:** JSON-LD, tipuri, validare, breadcrumb, Product with price, rating
 6. **Vizibilitate in AI:** AI crawlers allowed in robots.txt, a real `/llms.txt` (markdown title, 100+ chars, read before the page burst), sameAs links to the official profiles in the JSON-LD of the pages read (`computeAiChecks`)
 **Verificat pe** home + categorii + produse.
+**Measured, never estimated (2026-09-24):** "text repetat" counts the pages whose own written text (blocks of 10+ words ending a sentence, outside the site template, menus, filters and product cards) is at least half copied from another page read (`duplicateTextPages`); "pagini care concureaza" counts the pages whose H1 (or title) is identical to another page's (`sameHeadingPages`). Until then both were a fixed share of the pages (8% and 16%) shown as measured.
 **Product pages (2026-09-23):** a card at the top of the rubric reports, from the product pages actually read, how many have short or generic titles and how many lack a meta description (`computeProductSignal`, `ProductContentCard`); when no product page was read it says "de verificat", never a generic claim.
 **Cod:** `computeSeoChecks/Continut/Keywords/Structura` + `computeSchemaChecks` + `computeAiChecks`; render: the Part 1 slides of the deck.
 
