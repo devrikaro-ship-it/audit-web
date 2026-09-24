@@ -126,7 +126,7 @@ export function ReportDeck({ data, createdAt }: { data: AuditData; createdAt?: n
   }
   if (d.seo.ai) {
     slides.push({
-      eyebrow: "Partea 1 · SEO", src: `robots.txt, /llms.txt si schema de pe ${d.pages} de pagini`,
+      eyebrow: "Partea 1 · SEO", src: `setarile de acces ale site-ului si datele pentru Google de pe ${d.pages} de pagini`,
       body: (<>
         <h2>Vizibilitate in ChatGPT, Claude si Perplexity</h2>
         <div className="ai3">{d.seo.ai.map((c) => (

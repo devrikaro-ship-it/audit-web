@@ -159,7 +159,7 @@ type SeoPageResult = {
   urlClean: boolean;
 };
 
-function computeSeoChecks(pages: PageData[]): PageCheck[] {
+export function computeSeoChecks(pages: PageData[]): PageCheck[] {
   const indexableOk = pages.filter((p) => !isNoindex(p)).length;
   const mixedOk = pages.filter((p) => !hasMixedContent(p)).length;
   const results: SeoPageResult[] = pages.map(p => ({
@@ -415,7 +415,7 @@ export function sameAsLinks(pages: PageData[]): Set<string> {
   return out;
 }
 
-function computeStructuraChecks(
+export function computeStructuraChecks(
   pages: PageData[],
   robotsTxt: string,
   sitemapXml: string,
@@ -677,7 +677,7 @@ function uxUnknown(id: string, label: string, problema: string, fix: string, lip
   return { id, label, status: "necunoscut", scor: 0, gasit: [], lipsa: [lipsa], problema, fix };
 }
 
-function computeUxAudit(
+export function computeUxAudit(
   pages: PageData[],
   seg: { homepage: string; categories: string[]; products: string[] },
   mobile: PSIResult | null,
@@ -711,7 +711,7 @@ function computeUxAudit(
 
   // 2. Homepage (mereu prezent)
   fields.push(uxField("home", "Analiza homepage", [
-    { ok: countH1(home) >= 1, g: "mesaj / hero clar (H1)", l: "fara titlu-hero clar (H1)" },
+    { ok: countH1(home) >= 1, g: "mesaj clar la inceputul paginii", l: "fara un mesaj clar la inceputul paginii" },
     { ok: hasNavUi(home), g: "meniu de navigare", l: "meniu greu de gasit" },
     { ok: countInternalLinks(home, domain) >= 10, g: "categorii si cai spre produse", l: "putine cai spre categorii/produse" },
     { ok: hasViewport, g: "adaptat pentru mobil", l: "nu e adaptat pentru mobil" },
@@ -722,7 +722,7 @@ function computeUxAudit(
   if (catPage) {
     fields.push(uxField("categorie", "Analiza pagina categorie", [
       { ok: priceCount(catPage) >= 3 || contentImageCount(catPage) >= 6, g: "grila de produse cu poza si pret", l: "grila de produse neclara (poza/pret)" },
-      { ok: hasBreadcrumbs(catPage), g: "breadcrumbs (stii unde esti)", l: "fara breadcrumbs" },
+      { ok: hasBreadcrumbs(catPage), g: "traseul paginii (stii unde esti)", l: "fara traseul paginii (stii unde esti)" },
       { ok: hasPaginationUi(catPage), g: "paginare", l: "fara paginare vizibila" },
       { ok: hasIntroText(catPage), g: "text de intro pe categorie", l: "fara text de intro (pierzi si SEO)" },
     ], "Pagina de categorie e locul unde clientul alege. Fara grila clara, breadcrumbs si text de context, se pierde si pleaca.",

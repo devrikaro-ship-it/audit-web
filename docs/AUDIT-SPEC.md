@@ -80,7 +80,7 @@ Fiecare camp: status bun/partial/slab (necunoscut cand tipul de pagina lipseste 
 
 1. **Nu putem confirma -> "de verificat", NICIODATA "lipsa".** Universal, la toate campurile (adoptat ca default).
 2. **Fara diacritice** in textele din raport (client-facing).
-3. Fiecare problema tradusa in limbaj de client (durere + bani + loc in Google).
+3. Fiecare problema tradusa in limbaj de client (durere + bani + loc in Google). Enforced 2026-09-24: every word the report shows about a check comes from `PAGE_COPY` / `SEO_SITE` / `UX_SITE` in `lib/report-deck.ts`; the engine's `label`, `problema`, `fix` and site values are technical notes and never render. `lib/report-copy.test.ts` renders a report where every check fails and fails on any technical term, and fails when the engine emits a check with no client wording.
 4. Ends with the contact slide; the checklists describe the fixes, they do not sell them (2026-09-24).
 
 ## 6. Praguri verdict + scor

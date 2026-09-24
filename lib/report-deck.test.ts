@@ -25,9 +25,9 @@ describe("buildDeck", () => {
   it("lists page problems worst first, counting the pages that HAVE the problem, in client language", () => {
     const d = buildDeck(base());
     expect(d.seo.problems.map((p) => [p.title, p.count])).toEqual([
-      ["llms_txt", "1 din 1 fisier"],
+      ["Lipseste rezumatul pentru asistentii AI", "1 din 1 fisier"],
       ["Cuvantul cautat lipseste din adresa paginii", "35 din 60 pagini"],
-      ["robots_llm", "1 din 6 crawlere"],
+      ["Roboti AI opriti sa citeasca site-ul", "1 din 6 roboti AI"],
       ["Text repetat intre pagini", "5 din 60 pagini"],
     ]);
     expect(d.domain).toBe("s.ro");
@@ -43,16 +43,16 @@ describe("buildDeck", () => {
 
   it("checklist rows: open items carry the first line of the fix, site checks come from checksRezultate", () => {
     const rows = buildDeck(base()).seo.checklist;
-    expect(rows.find((r) => r.title === "Text repetat intre pagini")).toEqual({ done: false, title: "Text repetat intre pagini", note: "fix continut_unic", result: "5 din 60 pagini" });
-    expect(rows.find((r) => r.title === "Conexiune securizata (HTTPS)")?.done).toBe(true);
-    expect(rows.find((r) => r.title === "Stele (rating) in Google")?.done).toBe(false);
+    expect(rows.find((r) => r.title === "Text repetat intre pagini")).toEqual({ done: false, title: "Text repetat intre pagini", note: "Scrie text propriu pentru fiecare pagina, incepand cu categoriile si produsele cele mai vandute.", result: "5 din 60 pagini" });
+    expect(rows.find((r) => r.title === "Conexiune securizata (lacatul din browser)")).toMatchObject({ done: true, result: "da" });
+    expect(rows.find((r) => r.title === "Stele (nota clientilor) afisate in Google")).toMatchObject({ done: false, result: "2 din 46 pagini de produs" });
   });
 
   it("an unmeasured value is 'de verificat', never a finding, and never the first thing to fix", () => {
     const d = buildDeck(base({ checksRezultate: { lcp: { status: "atentie", value: "Date indisponibile" }, pagespeed_mobile: { status: "atentie", value: "Nu s-a putut contacta PageSpeed API" } } }));
     expect(d.ux.checklist.filter((r) => r.result === "de verificat").map((r) => r.title)).toEqual(["Scor de viteza pe mobil", "Continutul principal apare repede pe telefon"]);
     expect(d.ux.speed.mobile).toBe("—");
-    expect(d.first?.title).toBe("llms_txt");
+    expect(d.first?.title).toBe("Lipseste rezumatul pentru asistentii AI");
   });
 
   it("puts a slow mobile page first when it is measured", () => {
