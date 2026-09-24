@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { computeContinutChecks, computeKeywordsChecks, computeStructuraChecks, duplicateTextPages, keywordInWrittenText, ownWrittenText, paginationState, sameHeadingPages } from "./audit-engine";
 import type { PageData } from "./net";
 import { priceCount } from "./page-selection";
+import { countInternalLinks } from "./parse-page";
 
 const page = (url: string, body: string, title = ""): PageData => ({
   url, status: 200, ok: true, headers: {},
@@ -127,5 +128,13 @@ describe("paginationState", () => {
 describe("priceCount", () => {
   it("counts a price whose currency sits in its own tag, as themes often write it", () => {
     expect(priceCount('<span class="price">29 <small>lei</small></span><span class="price">1.299,00<span>RON</span></span><b>49 lei</b>')).toBe(3);
+  });
+});
+
+describe("countInternalLinks", () => {
+  it("counts links to the same shop with or without www", () => {
+    const html = '<a href="https://magazinfitness.ro/gantere/">a</a><a href="https://www.magazinfitness.ro/benzi/">b</a><a href="/cos/">c</a><a href="https://facebook.com/magazinfitness.ro">d</a>';
+    expect(countInternalLinks(html, "www.magazinfitness.ro")).toBe(3);
+    expect(countInternalLinks(html, "magazinfitness.ro")).toBe(3);
   });
 });

@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — A shop entered with www had none of its full links counted as internal
+
+Symptom: magazinfitness.ro's home page got "Putine cai spre categorii/produse" although it links to every category. Measured cause: the audit was started on www.magazinfitness.ro and `countInternalLinks` tested `href.includes("www.magazinfitness.ro")`, while the site links as https://magazinfitness.ro/...; it also counted facebook.com/magazinfitness.ro as internal. Recognition signal: a link-count finding on a shop whose entered host differs from its links by "www.". Repair: links are resolved and compared by host with "www." ignored; relative links count, anchors and mail/phone/script links do not.
+
 ## 2026-09-24 — Prices written with the currency in its own tag were not seen
 
 Symptom: magazinfitness.ro's product pages got "Pret sau stoc neclar", and its category pages counted 0 prices, while every card shows "29 lei" and "In stoc". Measured cause: `priceCount` matched "29 lei" on raw HTML; the theme writes `29 <small>lei</small>`. Recognition signal: a price count of 0 on a page that visibly lists prices. Repair: prices are counted on the text with tags removed; the product page now reads "pret + stoc". The same run showed the unmeasured-speed fix working: a PageSpeed failure on diente.ro read "viteza de masurat", not 0.

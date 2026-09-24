@@ -79,12 +79,19 @@ export function parseImages(html: string): { src: string; alt: string }[] {
   return results;
 }
 
+// Links to the same shop: the link's host equals the shop's, "www." ignored on both sides (a shop entered as
+// www.x.ro often links as x.ro). Relative links count; anchors, mail, phone and script links do not.
 export function countInternalLinks(html: string, domain: string): number {
+  const bare = (h: string) => h.toLowerCase().replace(/^www\./, "");
+  const own = bare(domain);
   const re = /href=["']([^"']+)["']/gi;
   let count = 0, m: RegExpExecArray | null;
   while ((m = re.exec(html)) !== null) {
-    const href = m[1];
-    if (href.includes(domain) || href.startsWith("/")) count++;
+    const href = m[1].trim();
+    if (!href || /^(#|mailto:|tel:|javascript:)/i.test(href)) continue;
+    try {
+      if (bare(new URL(href, `https://${own}/`).hostname) === own) count++;
+    } catch { /* not a URL */ }
   }
   return count;
 }
