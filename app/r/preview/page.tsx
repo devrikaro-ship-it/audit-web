@@ -1,6 +1,6 @@
 "use client";
 
-import { ReportRenderer } from "@/components/report-renderer";
+import { ReportDeck } from "@/components/report-deck";
 import type { AuditData } from "@/lib/types";
 
 const MOCK_DATA: AuditData = {
@@ -85,5 +85,5 @@ const MOCK_DATA: AuditData = {
 };
 
 export default function ReportPreview() {
-  return <ReportRenderer data={MOCK_DATA} />;
+  return <ReportDeck data={MOCK_DATA} />;
 }

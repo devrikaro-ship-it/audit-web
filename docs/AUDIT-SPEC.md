@@ -2,9 +2,9 @@
 
 > **Autoritate:** daca codul si acest fisier se contrazic, castiga acest fisier
 > (sau schimbam fisierul explicit, nu codul pe furis).
-> **Se citeste INAINTE** de a atinge raportul: `components/report-renderer.tsx`,
+> **Se citeste INAINTE** de a atinge raportul: `lib/report-deck.ts`, `components/report-deck.tsx`,
 > `lib/audit-engine.ts`, `lib/css-detect.ts`.
-> **Last update:** 2026-09-23 — the cold audit analyses the site only: two rubrics, SEO and UX/UI (operator decision). Tracking, Google Ads and the revenue simulation are removed; see `docs/superpowers/specs/2026-09-23-site-audit-only-design.md`. <!-- LANG: pending full translation to EN -->
+> **Last update:** 2026-09-24 — the report is a 16:9 deck in two parts (Part 1 SEO, Part 2 UX/UI), each closing with a checklist, no sales pitch; SEO gains the AI visibility zone (operator decision). 2026-09-23 — the cold audit analyses the site only: two rubrics, SEO and UX/UI (operator decision). Tracking, Google Ads and the revenue simulation are removed; see `docs/superpowers/specs/2026-09-23-site-audit-only-design.md`. <!-- LANG: pending full translation to EN -->
 
 ---
 
@@ -14,7 +14,7 @@ Raport de audit pentru un **prospect ecom netehnic**. E instrument de **vanzare*
 - **Lead magnet:** starting ONLY from the URL, with no account access. Quick enough to hook.
 - Se vede **public** -> onestitate: nu marca "lipsa" ce nu putem confirma.
 - Fiecare problema in limbaj de client (clienti pierduti / bani / loc in Google), nu jargon.
-- Se termina cu **CTA Devrika**.
+- Ends with a neutral contact slide ("Intrebari despre raport?"), not a sales pitch (operator, 2026-09-24).
 
 **Scope: ECOM-ONLY (all-in).** Auditul, **landing-ul si toata comunicarea** sunt orientate 100% pe magazine online — Devrika merge all-in pe ecom. Non-ecom **nu** e acoperit: nu construim varianta separata. Un URL non-ecom primeste un raport degradat (fara UX/UI pe tipuri de pagini) — acceptat, nu-l optimizam. Landing (`app/audit-seo`) + copy + CTA = mesaj ecom.
 
@@ -32,16 +32,25 @@ modes and the `/cald` warm report are retired. Orchestration: `skill/SKILL.md`.
 
 ## 3. Report structure: EXACTLY 2 rubrics, in order
 
+**Format (operator, 2026-09-24):** a 16:9 deck, the same on `/r/<id>` and in the PDF (one slide per 1200x675 page),
+in the style of the YTS Dental growth plan. Order: cover · "Pe scurt" · **Part 1 SEO** (opener, zone table,
+problems on pages, product pages, AI visibility, SEO checklist) · **Part 2 UX/UI** (opener, speed and page-type
+scores, found/missing per page type, UX/UI checklist) · contact slide. A checklist lists the open items first
+(checkbox, pages affected, first line of the fix), then "Deja in regula" in a compact block; it spans as many slides
+as it needs. Content: `buildDeck` in `lib/report-deck.ts` (pure, tested); layout: `components/report-deck.tsx`.
+Design: `docs/superpowers/specs/2026-09-24-report-deck-design.md`.
+
 ### 3.1 SEO
-**5 sub-sectiuni** (definite de Vlad):
-1. **SEO Tehnic (On-page):** Title, Meta description, H1, Canonical, structura URL
+**6 zones** (5 defined by Vlad, the 6th added 2026-09-24 from devrika-seo pillar 9):
+1. **SEO Tehnic (On-page):** Title, Meta description, H1, Canonical, structura URL, indexare (noindex meta / X-Robots-Tag), continut mixt (http resources on https)
 2. **Calitatea Continutului:** text subtire, duplicat, ierarhie H2/H3, lizibilitate, keyword principal
 3. **Analiza Cuvinte Cheie:** kw in title/H1/URL, acoperire categorii, canibalizare
-4. **Structura Site-ului:** robots.txt + crawlere AI, sitemap, breadcrumbs, linkuri rupte, internal linking
-5. **Schema Markup:** JSON-LD, tipuri, validare, breadcrumb, rating
+4. **Structura Site-ului:** sitemap, breadcrumbs, linkuri rupte, internal linking
+5. **Schema Markup:** JSON-LD, tipuri, validare, breadcrumb, Product with price, rating
+6. **Vizibilitate in AI:** AI crawlers allowed in robots.txt, a real `/llms.txt` (markdown title, 100+ chars, read before the page burst), sameAs links to the official profiles in the JSON-LD of the pages read (`computeAiChecks`)
 **Verificat pe** home + categorii + produse.
 **Product pages (2026-09-23):** a card at the top of the rubric reports, from the product pages actually read, how many have short or generic titles and how many lack a meta description (`computeProductSignal`, `ProductContentCard`); when no product page was read it says "de verificat", never a generic claim.
-**Cod:** `computeSeoChecks/Continut/Keywords/Structura` + `computeSchemaChecks`; render `SectionBlock` x5.
+**Cod:** `computeSeoChecks/Continut/Keywords/Structura` + `computeSchemaChecks` + `computeAiChecks`; render: the Part 1 slides of the deck.
 
 ### 3.2 UX / UI
 **Campuri (fix acestea, 5 — decis 2026-07-01):**
@@ -51,7 +60,7 @@ modes and the `/cald` warm report are retired. Orchestration: `skill/SKILL.md`.
 4. **Analiza pagina produs** — imagini multiple, pret+stoc, "Adauga in cos", descriere, recenzii, produse similare
 5. **Filtre & sortare** — marime / culoare / pret / brand + optiuni de sortare
 Fiecare camp: status bun/partial/slab (necunoscut cand tipul de pagina lipseste din crawl, exclus din medie) + semnale gasit/lipsa in limbaj de client. Scor rubrica = media campurilor cu status != necunoscut.
-**Cod:** `lib/audit-engine.ts` (`computeUxAudit` + detectori) -> `UxAudit`/`UxField` in `lib/types.ts`; render `UxCard`/`UxUiSection` (`components/report-renderer.tsx`). ✅ construit.
+**Cod:** `lib/audit-engine.ts` (`computeUxAudit` + detectori) -> `UxAudit`/`UxField` in `lib/types.ts`; render: the Part 2 slides of the deck (`components/report-deck.tsx`). ✅ construit.
 
 ## 4. EXCLUS explicit (NU apar in raport)
 
@@ -71,19 +80,19 @@ Fiecare camp: status bun/partial/slab (necunoscut cand tipul de pagina lipseste 
 1. **Nu putem confirma -> "de verificat", NICIODATA "lipsa".** Universal, la toate campurile (adoptat ca default).
 2. **Fara diacritice** in textele din raport (client-facing).
 3. Fiecare problema tradusa in limbaj de client (durere + bani + loc in Google).
-4. Se termina cu **CTA Devrika**.
+4. Ends with the contact slide; the checklists describe the fixes, they do not sell them (2026-09-24).
 
 ## 6. Praguri verdict + scor
 
 Scor per rubrica 0-100. Verdict: **>=70 Bun** (verde) · **>=40 De reglat** (galben) · **<40 Slab** (rosu). (decis 2026-07-02)
 
-Scor per rubrica: SEO = media celor 5 sub-sectiuni; UX/UI = media celor 5 campuri (viteza + 3 tipuri de pagini + filtre).
+Scor per rubrica: SEO = media celor 6 zone (5 when an older report has no AI checks); UX/UI = media celor 5 campuri (viteza + 3 tipuri de pagini + filtre).
 
 **Scor global (gauge hero) — 2026-07-07:** doar componentele VIZIBILE in raport (`computeOverallScore`: viteza 0.17 + seo 0.24 + continut 0.20 + keywords 0.16 + structura 0.13 + schema 0.10 = 1.00). Social + securitate **NU** intra in nota (nu-s rubrici, §4) — inainte ponderau 10% ascuns; scoase ca nota sa reflecte exact ce se afiseaza. (`social`/`securitate` raman calculate in `checksRezultate` dar neafisate — cod mort inofensiv.)
 
-## 7. Persuasion wrapper (fixed, outside the 2 rubrics)
+## 7. Wrapper (fixed, outside the 2 rubrics)
 
-Hero (domain + overall score gauge) · "Ce te costa asta" · "De ce Devrika" · CTA + contact. The CTA speaks about fixing the site.
+Cover (domain, overall score, the two parts) · "Pe scurt" (scores and the first thing to fix) · contact slide. The former "Ce te costa asta" / "De ce Devrika" / CTA blocks are retired (2026-09-24).
 
 ## 8. Parametri de detectie
 

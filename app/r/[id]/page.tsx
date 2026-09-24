@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { ReportRenderer } from "@/components/report-renderer";
+import { ReportDeck } from "@/components/report-deck";
 import type { AuditData } from "@/lib/types";
 import Link from "next/link";
 
@@ -37,6 +37,7 @@ function ErrorScreen({ message }: { message: string }) {
 export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<AuditData | null>(null);
+  const [createdAt, setCreatedAt] = useState<number | undefined>();
   const [error, setError] = useState<string | null>(null);
   const isPrint = useSearchParams().get("print") === "1";
 
@@ -52,6 +53,7 @@ export default function ReportPage() {
 
         if (json.status === "done" && json.data) {
           setData(json.data);
+          setCreatedAt(json.createdAt);
         } else if (json.status === "error") {
           setError(json.error ?? "Eroare la procesarea auditului.");
         } else if (json.status === "pending" || json.status === "running") {
@@ -73,7 +75,7 @@ export default function ReportPage() {
   if (!data) return <LoadingScreen />;
   return (
     <>
-      <ReportRenderer data={data} />
+      <ReportDeck data={data} createdAt={createdAt} />
       {!isPrint && (
         <a
           href={`/r/${id}/pdf`}
@@ -83,9 +85,9 @@ export default function ReportPage() {
             position: "fixed", left: "50%", bottom: 24, transform: "translateX(-50%)", zIndex: 50,
             display: "inline-flex", alignItems: "center", gap: 9,
             padding: "16px 34px", borderRadius: 999, color: "#fff", fontWeight: 800,
-            fontFamily: "var(--font-sora), system-ui, sans-serif", fontSize: 16.5,
-            textDecoration: "none", boxShadow: "0 12px 34px rgba(10,190,207,0.5)",
-            background: "linear-gradient(135deg,#47499E,#0ABECF)",
+            fontFamily: "\"Barlow Semi Condensed\", \"Arial Narrow\", Arial, sans-serif", fontSize: 17, letterSpacing: ".04em",
+            textDecoration: "none", boxShadow: "0 10px 28px rgba(85,82,224,0.35)",
+            background: "#5552E0",
           }}
         >
           ⬇ Descarca PDF

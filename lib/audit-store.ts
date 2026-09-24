@@ -20,7 +20,7 @@ const update = (id: string, u: Partial<AuditJob>) => {
   if (job) store.set(id, { ...job, ...u });
 };
 
-export type JobView = { id: string; url: string; status: AuditJob["status"]; data: AuditJob["data"] | null; error: string | null };
+export type JobView = { id: string; url: string; status: AuditJob["status"]; data: AuditJob["data"] | null; error: string | null; createdAt: number };
 
 // Porneste auditul de la URL si il ruleaza in fundal. Returneaza id-ul imediat.
 export function startJob(url: string, meta: StartMeta = {}): string {
@@ -48,9 +48,9 @@ export async function finalizeJob(id: string, input: FinalizeInput): Promise<boo
 
 export async function getJobView(id: string): Promise<JobView | null> {
   const job = store.get(id);
-  if (job) return { id: job.id, url: job.url, status: job.status, data: job.data ?? null, error: job.error ?? null };
+  if (job) return { id: job.id, url: job.url, status: job.status, data: job.data ?? null, error: job.error ?? null, createdAt: job.createdAt };
   const stored = await getAudit(id);
-  if (stored) return { id: stored.id, url: stored.url, status: "done", data: stored.data, error: null };
+  if (stored) return { id: stored.id, url: stored.url, status: "done", data: stored.data, error: null, createdAt: stored.createdAt };
   return null;
 }
 

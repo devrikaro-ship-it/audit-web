@@ -1,6 +1,6 @@
 ---
 name: audit-devrika
-description: "Devrika website audit for online stores (lead magnet): starting only from the store URL, with no account access, it reads the pages that sell and produces a public report with two rubrics, SEO and UX/UI, written for a non-technical decision maker and ending with the Devrika CTA. It audits the website only — no tracking, no Google Ads (the Google Ads audit is the separate `audit-google-ads` skill). Use when: site audit, website audit, audit a prospect's store, store audit report, run the audit tool on a URL."
+description: "Devrika website audit for online stores (lead magnet): starting only from the store URL, with no account access, it reads the pages that sell and produces a public report as a 16:9 deck in two parts, SEO (including visibility in AI assistants) then UX/UI, each closing with a checklist, written for a non-technical decision maker. It audits the website only — no tracking, no Google Ads (the Google Ads audit is the separate `audit-google-ads` skill). Use when: site audit, website audit, audit a prospect's store, store audit report, run the audit tool on a URL."
 user-invokable: true
 argument-hint: "[url]"
 license: MIT

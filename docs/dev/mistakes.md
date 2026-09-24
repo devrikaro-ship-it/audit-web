@@ -1,5 +1,11 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — The 16:9 PDF printed the phone layout
+
+Symptom: the first PDF of the deck had every two-column slide stacked in one column, and one slide spilled onto an extra page with only its footer. Measured cause: the deck's `@media (max-width:760px)` phone rules matched while Chrome laid out the page for printing. Recognition signal: a PDF page count higher than the slide count, or stacked columns only in the PDF. Repair: the phone rules are `@media screen and (max-width:760px)`, so print keeps the desktop layout; the check is PDF pages == slides.
+
+Related: Chrome's `--print-to-pdf` never finishes against `next dev` (the hot-reload connection keeps the page busy), so a PDF is verified against `next build && next start`, never the dev server.
+
 ## 2026-09-24 — llms.txt reported missing on a shop that has one
 
 Symptom: the local audit of diente.ro (Shopify) scored llms.txt 0/1 while fetching https://diente.ro/llms.txt alone returned 4,471 characters. Measured cause: the file was requested after the 60-page burst, when the shop was rate-limiting the audit, so the small request failed and read as "no file". Recognition signal: a site-level file check that fails only on shops that throttle (Shopify, MerchantPro) and passes when fetched by hand. Repair: site-level files (robots.txt, llms.txt) are read before the page burst; the sameAs signal is read from the JSON-LD of every page fetched instead of a regex on the homepage.
