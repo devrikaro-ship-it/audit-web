@@ -207,7 +207,6 @@ export function ReportDeck({ data, createdAt }: { data: AuditData; createdAt?: n
   const total = slides.length;
   return (
     <div className="deck">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700;800&display=swap" precedence="default" />
       {slides.map((s, i) => (
         <section className={`slide ${s.cls ?? ""}`} key={i}>
           <Top eyebrow={s.eyebrow} />
