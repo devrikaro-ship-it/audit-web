@@ -76,6 +76,10 @@ describe("paginateChecklist", () => {
   it("renders one slide of done rows when nothing is open", () => {
     expect(shape([ok(1)])).toEqual([[0, 1]]);
   });
+  it("continues a long done block on the next slide instead of letting it overflow", () => {
+    expect(shape(Array.from({ length: 40 }, (_, i) => ok(i)))).toEqual([[0, 20], [0, 20]]);
+    expect(shape([...Array.from({ length: 5 }, (_, i) => open(i)), ...Array.from({ length: 32 }, (_, i) => ok(i))])).toEqual([[5, 4], [0, 20], [0, 8]]);
+  });
 
   it("a check that judged no page is neither a problem nor part of a score", () => {
     const withEmpty = base({ continutChecks: [check("continut_unic", 55, 60), check("cuvinte_cheie", 0, 0)] });
@@ -112,6 +116,29 @@ describe("paginateChecklist", () => {
     const old = base({ keywordsChecks: [check("kw_in_url", 25, 60), check("kw_categorii", 0, 60)] });
     expect(buildDeck(old).seo.problems.map((p) => p.title)).not.toContain("Cautari fara o categorie dedicata");
     expect(buildDeck(old).seo.zones.find((z) => z.name === "Cuvinte cheie")?.score).toBe(42);
+  });
+
+  it("with the ten SEO components: numbered components, faults in chain order, unmeasured rows de verificat", () => {
+    const seo = [
+      { id: "raspuns", rows: [{ id: "pagini_200", ok: 60, total: 60 }, { id: "acces_server", ok: 0, total: 1, verify: true }] },
+      { id: "robots", rows: [{ id: "robots_sitemap", ok: 0, total: 1 }] },
+      { id: "html", rows: [{ id: "html_pret", ok: 0, total: 0 }] },
+      { id: "continut", rows: [{ id: "alt_imagini", ok: 0, total: 40 }] },
+    ];
+    const d = buildDeck(base({ seo, checksRezultate: {} }));
+    expect(d.seo.zones.map((z) => [z.name, z.score])).toEqual([["1. Paginile raspund corect", 100], ["2. Reguli pentru roboti (robots.txt)", 0], ["3. Continut vizibil fara incarcare ulterioara", null], ["4. Continutul paginii", 0]]);
+    expect(d.seo.problems.map((p) => [p.title, p.count])).toEqual([["robots.txt arata unde e lista de pagini", "de reparat"], ["Pozele produselor au descriere", "40 din 40 pagini de produs"]]);
+    expect(d.seo.checklist.map((r) => [r.title, r.done, r.result])).toEqual([
+      ["Pagini care raspund corect", true, "60 din 60 pagini"],
+      ["Site-ul raspunde cererilor automate", false, "de verificat"],
+      ["robots.txt arata unde e lista de pagini", false, "nu"],
+      ["Pretul e in pagina, nu incarcat ulterior", false, "de verificat"],
+      ["Pozele produselor au descriere", false, "0 din 40 pagini de produs"],
+    ]);
+    expect(d.seo.score).toBe(33);
+    expect(d.first?.title).toBe("robots.txt arata unde e lista de pagini");
+    expect(d.seo.product).toBeNull();
+    expect(d.seo.ai).toBeNull();
   });
 });
 

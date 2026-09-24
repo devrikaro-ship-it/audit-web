@@ -8,7 +8,7 @@ import { computeLearning, effectiveProfile, readApprovals } from "./learning";
 import { appendObservation, pathPrefixes, readObservations } from "./observations";
 import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, openWithRetry, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, UNAVAILABLE, type PageData, type PSIResult } from "./net";
-import { computeSeoComponents } from "./seo-components";
+import { computeSeoComponents, seoScore } from "./seo-components";
 import { runSeoProbes } from "./seo-probes";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
@@ -612,45 +612,6 @@ export function computeVitezaChecks(mobile: PSIResult | null, desktop: PSIResult
   };
 }
 
-// ── Score computation ────────────────────────────────────────────────────────
-
-function checkToScore(status: StatusCheck): number {
-  return status === "ok" ? 100 : status === "atentie" ? 55 : 10;
-}
-
-// A check that judged no page (total 0) is not measured and does not count.
-function pageCheckScore(checks: PageCheck[]): number {
-  const scores = checks.filter(c => c.total > 0).map(c => Math.round((c.correctCount / c.total) * 100));
-  return Math.round(scores.reduce((a, b) => a + b, 0) / (scores.length || 1));
-}
-
-function sectionScore(checks: Record<string, CheckResult>): number {
-  const vals = Object.values(checks).map(c => checkToScore(c.status));
-  return Math.round(vals.reduce((a, b) => a + b, 0) / (vals.length || 1));
-}
-
-function computeOverallScore(
-  viteza: Record<string, CheckResult>,
-  seo: PageCheck[],
-  continut: PageCheck[],
-  keywords: PageCheck[],
-  structura: PageCheck[],
-  schema: Record<string, CheckResult>,
-): number {
-  // Doar componentele VIZIBILE in raport (spec §4: social/securitate nu-s rubrici,
-  // deci nu intra in nota globala). Ponderi renormalizate la 1.00 dupa scoaterea
-  // celor 10% (social+securitate) — proportiile relative pastrate.
-  const weights = [
-    { score: sectionScore(viteza),     weight: 0.17 },
-    { score: pageCheckScore(seo),      weight: 0.24 },
-    { score: pageCheckScore(continut), weight: 0.20 },
-    { score: pageCheckScore(keywords), weight: 0.16 },
-    { score: pageCheckScore(structura),weight: 0.13 },
-    { score: sectionScore(schema),     weight: 0.10 },
-  ];
-  return Math.round(weights.reduce((acc, w) => acc + w.score * w.weight, 0));
-}
-
 // ── UX / UI — analiza pe tipuri de pagina (spec 3.3) ─────────────────────────
 // Semnale euristice din HTML-ul fiecarui tip de pagina (home / categorie / produs).
 // Cand nu prindem un tip de pagina in crawl -> status "necunoscut" (exclus din medie).
@@ -946,10 +907,11 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const social = computeSocialChecks(homepageData);
   const securitate = computeSecurityChecks(homepageData);
 
-  const scor = computeOverallScore(viteza, seoChecks, continutChecks, keywordsChecks, structuraChecks, schema);
   const isEcom = detectEcom(analyzedPages.map((p) => p.html).join("\n").toLowerCase());
   const productSignal = isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
   const ux = isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
+  // The overall score is the mean of the two parts the cover shows (docs/superpowers/specs/2026-09-24-seo-ten-...).
+  const scor = ux ? Math.round((seoScore(seo) + ux.scor) / 2) : seoScore(seo);
 
   const checksRezultate = { ...viteza, ...schema, ...social, ...securitate };
   const failedPageChecks = [...seoChecks, ...continutChecks, ...keywordsChecks, ...structuraChecks, ...aiChecks]

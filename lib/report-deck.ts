@@ -2,10 +2,12 @@
 // checklist. Pure: AuditData in, the content of every slide out; components/report-deck.tsx only lays it out.
 import { CHECKS } from "./problems-db";
 import { statusScore, verdict, type Verdict } from "./scoring";
-import type { AuditData, CheckResult, PageCheck, UxField } from "./types";
+import type { AuditData, CheckResult, PageCheck, SeoComponent, UxField } from "./types";
+import { componentScore, seoScore as tenScore } from "./seo-score";
+import { COMPONENTS, ROWS, STAGES } from "./seo-copy";
 
 export type Tone = "good" | "warn" | "bad";
-export type Zone = { name: string; what: string; score: number };
+export type Zone = { name: string; what: string; score: number | null };
 export type Problem = { title: string; count: string; tone: Tone; problem: string; fix: string };
 export type CheckRow = { done: boolean; title: string; note: string; result: string };
 export type AiCard = { label: string; big: string; text: string; why: string; tone: Tone };
@@ -16,7 +18,7 @@ export type Deck = {
   cover: string;
   pages: number;
   score: number;
-  seo: { score: number; zones: Zone[]; problems: Problem[]; product: ProductSlide | null; ai: AiCard[] | null; checklist: CheckRow[] };
+  seo: { score: number; zones: Zone[]; pills: string[]; problems: Problem[]; product: ProductSlide | null; ai: AiCard[] | null; checklist: CheckRow[] };
   ux: { score: number | null; speed: { mobile: string; desktop: string; lcp: string }; pages: UxPage[]; checklist: CheckRow[] };
   first: { title: string; text: string } | null;
 };
@@ -156,6 +158,29 @@ function aiCards(checks: PageCheck[]): AiCard[] {
   ];
 }
 
+// Part 1 from the ten SEO components (reports from 2026-09-24): the components as the zone table, the first four
+// faults in chain order (an earlier component matters more), and every row in the checklist.
+function tenComponents(seo: SeoComponent[]) {
+  const zones: Zone[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({ name: `${i + 1}. ${COMPONENTS[c.id].name}`, what: COMPONENTS[c.id].what, score: componentScore(c) }));
+  const rows = seo.flatMap((c) => c.rows).filter((r) => ROWS[r.id]);
+  const result = (r: SeoComponent["rows"][number]) => (ROWS[r.id].unit ? `${r.ok} din ${r.total} ${ROWS[r.id].unit}` : r.ok === r.total ? "da" : "nu");
+  const faults = rows.filter((r) => r.total > 0 && !r.verify && r.ok < r.total);
+  const problems: Problem[] = faults.slice(0, 4).map((r) => ({
+    title: ROWS[r.id].title,
+    count: ROWS[r.id].unit ? `${r.total - r.ok} din ${r.total} ${ROWS[r.id].unit}` : "de reparat",
+    tone: r.ok / r.total < 0.5 ? "bad" : "warn",
+    problem: ROWS[r.id].problem(),
+    fix: ROWS[r.id].fix,
+  }));
+  const checklist: CheckRow[] = rows.map((r) => {
+    const copy = ROWS[r.id];
+    if (r.total === 0) return { done: false, title: copy.title, note: "Nu am putut masura din afara site-ului.", result: "de verificat" };
+    if (r.verify) return { done: false, title: copy.title, note: copy.fix, result: "de verificat" };
+    return r.ok === r.total ? { done: true, title: copy.title, note: "", result: result(r) } : { done: false, title: copy.title, note: copy.fix, result: result(r) };
+  });
+  return { score: tenScore(seo), zones, pills: Object.values(STAGES), problems, checklist };
+}
+
 export function buildDeck(data: AuditData): Deck {
   const cr = withLegacySpeed(data.checksRezultate);
   const ai = data.aiChecks ?? [];
@@ -167,7 +192,7 @@ export function buildDeck(data: AuditData): Deck {
     { name: "Date pentru Google", what: "Pret, stoc, stele si datele firmei, afisate in Google", score: schemaScore(data) },
     ...(ai.length ? [{ name: "Vizibilitate in AI", what: "ChatGPT, Claude, Perplexity: acces, rezumat, identitatea firmei", score: pageScore(ai) }] : []),
   ];
-  const seoScore = Math.round(zones.reduce((s, z) => s + z.score, 0) / zones.length);
+  const seoScore = Math.round(zones.reduce((s, z) => s + (z.score ?? 0), 0) / zones.length);
 
   const pageChecks = [...data.seoChecks, ...data.continutChecks, ...data.keywordsChecks, ...data.structuraChecks, ...ai];
   const failing = measuredChecks(pageChecks).filter((c) => ratio(c) < 1).sort((a, b) => ratio(a) - ratio(b));
@@ -214,9 +239,11 @@ export function buildDeck(data: AuditData): Deck {
   const measured = (k: string) => (cr[k] && !UNMEASURED.test(cr[k].value) ? cr[k].value : "—");
 
   const lcpSlow = cr.lcp && cr.lcp.status !== "ok" && !UNMEASURED.test(cr.lcp.value);
+  const ten = data.seo?.length ? tenComponents(data.seo) : null;
+  const topProblem = ten ? ten.problems[0] : problems[0];
   const first = lcpSlow
     ? { title: "Pagina se incarca greu pe telefon", text: `Continutul principal apare dupa ${cr.lcp.value}; tinta e sub 2,5 s.` }
-    : problems[0] ? { title: problems[0].title, text: problems[0].problem } : null;
+    : topProblem ? { title: topProblem.title, text: topProblem.problem } : null;
 
   const domain = data.domain.replace(/^www\./, "");
   return {
@@ -224,7 +251,9 @@ export function buildDeck(data: AuditData): Deck {
     cover: verdict(data.scor) === "bun" ? `Ce mai poate castiga ${domain}` : `Unde pierde clienti ${domain}`,
     pages: data.pagesAnalyzed,
     score: data.scor,
-    seo: { score: seoScore, zones, problems: problems.slice(0, 4), product, ai: ai.length ? aiCards(ai) : null, checklist: seoChecklist },
+    seo: ten
+      ? { ...ten, product: null, ai: null }
+      : { score: seoScore, zones, pills: zones.map((z) => z.name), problems: problems.slice(0, 4), product, ai: ai.length ? aiCards(ai) : null, checklist: seoChecklist },
     ux: {
       score: data.ux ? data.ux.scor : null,
       speed: { mobile: measured("pagespeed_mobile"), desktop: measured("pagespeed_desktop"), lcp: measured("lcp") },
@@ -253,6 +282,15 @@ export function paginateChecklist(rows: CheckRow[], capacity = 7.4): { todo: Che
     pages[pages.length - 1].push(r);
     used += h;
   }
-  if (done.length && used + DONE_LABEL + Math.ceil(done.length / 2) * DONE_LINE > capacity && pages[pages.length - 1].length) pages.push([]);
-  return pages.map((t, i) => ({ todo: t, done: i === pages.length - 1 ? done : [] }));
+  // What is already fine fills the rest of the last slide two per line, then continues on new slides.
+  const out = pages.map((t) => ({ todo: t, done: [] as CheckRow[] }));
+  let rest = done;
+  while (rest.length) {
+    const lines = Math.floor((capacity - used - DONE_LABEL) / DONE_LINE);
+    if (lines < 1) { out.push({ todo: [], done: [] }); used = 0; continue; }
+    out[out.length - 1].done = rest.slice(0, lines * 2);
+    rest = rest.slice(lines * 2);
+    if (rest.length) { out.push({ todo: [], done: [] }); used = 0; }
+  }
+  return out;
 }

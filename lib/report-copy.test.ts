@@ -3,6 +3,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ReportDeck } from "@/components/report-deck";
 import { computeAiChecks, computeContinutChecks, computeKeywordsChecks, computeSeoChecks, computeStructuraChecks, computeUxAudit } from "./audit-engine";
+import { computeSeoComponents } from "./seo-components";
 import { buildDeck, PAGE_COPY } from "./report-deck";
 import type { AuditData } from "./types";
 import type { PageData } from "./net";
@@ -32,9 +33,20 @@ const data: AuditData = {
   productSignal: { checked: 2, weakTitles: 2, missingMeta: 2, hasFeed: false, headline: "meta description lipsa", message: "title tag prea scurt" },
   ux: computeUxAudit(pages, { homepage: pages[0].url, categories: [pages[1].url], products: [pages[2].url, pages[3].url] }, null, "s.ro"),
 } as AuditData;
+// The same shop with the ten SEO components: every one of them failing, some rows unmeasured or unconfirmed.
+const tenData: AuditData = {
+  ...data,
+  seo: computeSeoComponents({
+    origin: "https://s.ro", requested: [...pages, { ...pages[0], url: "https://s.ro/x", status: 500, ok: false }], pages,
+    categories: [pages[1].url], products: [pages[2].url, pages[3].url],
+    robotsTxt: "User-agent: *\nDisallow: /categorie/\nUser-agent: OAI-SearchBot\nDisallow: /", sitemapXml: "", listed: { categories: 0, products: 0, other: 0 },
+    refusedServer: true, readWithBrowser: false,
+    probes: { sitemapLastmod: null, httpToHttps: false, maxRedirectHops: 4, variantsSameHost: false, sitemapSample: { ok: 0, total: 0 }, sortParamHandled: false },
+  }),
+};
 
 // Words a shop owner does not use. File names the owner hands to a developer (robots.txt, llms.txt) are allowed.
-const JARGON = /\b(keywords?|kw|h[1-6]|url|url-uri|slug|301|canonical|meta|snippets?|serp|schema|json-ld|breadcrumbs?|breadcrumblist|llms?(?!\.txt)|llm-urile|crawl\w*|sitemap|noindex|headere?|hsts|og:\w+|favicon|apple-touch-icon|webp|avif|rich result|featured|targetat|rankeaza|canibalizare|on-page|title tag|alt text|organization|product|hero|lastmod|x-frame-options)\b/gi;
+const JARGON = /\b(keywords?|kw|h[1-6]|url|url-uri|slug|301|canonical|meta|snippets?|serp|schema|json-ld|breadcrumbs?|breadcrumblist|llms?(?!\.txt)|llm-urile|crawl\w*|noindex|headere?|hsts|og:\w+|favicon|apple-touch-icon|webp|avif|rich result|featured|targetat|rankeaza|canibalizare|on-page|title tag|alt text|organization|product|hero|lastmod|x-frame-options)\b/gi;
 const visibleText = (html: string) => html.replace(/<style[\s\S]*?<\/style>/g, " ").replace(/<[^>]+>/g, " ").replace(/&[a-z#0-9]+;/g, " ").replace(/\s+/g, " ");
 
 describe("the report speaks the shop owner's language", () => {
@@ -49,6 +61,12 @@ describe("the report speaks the shop owner's language", () => {
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
   });
 
+  it("shows no technical term on a report built from the ten SEO components", () => {
+    const text = visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: tenData })));
+    expect(text).toContain("Paginile raspund corect");
+    expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
+  });
+
   it("reads a report saved before the client wording without technical terms", () => {
     const home = { id: "home", label: "Analiza homepage", status: "partial" as const, scor: 50, gasit: ["mesaj / hero clar (H1)"], lipsa: ["fara breadcrumbs"], problema: "", fix: "" };
     const old = { ...data, ux: { ...data.ux!, fields: [home, { ...home, id: "categorie", gasit: ["breadcrumbs (stii unde esti)"], lipsa: ["fara titlu-hero clar (H1)"] }] } };
@@ -58,11 +76,12 @@ describe("the report speaks the shop owner's language", () => {
   });
 
   it("every open checklist row says how to fix it", () => {
-    const d = buildDeck(data);
+    for (const d of [buildDeck(data), buildDeck(tenData)]) {
     const pageNames = ["Homepage", "Pagina de categorie", "Pagina de produs", "Filtre si sortare"];
     const open = [...d.seo.checklist, ...d.ux.checklist].filter((r) => !r.done);
     expect(open.length).toBeGreaterThan(20);
     expect(open.filter((r) => !r.note || pageNames.includes(r.note)).map((r) => r.title)).toEqual([]);
+    }
   });
 });
 

@@ -51,6 +51,8 @@ body:has(.deck){margin:0;background:#FAF8F4;-webkit-print-color-adjust:exact;pri
 .deck .perf th{text-align:left;font-family:var(--f-num);font-weight:700;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--ink);padding:.5rem .6rem}
 .deck .perf td{border-bottom:1px solid var(--line);padding:.75rem .6rem;vertical-align:middle}
 .deck .perf .n{font-family:var(--f-num);font-weight:700;font-size:1.6rem;font-variant-numeric:tabular-nums}
+.deck .perf.compact td{padding:.42rem .6rem}
+.deck .perf.compact .n{font-size:1.3rem}
 .deck .muted{color:var(--muted)}
 .deck .pill{display:inline-block;font-family:var(--f-num);font-weight:700;font-size:.8rem;letter-spacing:.06em;padding:.2rem .6rem;border-radius:.3rem;white-space:nowrap}
 .deck .probs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--lg)}

@@ -58,15 +58,17 @@ export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData
     </>),
   });
 
-  const best = [...d.seo.zones].sort((a, b) => b.score - a.score)[0];
-  const worst = [...d.seo.zones].sort((a, b) => a.score - b.score)[0];
+  const scored = d.seo.zones.filter((z): z is typeof z & { score: number } => z.score !== null);
+  const best = [...scored].sort((a, b) => b.score - a.score)[0];
+  const worst = [...scored].sort((a, b) => a.score - b.score)[0];
+  const plainName = (n: string) => n.replace(/^\d+\.\s*/, "");
   slides.push({
     eyebrow: "Pe scurt",
     body: (<>
       <h2>Totul pe o pagina</h2>
       <div className="sum">
         <div className="si"><span className="label">Scor general</span><h3>{d.score}/100 — {VERDICT_LABEL[v].toLowerCase()}</h3><p>Calculat pe {d.pages} de pagini care vand: categorii si produse, nu articole de blog.</p></div>
-        <div className="si"><span className="label">Partea 1 · SEO</span><h3>{d.seo.score}/100</h3><p>{best.name} sta cel mai bine; {worst.name.toLowerCase()} are cel mai mult de castigat.</p></div>
+        <div className="si"><span className="label">Partea 1 · SEO</span><h3>{d.seo.score}/100</h3><p>{best && worst ? <>{plainName(best.name)} sta cel mai bine; la {plainName(worst.name).toLowerCase()} e cel mai mult de castigat.</> : "Nu am putut masura partea SEO din afara site-ului."}</p></div>
         <div className="si"><span className="label">Partea 2 · UX / UI</span><h3>{d.ux.score ?? "—"}/100</h3><p>Viteza pe mobil {d.ux.speed.mobile === "—" ? "de verificat" : d.ux.speed.mobile}; paginile de produs si de categorie sunt verificate pe pagini reale.</p></div>
         <div className="si hl"><span className="label">Primul lucru de reparat</span><h3>{d.first?.title ?? "Nimic urgent"}</h3><p>{d.first?.text}</p></div>
       </div>
@@ -80,17 +82,19 @@ export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData
       <span className="num pnum">01</span>
       <h2>SEO: cum te gasesc clientii</h2>
       <p className="lead">Ce vede Google cand iti citeste paginile de categorie si de produs, si ce vad ChatGPT, Claude sau Perplexity cand cineva le intreaba unde sa cumpere.</p>
-      <ul>{d.seo.zones.map((z) => <li key={z.name}>{z.name}</li>)}</ul>
+      <ul>{d.seo.pills.map((x) => <li key={x}>{x}</li>)}</ul>
     </>),
   });
   slides.push({
     eyebrow: "Partea 1 · SEO",
     body: (<>
       <h2>SEO: {d.seo.score}/100</h2>
-      <table className="perf">
-        <thead><tr><th>Zona</th><th>Ce verificam</th><th>Scor</th><th>Verdict</th></tr></thead>
+      <table className={`perf${d.seo.zones.length > 6 ? " compact" : ""}`}>
+        <thead><tr><th>{d.seo.zones.length > 6 ? "Componenta" : "Zona"}</th><th>Ce verificam</th><th>Scor</th><th>Verdict</th></tr></thead>
         <tbody>{d.seo.zones.map((z) => (
-          <tr key={z.name}><td><b>{z.name}</b></td><td className="muted">{z.what}</td><td className="n">{z.score}</td><td><span className={`pill ${toneOf(z.score)}`}>{VERDICT_LABEL[verdict(z.score)]}</span></td></tr>
+          <tr key={z.name}><td><b>{z.name}</b></td><td className="muted">{z.what}</td><td className="n">{z.score ?? "—"}</td><td>{z.score === null
+            ? <span className="pill warn">De verificat</span>
+            : <span className={`pill ${toneOf(z.score)}`}>{VERDICT_LABEL[verdict(z.score)]}</span>}</td></tr>
         ))}</tbody>
       </table>
     </>),
