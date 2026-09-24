@@ -120,7 +120,7 @@ describe("network helpers in the public output graph", () => {
       .mockRejectedValueOnce(new Error("offline")));
     await expect(fetchPSI("https://example.test", "mobile")).resolves.toBeNull();
     await expect(fetchPSI("https://example.test", "desktop")).resolves.toEqual({ score: 91, lcp: "1 s", cls: "0.1", tbt: "10 ms" });
-    await expect(fetchPSI("https://example.test", "mobile")).resolves.toEqual({ score: 0, lcp: "—", cls: "—", tbt: "—" });
+    await expect(fetchPSI("https://example.test", "mobile")).resolves.toBeNull();
     await expect(fetchPSI("https://example.test", "mobile")).resolves.toBeNull();
   });
 });

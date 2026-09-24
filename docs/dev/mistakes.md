@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — A speed test PageSpeed could not run was reported as a score of 0
+
+Symptom: a local audit of diente.ro showed "Scor de viteza pe mobil: 0 / 100" and "—" for the load times; a direct PageSpeed call minutes later measured 77. Measured cause: `fetchPSI` turned a missing performance score into 0 (`?? 0`), and `computeVitezaChecks` filled a side that returned nothing with `{ score: 0, lcp: "—" }`; a unit test even asserted the 0. Recognition signal: "0 / 100" together with "—" timings. Repair: no score means no result; a missing side or timing is "Date indisponibile", shown as "de verificat"; reports saved before read "0 / 100" and a "—" load time as not measured.
+
 ## 2026-09-24 — The report said a page lacks a trail while also saying every page has one
 
 Symptom: magazinfitness.ro's checklist listed "Pagini fara traseu: 1 din 60" above "Traseul paginii afisat in Google: 54 din 54". Measured cause: the visible-trail check judged every page read, home page included, while the structured-data check judges category and product pages only; the one "missing" trail was the home page, which has none by design. Recognition signal: two checks about the same element with different page sets (60 vs 54). Repair: `computeStructuraChecks` takes the category and product lists and judges the trail on those pages only; now 54 / 54 on both.

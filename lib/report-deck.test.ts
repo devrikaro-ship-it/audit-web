@@ -88,5 +88,15 @@ describe("paginateChecklist", () => {
     expect(buildDeck(base({ scor: 55 })).cover).toBe("Unde pierde clienti s.ro");
     expect(buildDeck(base({ scor: 20 })).cover).toBe("Unde pierde clienti s.ro");
   });
+
+  it("a report saved with a failed speed test shows it as de verificat, not as 0 / 100", () => {
+    const failed = base({ checksRezultate: {
+      pagespeed_mobile: { status: "critic", value: "0 / 100" }, pagespeed_desktop: { status: "critic", value: "0 / 100" },
+      lcp: { status: "atentie", value: "—" }, cls: { status: "ok", value: "0" }, inp: { status: "atentie", value: "—" },
+    } });
+    const d = buildDeck(failed);
+    expect(d.ux.speed).toEqual({ mobile: "—", desktop: "—", lcp: "—" });
+    expect(d.ux.checklist.filter((r) => ["Scor de viteza pe mobil", "Pagina nu sare in timpul incarcarii", "Raspuns rapid la click"].includes(r.title)).map((r) => r.result)).toEqual(["de verificat", "de verificat", "de verificat"]);
+  });
 });
 

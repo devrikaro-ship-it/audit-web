@@ -7,7 +7,7 @@ import { PROFILES, profileFor } from "./platform-knowledge";
 import { computeLearning, effectiveProfile, readApprovals } from "./learning";
 import { appendObservation, pathPrefixes, readObservations } from "./observations";
 import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, openWithRetry, type PageFetcher } from "./browser-fetch";
-import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, type PageData, type PSIResult } from "./net";
+import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, UNAVAILABLE, type PageData, type PSIResult } from "./net";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
 const LLM_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "OAI-SearchBot", "CCBot", "Googlebot-Extended"];
@@ -592,7 +592,7 @@ function ttfbCheck(ttfbMs: number | null): CheckResult {
   return { status: ttfbToStatus(ttfbMs), value: `${ttfbMs} ms` };
 }
 
-function computeVitezaChecks(mobile: PSIResult | null, desktop: PSIResult | null, ttfbMs: number | null): Record<string, CheckResult> {
+export function computeVitezaChecks(mobile: PSIResult | null, desktop: PSIResult | null, ttfbMs: number | null): Record<string, CheckResult> {
   if (!mobile && !desktop) {
     return {
       pagespeed_mobile:  { status: "atentie", value: "Nu s-a putut contacta PageSpeed API" },
@@ -603,14 +603,16 @@ function computeVitezaChecks(mobile: PSIResult | null, desktop: PSIResult | null
       ttfb: ttfbCheck(ttfbMs),
     };
   }
-  const m = mobile ?? { score: 0, lcp: "—", cls: "—", tbt: "—" };
-  const d = desktop ?? { score: 0, lcp: "—", cls: "—", tbt: "—" };
+  // A side PageSpeed could not measure, and any timing it did not return, stays unavailable ("de verificat").
+  const unavailable: CheckResult = { status: "atentie", value: UNAVAILABLE };
+  const timing = (v: string | undefined, toStatus: (x: string) => StatusCheck): CheckResult =>
+    v && v !== UNAVAILABLE ? { status: toStatus(v), value: v } : unavailable;
   return {
-    pagespeed_mobile:  { status: psiToStatus(m.score),  value: `${m.score} / 100` },
-    pagespeed_desktop: { status: psiToStatus(d.score),  value: `${d.score} / 100` },
-    lcp:  { status: lcpToStatus(m.lcp),  value: m.lcp },
-    cls:  { status: clsToStatus(m.cls),  value: m.cls },
-    inp:  { status: inpToStatus(m.tbt),  value: m.tbt },
+    pagespeed_mobile:  mobile ? { status: psiToStatus(mobile.score), value: `${mobile.score} / 100` } : unavailable,
+    pagespeed_desktop: desktop ? { status: psiToStatus(desktop.score), value: `${desktop.score} / 100` } : unavailable,
+    lcp:  timing(mobile?.lcp, lcpToStatus),
+    cls:  timing(mobile?.cls, clsToStatus),
+    inp:  timing(mobile?.tbt, inpToStatus),
     ttfb: ttfbCheck(ttfbMs),
   };
 }

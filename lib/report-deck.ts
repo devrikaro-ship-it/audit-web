@@ -123,6 +123,17 @@ const pageScore = (cs: PageCheck[]) => Math.round(measuredChecks(cs).reduce((s, 
 
 // A measurement the audit could not take is "de verificat", never a finding (AUDIT-SPEC §5.1).
 const UNMEASURED = /indisponibil|nu s-a putut|necunoscut/i;
+
+// Reports saved before 2026-09-24 stored a speed test PageSpeed could not run as "0 / 100", with "—" for the timings
+// and a meaningless "0" for layout shift. A real mobile measurement always has a load time, so "—" there marks the
+// whole mobile run as not measured, and "0 / 100" is never a real score.
+function withLegacySpeed(cr: Record<string, CheckResult>): Record<string, CheckResult> {
+  const na: CheckResult = { status: "atentie", value: "Date indisponibile" };
+  const out = { ...cr };
+  if (cr.lcp?.value === "—") for (const k of ["pagespeed_mobile", "lcp", "cls", "inp"]) if (out[k]) out[k] = na;
+  for (const k of ["pagespeed_mobile", "pagespeed_desktop"]) if (out[k]?.value === "0 / 100") out[k] = na;
+  return out;
+}
 const siteRow = ({ title, result, fix }: SiteCopy, r: CheckResult): CheckRow =>
   UNMEASURED.test(r.value)
     ? { done: false, title, note: "Nu am putut masura din afara site-ului.", result: "de verificat" }
@@ -146,7 +157,7 @@ function aiCards(checks: PageCheck[]): AiCard[] {
 }
 
 export function buildDeck(data: AuditData): Deck {
-  const cr = data.checksRezultate;
+  const cr = withLegacySpeed(data.checksRezultate);
   const ai = data.aiChecks ?? [];
   const zones: Zone[] = [
     { name: "SEO tehnic", what: "Titlurile si descrierile din Google, adresele, paginile ascunse", score: pageScore(data.seoChecks) },

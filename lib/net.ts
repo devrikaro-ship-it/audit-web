@@ -213,6 +213,8 @@ export type PSIResult = {
   tbt: string;
 };
 
+export const UNAVAILABLE = "Date indisponibile";
+
 export async function fetchPSI(url: string, strategy: "mobile" | "desktop"): Promise<PSIResult | null> {
   try {
     // Fara cheie, endpointul public da 429 pe volum (limita anonima). Cu cheia din
@@ -223,12 +225,15 @@ export async function fetchPSI(url: string, strategy: "mobile" | "desktop"): Pro
     if (!r.ok) return null;
     const json = await r.json();
     const audits = json?.lighthouseResult?.audits ?? {};
-    const score = Math.round((json?.lighthouseResult?.categories?.performance?.score ?? 0) * 100);
+    // Lighthouse omits the score when it could not measure the page: that is no measurement, not a score of 0.
+    const raw = json?.lighthouseResult?.categories?.performance?.score;
+    if (typeof raw !== "number") return null;
+    const timing = (id: string): string => audits[id]?.displayValue ?? UNAVAILABLE;
     return {
-      score,
-      lcp: audits["largest-contentful-paint"]?.displayValue ?? "—",
-      cls: audits["cumulative-layout-shift"]?.displayValue ?? "—",
-      tbt: audits["total-blocking-time"]?.displayValue ?? "—",
+      score: Math.round(raw * 100),
+      lcp: timing("largest-contentful-paint"),
+      cls: timing("cumulative-layout-shift"),
+      tbt: timing("total-blocking-time"),
     };
   } catch { return null; }
 }
