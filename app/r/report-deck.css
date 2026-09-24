@@ -142,6 +142,14 @@ html:has(.deck.phone){font-size:15px}
 .deck .check td.what small{color:var(--muted);font-size:.88rem}
 .deck .check td.res{color:var(--ink-2);white-space:nowrap;text-align:right;font-family:var(--f-num);font-weight:600}
 .deck .check tr.done td.what b{color:var(--muted);font-weight:500}
+.deck .check.std td{padding:.42rem .6rem}
+.deck .check.std tr.group td{padding-top:.8rem;border-bottom:2px solid var(--ink);font-family:var(--f-num);font-weight:700;font-size:1rem;letter-spacing:.02em}
+.deck .check.std td.box span{display:inline-grid;place-items:center;width:1.2rem;height:1.2rem;border:0;border-radius:.25rem;color:#fff;font-weight:800;font-size:.8rem;line-height:1}
+.deck .check.std td.box.ok span{background:var(--good)}
+.deck .check.std td.box.ok span::after{content:none}
+.deck .check.std td.box.fail span{background:var(--bad)}
+.deck .check.std td.box.verify span{background:var(--warn)}
+.deck .check.std tr.ok td.what b{font-weight:500;color:var(--ink-2)}
 .deck .contact .lead{font-size:1.25rem;color:var(--ink-2);max-width:52ch}
 @container deck (max-width:760px){.deck .ai3{grid-template-columns:1fr}
 .deck .part .pnum{font-size:6rem}

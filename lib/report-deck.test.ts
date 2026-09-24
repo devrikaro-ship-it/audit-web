@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDeck, paginateChecklist, type CheckRow } from "./report-deck";
+import { buildDeck, paginateChecklist, paginateStandard, type CheckRow, type StdGroup } from "./report-deck";
 import type { AuditData, PageCheck } from "./types";
 
 const check = (id: string, correctCount: number, total: number, unit?: string): PageCheck =>
@@ -73,6 +73,18 @@ describe("paginateChecklist", () => {
   it("moves the done block to its own slide when the last slide is already full", () => {
     expect(shape([...Array.from({ length: 7 }, (_, i) => open(i)), ...Array.from({ length: 6 }, (_, i) => ok(i))])).toEqual([[7, 0], [0, 6]]);
   });
+  it("standard checklist: groups in order, a group that does not fit continues on the next slide under its name", () => {
+    const g = (name: string, ok: number, fail: number): StdGroup => ({ name, score: null, rows: [
+      ...Array.from({ length: ok }, (_, i) => ({ state: "ok" as const, title: `${name}${i}`, result: "", note: "" })),
+      ...Array.from({ length: fail }, (_, i) => ({ state: "fail" as const, title: `${name}f${i}`, result: "", note: "fix" })),
+    ] });
+    const pages = paginateStandard([g("a", 4, 0), g("b", 2, 3), g("c", 4, 2)]);
+    expect(pages.map((p) => p.map((x) => [x.name, x.rows.length]))).toEqual([[["a", 4], ["b", 4]], [["b", 1], ["c", 6]]]);
+    const height = (p: StdGroup[]) => p.reduce((h, x) => h + 0.6 + x.rows.reduce((n, r) => n + (r.note ? 1 : 0.62), 0), 0);
+    expect(pages.every((p) => height(p) <= 7.4)).toBe(true);
+    expect(pages.flat().flatMap((x) => x.rows.map((r) => r.title))).toEqual([g("a", 4, 0), g("b", 2, 3), g("c", 4, 2)].flatMap((x) => x.rows.map((r) => r.title)));
+  });
+
   it("renders one slide of done rows when nothing is open", () => {
     expect(shape([ok(1)])).toEqual([[0, 1]]);
   });
@@ -128,14 +140,14 @@ describe("paginateChecklist", () => {
     const d = buildDeck(base({ seo, checksRezultate: {} }));
     expect(d.seo.zones.map((z) => [z.name, z.score])).toEqual([["1. Paginile raspund corect", 100], ["2. Reguli pentru roboti (robots.txt)", 0], ["3. Continut vizibil fara incarcare ulterioara", null], ["4. Continutul paginii", 0]]);
     expect(d.seo.problems.map((p) => [p.title, p.count])).toEqual([["robots.txt arata unde e lista de pagini", "de reparat"], ["Pozele produselor au descriere", "40 din 40 pagini de produs"]]);
-    expect(d.seo.checklist.map((r) => [r.title, r.done, r.result])).toEqual([
-      ["Pagini care raspund corect", true, "60 din 60 pagini"],
-      ["Site-ul raspunde cererilor automate", false, "de verificat"],
-      ["robots.txt arata unde e lista de pagini", false, "nu"],
-      ["Pretul e in pagina, nu incarcat ulterior", false, "de verificat"],
-      ["Pozele produselor au descriere", false, "0 din 40 pagini de produs"],
+    expect(d.seo.standard?.map((g) => [g.name, g.score, g.rows.map((r) => [r.state, r.title, r.result])])).toEqual([
+      ["1. Paginile raspund corect", 100, [["ok", "Pagini care raspund corect", "60 din 60 pagini"], ["verify", "Site-ul raspunde cererilor automate", "de verificat"]]],
+      ["2. Reguli pentru roboti (robots.txt)", 0, [["fail", "robots.txt arata unde e lista de pagini", "nu"]]],
+      ["3. Continut vizibil fara incarcare ulterioara", null, [["verify", "Pretul e in pagina, nu incarcat ulterior", "de verificat"]]],
+      ["4. Continutul paginii", 0, [["fail", "Pozele produselor au descriere", "0 din 40 pagini de produs"]]],
     ]);
     expect(d.seo.score).toBe(33);
+    expect(buildDeck(base({ seo: [{ id: "raspuns", rows: [{ id: "pagini_200", ok: 59, total: 60 }] }], checksRezultate: {} })).seo.standard?.[0].rows[0].state).toBe("fail");
     expect(d.first?.title).toBe("robots.txt arata unde e lista de pagini");
     expect(d.seo.product).toBeNull();
     expect(d.seo.ai).toBeNull();

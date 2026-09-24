@@ -79,10 +79,13 @@ cannot read needs no good title). Every row is measured from the store URL alone
    - 10.1 AI search robots allowed: OAI-SearchBot, PerplexityBot, Claude-SearchBot (of 3).
    - 10.2 links to the company's official profiles (sameAs, of 2).
 
-## Scores
+## Checklist and scores (operator, 2026-09-24: "un checklist standard cu x sau v")
 
-Component score = mean of its measured rows (ok / total). SEO score = mean of the components with a measured row.
-Overall score = mean of the SEO and UX/UI scores, the two numbers the cover shows.
+Every report shows the same 38 rows in the same order, grouped by component. A row is ✓ when every page checked
+passes, ✗ otherwise (the count stays next to it, e.g. "45 din 46"), and "de verificat" when it could not be measured
+or confirmed; "de verificat" rows count in no score. Component score = share of ✓ among its judged rows; SEO score =
+share of ✓ among all judged rows. Overall score = mean of the SEO and UX/UI scores, the two numbers the cover shows,
+recomputed when a report is shown.
 
 ## Removed (sources above)
 

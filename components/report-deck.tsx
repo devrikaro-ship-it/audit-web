@@ -1,11 +1,31 @@
 import type { ReactNode } from "react";
 import "@/app/r/report-deck.css";
-import { buildDeck, paginateChecklist, toneOf, VERDICT_LABEL, type CheckRow } from "@/lib/report-deck";
+import { buildDeck, paginateChecklist, paginateStandard, toneOf, VERDICT_LABEL, type CheckRow, type StdGroup, type StdRow } from "@/lib/report-deck";
 import { verdict } from "@/lib/scoring";
 import type { AuditData } from "@/lib/types";
 
 const MONTHS = ["ianuarie", "februarie", "martie", "aprilie", "mai", "iunie", "iulie", "august", "septembrie", "octombrie", "noiembrie", "decembrie"];
 const formatDate = (ms: number) => { const d = new Date(ms); return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; };
+
+// The standard SEO checklist: every component with its rows, each ✓ (passes on every page checked), ✗ with its fix,
+// or ? "de verificat" when it could not be measured from outside the site.
+const MARK: Record<StdRow["state"], string> = { ok: "✓", fail: "✗", verify: "?" };
+function StandardChecklist({ groups }: { groups: StdGroup[] }) {
+  return (
+    <table className="check std"><tbody>
+      {groups.flatMap((g, gi) => [
+        <tr className="group" key={`g${gi}`}><td colSpan={2}>{g.name}</td><td className="res">{g.score === null ? "de verificat" : `${g.score}/100`}</td></tr>,
+        ...g.rows.map((r, i) => (
+          <tr className={r.state} key={`${gi}-${i}`}>
+            <td className={`box ${r.state}`}><span>{MARK[r.state]}</span></td>
+            <td className="what"><b>{r.title}</b>{r.note && <small>{r.note}</small>}</td>
+            <td className="res">{r.result}</td>
+          </tr>
+        )),
+      ])}
+    </tbody></table>
+  );
+}
 
 function Checklist({ todo, done }: { todo: CheckRow[]; done: CheckRow[] }) {
   return (
@@ -140,11 +160,19 @@ export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData
       </>),
     });
   }
-  const seoPages = paginateChecklist(d.seo.checklist);
-  seoPages.forEach((pg, i) => slides.push({
-    eyebrow: "Partea 1 · SEO · Checklist",
-    body: (<><h2>Checklist SEO{seoPages.length > 1 ? ` (${i + 1}/${seoPages.length})` : ""}</h2><Checklist {...pg} /></>),
-  }));
+  if (d.seo.standard) {
+    const stdPages = paginateStandard(d.seo.standard);
+    stdPages.forEach((groups, i) => slides.push({
+      eyebrow: "Partea 1 · SEO · Checklist",
+      body: (<><h2>Checklist SEO{stdPages.length > 1 ? ` (${i + 1}/${stdPages.length})` : ""}</h2><StandardChecklist groups={groups} /></>),
+    }));
+  } else {
+    const seoPages = paginateChecklist(d.seo.checklist);
+    seoPages.forEach((pg, i) => slides.push({
+      eyebrow: "Partea 1 · SEO · Checklist",
+      body: (<><h2>Checklist SEO{seoPages.length > 1 ? ` (${i + 1}/${seoPages.length})` : ""}</h2><Checklist {...pg} /></>),
+    }));
+  }
 
   // ── Part 2: UX / UI
   slides.push({

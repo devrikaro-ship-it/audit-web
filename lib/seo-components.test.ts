@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { componentScore, computeSeoComponents, type SeoInput, type SeoProbes } from "./seo-components";
+import { componentScore, computeSeoComponents, seoScore, type SeoInput, type SeoProbes } from "./seo-components";
 import type { PageData } from "./net";
 
 const O = "https://s.ro";
@@ -96,8 +96,11 @@ describe("computeSeoComponents finds each fault where it is", () => {
 });
 
 describe("componentScore", () => {
-  it("averages the measured rows and leaves out the unmeasured and the unconfirmed", () => {
-    expect(componentScore({ id: "x", rows: [{ id: "a", ok: 1, total: 2 }, { id: "b", ok: 0, total: 0 }, { id: "c", ok: 0, total: 1, verify: true }] })).toBe(50);
+  it("is the share of ✓ rows: a row passes only when every page checked passes; unmeasured and unconfirmed rows are left out", () => {
+    expect(componentScore({ id: "x", rows: [{ id: "a", ok: 45, total: 46 }, { id: "d", ok: 3, total: 3 }, { id: "b", ok: 0, total: 0 }, { id: "c", ok: 0, total: 1, verify: true }] })).toBe(50);
     expect(componentScore({ id: "x", rows: [{ id: "a", ok: 0, total: 0 }] })).toBeNull();
+  });
+  it("scores the SEO part as the share of ✓ over all judged rows, not the mean of the components", () => {
+    expect(seoScore([{ id: "x", rows: [{ id: "a", ok: 1, total: 1 }] }, { id: "y", rows: [{ id: "b", ok: 1, total: 1 }, { id: "c", ok: 0, total: 1 }, { id: "d", ok: 0, total: 1 }] }])).toBe(50);
   });
 });

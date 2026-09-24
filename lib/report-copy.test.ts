@@ -78,7 +78,8 @@ describe("the report speaks the shop owner's language", () => {
   it("every open checklist row says how to fix it", () => {
     for (const d of [buildDeck(data), buildDeck(tenData)]) {
     const pageNames = ["Homepage", "Pagina de categorie", "Pagina de produs", "Filtre si sortare"];
-    const open = [...d.seo.checklist, ...d.ux.checklist].filter((r) => !r.done);
+    const std = (d.seo.standard ?? []).flatMap((g) => g.rows).filter((r) => r.state !== "ok").map((r) => ({ ...r, done: false }));
+    const open = [...d.seo.checklist, ...std, ...d.ux.checklist].filter((r) => !r.done);
     expect(open.length).toBeGreaterThan(20);
     expect(open.filter((r) => !r.note || pageNames.includes(r.note)).map((r) => r.title)).toEqual([]);
     }

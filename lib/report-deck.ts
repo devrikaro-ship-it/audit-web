@@ -3,7 +3,7 @@
 import { CHECKS } from "./problems-db";
 import { statusScore, verdict, type Verdict } from "./scoring";
 import type { AuditData, CheckResult, PageCheck, SeoComponent, UxField } from "./types";
-import { componentScore, seoScore as tenScore } from "./seo-score";
+import { componentScore, rowPass, seoScore as tenScore } from "./seo-score";
 import { COMPONENTS, ROWS, STAGES } from "./seo-copy";
 
 export type Tone = "good" | "warn" | "bad";
@@ -13,12 +13,17 @@ export type CheckRow = { done: boolean; title: string; note: string; result: str
 export type AiCard = { label: string; big: string; text: string; why: string; tone: Tone };
 export type UxPage = { id: string; name: string; score: number | null; verdict: string; tone: Tone; found: string[]; missing: string[] };
 
+// The standard SEO checklist: the same rows in the same order for every shop, grouped by component, each ✓, ✗ or
+// "de verificat" (operator, 2026-09-24).
+export type StdRow = { state: "ok" | "fail" | "verify"; title: string; result: string; note: string };
+export type StdGroup = { name: string; score: number | null; rows: StdRow[] };
+
 export type Deck = {
   domain: string;
   cover: string;
   pages: number;
   score: number;
-  seo: { score: number; zones: Zone[]; pills: string[]; problems: Problem[]; product: ProductSlide | null; ai: AiCard[] | null; checklist: CheckRow[] };
+  seo: { score: number; zones: Zone[]; pills: string[]; problems: Problem[]; product: ProductSlide | null; ai: AiCard[] | null; checklist: CheckRow[]; standard: StdGroup[] | null };
   ux: { score: number | null; speed: { mobile: string; desktop: string; lcp: string }; pages: UxPage[]; checklist: CheckRow[] };
   first: { title: string; text: string } | null;
 };
@@ -164,7 +169,7 @@ function tenComponents(seo: SeoComponent[]) {
   const zones: Zone[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({ name: `${i + 1}. ${COMPONENTS[c.id].name}`, what: COMPONENTS[c.id].what, score: componentScore(c) }));
   const rows = seo.flatMap((c) => c.rows).filter((r) => ROWS[r.id]);
   const result = (r: SeoComponent["rows"][number]) => (ROWS[r.id].unit ? `${r.ok} din ${r.total} ${ROWS[r.id].unit}` : r.ok === r.total ? "da" : "nu");
-  const faults = rows.filter((r) => r.total > 0 && !r.verify && r.ok < r.total);
+  const faults = rows.filter((r) => rowPass(r) === false);
   const problems: Problem[] = faults.slice(0, 4).map((r) => ({
     title: ROWS[r.id].title,
     count: ROWS[r.id].unit ? `${r.total - r.ok} din ${r.total} ${ROWS[r.id].unit}` : "de reparat",
@@ -172,13 +177,17 @@ function tenComponents(seo: SeoComponent[]) {
     problem: ROWS[r.id].problem(),
     fix: ROWS[r.id].fix,
   }));
-  const checklist: CheckRow[] = rows.map((r) => {
-    const copy = ROWS[r.id];
-    if (r.total === 0) return { done: false, title: copy.title, note: "Nu am putut masura din afara site-ului.", result: "de verificat" };
-    if (r.verify) return { done: false, title: copy.title, note: copy.fix, result: "de verificat" };
-    return r.ok === r.total ? { done: true, title: copy.title, note: "", result: result(r) } : { done: false, title: copy.title, note: copy.fix, result: result(r) };
-  });
-  return { score: tenScore(seo), zones, pills: Object.values(STAGES), problems, checklist };
+  const standard: StdGroup[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({
+    name: `${i + 1}. ${COMPONENTS[c.id].name}`,
+    score: componentScore(c),
+    rows: c.rows.filter((r) => ROWS[r.id]).map((r): StdRow => {
+      const copy = ROWS[r.id];
+      const pass = rowPass(r);
+      if (pass === null) return { state: "verify", title: copy.title, result: "de verificat", note: r.total === 0 ? "Nu am putut masura din afara site-ului." : copy.fix };
+      return pass ? { state: "ok", title: copy.title, result: result(r), note: "" } : { state: "fail", title: copy.title, result: result(r), note: copy.fix };
+    }),
+  }));
+  return { score: tenScore(seo), zones, pills: Object.values(STAGES), problems, checklist: [], standard };
 }
 
 export function buildDeck(data: AuditData): Deck {
@@ -246,14 +255,16 @@ export function buildDeck(data: AuditData): Deck {
     : topProblem ? { title: topProblem.title, text: topProblem.problem } : null;
 
   const domain = data.domain.replace(/^www\./, "");
+  // With the ten components the overall score is the mean of the two parts, recomputed so a stored report agrees.
+  const overall = ten ? (data.ux ? Math.round((ten.score + data.ux.scor) / 2) : ten.score) : data.scor;
   return {
     domain,
-    cover: verdict(data.scor) === "bun" ? `Ce mai poate castiga ${domain}` : `Unde pierde clienti ${domain}`,
+    cover: verdict(overall) === "bun" ? `Ce mai poate castiga ${domain}` : `Unde pierde clienti ${domain}`,
     pages: data.pagesAnalyzed,
-    score: data.scor,
+    score: overall,
     seo: ten
       ? { ...ten, product: null, ai: null }
-      : { score: seoScore, zones, pills: zones.map((z) => z.name), problems: problems.slice(0, 4), product, ai: ai.length ? aiCards(ai) : null, checklist: seoChecklist },
+      : { score: seoScore, zones, pills: zones.map((z) => z.name), problems: problems.slice(0, 4), product, ai: ai.length ? aiCards(ai) : null, checklist: seoChecklist, standard: null },
     ux: {
       score: data.ux ? data.ux.scor : null,
       speed: { mobile: measured("pagespeed_mobile"), desktop: measured("pagespeed_desktop"), lcp: measured("lcp") },
@@ -294,3 +305,30 @@ export function paginateChecklist(rows: CheckRow[], capacity = 7.4): { todo: Che
   }
   return out;
 }
+
+// The standard checklist over slides, groups kept in order: a group heading, then its rows; a ✗ or "de verificat"
+// row carries its how-to line and is taller. A group that does not fit continues on the next slide under its name.
+const GROUP_HEAD = 0.6;
+export function paginateStandard(groups: StdGroup[], capacity = 7.4): StdGroup[][] {
+  const pages: StdGroup[][] = [[]];
+  let used = 0;
+  for (const g of groups) {
+    let rows = g.rows;
+    while (rows.length) {
+      if (used + GROUP_HEAD + ROW_WITHOUT_NOTE > capacity && pages[pages.length - 1].length) { pages.push([]); used = 0; }
+      used += GROUP_HEAD;
+      const take: StdRow[] = [];
+      for (const r of rows) {
+        const h = r.note ? ROW_WITH_NOTE : ROW_WITHOUT_NOTE;
+        if (take.length && used + h > capacity) break;
+        take.push(r);
+        used += h;
+      }
+      pages[pages.length - 1].push({ ...g, rows: take });
+      rows = rows.slice(take.length);
+      if (rows.length) { pages.push([]); used = 0; }
+    }
+  }
+  return pages;
+}
+
