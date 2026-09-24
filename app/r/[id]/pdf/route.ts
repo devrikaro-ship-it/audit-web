@@ -1,16 +1,9 @@
 import type { NextRequest } from "next/server";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
-import { readFile, unlink } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { randomUUID } from "node:crypto";
 import { getAudit } from "@/lib/leads-store";
 import { findChrome, internalReportUrl } from "@/lib/find-chrome";
+import { printReportPdf } from "@/lib/report-pdf";
 
 export const runtime = "nodejs";
-
-const execFileAsync = promisify(execFile);
 
 export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const { id } = await ctx.params;
@@ -34,20 +27,8 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string 
   if (!probe || !probe.ok) {
     return new Response("Raportul nu a putut fi pregatit pentru PDF. Incearca din nou.", { status: 502 });
   }
-  const outPath = join(tmpdir(), `audit-${id}-${randomUUID()}.pdf`);
-
   try {
-    await execFileAsync(chrome, [
-      "--headless=new",
-      "--disable-gpu",
-      "--no-sandbox",
-      "--no-pdf-header-footer",
-      "--virtual-time-budget=15000",
-      `--print-to-pdf=${outPath}`,
-      reportUrl,
-    ], { timeout: 45000 });
-
-    const pdf = await readFile(outPath);
+    const pdf = await printReportPdf(chrome, reportUrl);
     const safeDomain = (stored.domain || "audit").replace(/[^a-z0-9.-]/gi, "_");
     return new Response(new Uint8Array(pdf), {
       headers: {
@@ -58,7 +39,5 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string 
     });
   } catch {
     return new Response("Nu s-a putut genera PDF-ul.", { status: 500 });
-  } finally {
-    unlink(outPath).catch(() => {});
   }
 }
