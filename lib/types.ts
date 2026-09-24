@@ -28,7 +28,12 @@ export type AuditData = {
   isEcom?: boolean;
   productSignal?: ProductSignal;   // product titles and descriptions, shown in the SEO rubric (shops only)
   ux?: UxAudit;                    // UX/UI by page type (shops only)
+  seo?: SeoComponent[];            // Part 1: the ten SEO components (2026-09-24); absent on older reports
 };
+
+// A measured row: ok of total (total 0 = not measured); verify = observed but not confirmable ("de verificat").
+export type SeoRow = { id: string; ok: number; total: number; verify?: boolean };
+export type SeoComponent = { id: string; rows: SeoRow[] };
 
 // ── UX / UI — analiza pe tipuri de pagina (spec 3.3): viteza + home + categorie + produs + filtre ──
 export type UxStatus = "bun" | "partial" | "slab" | "necunoscut";

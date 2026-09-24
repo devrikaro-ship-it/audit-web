@@ -8,6 +8,8 @@ import { computeLearning, effectiveProfile, readApprovals } from "./learning";
 import { appendObservation, pathPrefixes, readObservations } from "./observations";
 import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, openWithRetry, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, UNAVAILABLE, type PageData, type PSIResult } from "./net";
+import { computeSeoComponents } from "./seo-components";
+import { runSeoProbes } from "./seo-probes";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
 const LLM_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "OAI-SearchBot", "CCBot", "Googlebot-Extended"];
@@ -883,6 +885,10 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     ({ urls: toAnalyze, planned } = selectPages(homepage, typed));
   }
 
+  // The small SEO checks (redirects, www, sitemap sample, sort parameter) before the page burst, like llms.txt.
+  const probes = await runSeoProbes(origin, [...typed.category.slice(0, 10), ...typed.product.slice(0, 10)], typed.category[0] ?? null, sitemapXml)
+    .catch(() => ({ sitemapLastmod: null, httpToHttps: null, maxRedirectHops: null, variantsSameHost: null, sitemapSample: { ok: 0, total: 0 }, sortParamHandled: null }));
+
   // Phase 2: Fetch pages at the pace the platform accepts (profile.concurrency)
   const fetchDeadline = Date.now() + PAGE_FETCH_BUDGET_MS;
   const fetched = (list: (PageData | undefined)[]) => list.filter((p): p is PageData => !!p);
@@ -920,6 +926,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const ttfbMs = ttfbResult.status === "fulfilled" ? ttfbResult.value : null;
   const hasProductFeed = feedResult.status === "fulfilled" ? feedResult.value : false;
 
+
   const avertisment = detectBlocker(homepageData.html) ?? undefined;
 
   // Phase 4: Compute section results
@@ -930,6 +937,12 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const structuraChecks = computeStructuraChecks(analyzedPages, robotsTxt, sitemapXml, sitemapUrl, { categories, products });
   const aiChecks = computeAiChecks(robotsTxt, llmsTxt, analyzedPages);
   const schema = computeSchemaChecks(analyzedPages, { categories, products });
+  const readThroughBrowser = usedBrowser || !!browserFetcher;
+  const seo = computeSeoComponents({
+    origin, requested: pages, pages: analyzedPages, categories, products, robotsTxt, sitemapXml,
+    listed: { categories: typed.category.length, products: typed.product.length, other: typed.other.length },
+    refusedServer: looksBlocked(homeDirect.ok, homeDirect.html) || readThroughBrowser, readWithBrowser: readThroughBrowser, probes,
+  });
   const social = computeSocialChecks(homepageData);
   const securitate = computeSecurityChecks(homepageData);
 
@@ -969,5 +982,6 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     isEcom,
     productSignal,
     ux,
+    seo,
   };
 }

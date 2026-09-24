@@ -42,6 +42,8 @@ as it needs. Content: `buildDeck` in `lib/report-deck.ts` (pure, tested); layout
 Design: `docs/superpowers/specs/2026-09-24-report-deck-design.md`.
 
 ### 3.1 SEO
+> **2026-09-24 (operator):** Part 1 becomes ten components in dependency order (can the site be read -> does Google understand it -> can AI assistants use it), defined in `docs/superpowers/specs/2026-09-24-seo-ten-components-design.md`. The engine measures them (`lib/seo-components.ts`, `lib/seo-probes.ts`, stored as `seo`); the report switches to them once the deck renders them. The six zones below stay for reports saved before.
+
 **6 zones** (5 defined by Vlad, the 6th added 2026-09-24 from devrika-seo pillar 9):
 1. **SEO Tehnic (On-page):** Title, Meta description, H1, Canonical, structura URL, indexare (noindex meta / X-Robots-Tag), continut mixt (http resources on https)
 2. **Calitatea Continutului:** text subtire, duplicat, ierarhie H2/H3, lizibilitate, keyword principal
