@@ -116,6 +116,7 @@ html:has(.deck.phone){font-size:15px}
 .deck.phone .aic,.deck.phone .pg{display:block}
 .deck.phone .aic > * + *{margin-top:.6rem}
 .deck.phone .label{display:block;break-after:avoid}
+.deck.phone .check tr.group{break-after:avoid;break-inside:avoid}
 .deck.phone .check tr,.deck.phone .prob,.deck.phone .okgrid div,.deck.phone .pg,.deck.phone .stat{break-inside:avoid}
 }
 .deck .part .body{align-content:center;gap:var(--lg)}
