@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeContinutChecks, computeKeywordsChecks, duplicateTextPages, keywordInWrittenText, ownWrittenText, sameHeadingPages } from "./audit-engine";
+import { computeContinutChecks, computeKeywordsChecks, computeStructuraChecks, duplicateTextPages, keywordInWrittenText, ownWrittenText, sameHeadingPages } from "./audit-engine";
 import type { PageData } from "./net";
 
 const page = (url: string, body: string, title = ""): PageData => ({
@@ -95,3 +95,14 @@ describe("keywordInWrittenText", () => {
   });
 });
 
+
+describe("the visible trail is judged where it belongs", () => {
+  const trail = '<nav aria-label="breadcrumb"><a href="/">Acasa</a> / Gantere</nav>';
+  const home = page("https://s.ro/", "<h1>Magazin</h1>");
+  const cat = page("https://s.ro/gantere/", `<div class="breadcrumb">${trail}</div>`);
+  const prod = page("https://s.ro/gantere/set/", "<h1>Set gantere</h1>");
+  it("judges category and product pages only, never the home page", () => {
+    const c = computeStructuraChecks([home, cat, prod], "", "", "https://s.ro/sitemap.xml", { categories: [cat.url], products: [prod.url] }).find((x) => x.id === "breadcrumbs");
+    expect(c).toMatchObject({ correctCount: 1, total: 2 });
+  });
+});

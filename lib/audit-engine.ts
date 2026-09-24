@@ -433,10 +433,15 @@ export function computeStructuraChecks(
   robotsTxt: string,
   sitemapXml: string,
   sitemapUrl: string,
+  seg: { categories: string[]; products: string[] },
 ): PageCheck[] {
   const total = pages.length || 1;
   const sitemapCheck = checkSitemapCriteria(sitemapXml, sitemapUrl, robotsTxt);
-  const breadcrumbsOk = pages.filter(p => hasBreadcrumbs(p.html)).length;
+  // The trail belongs on category and product pages; the home page has none by design.
+  const norm = (u: string) => u.replace(/\/$/, "");
+  const inner = new Set([...seg.categories, ...seg.products].map(norm));
+  const trailPages = pages.filter(p => inner.has(norm(p.url)));
+  const breadcrumbsOk = trailPages.filter(p => hasBreadcrumbs(p.html)).length;
   const brokenLinksOk = pages.filter(p => p.status !== 404 && p.status !== 410).length;
   const internalLinkingOk = pages.filter(p => countInternalLinks(p.html, new URL(p.url).hostname) >= 3).length;
 
@@ -449,8 +454,8 @@ export function computeStructuraChecks(
     },
     {
       id: "breadcrumbs", label: "Breadcrumbs",
-      correctCount: breadcrumbsOk, total,
-      problema: `${total - breadcrumbsOk} pagini nu au breadcrumbs. Breadcrumbs ajuta Google sa inteleaga ierarhia si ofera potential de rich result.`,
+      correctCount: breadcrumbsOk, total: trailPages.length,
+      problema: `${trailPages.length - breadcrumbsOk} pagini de categorie si produs nu au breadcrumbs. Breadcrumbs ajuta Google sa inteleaga ierarhia si ofera potential de rich result.`,
       fix: "Adauga breadcrumbs vizibile pe toate paginile. Rank Math si Yoast genereaza automat si schema BreadcrumbList.",
     },
     {
@@ -916,7 +921,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const seoChecks = computeSeoChecks(analyzedPages);
   const continutChecks = computeContinutChecks(analyzedPages);
   const keywordsChecks = computeKeywordsChecks(analyzedPages);
-  const structuraChecks = computeStructuraChecks(analyzedPages, robotsTxt, sitemapXml, sitemapUrl);
+  const structuraChecks = computeStructuraChecks(analyzedPages, robotsTxt, sitemapXml, sitemapUrl, { categories, products });
   const aiChecks = computeAiChecks(robotsTxt, llmsTxt, analyzedPages);
   const schema = computeSchemaChecks(analyzedPages, { categories, products });
   const social = computeSocialChecks(homepageData);

@@ -14,7 +14,7 @@ const pageChecks = {
   seoChecks: computeSeoChecks(pages),
   continutChecks: computeContinutChecks(pages),
   keywordsChecks: computeKeywordsChecks(pages),
-  structuraChecks: computeStructuraChecks(pages, "", "", "https://s.ro/sitemap.xml"),
+  structuraChecks: computeStructuraChecks(pages, "", "", "https://s.ro/sitemap.xml", { categories: [pages[1].url], products: [pages[2].url, pages[3].url] }),
   aiChecks: computeAiChecks("User-agent: GPTBot\nDisallow: /", "", pages),
 };
 const fail = (value: string) => ({ status: "critic" as const, value });

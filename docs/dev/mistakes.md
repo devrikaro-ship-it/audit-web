@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — The report said a page lacks a trail while also saying every page has one
+
+Symptom: magazinfitness.ro's checklist listed "Pagini fara traseu: 1 din 60" above "Traseul paginii afisat in Google: 54 din 54". Measured cause: the visible-trail check judged every page read, home page included, while the structured-data check judges category and product pages only; the one "missing" trail was the home page, which has none by design. Recognition signal: two checks about the same element with different page sets (60 vs 54). Repair: `computeStructuraChecks` takes the category and product lists and judges the trail on those pages only; now 54 / 54 on both.
+
 ## 2026-09-24 — Two report rows measured the same heading, and titles were read with their HTML codes
 
 Symptom: the magazinfitness.ro report listed "Cuvantul cautat lipseste din titlul paginii" (10 pages) and "Text fara cuvantul pe care il cauta clientii" (7 pages) as two problems. Measured cause: both tested whether the H1 contains the first words of the title (3 words vs 2), so one fault was counted twice in the score. While moving the second one to the written text, diente.ro showed two more defects: category pages were judged on the delivery sentence every page repeats, and `parseTitle` kept `&ndash;`, so "ndash" became a searched word. Recognition signal: two checks whose code reads the same element; a searched word that is an HTML entity name. Repair: `cuvinte_cheie` reads the page's own written text (`ownWrittenText`, template excluded, pages without own text not judged); `parseTitle` decodes character references (`decodeEntities`). Each fix has a test that failed first.
