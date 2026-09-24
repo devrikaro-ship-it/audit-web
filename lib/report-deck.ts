@@ -62,28 +62,28 @@ const yesNo = (r: CheckResult) => (r.status === "ok" ? "da" : "lipseste");
 const outOf = (what: string) => (r: CheckResult) => { const m = nums(r.value); return m ? `${m[1]} din ${m[2]} ${what}` : yesNo(r); };
 const countOr = (ok: string, what: string) => (r: CheckResult) => (r.status === "ok" ? ok : `${r.value.match(/\d+/)?.[0] ?? "unele"} ${what}`);
 const asMeasured = (r: CheckResult) => r.value;
-type SiteCopy = { title: string; result: (r: CheckResult) => string };
+type SiteCopy = { title: string; result: (r: CheckResult) => string; fix: string };
 const SEO_SITE: Record<string, SiteCopy> = {
-  schema_tipuri: { title: "Google stie ca site-ul e un magazin", result: yesNo },
-  schema_produs: { title: "Pret si stoc afisate in Google", result: outOf("pagini de produs") },
-  schema_breadcrumbs: { title: "Traseul paginii afisat in Google", result: outOf("pagini") },
-  schema_rating: { title: "Stele (nota clientilor) afisate in Google", result: outOf("pagini de produs") },
-  og_tags: { title: "Titlu si descriere cand linkul e distribuit pe Facebook", result: yesNo },
-  og_image: { title: "Imagine cand linkul e distribuit pe Facebook", result: yesNo },
-  https: { title: "Conexiune securizata (lacatul din browser)", result: yesNo },
-  hsts: { title: "Browserul foloseste mereu conexiunea securizata", result: yesNo },
-  security_headers: { title: "Protectiile de securitate ale paginilor", result: yesNo },
-  imagini_alt: { title: "Descrieri la imagini, pentru Google si pentru nevazatori", result: countOr("toate au descriere", "imagini fara descriere") },
+  schema_tipuri: { title: "Google stie ca site-ul e un magazin", result: yesNo, fix: "Adauga in datele magazinului pentru Google numele firmei, logo-ul si datele de contact; modulele SEO obisnuite o fac din setari." },
+  schema_produs: { title: "Pret si stoc afisate in Google", result: outOf("pagini de produs"), fix: "Activeaza datele de produs pentru Google (pret si stoc) pe toate paginile de produs, din tema sau dintr-un modul SEO." },
+  schema_breadcrumbs: { title: "Traseul paginii afisat in Google", result: outOf("pagini"), fix: "Activeaza traseul in datele pentru Google pe categorii si produse; modulele SEO obisnuite il pun automat." },
+  schema_rating: { title: "Stele (nota clientilor) afisate in Google", result: outOf("pagini de produs"), fix: "Cere recenzii dupa livrare si afiseaza-le pe pagina produsului, cu nota inclusa in datele pentru Google; stelele apar doar din recenzii reale." },
+  og_tags: { title: "Titlu si descriere cand linkul e distribuit pe Facebook", result: yesNo, fix: "Completeaza titlul si descrierea pentru distribuire in setarile SEO ale paginii principale." },
+  og_image: { title: "Imagine cand linkul e distribuit pe Facebook", result: yesNo, fix: "Alege o imagine pentru distribuire (1200 x 630 pixeli) in setarile SEO ale paginii principale." },
+  https: { title: "Conexiune securizata (lacatul din browser)", result: yesNo, fix: "Instaleaza un certificat de securitate (gratuit la majoritatea firmelor de gazduire) si trimite tot site-ul pe https." },
+  hsts: { title: "Browserul foloseste mereu conexiunea securizata", result: yesNo, fix: "Cere firmei de gazduire sa oblige browserele sa foloseasca mereu conexiunea securizata." },
+  security_headers: { title: "Protectiile de securitate ale paginilor", result: yesNo, fix: "Cere firmei de gazduire sa activeze protectiile de securitate standard ale paginilor." },
+  imagini_alt: { title: "Descrieri la imagini, pentru Google si pentru nevazatori", result: countOr("toate au descriere", "imagini fara descriere"), fix: "Scrie la fiecare imagine, in campul de descriere din platforma, o propozitie scurta despre ce arata." },
 };
 const UX_SITE: Record<string, SiteCopy> = {
-  pagespeed_mobile: { title: "Scor de viteza pe mobil", result: asMeasured },
-  lcp: { title: "Continutul principal apare repede pe telefon", result: asMeasured },
-  cls: { title: "Pagina nu sare in timpul incarcarii", result: asMeasured },
-  inp: { title: "Raspuns rapid la click", result: asMeasured },
-  ttfb: { title: "Serverul raspunde repede", result: asMeasured },
-  imagini_optimizate: { title: "Imagini intr-un format usor", result: countOr("da", "imagini prea grele") },
-  favicon: { title: "Iconita magazinului in tabul browserului", result: yesNo },
-  apple_icon: { title: "Iconita cand magazinul e salvat pe ecranul telefonului", result: yesNo },
+  pagespeed_mobile: { title: "Scor de viteza pe mobil", result: asMeasured, fix: "Micsoreaza imaginile, amana scripturile care nu sunt necesare la inceput si verifica viteza gazduirii." },
+  lcp: { title: "Continutul principal apare repede pe telefon", result: asMeasured, fix: "Incarca prima imaginea mare de sus, la dimensiunea potrivita pentru telefon, si amana restul." },
+  cls: { title: "Pagina nu sare in timpul incarcarii", result: asMeasured, fix: "Rezerva spatiu pentru imagini si bannere, ca pagina sa nu se miste in timp ce se incarca." },
+  inp: { title: "Raspuns rapid la click", result: asMeasured, fix: "Redu scripturile care ruleaza la fiecare atingere a ecranului: chat, ferestre care apar, module de urmarire." },
+  ttfb: { title: "Serverul raspunde repede", result: asMeasured, fix: "Verifica gazduirea si pastreaza pe server paginile gata generate, ca sa nu fie construite la fiecare vizita." },
+  imagini_optimizate: { title: "Imagini intr-un format usor", result: countOr("da", "imagini prea grele"), fix: "Transforma imaginile intr-un format modern, mai usor; majoritatea platformelor au un modul care o face automat." },
+  favicon: { title: "Iconita magazinului in tabul browserului", result: yesNo, fix: "Incarca iconita magazinului (logo mic, patrat) din setarile temei." },
+  apple_icon: { title: "Iconita cand magazinul e salvat pe ecranul telefonului", result: yesNo, fix: "Incarca din setarile temei o iconita patrata de 180 x 180 pixeli pentru telefoane." },
 };
 // UX signals are stored with each report; reports saved before 2026-09-24 carry these older technical wordings.
 const UX_SIGNAL_BEFORE_2026_09_24: Record<string, string> = {
@@ -93,6 +93,25 @@ const UX_SIGNAL_BEFORE_2026_09_24: Record<string, string> = {
   "fara breadcrumbs": "fara traseul paginii (stii unde esti)",
 };
 const uxSignal = (s: string) => UX_SIGNAL_BEFORE_2026_09_24[s] ?? s;
+// How to fix each thing a page type is missing, keyed by the signal as the report shows it.
+const UX_FIX: Record<string, string> = {
+  "fara un mesaj clar la inceputul paginii": "Pune sus pe prima pagina un titlu mare care spune ce vinzi si pentru cine.",
+  "meniu greu de gasit": "Afiseaza meniul cu categoriile principale sus, vizibil si pe telefon.",
+  "putine cai spre categorii/produse": "Pune pe prima pagina legaturi catre categoriile principale si catre cateva produse vandute des.",
+  "nu e adaptat pentru mobil": "Foloseste o tema care se aseaza corect pe telefon si verifica paginile principale de pe un telefon.",
+  "grila de produse neclara (poza/pret)": "Afiseaza in lista de produse poza si pretul fiecarui produs.",
+  "fara traseul paginii (stii unde esti)": "Afiseaza traseul (Acasa > Categorie > Produs) deasupra titlului, pe categorii si produse.",
+  "fara paginare vizibila": "Adauga sub lista de produse numerotarea paginilor sau un buton 'Vezi mai multe'.",
+  "fara text de intro (pierzi si SEO)": "Scrie 2-3 fraze sub titlul categoriei: ce gaseste clientul acolo si cum alege.",
+  "prea putine imagini de produs": "Pune cel putin 3-4 poze pe produs: din mai multe unghiuri, in folosire, cu detalii.",
+  "pret sau stoc neclar": "Afiseaza langa butonul de comanda pretul si daca produsul e in stoc.",
+  "buton de comanda greu de gasit": "Fa butonul 'Adauga in cos' mare si vizibil fara derulare, si pe telefon.",
+  "descriere subtire": "Scrie descrieri care raspund la ce intreaba clientii: la ce foloseste, dimensiuni, material, cum il alegi.",
+  "fara recenzii pe produs": "Cere recenzii dupa livrare si afiseaza-le pe pagina produsului.",
+  "fara produse similare": "Afiseaza sub produs 4-8 produse similare sau complementare.",
+  "fara filtre pe categorii": "Adauga filtre dupa pret, marca si caracteristicile principale ale produselor.",
+  "fara sortare (pret, popularitate)": "Adauga in lista de produse sortare dupa pret si dupa popularitate.",
+};
 const UX_PAGES: Record<string, string> = { home: "Homepage", categorie: "Pagina de categorie", produs: "Pagina de produs", filtre: "Filtre si sortare" };
 
 const UNIT: Record<string, string> = { crawlere: "roboti AI", criterii: "conditii", fisier: "fisier", legaturi: "legaturi" };
@@ -104,10 +123,10 @@ const pageScore = (cs: PageCheck[]) => Math.round(measuredChecks(cs).reduce((s, 
 
 // A measurement the audit could not take is "de verificat", never a finding (AUDIT-SPEC §5.1).
 const UNMEASURED = /indisponibil|nu s-a putut|necunoscut/i;
-const siteRow = ({ title, result }: SiteCopy, r: CheckResult): CheckRow =>
+const siteRow = ({ title, result, fix }: SiteCopy, r: CheckResult): CheckRow =>
   UNMEASURED.test(r.value)
     ? { done: false, title, note: "Nu am putut masura din afara site-ului.", result: "de verificat" }
-    : { done: r.status === "ok", title, note: "", result: result(r) };
+    : { done: r.status === "ok", title, note: r.status === "ok" ? "" : fix, result: result(r) };
 
 function schemaScore(data: AuditData): number {
   const v = Object.entries(data.checksRezultate).filter(([k]) => CHECKS[k]?.sectiune === "schema").map(([, r]) => statusScore(r.status));
@@ -175,7 +194,7 @@ export function buildDeck(data: AuditData): Deck {
     };
   });
   const uxChecklist: CheckRow[] = [
-    ...uxPages.flatMap((p) => p.missing.map((m) => ({ done: false, title: m.charAt(0).toUpperCase() + m.slice(1), note: p.name, result: "de adaugat" }))),
+    ...uxPages.flatMap((p) => p.missing.map((m) => ({ done: false, title: m.charAt(0).toUpperCase() + m.slice(1), note: UX_FIX[m] ? `${p.name}: ${UX_FIX[m]}` : p.name, result: "de adaugat" }))),
     ...Object.entries(UX_SITE).filter(([k]) => cr[k]).map(([k, c]) => siteRow(c, cr[k])),
   ];
   const measured = (k: string) => (cr[k] && !UNMEASURED.test(cr[k].value) ? cr[k].value : "—");

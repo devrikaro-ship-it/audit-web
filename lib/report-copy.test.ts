@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ReportDeck } from "@/components/report-deck";
 import { computeAiChecks, computeContinutChecks, computeKeywordsChecks, computeSeoChecks, computeStructuraChecks, computeUxAudit } from "./audit-engine";
-import { PAGE_COPY } from "./report-deck";
+import { buildDeck, PAGE_COPY } from "./report-deck";
 import type { AuditData } from "./types";
 import type { PageData } from "./net";
 
@@ -56,4 +56,13 @@ describe("the report speaks the shop owner's language", () => {
     expect(text).toContain("mesaj clar la inceputul paginii");
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
   });
+
+  it("every open checklist row says how to fix it", () => {
+    const d = buildDeck(data);
+    const pageNames = ["Homepage", "Pagina de categorie", "Pagina de produs", "Filtre si sortare"];
+    const open = [...d.seo.checklist, ...d.ux.checklist].filter((r) => !r.done);
+    expect(open.length).toBeGreaterThan(20);
+    expect(open.filter((r) => !r.note || pageNames.includes(r.note)).map((r) => r.title)).toEqual([]);
+  });
 });
+
