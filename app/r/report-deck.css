@@ -107,10 +107,13 @@ html:has(.deck.phone){font-size:15px}
 .deck.phone .slide:not(.cover) .foot{display:none}
 /* Chrome ignores break-after:avoid on grid items, so a phone slide prints as a block: a label or heading then stays
    on the page of the content it introduces. */
-.deck.phone .slide,.deck.phone .body{display:block}
-.deck.phone .slide > * + *,.deck.phone .body > * + *{margin-top:var(--lg)}
+.deck.phone .slide,.deck.phone .body,.deck.phone .pages4,.deck.phone .probs,.deck.phone .ai3,.deck.phone .stats3,.deck.phone .pairs,.deck.phone .sum,.deck.phone .uxrow{display:block}
+.deck.phone .slide > * + *,.deck.phone .body > * + *,.deck.phone .pages4 > * + *,.deck.phone .probs > * + *,.deck.phone .ai3 > * + *,.deck.phone .stats3 > * + *,.deck.phone .pairs > * + *,.deck.phone .sum > * + *,.deck.phone .uxrow > * + *{margin-top:var(--lg)}
 .deck.phone .top,.deck.phone h2,.deck.phone .body > :first-child{break-after:avoid}
 .deck.phone h1,.deck.phone h2,.deck.phone h3,.deck.phone .top{break-inside:avoid}
+.deck.phone .aic,.deck.phone .pg{display:block}
+.deck.phone .aic > * + *{margin-top:.6rem}
+.deck.phone .label{display:block;break-after:avoid}
 .deck.phone .check tr,.deck.phone .prob,.deck.phone .okgrid div,.deck.phone .pg,.deck.phone .stat{break-inside:avoid}
 }
 .deck .part .body{align-content:center;gap:var(--lg)}
