@@ -2,9 +2,16 @@
 // jsonld/imagini/linkuri/cuvinte/breadcrumb/faq) intr-un singur loc, pur si testabil.
 // Inainte traiau in mijlocul audit-engine, amestecate cu scoring-ul. Aici: string -> valoare.
 
+const NAMED: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "–", mdash: "—", hellip: "…", laquo: "«", raquo: "»" };
+// Text as the visitor reads it: HTML character references decoded; an unknown named one becomes a space.
+export function decodeEntities(text: string): string {
+  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (_, e: string) =>
+    e[0] === "#" ? String.fromCodePoint(e[1].toLowerCase() === "x" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10)) : NAMED[e.toLowerCase()] ?? " ");
+}
+
 export function parseTitle(html: string): string {
   const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-  return m ? m[1].replace(/<[^>]+>/g, "").trim() : "";
+  return m ? decodeEntities(m[1].replace(/<[^>]+>/g, "")).trim() : "";
 }
 
 export function parseMeta(html: string, name: string): string {

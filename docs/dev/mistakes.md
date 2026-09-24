@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — Two report rows measured the same heading, and titles were read with their HTML codes
+
+Symptom: the magazinfitness.ro report listed "Cuvantul cautat lipseste din titlul paginii" (10 pages) and "Text fara cuvantul pe care il cauta clientii" (7 pages) as two problems. Measured cause: both tested whether the H1 contains the first words of the title (3 words vs 2), so one fault was counted twice in the score. While moving the second one to the written text, diente.ro showed two more defects: category pages were judged on the delivery sentence every page repeats, and `parseTitle` kept `&ndash;`, so "ndash" became a searched word. Recognition signal: two checks whose code reads the same element; a searched word that is an HTML entity name. Repair: `cuvinte_cheie` reads the page's own written text (`ownWrittenText`, template excluded, pages without own text not judged); `parseTitle` decodes character references (`decodeEntities`). Each fix has a test that failed first.
+
 ## 2026-09-24 — Two report findings were a fixed share of the pages, shown as measured
 
 Symptom: the public report of magazinfitness.ro said "Text repetat intre pagini: 5 din 60" and "Pagini care concureaza pe aceeasi cautare: 10 din 60", labelled MASURAT. Measured cause: `continut_unic` was `total - round(total * 0.08)` ("placeholder") and `kw_fara_canibalizare` was `round(total * 0.84)`, so every shop got the same two findings. Measured on the same shop, both are 0. Recognition signal: a finding whose count is a constant share of the pages read on every audit; grep the engine for `total * 0.`. Repair: `duplicateTextPages` and `sameHeadingPages` measure the pages read; a test on 25 distinct pages fails with either formula put back. The first version of the duplicate measure flagged filter lists (magazinfitness.ro/magazin) and product names on cards (diente.ro/collections/lucas); only blocks ending a sentence count as written text now.

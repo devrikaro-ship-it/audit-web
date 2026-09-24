@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeContinutChecks, computeKeywordsChecks, duplicateTextPages, sameHeadingPages } from "./audit-engine";
+import { computeContinutChecks, computeKeywordsChecks, duplicateTextPages, keywordInWrittenText, ownWrittenText, sameHeadingPages } from "./audit-engine";
 import type { PageData } from "./net";
 
 const page = (url: string, body: string, title = ""): PageData => ({
@@ -64,3 +64,34 @@ describe("the report checks are measured, never a fixed share of the pages", () 
     expect(computeKeywordsChecks(distinct).find((c) => c.id === "kw_fara_canibalizare")).toMatchObject({ correctCount: 25, total: 25 });
   });
 });
+
+describe("keywordInWrittenText", () => {
+  const withText = (title: string, h1: string, text: string) => page("https://s.ro/p", `<h1>${h1}</h1><p>${text}</p>`, title);
+  const alone = (p: PageData) => keywordInWrittenText(p, ownWrittenText([p])[0].own);
+  it("finds the title words in the written text, with other endings and without diacritics", () => {
+    expect(alone(withText("Gantere reglabile 20 kg | Magazin", "Produs", "Setul de gantere reglabila din otel se foloseste acasa si la sala, pentru antrenamente complete."))).toBe(true);
+  });
+  it("reads the title as the visitor sees it, not its HTML codes", () => {
+    expect(alone(withText("Formular retragere &ndash; Magazin", "Formular", "Completeaza formularul de retragere cu adresa de e-mail si numarul comenzii tale."))).toBe(true);
+  });
+  it("reports a text that never uses the title words", () => {
+    expect(alone(withText("Banda de alergare | Magazin", "Banda de alergare", "Un produs solid, construit din materiale bune, potrivit pentru orice apartament sau casa."))).toBe(false);
+  });
+  it("does not judge a page with no written text", () => {
+    expect(alone(page("https://s.ro/p", "<h1>Gantere</h1><div>Adauga in cos</div>", "Gantere | Magazin"))).toBeNull();
+  });
+  it("measures the text, not the main heading, so it is not the heading check counted twice", () => {
+    const pages = [withText("Gantere reglabile | Magazin", "Oferta zilei", "Aceste gantere reglabile se schimba rapid intre greutati, ideale pentru antrenamentul de acasa.")];
+    expect(computeContinutChecks(pages).find((c) => c.id === "cuvinte_cheie")).toMatchObject({ correctCount: 1, total: 1 });
+    expect(computeKeywordsChecks(pages).find((c) => c.id === "kw_in_h1")).toMatchObject({ correctCount: 0, total: 1 });
+  });
+  it("does not judge a page whose only written text is the one every page repeats", () => {
+    const blurb = "<p>Livrare rapida oriunde in Romania, gratuita la comenzile peste 749 RON, cu retur in 14 zile.</p>";
+    const pages = [
+      withText("Gantere reglabile | Magazin", "Gantere", "Aceste gantere reglabile se schimba rapid intre greutati, ideale pentru antrenamentul de acasa."),
+      ...["a", "b", "c"].map((x) => page(`https://s.ro/${x}`, `<h1>Adeziv ${x}</h1>` + blurb, `Adeziv oral ${x} | Magazin`)),
+    ].map((p) => ({ ...p, html: p.html.replace("</body>", blurb + "</body>") }));
+    expect(computeContinutChecks(pages).find((c) => c.id === "cuvinte_cheie")).toMatchObject({ correctCount: 1, total: 1 });
+  });
+});
+

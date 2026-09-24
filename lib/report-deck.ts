@@ -37,7 +37,7 @@ export const PAGE_COPY: Record<string, Copy> = {
   indexare: { title: "Pagini ascunse de Google", problem: (n) => `${n} pagini de categorie sau de produs sunt marcate sa nu apara in Google.`, fix: "Scoate marcajul care ascunde paginile de categorie si de produs; lasa-l doar pe cos, cont si cautarea din site." },
   continut_mixt: { title: "Pagini cu elemente nesecurizate", problem: (n) => `${n} pagini incarca imagini sau fisiere printr-o legatura nesecurizata (http), pe care browserul o poate bloca sau o poate semnala ca nesigura.`, fix: "Schimba legaturile http:// in https:// in tema, in texte si in setarile imaginilor." },
   lungime_continut: { title: "Pagini cu prea putin text", problem: (n) => `${n} pagini au sub 400 de cuvinte, prea putin ca Google sa inteleaga ce vinzi acolo.`, fix: "Adauga text util: cum alegi, detalii tehnice, intrebari frecvente; tinta e 600 de cuvinte pe categorii si 800 pe produse." },
-  cuvinte_cheie: { title: "Text fara cuvantul pe care il cauta clientii", problem: (n) => `${n} pagini au un titlu mare care nu contine primele cuvinte din titlul din Google, asa ca pagina nu repeta ce cauta clientul.`, fix: "Fa ca titlul mare de pe pagina sa contina cuvintele cu care incepe titlul din Google." },
+  cuvinte_cheie: { title: "Text fara cuvantul pe care il cauta clientii", problem: (n) => `${n} pagini au text, dar textul nu foloseste cuvintele cu care incepe titlul paginii, adica ce cauta clientul.`, fix: "Foloseste in primele randuri ale textului cuvintele din titlul paginii, formulate natural." },
   structura_headings: { title: "Pagini fara subtitluri", problem: (n) => `${n} pagini sunt un singur bloc de text, fara subtitluri, greu de citit pentru clienti si pentru Google.`, fix: "Imparte textul in sectiuni cu subtitluri, de exemplu: Caracteristici, Cum alegi, Intrebari frecvente." },
   faq_autoritate: { title: "Pagini fara intrebari frecvente", problem: (n) => `${n} pagini nu au o sectiune de intrebari frecvente, pe care Google si asistentii AI o preiau des in raspunsuri.`, fix: "Adauga 3-5 intrebari reale ale clientilor, cu raspunsuri scurte." },
   continut_unic: { title: "Text repetat intre pagini", problem: (n) => `${n} pagini au cel putin jumatate din text copiat identic de pe alta pagina a magazinului.`, fix: "Scrie text propriu pentru fiecare pagina, incepand cu categoriile si produsele cele mai vandute." },
@@ -97,7 +97,9 @@ const UX_PAGES: Record<string, string> = { home: "Homepage", categorie: "Pagina 
 const UNIT: Record<string, string> = { crawlere: "roboti AI", criterii: "conditii", fisier: "fisier", legaturi: "legaturi" };
 const unitOf = (c: PageCheck) => UNIT[c.unit ?? ""] ?? "pagini";
 const ratio = (c: PageCheck) => c.correctCount / Math.max(c.total, 1);
-const pageScore = (cs: PageCheck[]) => Math.round(cs.reduce((s, c) => s + ratio(c) * 100, 0) / Math.max(cs.length, 1));
+// A check that judged no page (total 0) is not measured: it counts neither in a score nor as a problem.
+const measuredChecks = (cs: PageCheck[]) => cs.filter((c) => c.total > 0);
+const pageScore = (cs: PageCheck[]) => Math.round(measuredChecks(cs).reduce((s, c) => s + ratio(c) * 100, 0) / Math.max(measuredChecks(cs).length, 1));
 
 // A measurement the audit could not take is "de verificat", never a finding (AUDIT-SPEC §5.1).
 const UNMEASURED = /indisponibil|nu s-a putut|necunoscut/i;
@@ -137,7 +139,7 @@ export function buildDeck(data: AuditData): Deck {
   const seoScore = Math.round(zones.reduce((s, z) => s + z.score, 0) / zones.length);
 
   const pageChecks = [...data.seoChecks, ...data.continutChecks, ...data.keywordsChecks, ...data.structuraChecks, ...ai];
-  const failing = pageChecks.filter((c) => ratio(c) < 1).sort((a, b) => ratio(a) - ratio(b));
+  const failing = measuredChecks(pageChecks).filter((c) => ratio(c) < 1).sort((a, b) => ratio(a) - ratio(b));
   const problems: Problem[] = failing.filter((c) => PAGE_COPY[c.id]).map((c) => {
     const copy = PAGE_COPY[c.id];
     return {

@@ -76,4 +76,11 @@ describe("paginateChecklist", () => {
   it("renders one slide of done rows when nothing is open", () => {
     expect(shape([ok(1)])).toEqual([[0, 1]]);
   });
+
+  it("a check that judged no page is neither a problem nor part of a score", () => {
+    const withEmpty = base({ continutChecks: [check("continut_unic", 55, 60), check("cuvinte_cheie", 0, 0)] });
+    expect(buildDeck(withEmpty).seo.problems.map((p) => p.title)).not.toContain("Text fara cuvantul pe care il cauta clientii");
+    expect(buildDeck(withEmpty).seo.zones.find((z) => z.name === "Continut")?.score).toBe(buildDeck(base()).seo.zones.find((z) => z.name === "Continut")?.score);
+  });
 });
+

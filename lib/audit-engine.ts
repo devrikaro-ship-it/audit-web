@@ -1,7 +1,7 @@
 import type { AuditData, CheckResult, PageCheck, StatusCheck, ProductSignal, UxAudit, UxField } from "./types";
 import { detectEcom, detectPlatform } from "./site-signals";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
-import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
+import { decodeEntities, parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
 import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
 import { PROFILES, profileFor } from "./platform-knowledge";
 import { computeLearning, effectiveProfile, readApprovals } from "./learning";
@@ -242,19 +242,24 @@ function textBlocks(html: string): string[] {
   return html
     .replace(/<(script|style|nav|header|footer|noscript)[\s\S]*?<\/\1>/gi, " ")
     .split(/<\/?(?:p|li|div|td|h[1-6]|br|section|article)\b[^>]*>/i)
-    .map((b) => b.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim().toLowerCase())
+    .map((b) => decodeEntities(b.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim().toLowerCase())
     .filter((b) => b.length >= 60 && b.split(" ").length >= 10 && /[.!?]$/.test(b));
 }
 
-// Pages whose own text (blocks not repeated on most pages, i.e. not the site template) is at least half copied,
-// block for block, from another page read. Pages with under 200 characters of own text are left to the thin-text check.
-export function duplicateTextPages(pages: PageData[]): number {
+// The written text each page has of its own: its blocks minus the site template (blocks found on most pages read),
+// with, for every block, the number of pages it appears on.
+export function ownWrittenText(pages: PageData[]): { own: string[]; seenOn: Map<string, number> }[] {
   const blocks = pages.map((p) => [...new Set(textBlocks(p.html))]);
   const seenOn = new Map<string, number>();
   for (const bs of blocks) for (const b of bs) seenOn.set(b, (seenOn.get(b) ?? 0) + 1);
   const template = (b: string) => (seenOn.get(b) ?? 0) > Math.max(2, pages.length / 2);
-  return blocks.filter((bs) => {
-    const own = bs.filter((b) => !template(b));
+  return blocks.map((bs) => ({ own: bs.filter((b) => !template(b)), seenOn }));
+}
+
+// Pages whose own text is at least half copied, block for block, from another page read. Pages with under 200
+// characters of own text are left to the thin-text check.
+export function duplicateTextPages(pages: PageData[]): number {
+  return ownWrittenText(pages).filter(({ own, seenOn }) => {
     const chars = own.reduce((n, b) => n + b.length, 0);
     const copied = own.filter((b) => (seenOn.get(b) ?? 0) > 1).reduce((n, b) => n + b.length, 0);
     return chars >= 200 && copied * 2 >= chars;
@@ -275,15 +280,23 @@ export function sameHeadingPages(pages: PageData[]): number {
   return [...urls.values()].filter((u) => u.size > 1).reduce((n, u) => n + u.size, 0);
 }
 
+// Whether a page's own written text uses the words its title starts with (each word, inflections allowed by
+// comparing the first 5 letters without diacritics). Null for a page with no own written text or no title.
+export function keywordInWrittenText(p: PageData, own: string[]): boolean | null {
+  const plain = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const words = plain(extractKeyword(parseTitle(p.html))).split(/[^a-z0-9]+/).filter((w) => w.length >= 3);
+  const text = plain(own.join(" "));
+  if (!words.length || !text) return null;
+  const textWords = text.split(/[^a-z0-9]+/);
+  return words.every((w) => textWords.some((t) => t.startsWith(w.slice(0, 5))));
+}
+
 export function computeContinutChecks(pages: PageData[]): PageCheck[] {
   const total = pages.length || 1;
   const wordOk = pages.filter(p => countWords(p.html) >= 400).length;
-  const kwOk = pages.filter(p => {
-    const title = parseTitle(p.html).toLowerCase();
-    const kw = title.split(/\s+/).slice(0, 2).join(" ");
-    const h1s = p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "";
-    return kw && h1s.toLowerCase().includes(kw);
-  }).length;
+  const own = ownWrittenText(pages);
+  const judged = pages.map((p, i) => keywordInWrittenText(p, own[i].own)).filter((r): r is boolean => r !== null);
+  const kwOk = judged.filter(Boolean).length;
   const headingsOk = pages.filter(p => hasH2(p.html)).length;
   const faqOk = pages.filter(p => hasFAQ(p.html)).length;
   const uniqueOk = total - duplicateTextPages(pages);
@@ -297,8 +310,8 @@ export function computeContinutChecks(pages: PageData[]): PageCheck[] {
     },
     {
       id: "cuvinte_cheie", label: "Cuvinte cheie relevante",
-      correctCount: kwOk, total,
-      problema: `${total - kwOk} de pagini nu contin keyword-ul principal in H1. Google si LLM-urile nu pot asocia pagina cu interogarea cautata.`,
+      correctCount: kwOk, total: judged.length,
+      problema: `${judged.length - kwOk} din ${judged.length} pagini cu text nu folosesc in text cuvintele cu care incepe titlul paginii.`,
       fix: "Introduce keyword-ul principal in primele 100 cuvinte si in cel putin un H2.",
     },
     {
@@ -603,8 +616,9 @@ function checkToScore(status: StatusCheck): number {
   return status === "ok" ? 100 : status === "atentie" ? 55 : 10;
 }
 
+// A check that judged no page (total 0) is not measured and does not count.
 function pageCheckScore(checks: PageCheck[]): number {
-  const scores = checks.map(c => Math.round((c.correctCount / Math.max(c.total, 1)) * 100));
+  const scores = checks.filter(c => c.total > 0).map(c => Math.round((c.correctCount / c.total) * 100));
   return Math.round(scores.reduce((a, b) => a + b, 0) / (scores.length || 1));
 }
 
