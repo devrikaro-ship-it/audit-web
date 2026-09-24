@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — Prices written with the currency in its own tag were not seen
+
+Symptom: magazinfitness.ro's product pages got "Pret sau stoc neclar", and its category pages counted 0 prices, while every card shows "29 lei" and "In stoc". Measured cause: `priceCount` matched "29 lei" on raw HTML; the theme writes `29 <small>lei</small>`. Recognition signal: a price count of 0 on a page that visibly lists prices. Repair: prices are counted on the text with tags removed; the product page now reads "pret + stoc". The same run showed the unmeasured-speed fix working: a PageSpeed failure on diente.ro read "viteza de masurat", not 0.
+
 ## 2026-09-24 — A category that shows all its products was told it lacks pagination
 
 Symptom: magazinfitness.ro's report listed "Fara paginare vizibila" for category pages; /gantere/ shows all 48 of its 48 products on one page. Measured cause: the UX check required pagination markup on every category page, whatever its size. Recognition signal: a missing-pagination finding on a category whose product total equals what it lists. Repair: `paginationState` says present, missing (the page states a total above the prices it shows, with a grid of at least 3), or not judged; a signal that is not judged is left out of the score and the list.

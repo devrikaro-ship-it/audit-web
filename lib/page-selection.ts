@@ -148,8 +148,10 @@ export function replacementsFor(failed: PageType[], typed: TypedUrls, tried: Set
   return { urls, planned };
 }
 
+// Prices as the visitor reads them: tags removed first, since themes often put the currency in its own element
+// ("29 <small>lei</small>").
 export function priceCount(html: string): number {
-  return (html.match(/\d[\d.\s]*[.,]?\d*\s*(lei|ron|€|eur)\b/gi) ?? []).length;
+  return (html.replace(/<[^>]+>/g, " ").match(/\d[\d.\s]*[.,]?\d*\s*(lei|ron|€|eur)\b/gi) ?? []).length;
 }
 export function hasAddToCart(html: string): boolean {
   return /add[-_ ]?to[-_ ]?cart|adaug[aă]\s+[iî]n\s+co[sș]|single_add_to_cart|comanda\s+rapida|cumpar[aă]\s+acum|buy\s+now/i.test(html);

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { computeContinutChecks, computeKeywordsChecks, computeStructuraChecks, duplicateTextPages, keywordInWrittenText, ownWrittenText, paginationState, sameHeadingPages } from "./audit-engine";
 import type { PageData } from "./net";
+import { priceCount } from "./page-selection";
 
 const page = (url: string, body: string, title = ""): PageData => ({
   url, status: 200, ok: true, headers: {},
@@ -120,5 +121,11 @@ describe("paginationState", () => {
   });
   it("does not judge when the page gives no product total", () => {
     expect(paginationState(grid(12))).toBeNull();
+  });
+});
+
+describe("priceCount", () => {
+  it("counts a price whose currency sits in its own tag, as themes often write it", () => {
+    expect(priceCount('<span class="price">29 <small>lei</small></span><span class="price">1.299,00<span>RON</span></span><b>49 lei</b>')).toBe(3);
   });
 });
