@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — Production PDFs came out in a fallback font while every local PDF had Barlow
+
+Symptom: after the phone-PDF deploy, both PDFs from production (16:9 and phone) used DejaVu fallbacks; a report printed on production that morning had Barlow, and the same code printed locally had Barlow every time. Measured: the fonts are served (200, font/woff2) and the live CSS declares them; the production Chromium (HeadlessChrome 132, Linux) printed before the font files arrived. The exact reason in the container was not isolated. Recognition signal: a report PDF whose embedded fonts are DejaVu, or text visibly in a serif fallback. Repair: the print page loads /r/print-fonts, the report's @font-face rules with each font inlined, so printing never waits on a font download; proven locally by printing with /fonts/barlow* blocked (Barlow embedded; the normal page under the same block falls back). Check embedded fonts after every deploy that touches the report, on production, not only locally.
+
 ## 2026-09-24 — A shop entered with www had none of its full links counted as internal
 
 Symptom: magazinfitness.ro's home page got "Putine cai spre categorii/produse" although it links to every category. Measured cause: the audit was started on www.magazinfitness.ro and `countInternalLinks` tested `href.includes("www.magazinfitness.ro")`, while the site links as https://magazinfitness.ro/...; it also counted facebook.com/magazinfitness.ro as internal. Recognition signal: a link-count finding on a shop whose entered host differs from its links by "www.". Repair: links are resolved and compared by host with "www." ignored; relative links count, anchors and mail/phone/script links do not.

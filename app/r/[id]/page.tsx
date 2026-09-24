@@ -86,6 +86,7 @@ export default function ReportPage() {
   if (!data) return <LoadingScreen />;
   return (
     <>
+      {isPrint && <link rel="stylesheet" href="/r/print-fonts" precedence="high" />}
       <ReportDeck data={data} createdAt={createdAt} phone={phoneLayout} />
       {!isPrint && (
         <a
