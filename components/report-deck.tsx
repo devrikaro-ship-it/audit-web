@@ -47,7 +47,7 @@ export function ReportDeck({ data, createdAt }: { data: AuditData; createdAt?: n
     src: `${createdAt ? formatDate(createdAt) + " · " : ""}${d.pages} de pagini citite: categorii si produse`,
     body: (<>
       <div className="covrow">
-        <h1>Unde pierde clienti {d.domain}</h1>
+        <h1>{d.cover}</h1>
         <div className={`score ${toneOf(d.score)}`}><span className="num">{d.score}</span><small>din 100</small><em>{VERDICT_LABEL[v]}</em></div>
       </div>
       <div className="moves">

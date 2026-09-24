@@ -82,5 +82,11 @@ describe("paginateChecklist", () => {
     expect(buildDeck(withEmpty).seo.problems.map((p) => p.title)).not.toContain("Text fara cuvantul pe care il cauta clientii");
     expect(buildDeck(withEmpty).seo.zones.find((z) => z.name === "Continut")?.score).toBe(buildDeck(base()).seo.zones.find((z) => z.name === "Continut")?.score);
   });
+
+  it("the cover title matches the verdict: a good shop is not told it is losing clients", () => {
+    expect(buildDeck(base({ scor: 94 })).cover).toBe("Ce mai poate castiga s.ro");
+    expect(buildDeck(base({ scor: 55 })).cover).toBe("Unde pierde clienti s.ro");
+    expect(buildDeck(base({ scor: 20 })).cover).toBe("Unde pierde clienti s.ro");
+  });
 });
 

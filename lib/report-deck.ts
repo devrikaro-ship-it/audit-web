@@ -13,6 +13,7 @@ export type UxPage = { id: string; name: string; score: number | null; verdict: 
 
 export type Deck = {
   domain: string;
+  cover: string;
   pages: number;
   score: number;
   seo: { score: number; zones: Zone[]; problems: Problem[]; product: ProductSlide | null; ai: AiCard[] | null; checklist: CheckRow[] };
@@ -184,8 +185,10 @@ export function buildDeck(data: AuditData): Deck {
     ? { title: "Pagina se incarca greu pe telefon", text: `Continutul principal apare dupa ${cr.lcp.value}; tinta e sub 2,5 s.` }
     : problems[0] ? { title: problems[0].title, text: problems[0].problem } : null;
 
+  const domain = data.domain.replace(/^www\./, "");
   return {
-    domain: data.domain.replace(/^www\./, ""),
+    domain,
+    cover: verdict(data.scor) === "bun" ? `Ce mai poate castiga ${domain}` : `Unde pierde clienti ${domain}`,
     pages: data.pagesAnalyzed,
     score: data.scor,
     seo: { score: seoScore, zones, problems: problems.slice(0, 4), product, ai: ai.length ? aiCards(ai) : null, checklist: seoChecklist },
