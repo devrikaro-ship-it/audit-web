@@ -32,6 +32,7 @@ modes and the `/cald` warm report are retired. Orchestration: `skill/SKILL.md`.
 
 ## 3. Report structure: EXACTLY 2 rubrics, in order
 
+**Phone PDF (operator, 2026-09-24):** from a phone, "Descarca PDF" asks `/r/<id>/pdf?layout=phone`: portrait 440x782 pages in the phone layout, slides flowing one after another (each part starts a page), 15px text; the desktop PDF is unchanged. The phone layout follows the width of the report (`@container deck`), so it applies both on a phone screen and on the narrow printed page.
 **Format (operator, 2026-09-24):** a 16:9 deck, the same on `/r/<id>` and in the PDF (one slide per 1200x675 page),
 in the style of the YTS Dental growth plan. Order: cover · "Pe scurt" · **Part 1 SEO** (opener, zone table,
 problems on pages, product pages, AI visibility, SEO checklist) · **Part 2 UX/UI** (opener, speed and page-type

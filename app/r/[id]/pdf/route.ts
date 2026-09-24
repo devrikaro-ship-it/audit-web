@@ -28,7 +28,8 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string 
   // Chrome reads the report from inside the container over plain HTTP on the app's own port. The public origin
   // behind the proxy is https://localhost:3000 here, which Chrome cannot open (the first production PDFs were a
   // printed ERR_SSL_PROTOCOL_ERROR page).
-  const reportUrl = internalReportUrl(id, process.env.PORT, req.nextUrl.port);
+  const phone = req.nextUrl.searchParams.get("layout") === "phone";
+  const reportUrl = internalReportUrl(id, process.env.PORT, req.nextUrl.port, phone);
   const probe = await fetch(reportUrl).catch(() => null);
   if (!probe || !probe.ok) {
     return new Response("Raportul nu a putut fi pregatit pentru PDF. Incearca din nou.", { status: 502 });
@@ -51,7 +52,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string 
     return new Response(new Uint8Array(pdf), {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `inline; filename="audit-${safeDomain}.pdf"`,
+        "Content-Disposition": `inline; filename="audit-${safeDomain}${phone ? "-telefon" : ""}.pdf"`,
         "Cache-Control": "no-store",
       },
     });

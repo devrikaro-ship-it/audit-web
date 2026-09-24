@@ -19,4 +19,7 @@ describe("internalReportUrl", () => {
     expect(internalReportUrl("abc", "3000", "")).toBe("http://127.0.0.1:3000/r/abc?print=1");
     expect(internalReportUrl("abc", undefined, "3917")).toBe("http://127.0.0.1:3917/r/abc?print=1");
   });
+  it("asks for the phone layout when the PDF is for a phone", () => {
+    expect(internalReportUrl("abc", "3000", "", true)).toBe("http://127.0.0.1:3000/r/abc?print=1&layout=phone");
+  });
 });

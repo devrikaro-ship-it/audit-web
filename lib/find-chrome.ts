@@ -24,7 +24,7 @@ export function findChrome(env: Record<string, string | undefined> = process.env
   return null;
 }
 
-export function internalReportUrl(id: string, envPort: string | undefined, requestPort: string): string {
+export function internalReportUrl(id: string, envPort: string | undefined, requestPort: string, phone = false): string {
   const port = envPort || requestPort || "3000";
-  return `http://127.0.0.1:${port}/r/${encodeURIComponent(id)}?print=1`;
+  return `http://127.0.0.1:${port}/r/${encodeURIComponent(id)}?print=1${phone ? "&layout=phone" : ""}`;
 }

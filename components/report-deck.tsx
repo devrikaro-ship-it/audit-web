@@ -31,7 +31,8 @@ function Checklist({ todo, done }: { todo: CheckRow[]; done: CheckRow[] }) {
   );
 }
 
-export function ReportDeck({ data, createdAt }: { data: AuditData; createdAt?: number }) {
+// phone: the report printed as a portrait PDF for reading on a phone (narrow pages, the phone layout).
+export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData; createdAt?: number; phone?: boolean }) {
   const d = buildDeck(data);
   const readOn = `citit pe ${d.pages} de pagini`;
   const Top = ({ eyebrow }: { eyebrow: string }) => (
@@ -206,7 +207,7 @@ export function ReportDeck({ data, createdAt }: { data: AuditData; createdAt?: n
 
   const total = slides.length;
   return (
-    <div className="deck">
+    <div className={phone ? "deck phone" : "deck"}>
       {slides.map((s, i) => (
         <section className={`slide ${s.cls ?? ""}`} key={i}>
           <Top eyebrow={s.eyebrow} />

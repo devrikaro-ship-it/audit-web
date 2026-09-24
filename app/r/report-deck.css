@@ -88,15 +88,30 @@ body:has(.deck){margin:0;background:#FAF8F4;-webkit-print-color-adjust:exact;pri
 .deck .contacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--lg);max-width:60rem}
 .deck .contacts div{border-top:2px solid var(--brand);padding-top:var(--sm);display:grid;gap:.2rem}
 .deck .contacts b{font-family:var(--f-num);font-size:1.7rem}
-@media screen and (max-width:760px){.deck .covrow,.deck .sum,.deck .probs,.deck .stats3,.deck .pairs,.deck .uxrow,.deck .pages4,.deck .steps,.deck .contacts,.deck .moves{grid-template-columns:1fr}
+@container deck (max-width:760px){.deck .covrow,.deck .sum,.deck .probs,.deck .stats3,.deck .pairs,.deck .uxrow,.deck .pages4,.deck .steps,.deck .contacts,.deck .moves{grid-template-columns:1fr}
 .deck .cover h1{font-size:3rem}
 .deck .score{justify-items:start}
 .deck .score .num{font-size:6rem}
 .deck h2{font-size:2rem}
 }
 @page{size:1200px 675px;margin:0}
+@page phone{size:440px 782px;margin:0}
 @media print{html:has(.deck){font-size:12px}
 .deck .slide{height:675px;min-height:0;break-after:page;border:0;padding-block:28px 18px}
+html:has(.deck.phone){font-size:15px}
+/* The phone PDF is read by scrolling: slides flow one after another instead of one per page, so a slide a few lines
+   too long does not leave a near-empty page. Each part starts a page; only the cover keeps its footer. */
+.deck.phone .slide{page:phone;height:auto;min-height:0;break-after:auto;padding-block:22px 18px;border-bottom:1px solid var(--line)}
+.deck.phone .slide.part,.deck.phone .slide.contact{break-before:page}
+.deck.phone .slide.part{min-height:782px}
+.deck.phone .slide:not(.cover) .foot{display:none}
+/* Chrome ignores break-after:avoid on grid items, so a phone slide prints as a block: a label or heading then stays
+   on the page of the content it introduces. */
+.deck.phone .slide,.deck.phone .body{display:block}
+.deck.phone .slide > * + *,.deck.phone .body > * + *{margin-top:var(--lg)}
+.deck.phone .top,.deck.phone h2,.deck.phone .body > :first-child{break-after:avoid}
+.deck.phone h1,.deck.phone h2,.deck.phone h3,.deck.phone .top{break-inside:avoid}
+.deck.phone .check tr,.deck.phone .prob,.deck.phone .okgrid div,.deck.phone .pg,.deck.phone .stat{break-inside:avoid}
 }
 .deck .part .body{align-content:center;gap:var(--lg)}
 .deck .part .pnum{font-size:11rem;color:var(--brand);line-height:.8}
@@ -123,7 +138,7 @@ body:has(.deck){margin:0;background:#FAF8F4;-webkit-print-color-adjust:exact;pri
 .deck .check td.res{color:var(--ink-2);white-space:nowrap;text-align:right;font-family:var(--f-num);font-weight:600}
 .deck .check tr.done td.what b{color:var(--muted);font-weight:500}
 .deck .contact .lead{font-size:1.25rem;color:var(--ink-2);max-width:52ch}
-@media screen and (max-width:760px){.deck .ai3{grid-template-columns:1fr}
+@container deck (max-width:760px){.deck .ai3{grid-template-columns:1fr}
 .deck .part .pnum{font-size:6rem}
 .deck .part h2{font-size:2.8rem}
 .deck .check td.res{white-space:normal}
@@ -134,7 +149,7 @@ body:has(.deck){margin:0;background:#FAF8F4;-webkit-print-color-adjust:exact;pri
 .deck .okgrid div b::before{content:"✓ ";color:var(--good);font-weight:700}
 .deck .okgrid div span{font-family:var(--f-num);font-weight:600;text-align:right}
 .deck .cl{display:grid;gap:var(--md)}
-@media screen and (max-width:760px){.deck .okgrid{grid-template-columns:1fr}
+@container deck (max-width:760px){.deck .okgrid{grid-template-columns:1fr}
 }
-.deck{font-family:var(--f-body);color:var(--ink);background:var(--paper);line-height:1.4}
+.deck{container:deck/inline-size;font-family:var(--f-body);color:var(--ink);background:var(--paper);line-height:1.4}
 .deck .contacts a{color:inherit;text-decoration:none}

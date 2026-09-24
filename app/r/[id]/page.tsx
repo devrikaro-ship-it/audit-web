@@ -39,7 +39,18 @@ export default function ReportPage() {
   const [data, setData] = useState<AuditData | null>(null);
   const [createdAt, setCreatedAt] = useState<number | undefined>();
   const [error, setError] = useState<string | null>(null);
-  const isPrint = useSearchParams().get("print") === "1";
+  const params = useSearchParams();
+  const isPrint = params.get("print") === "1";
+  const phoneLayout = params.get("layout") === "phone";
+  // On a phone, the download is the portrait PDF laid out for a phone screen; elsewhere the 16:9 deck.
+  const [onPhone, setOnPhone] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 760px)");
+    const sync = () => setOnPhone(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -75,10 +86,10 @@ export default function ReportPage() {
   if (!data) return <LoadingScreen />;
   return (
     <>
-      <ReportDeck data={data} createdAt={createdAt} />
+      <ReportDeck data={data} createdAt={createdAt} phone={phoneLayout} />
       {!isPrint && (
         <a
-          href={`/r/${id}/pdf`}
+          href={onPhone ? `/r/${id}/pdf?layout=phone` : `/r/${id}/pdf`}
           target="_blank"
           rel="noopener noreferrer"
           style={{
