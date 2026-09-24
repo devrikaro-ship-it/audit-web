@@ -179,7 +179,7 @@ export function ReportDeck({ data, createdAt }: { data: AuditData; createdAt?: n
         <h2>Ce am gasit pe fiecare tip de pagina</h2>
         <div className="pages4">{d.ux.pages.map((p) => (
           <div className="pg" key={p.id}><span className="label">{p.name}</span>
-            <ul>{p.found.map((x) => <li className="y" key={"y" + x}>{x}</li>)}{p.missing.map((x) => <li className="n" key={"n" + x}>{x}</li>)}</ul>
+            <ul>{p.score === null && <li>De verificat: nu am citit o astfel de pagina.</li>}{p.found.map((x) => <li className="y" key={"y" + x}>{x}</li>)}{p.missing.map((x) => <li className="n" key={"n" + x}>{x}</li>)}</ul>
           </div>
         ))}</div>
       </>),

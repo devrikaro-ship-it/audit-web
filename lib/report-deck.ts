@@ -201,11 +201,14 @@ export function buildDeck(data: AuditData): Deck {
       id, name, score: known ? f.scor : null,
       verdict: known ? VERDICT_LABEL[verdict(f.scor)] : "De verificat",
       tone: known ? toneOf(f.scor) : "warn",
-      found: f.gasit.map(uxSignal), missing: f.lipsa.map(uxSignal),
+      // A page type the audit did not read has nothing found or missing: it is "de verificat" (AUDIT-SPEC §5.1).
+      found: known ? f.gasit.map(uxSignal) : [], missing: known ? f.lipsa.map(uxSignal) : [],
     };
   });
   const uxChecklist: CheckRow[] = [
-    ...uxPages.flatMap((p) => p.missing.map((m) => ({ done: false, title: m.charAt(0).toUpperCase() + m.slice(1), note: UX_FIX[m] ? `${p.name}: ${UX_FIX[m]}` : p.name, result: "de adaugat" }))),
+    ...uxPages.flatMap((p) => p.score === null
+      ? [{ done: false, title: `${p.name}: nu am citit o astfel de pagina`, note: "Nu a fost printre paginile citite, asa ca nu am putut-o verifica.", result: "de verificat" }]
+      : p.missing.map((m) => ({ done: false, title: m.charAt(0).toUpperCase() + m.slice(1), note: UX_FIX[m] ? `${p.name}: ${UX_FIX[m]}` : p.name, result: "de adaugat" }))),
     ...Object.entries(UX_SITE).filter(([k]) => cr[k]).map(([k, c]) => siteRow(c, cr[k])),
   ];
   const measured = (k: string) => (cr[k] && !UNMEASURED.test(cr[k].value) ? cr[k].value : "—");

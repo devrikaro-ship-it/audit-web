@@ -98,5 +98,14 @@ describe("paginateChecklist", () => {
     expect(d.ux.speed).toEqual({ mobile: "—", desktop: "—", lcp: "—" });
     expect(d.ux.checklist.filter((r) => ["Scor de viteza pe mobil", "Pagina nu sare in timpul incarcarii", "Raspuns rapid la click"].includes(r.title)).map((r) => r.result)).toEqual(["de verificat", "de verificat", "de verificat"]);
   });
+
+  it("a page type the audit did not read is de verificat, never something to add", () => {
+    const unknown = { id: "filtre", label: "Filtre", status: "necunoscut" as const, scor: 0, gasit: [], lipsa: ["nu am prins acest tip de pagina in crawl"], problema: "", fix: "" };
+    const d = buildDeck(base({ ux: { scor: 80, fields: [unknown] } as AuditData["ux"] }));
+    expect(d.ux.checklist.filter((r) => r.note.startsWith("Filtre si sortare") || r.title.startsWith("Filtre si sortare"))).toEqual([
+      { done: false, title: "Filtre si sortare: nu am citit o astfel de pagina", note: "Nu a fost printre paginile citite, asa ca nu am putut-o verifica.", result: "de verificat" },
+    ]);
+    expect(d.ux.pages[0].missing).toEqual([]);
+  });
 });
 
