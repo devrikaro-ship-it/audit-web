@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — Three report links read as lost by a deploy, when they had never been saved
+
+Symptom: after the font deploy, three production report ids used in earlier sessions answered 404, and a memory summary said they had been verified live that same morning, so the deploy looked like it had wiped the saved reports. Measured cause: none of them was ever in the durable store. The one created on production (2d924663, 2026-09-23 15:59 UTC) predates "save every finished audit" (d437a1c, committed 17:40 UTC, deployed after 18:22 UTC), so an audit with no contact lived only in memory and was dropped by the evening deploy; a fresh production audit survived a container restart (new internal IP, same answer). Recognition signal: a report id that 404s after a deploy. Check its creation time against the deploy of d437a1c and repeat the test with a fresh audit and a restart before suspecting the volume. Repair: none needed in the code; an automatic memory summary is a claim, not proof that a report was checked.
+
 ## 2026-09-24 — The 16:9 PDF printed the phone layout
 
 Symptom: the first PDF of the deck had every two-column slide stacked in one column, and one slide spilled onto an extra page with only its footer. Measured cause: the deck's `@media (max-width:760px)` phone rules matched while Chrome laid out the page for printing. Recognition signal: a PDF page count higher than the slide count, or stacked columns only in the PDF. Repair: the phone rules are `@media screen and (max-width:760px)`, so print keeps the desktop layout; the check is PDF pages == slides.

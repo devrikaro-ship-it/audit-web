@@ -34,3 +34,5 @@ diacritics. Older reports without AI checks render five zones and no AI slide.
 `lib/report-deck.ts` (pure model, tested in `lib/report-deck.test.ts`), `components/report-deck.tsx` (layout),
 `app/r/report-deck.css` (every rule scoped under `.deck`; the phone layout applies to `screen` only so the PDF keeps
 the 16:9 desktop layout). The PDF route is unchanged: Chromium prints `/r/<id>?print=1` with `@page 1200px 675px`.
+The Barlow and Barlow Semi Condensed faces are served by the app from `public/fonts/` and declared in
+`app/r/report-deck.css`, so the server's Chromium never depends on Google Fonts to print the PDF.
