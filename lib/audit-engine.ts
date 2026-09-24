@@ -663,6 +663,17 @@ function computeOverallScore(
 function hasPaginationUi(html: string): boolean {
   return /page\/\d|[?&]paged?=|rel=["']next["']|page-numbers|pagination|nav-links/i.test(html);
 }
+// Pagination on a category page: present, missing (the page states more products than the prices it shows), or null
+// when nothing says the category has more products than it lists, such as a category shown whole on one page.
+// A product on sale shows two prices, so the price count can only overstate what is shown, never hide a gap.
+export function paginationState(html: string): boolean | null {
+  if (hasPaginationUi(html)) return true;
+  const totals = [...html.matchAll(/(\d+)\s*(?:produse|rezultate|articole|products|results|items)\b/gi)].map((m) => Number(m[1]));
+  const shown = priceCount(html);
+  if (!totals.length || shown < 3) return null;
+  return Math.max(...totals) > shown ? false : null;
+}
+
 function hasSortUi(html: string): boolean {
   return /orderby|sorteaz[aă]|sortare|sort[-_ ]?by|[?&]sort=|["']sort-/i.test(html);
 }
@@ -744,7 +755,7 @@ export function computeUxAudit(
     fields.push(uxField("categorie", "Analiza pagina categorie", [
       { ok: priceCount(catPage) >= 3 || contentImageCount(catPage) >= 6, g: "grila de produse cu poza si pret", l: "grila de produse neclara (poza/pret)" },
       { ok: hasBreadcrumbs(catPage), g: "traseul paginii (stii unde esti)", l: "fara traseul paginii (stii unde esti)" },
-      { ok: hasPaginationUi(catPage), g: "paginare", l: "fara paginare vizibila" },
+      ...(paginationState(catPage) === null ? [] : [{ ok: paginationState(catPage) === true, g: "paginare", l: "fara paginare vizibila" }]),
       { ok: hasIntroText(catPage), g: "text de intro pe categorie", l: "fara text de intro (pierzi si SEO)" },
     ], "Pagina de categorie e locul unde clientul alege. Fara grila clara, breadcrumbs si text de context, se pierde si pleaca.",
       "Structuram pagina de categorie: grila poza+pret, breadcrumbs, paginare, text de intro optimizat."));

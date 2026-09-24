@@ -57,7 +57,7 @@ Design: `docs/superpowers/specs/2026-09-24-report-deck-design.md`.
 **Campuri (fix acestea, 5 — decis 2026-07-01):**
 1. **Viteza** — scor de incarcare pe mobil
 2. **Analiza homepage** — hero/mesaj clar, meniu + categorii vizibile, cale spre produse, mobil OK
-3. **Analiza pagina categorie** — grila produse (poza+pret), breadcrumbs, paginare, text intro categorie
+3. **Analiza pagina categorie** — grila produse (poza+pret), breadcrumbs, paginare, text intro categorie (pagination is judged only when the page states more products than the prices it shows, `paginationState`; a category shown whole on one page is not judged — 2026-09-24)
 4. **Analiza pagina produs** — imagini multiple, pret+stoc, "Adauga in cos", descriere, recenzii, produse similare
 5. **Filtre & sortare** — marime / culoare / pret / brand + optiuni de sortare
 Fiecare camp: status bun/partial/slab (necunoscut cand tipul de pagina lipseste din crawl, exclus din medie) + semnale gasit/lipsa in limbaj de client. Scor rubrica = media campurilor cu status != necunoscut.

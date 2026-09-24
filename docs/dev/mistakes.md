@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — A category that shows all its products was told it lacks pagination
+
+Symptom: magazinfitness.ro's report listed "Fara paginare vizibila" for category pages; /gantere/ shows all 48 of its 48 products on one page. Measured cause: the UX check required pagination markup on every category page, whatever its size. Recognition signal: a missing-pagination finding on a category whose product total equals what it lists. Repair: `paginationState` says present, missing (the page states a total above the prices it shows, with a grid of at least 3), or not judged; a signal that is not judged is left out of the score and the list.
+
 ## 2026-09-24 — A speed test PageSpeed could not run was reported as a score of 0
 
 Symptom: a local audit of diente.ro showed "Scor de viteza pe mobil: 0 / 100" and "—" for the load times; a direct PageSpeed call minutes later measured 77. Measured cause: `fetchPSI` turned a missing performance score into 0 (`?? 0`), and `computeVitezaChecks` filled a side that returned nothing with `{ score: 0, lcp: "—" }`; a unit test even asserted the 0. Recognition signal: "0 / 100" together with "—" timings. Repair: no score means no result; a missing side or timing is "Date indisponibile", shown as "de verificat"; reports saved before read "0 / 100" and a "—" load time as not measured.

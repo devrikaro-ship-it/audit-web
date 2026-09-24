@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeContinutChecks, computeKeywordsChecks, computeStructuraChecks, duplicateTextPages, keywordInWrittenText, ownWrittenText, sameHeadingPages } from "./audit-engine";
+import { computeContinutChecks, computeKeywordsChecks, computeStructuraChecks, duplicateTextPages, keywordInWrittenText, ownWrittenText, paginationState, sameHeadingPages } from "./audit-engine";
 import type { PageData } from "./net";
 
 const page = (url: string, body: string, title = ""): PageData => ({
@@ -104,5 +104,21 @@ describe("the visible trail is judged where it belongs", () => {
   it("judges category and product pages only, never the home page", () => {
     const c = computeStructuraChecks([home, cat, prod], "", "", "https://s.ro/sitemap.xml", { categories: [cat.url], products: [prod.url] }).find((x) => x.id === "breadcrumbs");
     expect(c).toMatchObject({ correctCount: 1, total: 2 });
+  });
+});
+
+describe("paginationState", () => {
+  const grid = (n: number) => Array.from({ length: n }, (_, i) => `<article><a href="/p/${i}">Produs ${i}</a><span>${100 + i} lei</span></article>`).join("");
+  it("counts pagination as present when the page has it", () => {
+    expect(paginationState(`<p>48 rezultate</p>${grid(24)}<nav class="woocommerce-pagination"><a class="page-numbers" href="/page/2/">2</a></nav>`)).toBe(true);
+  });
+  it("reports it missing only when the page says it has more products than it shows", () => {
+    expect(paginationState(`<p>Afisare 1-24 din 48 rezultate</p>${grid(24)}`)).toBe(false);
+  });
+  it("does not judge a category that shows all its products on one page", () => {
+    expect(paginationState(`<strong>48 produse</strong>${grid(48)}`)).toBeNull();
+  });
+  it("does not judge when the page gives no product total", () => {
+    expect(paginationState(grid(12))).toBeNull();
   });
 });
