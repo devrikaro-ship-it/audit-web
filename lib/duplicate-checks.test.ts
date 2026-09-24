@@ -138,3 +138,9 @@ describe("countInternalLinks", () => {
     expect(countInternalLinks(html, "magazinfitness.ro")).toBe(3);
   });
 });
+
+describe("the site audit measures the site, not search demand", () => {
+  it("does not emit the retired category-coverage check", () => {
+    expect(computeKeywordsChecks([page("https://s.ro/a/b/", "<h1>A</h1>", "A")]).map((c) => c.id)).not.toContain("kw_categorii");
+  });
+});

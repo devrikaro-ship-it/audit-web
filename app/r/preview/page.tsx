@@ -52,7 +52,6 @@ const MOCK_DATA: AuditData = {
     { id: "kw_in_title",          label: "Keyword in Title Tag",     correctCount: 32, total: 50, unit: "kw", problema: "18 cuvinte cheie din top 50 nu apar in title tag.", fix: "Rescrie title tag-ul paginilor fara keyword." },
     { id: "kw_in_h1",             label: "Keyword in H1",            correctCount: 38, total: 50, unit: "kw", problema: "12 cuvinte cheie nu apar in H1-ul paginii tinta.", fix: "Asigura-te ca H1-ul contine keyword-ul principal." },
     { id: "kw_in_url",            label: "Keyword in URL",           correctCount: 28, total: 50, unit: "kw", problema: "22 pagini au URL-uri care nu reflecta cuvantul cheie.", fix: "Restructureaza URL-urile sa contina keyword-ul." },
-    { id: "kw_categorii",         label: "Kw acoperit de categorii", correctCount: 14, total: 50, unit: "kw", problema: "36 din top 50 kw nu au o pagina de categorie dedicata.", fix: "Creeaza pagini de categorie pentru grupele principale de kw." },
     { id: "kw_fara_canibalizare", label: "Fara canibalizare kw",     correctCount: 41, total: 50, unit: "kw", problema: "9 cuvinte cheie sunt targetate simultan de 2+ pagini.", fix: "Alege o pagina principala pentru fiecare keyword." },
   ],
   structuraChecks: [

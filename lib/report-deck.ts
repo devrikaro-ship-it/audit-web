@@ -45,7 +45,6 @@ export const PAGE_COPY: Record<string, Copy> = {
   kw_in_title: { title: "Pagini fara titlu in Google", problem: (n) => `${n} pagini nu au un titlu pe care sa-l afiseze Google.`, fix: "Scrie pentru fiecare pagina un titlu care incepe cu ce cauta clientul." },
   kw_in_h1: { title: "Cuvantul cautat lipseste din titlul paginii", problem: (n) => `${n} pagini au un titlu mare care nu contine cuvintele cu care incepe titlul din Google.`, fix: "Pune in titlul mare de pe pagina aceleasi cuvinte cu care incepe titlul din Google." },
   kw_in_url: { title: "Cuvantul cautat lipseste din adresa paginii", problem: (n) => `${n} pagini au o adresa care nu contine cuvintele cu care incepe titlul paginii.`, fix: "La paginile noi, fa adresa din cuvintele titlului. La cele vechi, schimba adresa doar impreuna cu o trimitere automata de la adresa veche, altfel pierzi pozitiile din Google." },
-  kw_categorii: { title: "Cautari fara o categorie dedicata", problem: (n) => `${n} pagini nu sunt pagini de categorie cu adresa scurta, direct sub numele magazinului.`, fix: "Creeaza categorii pentru grupele de produse cautate des, cu cel putin 500 de cuvinte de text." },
   kw_fara_canibalizare: { title: "Pagini care concureaza pe aceeasi cautare", problem: (n) => `${n} pagini au exact acelasi titlu ca alta pagina a magazinului, asa ca Google nu stie pe care sa o arate.`, fix: "Pastreaza o singura pagina pentru fiecare titlu; la celelalte schimba titlul si textul sau trimite-le automat catre pagina pastrata." },
   robots_llm: { title: "Roboti AI opriti sa citeasca site-ul", problem: (n, t) => `${n} din ${t} roboti AI (ChatGPT, Claude, Perplexity) nu au voie sa citeasca site-ul, asa ca nu il pot recomanda.`, fix: "Permite in fisierul robots.txt al site-ului robotii GPTBot, ClaudeBot si PerplexityBot." },
   llms_txt: { title: "Lipseste rezumatul pentru asistentii AI", problem: () => "Magazinul nu are fisierul llms.txt: un rezumat scris pentru ChatGPT, Claude si Perplexity, cu ce vinzi si ce pagini sa citeasca.", fix: "Publica la adresa /llms.txt un rezumat al magazinului: ce vinzi, categoriile principale cu link si paginile de livrare, retur si contact." },
@@ -117,8 +116,9 @@ const UX_PAGES: Record<string, string> = { home: "Homepage", categorie: "Pagina 
 const UNIT: Record<string, string> = { crawlere: "roboti AI", criterii: "conditii", fisier: "fisier", legaturi: "legaturi" };
 const unitOf = (c: PageCheck) => UNIT[c.unit ?? ""] ?? "pagini";
 const ratio = (c: PageCheck) => c.correctCount / Math.max(c.total, 1);
-// A check that judged no page (total 0) is not measured: it counts neither in a score nor as a problem.
-const measuredChecks = (cs: PageCheck[]) => cs.filter((c) => c.total > 0);
+// A check that judged no page (total 0) is not measured, and a check the report has no wording for (retired, such as
+// kw_categorii in reports saved before 2026-09-24) is not part of the audit: neither counts in a score or as a problem.
+const measuredChecks = (cs: PageCheck[]) => cs.filter((c) => c.total > 0 && PAGE_COPY[c.id]);
 const pageScore = (cs: PageCheck[]) => Math.round(measuredChecks(cs).reduce((s, c) => s + ratio(c) * 100, 0) / Math.max(measuredChecks(cs).length, 1));
 
 // A measurement the audit could not take is "de verificat", never a finding (AUDIT-SPEC §5.1).

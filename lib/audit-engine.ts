@@ -341,14 +341,13 @@ export function computeKeywordsChecks(pages: PageData[]): PageCheck[] {
   const kwResults = pages.map(p => {
     const title = parseTitle(p.html).toLowerCase();
     const kw = extractKeyword(title);
-    if (!kw) return { inTitle: false, inH1: false, inUrl: false, inCategory: false };
+    if (!kw) return { inTitle: false, inH1: false, inUrl: false };
     const h1 = (p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").toLowerCase();
     const urlPath = new URL(p.url).pathname.toLowerCase();
     return {
       inTitle: title.includes(kw),
       inH1: h1.includes(kw),
       inUrl: urlPath.replace(/-/g, " ").includes(kw),
-      inCategory: urlPath.split("/").filter(Boolean).length === 1,
     };
   });
 
@@ -370,12 +369,6 @@ export function computeKeywordsChecks(pages: PageData[]): PageCheck[] {
       correctCount: kwResults.filter(r => r.inUrl).length, total,
       problema: `${total - kwResults.filter(r => r.inUrl).length} pagini au URL-uri care nu reflecta cuvantul cheie targetat.`,
       fix: "Restructureaza URL-urile sa contina keyword-ul. Adauga redirecturi 301 de la URL-urile vechi.",
-    },
-    {
-      id: "kw_categorii", label: "Kw acoperit de categorii", unit: "kw",
-      correctCount: kwResults.filter(r => r.inCategory).length, total,
-      problema: `${total - kwResults.filter(r => r.inCategory).length} kw nu au o pagina de categorie dedicata. Categoriile rankeaza mai bine pe kw cu volum mare.`,
-      fix: "Creeaza pagini de categorie pentru grupele principale de kw cu minim 500 cuvinte de continut.",
     },
     {
       id: "kw_fara_canibalizare", label: "Fara canibalizare kw", unit: "kw",

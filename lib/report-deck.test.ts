@@ -107,5 +107,11 @@ describe("paginateChecklist", () => {
     ]);
     expect(d.ux.pages[0].missing).toEqual([]);
   });
+
+  it("a report saved with the retired category-coverage check neither lists it nor scores it", () => {
+    const old = base({ keywordsChecks: [check("kw_in_url", 25, 60), check("kw_categorii", 0, 60)] });
+    expect(buildDeck(old).seo.problems.map((p) => p.title)).not.toContain("Cautari fara o categorie dedicata");
+    expect(buildDeck(old).seo.zones.find((z) => z.name === "Cuvinte cheie")?.score).toBe(42);
+  });
 });
 

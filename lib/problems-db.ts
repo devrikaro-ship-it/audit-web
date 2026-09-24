@@ -46,7 +46,6 @@ export const CHECKS: Record<string, CheckDef> = {
   kw_in_title:        { id: "kw_in_title",         label: "Keyword in Title Tag",   sectiune: "keywords",  importanta: "critic",    descriereOk: "Keyword principal prezent in title tag-ul tuturor paginilor tinta" },
   kw_in_h1:           { id: "kw_in_h1",            label: "Keyword in H1",          sectiune: "keywords",  importanta: "critic",    descriereOk: "Keyword principal prezent in H1-ul paginilor tinta" },
   kw_in_url:          { id: "kw_in_url",           label: "Keyword in URL",         sectiune: "keywords",  importanta: "major",     descriereOk: "URL-urile reflecta keyword-ul targetat — slug descriptiv" },
-  kw_categorii:       { id: "kw_categorii",        label: "Kw acoperit de categorii",sectiune: "keywords", importanta: "major",     descriereOk: "Kw principale sunt acoperite de pagini de categorie dedicate" },
   kw_fara_canibalizare:{ id: "kw_fara_canibalizare",label: "Fara canibalizare kw",  sectiune: "keywords",  importanta: "important", descriereOk: "Fiecare keyword este targetat de o singura pagina principala" },
 
   // 5. Structura Site-ului (5)
@@ -110,7 +109,6 @@ export const PROBLEMS: Record<string, Problem> = {
   kw_title_lipsa:           { id: "kw_title_lipsa",           label: "Keyword absent din Title Tag",      sectiune: "keywords",  importanta: "critic",    problema: "Keyword-ul principal nu apare in title tag-ul paginii care il targeteaza. Google citeste title tag-ul primul cand decide relevanta pentru o interogare.", fix: "Rescrie title tag-ul sa inceapa cu keyword-ul principal. Formula recomandata: [Keyword] — [Beneficiu] | [Brand]." },
   kw_h1_lipsa:              { id: "kw_h1_lipsa",              label: "Keyword absent din H1",             sectiune: "keywords",  importanta: "critic",    problema: "Keyword-ul principal lipseste din H1-ul paginii tinta. H1 este al doilea cel mai important semnal on-page dupa title tag.", fix: "Rescrie H1-ul sa includa keyword-ul principal formulat natural. H1 nu trebuie sa fie identic cu title tag-ul — variaza formularea." },
   kw_url_slab:              { id: "kw_url_slab",              label: "Keyword absent din URL",            sectiune: "keywords",  importanta: "major",     problema: "URL-urile paginilor nu contin keyword-ul targetat. Un URL descriptiv ajuta Google sa inteleaga topicul paginii inainte sa o crawleze complet.", fix: "Restructureaza URL-urile sa contina keyword-ul: /servicii/implant-dentar in loc de /p?id=47. Adauga redirecturi 301 de la URL-urile vechi." },
-  kw_categorie_lipsa:       { id: "kw_categorie_lipsa",       label: "Kw fara pagina de categorie",       sectiune: "keywords",  importanta: "major",     problema: "Kw cu volum mare nu au o pagina de categorie dedicata. Paginile de categorie acumuleaza autoritate de la linkurile interne si rankeaza mai bine pe kw de nisa.", fix: "Creeaza pagini de categorie pentru grupele principale de kw. Fiecare categorie trebuie sa aiba minim 500 cuvinte de continut propriu, nu doar lista de produse." },
   kw_canibalizare_found:    { id: "kw_canibalizare_found",    label: "Canibalizare de cuvinte cheie",     sectiune: "keywords",  importanta: "important", problema: "Mai multe pagini concureaza pe acelasi keyword. Google nu stie care sa o afiseze si fluctueaza intre ele, reducand pozitia ambelor.", fix: "Alege o pagina principala pentru fiecare keyword. Adauga canonical de la paginile secundare catre aceasta si diferentiaza continutul lor." },
 
   // Structura
@@ -178,7 +176,6 @@ export const CHECK_TO_PROBLEM: Record<string, Record<StatusCheck, string | null>
   kw_in_title:          { ok: null, atentie: "kw_title_lipsa",          critic: "kw_title_lipsa" },
   kw_in_h1:            { ok: null, atentie: "kw_h1_lipsa",             critic: "kw_h1_lipsa" },
   kw_in_url:           { ok: null, atentie: "kw_url_slab",             critic: "kw_url_slab" },
-  kw_categorii:        { ok: null, atentie: "kw_categorie_lipsa",      critic: "kw_categorie_lipsa" },
   kw_fara_canibalizare:{ ok: null, atentie: "kw_canibalizare_found",   critic: "kw_canibalizare_found" },
   robots_llm:         { ok: null, atentie: "robots_llm_blocat",        critic: "robots_llm_blocat" },
   sitemap_xml:        { ok: null, atentie: "sitemap_invalid",           critic: "sitemap_invalid" },
