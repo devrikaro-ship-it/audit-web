@@ -48,4 +48,12 @@ describe("the report speaks the shop owner's language", () => {
     expect(text).toContain("Pagini fara un titlu principal clar");
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
   });
+
+  it("reads a report saved before the client wording without technical terms", () => {
+    const home = { id: "home", label: "Analiza homepage", status: "partial" as const, scor: 50, gasit: ["mesaj / hero clar (H1)"], lipsa: ["fara breadcrumbs"], problema: "", fix: "" };
+    const old = { ...data, ux: { ...data.ux!, fields: [home, { ...home, id: "categorie", gasit: ["breadcrumbs (stii unde esti)"], lipsa: ["fara titlu-hero clar (H1)"] }] } };
+    const text = visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: old })));
+    expect(text).toContain("mesaj clar la inceputul paginii");
+    expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
+  });
 });

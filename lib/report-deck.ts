@@ -84,6 +84,14 @@ const UX_SITE: Record<string, SiteCopy> = {
   favicon: { title: "Iconita magazinului in tabul browserului", result: yesNo },
   apple_icon: { title: "Iconita cand magazinul e salvat pe ecranul telefonului", result: yesNo },
 };
+// UX signals are stored with each report; reports saved before 2026-09-24 carry these older technical wordings.
+const UX_SIGNAL_BEFORE_2026_09_24: Record<string, string> = {
+  "mesaj / hero clar (H1)": "mesaj clar la inceputul paginii",
+  "fara titlu-hero clar (H1)": "fara un mesaj clar la inceputul paginii",
+  "breadcrumbs (stii unde esti)": "traseul paginii (stii unde esti)",
+  "fara breadcrumbs": "fara traseul paginii (stii unde esti)",
+};
+const uxSignal = (s: string) => UX_SIGNAL_BEFORE_2026_09_24[s] ?? s;
 const UX_PAGES: Record<string, string> = { home: "Homepage", categorie: "Pagina de categorie", produs: "Pagina de produs", filtre: "Filtre si sortare" };
 
 const UNIT: Record<string, string> = { crawlere: "roboti AI", criterii: "conditii", fisier: "fisier", legaturi: "legaturi" };
@@ -160,7 +168,7 @@ export function buildDeck(data: AuditData): Deck {
       id, name, score: known ? f.scor : null,
       verdict: known ? VERDICT_LABEL[verdict(f.scor)] : "De verificat",
       tone: known ? toneOf(f.scor) : "warn",
-      found: f.gasit, missing: f.lipsa,
+      found: f.gasit.map(uxSignal), missing: f.lipsa.map(uxSignal),
     };
   });
   const uxChecklist: CheckRow[] = [
