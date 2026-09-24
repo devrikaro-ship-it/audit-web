@@ -1,7 +1,7 @@
 import type { AuditData, CheckResult, PageCheck, StatusCheck, ProductSignal, UxAudit, UxField } from "./types";
 import { detectEcom, detectPlatform } from "./site-signals";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
-import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
+import { parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
 import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
 import { PROFILES, profileFor } from "./platform-knowledge";
 import { computeLearning, effectiveProfile, readApprovals } from "./learning";
@@ -160,6 +160,8 @@ type SeoPageResult = {
 };
 
 function computeSeoChecks(pages: PageData[]): PageCheck[] {
+  const indexableOk = pages.filter((p) => !isNoindex(p)).length;
+  const mixedOk = pages.filter((p) => !hasMixedContent(p)).length;
   const results: SeoPageResult[] = pages.map(p => ({
     hasTitle: !!parseTitle(p.html),
     titleLen: parseTitle(p.html).length,
@@ -207,7 +209,31 @@ function computeSeoChecks(pages: PageData[]): PageCheck[] {
       problema: `${total - urlOk} pagini au URL-uri cu parametri sau caractere speciale.`,
       fix: "Foloseste URL-uri curate cu slug-uri descriptive. Ex: /servicii/implant-dentar in loc de /p?id=123.",
     },
+    {
+      id: "indexare", label: "Pagini lasate la indexare",
+      correctCount: indexableOk, total,
+      problema: `${total - indexableOk} pagini care vand (categorii si produse) sunt blocate cu noindex: Google nu le arata deloc in cautari.`,
+      fix: "Scoate noindex de pe paginile de categorie si produs; pastreaza-l doar pe cos, cont si cautarea interna.",
+    },
+    {
+      id: "continut_mixt", label: "Resurse sigure (https)",
+      correctCount: mixedOk, total,
+      problema: `${total - mixedOk} pagini incarca imagini sau scripturi pe http, nu pe https. Browserul le blocheaza sau afiseaza avertismente de securitate.`,
+      fix: "Inlocuieste adresele http:// cu https:// in tema, in continut si in setarile de imagini.",
+    },
   ];
+}
+
+// A money page blocked from Google: meta robots or X-Robots-Tag noindex.
+export function isNoindex(p: PageData): boolean {
+  const meta = /<meta[^>]+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(p.html) || /<meta[^>]+content=["'][^"']*noindex[^"']*["'][^>]*name=["']robots["']/i.test(p.html);
+  return meta || /noindex/i.test(p.headers["x-robots-tag"] ?? "");
+}
+
+// Mixed content: an https page loading src/href resources over plain http (links to other sites are not resources).
+export function hasMixedContent(p: PageData): boolean {
+  if (!p.url.startsWith("https://")) return false;
+  return /<(?:img|script|iframe|source|video|audio)[^>]+src=["']http:\/\//i.test(p.html) || /<link[^>]+rel=["']stylesheet["'][^>]+href=["']http:\/\//i.test(p.html);
 }
 
 function computeContinutChecks(pages: PageData[]): PageCheck[] {
@@ -308,6 +334,48 @@ function computeKeywordsChecks(pages: PageData[]): PageCheck[] {
   ];
 }
 
+// GEO / AI search (devrika-seo pillar 9): AI crawler access, llms.txt, and the entity links AI answers rely on.
+export function computeAiChecks(robotsTxt: string, llmsTxt: string, pages: PageData[]): PageCheck[] {
+  const llmCheck = checkLLMCrawlers(robotsTxt);
+  const llmsOk = /^\s*#\s*\S/.test(llmsTxt) && llmsTxt.trim().length >= 100;
+  const sameAsCount = sameAsLinks(pages).size;
+  return [
+    {
+      id: "robots_llm", label: "Acces pentru robotii AI", unit: "crawlere",
+      correctCount: llmCheck.correctCount, total: llmCheck.total,
+      problema: "robots.txt poate bloca crawlerii LLM (GPTBot, ClaudeBot, PerplexityBot). Site-ul nu va fi citat ca sursa in raspunsurile AI.",
+      fix: "Adauga in robots.txt:\nUser-agent: GPTBot\nAllow: /\nUser-agent: ClaudeBot\nAllow: /\nUser-agent: PerplexityBot\nAllow: /",
+    },
+    {
+      id: "llms_txt", label: "Fisierul llms.txt", unit: "fisier",
+      correctCount: llmsOk ? 1 : 0, total: 1,
+      problema: "Magazinul nu are un fisier llms.txt: un rezumat al site-ului, scris pentru ChatGPT, Claude si Perplexity, care le spune ce vinzi si ce pagini sa citeasca.",
+      fix: "Publica la /llms.txt un rezumat al magazinului: ce vinzi, categoriile principale cu link si paginile importante (livrare, retur, contact).",
+    },
+    {
+      id: "entitate_ai", label: "Identitatea firmei pentru AI", unit: "legaturi",
+      correctCount: Math.min(sameAsCount, 2), total: 2,
+      problema: "Schema organizatiei nu leaga magazinul de profilurile lui oficiale (Facebook, Instagram, Google). Asistentii AI il recunosc mai greu ca firma reala.",
+      fix: "Adauga in schema Organization campul sameAs cu profilurile oficiale ale firmei.",
+    },
+  ];
+}
+
+// Every sameAs URL declared in the JSON-LD of the pages read (organisation profiles: Facebook, Instagram, Wikidata...).
+export function sameAsLinks(pages: PageData[]): Set<string> {
+  const out = new Set<string>();
+  const walk = (node: unknown): void => {
+    if (Array.isArray(node)) { node.forEach(walk); return; }
+    if (!node || typeof node !== "object") return;
+    for (const [k, v] of Object.entries(node as Record<string, unknown>)) {
+      if (k === "sameAs") (Array.isArray(v) ? v : [v]).forEach((u) => typeof u === "string" && /^https?:\/\//.test(u) && out.add(u));
+      else walk(v);
+    }
+  };
+  for (const p of pages) parseJsonLD(p.html).forEach(walk);
+  return out;
+}
+
 function computeStructuraChecks(
   pages: PageData[],
   robotsTxt: string,
@@ -315,19 +383,12 @@ function computeStructuraChecks(
   sitemapUrl: string,
 ): PageCheck[] {
   const total = pages.length || 1;
-  const llmCheck = checkLLMCrawlers(robotsTxt);
   const sitemapCheck = checkSitemapCriteria(sitemapXml, sitemapUrl, robotsTxt);
   const breadcrumbsOk = pages.filter(p => hasBreadcrumbs(p.html)).length;
   const brokenLinksOk = pages.filter(p => p.status !== 404 && p.status !== 410).length;
   const internalLinkingOk = pages.filter(p => countInternalLinks(p.html, new URL(p.url).hostname) >= 3).length;
 
   return [
-    {
-      id: "robots_llm", label: "robots.txt & LLM crawlere", unit: "crawlere",
-      correctCount: llmCheck.correctCount, total: llmCheck.total,
-      problema: "robots.txt poate bloca crawlerii LLM (GPTBot, ClaudeBot, PerplexityBot). Site-ul nu va fi citat ca sursa in raspunsurile AI.",
-      fix: "Adauga in robots.txt:\nUser-agent: GPTBot\nAllow: /\nUser-agent: ClaudeBot\nAllow: /\nUser-agent: PerplexityBot\nAllow: /",
-    },
     {
       id: "sitemap_xml", label: "Sitemap XML", unit: "criterii",
       correctCount: sitemapCheck.correctCount, total: sitemapCheck.total,
@@ -394,6 +455,11 @@ export function computeSchemaChecks(pages: PageData[], seg: { categories: string
   };
   coverage("schema_breadcrumbs", inner, (t) => t === "BreadcrumbList", "BreadcrumbList", "pagini de categorie si produs");
   coverage("schema_rating", productPages, (t) => t === "AggregateRating" || t === "Review", "Rating", "pagini de produs");
+  if (productPages.length > 0) {
+    const n = productPages.filter((u) => { const t = typesOf.get(u) ?? new Set<string>(); return t.has("Product") && t.has("Offer"); }).length;
+    const status: StatusCheck = n / productPages.length >= 0.8 ? "ok" : n > 0 ? "atentie" : "critic";
+    out.schema_produs = { status, value: `Product cu pret pe ${n} din ${productPages.length} pagini de produs verificate` };
+  }
   return out;
 }
 
@@ -721,6 +787,8 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const profile = effectiveProfile(profileFor(detectPlatform(homeHtmlEarly.slice(0, 400000))), learning);
   const language = homeHtmlEarly.match(/<html[^>]*\blang=["']?([a-z]{2})/i)?.[1]?.toLowerCase() ?? null;
   const robotsTxt = await readText(`${origin}/robots.txt`);
+  // Read before the page burst: rate-limiting shops (Shopify) refuse small files requested right after it.
+  const llmsTxt = await readText(`${origin}/llms.txt`);
   const sitemapUrl = extractSitemapFromRobots(robotsTxt, origin);
   const sitemapXml = await readText(sitemapUrl);
   const sitemapCandidates = [sitemapUrl, ...profile.sitemapEntryPoints.map((p) => origin + p)];
@@ -796,6 +864,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const continutChecks = computeContinutChecks(analyzedPages);
   const keywordsChecks = computeKeywordsChecks(analyzedPages);
   const structuraChecks = computeStructuraChecks(analyzedPages, robotsTxt, sitemapXml, sitemapUrl);
+  const aiChecks = computeAiChecks(robotsTxt, llmsTxt, analyzedPages);
   const schema = computeSchemaChecks(analyzedPages, { categories, products });
   const social = computeSocialChecks(homepageData);
   const securitate = computeSecurityChecks(homepageData);
@@ -806,7 +875,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const ux = isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
 
   const checksRezultate = { ...viteza, ...schema, ...social, ...securitate };
-  const failedPageChecks = [...seoChecks, ...continutChecks, ...keywordsChecks, ...structuraChecks]
+  const failedPageChecks = [...seoChecks, ...continutChecks, ...keywordsChecks, ...structuraChecks, ...aiChecks]
     .filter((c) => c.correctCount < c.total * 0.7).map((c) => c.id);
   await appendObservation({
     at: Date.now(), domain, platform: profile.platform,
@@ -832,6 +901,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     continutChecks,
     keywordsChecks,
     structuraChecks,
+    aiChecks,
     isEcom,
     productSignal,
     ux,

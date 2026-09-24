@@ -1,5 +1,9 @@
 # seo-audit — dev mistakes
 
+## 2026-09-24 — llms.txt reported missing on a shop that has one
+
+Symptom: the local audit of diente.ro (Shopify) scored llms.txt 0/1 while fetching https://diente.ro/llms.txt alone returned 4,471 characters. Measured cause: the file was requested after the 60-page burst, when the shop was rate-limiting the audit, so the small request failed and read as "no file". Recognition signal: a site-level file check that fails only on shops that throttle (Shopify, MerchantPro) and passes when fetched by hand. Repair: site-level files (robots.txt, llms.txt) are read before the page burst; the sameAs signal is read from the JSON-LD of every page fetched instead of a regex on the homepage.
+
 ## 2026-09-23 — The report PDF printed an error page and returned 200
 
 Symptom: after Chromium was installed, "Descarca PDF" answered 200 with a one-page PDF showing "ERR_SSL_PROTOCOL_ERROR". Measured cause: the route asked Chrome for req.nextUrl.origin, which behind the proxy is https://localhost:3000, while the container serves plain HTTP; the route never checked what it printed. Recognition signal: a report PDF of one page or ~20 KB. Repair: Chrome reads http://127.0.0.1:<PORT>/r/<id>?print=1 and the route checks the report answers before printing (502 otherwise).

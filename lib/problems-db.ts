@@ -61,6 +61,7 @@ export const CHECKS: Record<string, CheckDef> = {
   schema_tipuri:      { id: "schema_tipuri",       label: "Tipuri schema potrivite",sectiune: "schema",    importanta: "important", descriereOk: "LocalBusiness, Product, Article sau FAQ prezente dupa caz" },
   schema_validare:    { id: "schema_validare",     label: "Schema fara erori",      sectiune: "schema",    importanta: "major",     descriereOk: "Schema valida — Google Rich Results Test trece fara erori" },
   schema_breadcrumbs: { id: "schema_breadcrumbs",  label: "Breadcrumb schema",      sectiune: "schema",    importanta: "important", descriereOk: "Breadcrumb JSON-LD prezent pentru navigare clara in Google" },
+  schema_produs:      { id: "schema_produs",       label: "Schema Product cu pret", sectiune: "schema",    importanta: "critic",    descriereOk: "Paginile de produs trimit catre Google numele, pretul si stocul" },
   schema_rating:      { id: "schema_rating",       label: "Rating / Review schema", sectiune: "schema",    importanta: "important", descriereOk: "AggregateRating prezent pe pagini de produse si servicii" },
 
   // 7. Social & OG Tags (5)
@@ -126,6 +127,8 @@ export const PROBLEMS: Record<string, Problem> = {
   schema_cu_erori:          { id: "schema_cu_erori",          label: "Erori de validare in schema",       sectiune: "schema",    importanta: "major",     problema: "Schema contine campuri obligatorii lipsa sau valori gresite. Google o ignora sau afiseaza avertisment in Search Console.", fix: "Testeaza schema pe search.google.com/test/rich-results si corecteaza toate erorile marcate cu rosu." },
   breadcrumbs_lipsa:        { id: "breadcrumbs_lipsa",        label: "Breadcrumb schema lipsa",           sectiune: "schema",    importanta: "important", problema: "Nu exista schema de tip BreadcrumbList. Google nu poate afisa calea de navigare sub rezultat — mai putin click-uri.", fix: "Adauga schema BreadcrumbList pe paginile de categoria si produs. In WordPress, Rank Math si Yoast o genereaza automat." },
   breadcrumbs_partial:      { id: "breadcrumbs_partial",      label: "Breadcrumb schema incompleta",      sectiune: "schema",    importanta: "important", problema: "Doar o parte din paginile de categorie si produs au schema BreadcrumbList. Pe celelalte Google nu poate afisa calea de navigare sub rezultat.", fix: "Activeaza BreadcrumbList pe toate sabloanele de categorie si produs, nu doar pe unele." },
+  produs_schema_lipsa:      { id: "produs_schema_lipsa",      label: "Schema Product lipsa",             sectiune: "schema",    importanta: "critic",    problema: "Paginile de produs nu trimit catre Google schema Product cu pret si stoc. Produsele apar in cautare fara pret si nu pot aparea in rezultatele cu produse gratuite din Google.", fix: "Genereaza schema Product cu Offer (pret, moneda, stoc) pe fiecare pagina de produs; pluginurile SEO si temele moderne o pot emite automat." },
+  produs_schema_partial:    { id: "produs_schema_partial",    label: "Schema Product doar pe unele produse", sectiune: "schema", importanta: "important", problema: "Doar o parte din paginile de produs trimit catre Google schema Product cu pret. Celelalte apar fara pret in cautare.", fix: "Activeaza schema Product cu Offer pe toate sabloanele de produs." },
   rating_schema_partial:    { id: "rating_schema_partial",    label: "Rating schema doar pe unele produse", sectiune: "schema",  importanta: "important", problema: "Doar o parte din paginile de produs trimit rating catre Google. Produsele fara el apar fara stele, langa concurenti care le au.", fix: "Trimite AggregateRating pe toate produsele care au recenzii reale." },
   rating_schema_lipsa:      { id: "rating_schema_lipsa",      label: "Rating schema lipsa",               sectiune: "schema",    importanta: "important", problema: "Nu exista AggregateRating pe paginile de servicii sau produse. Concurentii cu stele in Google primesc mai multe click-uri.", fix: "Adauga AggregateRating cu ratingValue, reviewCount si bestRating in JSON-LD. Asigura-te ca recenziile sunt reale." },
 
@@ -187,6 +190,7 @@ export const CHECK_TO_PROBLEM: Record<string, Record<StatusCheck, string | null>
   schema_validare:    { ok: null, atentie: "schema_cu_erori",           critic: "schema_cu_erori" },
   schema_breadcrumbs: { ok: null, atentie: "breadcrumbs_partial",       critic: "breadcrumbs_lipsa" },
   schema_rating:      { ok: null, atentie: "rating_schema_partial",     critic: "rating_schema_lipsa" },
+  schema_produs:      { ok: null, atentie: "produs_schema_partial",     critic: "produs_schema_lipsa" },
   og_tags:            { ok: null, atentie: "og_title_desc_missing",     critic: "og_title_desc_missing" },
   og_image:           { ok: null, atentie: "og_image_missing",          critic: "og_image_missing" },
   twitter_card:       { ok: null, atentie: "twitter_card_missing",      critic: "twitter_card_missing" },

@@ -24,6 +24,7 @@ export type AuditData = {
   continutChecks: PageCheck[];
   keywordsChecks: PageCheck[];
   structuraChecks: PageCheck[];
+  aiChecks?: PageCheck[];          // GEO / AI search: AI crawlers, llms.txt, entity links (older reports have none)
   isEcom?: boolean;
   productSignal?: ProductSignal;   // product titles and descriptions, shown in the SEO rubric (shops only)
   ux?: UxAudit;                    // UX/UI by page type (shops only)
