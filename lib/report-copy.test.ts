@@ -89,6 +89,9 @@ describe("the report speaks the shop owner's language", () => {
     expect(text).toContain("Grila de produse cu poza si pret");
     expect(text).toContain("Paginile raspund corect");
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
+    // Counts as Romanian writes them: "4 pagini", never "4 de pagini" (1-19 and 101-119 take no "de").
+    expect(text).toContain("citit pe 4 pagini");
+    expect(text.match(/\b(?:[1-9]|1\d|10[1-9]|11\d) de \w+/g) ?? []).toEqual([]);
   });
 
   it("reads a report saved before the client wording without technical terms", () => {
@@ -128,6 +131,8 @@ const templates = () => registryTexts().filter((t) => /[a-z]{2}/i.test(t)).map((
 // What is not wording: numbers with their units, scores, page counts, the slide counter, the audited domain.
 const DATA = /^([\d\s.,/%—·:+()×✓✗?<>-]|ms\b|s\b|px\b)*$/;
 const DOMAIN = /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i;
+// A count with its noun from the register ("4 pagini", "51 de pagini") is data too.
+const COUNTED = new RegExp(`^\\d+ (?:de )?(?:${Object.values(REGISTRY.NOUN).flat().join("|")})$`);
 const segments = (html: string) => html.replace(/<style[\s\S]*?<\/style>/g, " ").split(/<[^>]+>/)
   .map((t) => t.replace(/&nbsp;/g, "\u00a0").replace(/&amp;/g, "&").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim())
   .filter(Boolean);
@@ -138,7 +143,7 @@ const outsideRegistry = (html: string) => {
   const ts = templates();
   const known = (raw: string, depth = 2): boolean => {
     const t = raw.trim();
-    if (!t || DATA.test(t) || DOMAIN.test(t)) return true;
+    if (!t || DATA.test(t) || DOMAIN.test(t) || COUNTED.test(t)) return true;
     for (const v of [t, t.charAt(0).toLowerCase() + t.slice(1), t.charAt(0).toUpperCase() + t.slice(1)]) {
       for (const re of ts) {
         const m = re.exec(v);

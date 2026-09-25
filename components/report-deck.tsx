@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import "@/app/r/report-deck.css";
 import { buildDeck, paginateChecklist, paginateStandard, toneOf, VERDICT_LABEL, type CheckRow, type StdGroup, type StdRow } from "@/lib/report-deck";
 import { verdict } from "@/lib/scoring";
-import { cap, CONTACT, fill, MONTHS, UI, UI_LEADS, WORD } from "@/lib/copy-registry";
+import { cap, CONTACT, countOf, fill, MONTHS, NOUN, UI, UI_LEADS, WORD } from "@/lib/copy-registry";
 import type { AuditData } from "@/lib/types";
 
 const formatDate = (ms: number) => { const d = new Date(ms); return fill(UI.date, { day: d.getDate(), month: MONTHS[d.getMonth()], year: d.getFullYear() }); };
@@ -56,7 +56,9 @@ export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData
   // A lead site reads the same slides in its own words (UI_LEADS).
   const T = data.siteKind?.type === "leads" ? { ...UI, ...UI_LEADS } : UI;
   const d = buildDeck(data);
-  const readOn = fill(T.readOn, { pages: d.pages });
+  // "4 pagini", "51 de pagini": the count as Romanian writes it.
+  const pagesRead = countOf(d.pages, NOUN.page);
+  const readOn = fill(T.readOn, { pages: pagesRead });
   const Top = ({ eyebrow }: { eyebrow: string }) => (
     <div className="top"><span className="eyebrow">{eyebrow}</span><span className="brandmark">{d.domain}</span></div>
   );
@@ -67,7 +69,7 @@ export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData
 
   slides.push({
     cls: "cover", eyebrow: T.coverEyebrow,
-    src: createdAt ? fill(T.coverSourceDated, { date: formatDate(createdAt), pages: d.pages }) : fill(T.coverSource, { pages: d.pages }),
+    src: createdAt ? fill(T.coverSourceDated, { date: formatDate(createdAt), pages: pagesRead }) : fill(T.coverSource, { pages: pagesRead }),
     body: (<>
       <div className="covrow">
         <h1>{d.cover}</h1>
@@ -89,7 +91,7 @@ export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData
     body: (<>
       <h2>{T.summaryTitle}</h2>
       <div className="sum">
-        <div className="si"><span className="label">{T.summaryOverall}</span><h3>{fill(T.summaryOverallValue, { score: d.score, verdict: VERDICT_LABEL[v].toLowerCase() })}</h3><p>{fill(T.summaryOverallText, { pages: d.pages })}</p></div>
+        <div className="si"><span className="label">{T.summaryOverall}</span><h3>{fill(T.summaryOverallValue, { score: d.score, verdict: VERDICT_LABEL[v].toLowerCase() })}</h3><p>{fill(T.summaryOverallText, { pages: pagesRead })}</p></div>
         <div className="si"><span className="label">{T.part1Label}</span><h3>{fill(T.scoreOf100, { score: d.seo.score })}</h3><p>{best && worst ? fill(T.summarySeoText, { best: plainName(best.name), worst: plainName(worst.name).toLowerCase() }) : T.summarySeoUnmeasured}</p></div>
         <div className="si"><span className="label">{T.part2Label}</span><h3>{fill(T.scoreOf100, { score: d.ux.score ?? "—" })}</h3><p>{fill(T.summaryUxText, { speed: d.ux.speed.mobile === "—" ? WORD.verify : d.ux.speed.mobile })}</p></div>
         <div className="si hl"><span className="label">{T.summaryFirst}</span><h3>{d.first?.title ?? T.summaryFirstNone}</h3><p>{d.first?.text}</p></div>
@@ -153,7 +155,7 @@ export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData
   }
   if (d.seo.ai) {
     slides.push({
-      eyebrow: T.part1Label, src: fill(T.aiSource, { pages: d.pages }),
+      eyebrow: T.part1Label, src: fill(T.aiSource, { pages: pagesRead }),
       body: (<>
         <h2>{T.aiTitle}</h2>
         <div className="ai3">{d.seo.ai.map((c) => (
