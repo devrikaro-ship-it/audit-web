@@ -108,7 +108,7 @@ const templates = () => registryTexts().filter((t) => /[a-z]{2}/i.test(t)).map((
 const DATA = /^([\d\s.,/%—·:+()×✓✗?<>-]|ms\b|s\b|px\b)*$/;
 const DOMAIN = /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i;
 const segments = (html: string) => html.replace(/<style[\s\S]*?<\/style>/g, " ").split(/<[^>]+>/)
-  .map((t) => t.replace(/&amp;/g, "&").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim())
+  .map((t) => t.replace(/&nbsp;/g, "\u00a0").replace(/&amp;/g, "&").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim())
   .filter(Boolean);
 // A text is known when it is data, an entry, or a template whose every placeholder is filled with something known
 // (a template made only of placeholders, "{n} {what}", therefore accepts nothing on its own).

@@ -126,7 +126,7 @@ export const LEGACY_ZONES = {
   continut: { name: "Continut", what: "Cat text au paginile, daca e unic, daca are subtitluri" },
   keywords: { name: "Cuvinte cheie", what: "Ce cauta clientul, in titluri si in adrese" },
   structura: { name: "Structura site", what: "Lista de pagini pentru Google, traseul, legaturile intre pagini" },
-  schema: { name: COMPONENTS.date_structurate.name, what: "Pret, stoc, stele si datele firmei, afisate in Google" },
+  schema: { name: COMPONENTS.date_structurate.name, what: "Pret, stoc, stele si datele firmei, declarate pentru Google" },
   ai: { name: "Vizibilitate in AI", what: "ChatGPT, Claude, Perplexity: acces, rezumat, identitatea firmei" },
 };
 
