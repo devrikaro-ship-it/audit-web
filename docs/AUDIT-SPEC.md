@@ -16,6 +16,8 @@ Raport de audit pentru un **prospect ecom netehnic**. E instrument de **vanzare*
 - Fiecare problema in limbaj de client (clienti pierduti / bani / loc in Google), nu jargon.
 - Ends with a neutral contact slide ("Intrebari despre raport?"), not a sales pitch (operator, 2026-09-24).
 
+> **2026-09-25 (operator):** the site audit covers shops AND lead generators (clinics, services, B2B), each judged on what brings it money; the paragraph below is superseded. Design: `docs/superpowers/specs/2026-09-25-site-audit-ecom-leads-design.md`.
+
 **Scope: ECOM-ONLY (all-in).** Auditul, **landing-ul si toata comunicarea** sunt orientate 100% pe magazine online — Devrika merge all-in pe ecom. Non-ecom **nu** e acoperit: nu construim varianta separata. Un URL non-ecom primeste un raport degradat (fara UX/UI pe tipuri de pagini) — acceptat, nu-l optimizam. Landing (`app/audit-seo`) + copy + CTA = mesaj ecom.
 
 **Strategic principle (2026-09-23):** the report shows what is wrong on the site itself — how Google finds the pages and how easily a visitor buys. Findings lead to fixing the site (SEO, speed, category and product pages); the report does not sell ads services.
