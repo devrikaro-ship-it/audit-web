@@ -350,6 +350,9 @@ export const UI = {
   // A rule that fails is always said to fail, next to it: never a count that reads like praise.
   faultOn: "nu e indeplinit pe {fail} din {t} {unit}",
   faultNot: "nu e indeplinit",
+  // A ✗ row of the checklist says what is wrong, why it matters, then how to fix it.
+  checkProblem: "Problema: {fault}. {why}",
+  checkProblemBare: "Problema: {fault}.",
   whyUnmeasured: "{text} Nu am putut masura din afara site-ului: {v}.",
   thScore: "Scor",
   thVerdict: "Verdict",

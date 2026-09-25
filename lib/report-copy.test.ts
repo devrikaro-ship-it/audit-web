@@ -86,6 +86,8 @@ describe("the report speaks the shop owner's language", () => {
     // Each component says why it has its verdict; a failing rule is said to fail, never shown as a count alone.
     expect(text).toMatch(/De ce e (bun|de reglat|rau): /);
     expect(text).toContain("Tot site-ul se deschide pe conexiune securizata (https): nu e indeplinit");
+    // A ✗ row of the checklist says what is wrong and why, before how to fix it.
+    expect(text).toMatch(/Paginile citite se deschid fara eroare Problema: Nu e indeplinit pe 1 din 5 pagini\. Unele pagini citite raspund cu eroare: nu exista sau serverul da gres\. Cum se repara: /);
     // Part 2 as ✓/✗ rows, both kinds.
     expect(text).toContain("Formularul de contact are cel mult cinci campuri");
     expect(text).toContain("Lista de produse arata poza si pretul fiecarui produs");

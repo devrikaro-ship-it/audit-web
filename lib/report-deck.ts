@@ -16,7 +16,7 @@ export type UxPage = { id: string; name: string; score: number | null; verdict: 
 
 // The standard SEO checklist: the same rows in the same order for every shop, grouped by component, each ✓, ✗ or
 // "de verificat" (operator, 2026-09-24).
-export type StdRow = { state: "ok" | "fail" | "verify"; title: string; result: string; note: string };
+export type StdRow = { state: "ok" | "fail" | "verify"; title: string; result: string; note: string; problem?: string };
 export type StdGroup = { name: string; score: number | null; rows: StdRow[] };
 
 export type Deck = {
@@ -129,7 +129,8 @@ function tenComponents(seo: SeoComponent[], leads = false) {
       const copy = copyOf(r.id);
       const pass = rowPass(r);
       if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, note: r.total === 0 ? WORD.notMeasured : copy.fix };
-      return pass ? { state: "ok", title: copy.title, result: result(r), note: "" } : { state: "fail", title: copy.title, result: result(r), note: copy.fix };
+      return pass ? { state: "ok", title: copy.title, result: result(r), note: "" }
+        : { state: "fail", title: copy.title, result: result(r), problem: fill(UI.checkProblem, { fault: cap(fault(r)), why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
     }),
   }));
   return { score: tenScore(seo), zones, pills: Object.values(STAGES), problems, checklist: [], standard };
@@ -162,7 +163,9 @@ function uxFromRows(groups: SeoComponent[]) {
       const pass = rowPass(r);
       const result = r.total > 1 ? fill(WORD.ratio, { ok: r.ok, t: r.total }) : pass ? WORD.yes : WORD.no;
       if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, note: r.total === 0 ? WORD.notMeasured : copy.fix };
-      return pass ? { state: "ok", title: copy.title, result, note: "" } : { state: "fail", title: copy.title, result, note: copy.fix };
+      const fault = r.total > 1 ? fill(UI.faultOn, { fail: r.total - r.ok, t: r.total, unit: NOUN.page[1] }) : UI.faultNot;
+      return pass ? { state: "ok", title: copy.title, result, note: "" }
+        : { state: "fail", title: copy.title, result, problem: fill(UI.checkProblemBare, { fault: cap(fault) }), note: fill(UI.problemsFix, { fix: copy.fix }) };
     }),
   }));
   return { score: tenScore(groups), pages, standard };
@@ -266,6 +269,7 @@ export function buildDeck(data: AuditData): Deck {
 // Heights are in units of an open row with its how-to line (measured 2026-09-24 at 1280x720 and in the 1200x675
 // PDF: 8 such rows overflow a slide by 20 px, so a slide holds 7.4 units).
 const ROW_WITH_NOTE = 1;
+const ROW_WITH_PROBLEM = 1.5;
 const ROW_WITHOUT_NOTE = 0.62;
 const DONE_LABEL = 0.5;
 const DONE_LINE = 0.65; // one line of the two-column block; a long value can wrap
@@ -306,7 +310,7 @@ export function paginateStandard(groups: StdGroup[], capacity = 7.4): StdGroup[]
       used += GROUP_HEAD;
       const take: StdRow[] = [];
       for (const r of rows) {
-        const h = r.note ? ROW_WITH_NOTE : ROW_WITHOUT_NOTE;
+        const h = r.problem ? ROW_WITH_PROBLEM : r.note ? ROW_WITH_NOTE : ROW_WITHOUT_NOTE;
         if (take.length && used + h > capacity) break;
         take.push(r);
         used += h;
