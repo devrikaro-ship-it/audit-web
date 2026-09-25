@@ -341,3 +341,16 @@ export const UI = {
   contactTitle: "Intrebari despre raport?",
   contactLead: "Iti explicam oricare punct din checklist si cum il repari, fie ca il faci singur, fie cu echipa ta.",
 };
+
+// A lead site's report (spec 2026-09-25 §5): the sentences of UI that speak of products, categories or the cart, in
+// the words of a site that brings contacts. Only the entries that differ.
+export const UI_LEADS: Partial<Record<keyof typeof UI, string>> = {
+  coverSource: "{pages} de pagini citite: servicii si locatii",
+  coverSourceDated: "{date} · {pages} de pagini citite: servicii si locatii",
+  coverPart2Lead: "cat de usor te contacteaza sau face o programare un vizitator, pe telefon si pe desktop",
+  summaryOverallText: "Calculat pe {pages} de pagini care aduc clienti: servicii, locatii si contact, nu articole de blog.",
+  summaryUxText: "Viteza pe mobil {speed}; paginile de servicii si de contact sunt verificate pe pagini reale.",
+  part1Lead: "Ce vede Google cand iti citeste paginile de servicii si de locatii, si ce vad ChatGPT, Claude sau Perplexity cand cineva le intreaba pe cine sa aleaga.",
+  part2Title: "UX / UI: cat de usor te contacteaza",
+  part2Lead: "Ce traieste un vizitator de la prima pagina pana la programare sau contact: cat asteapta, cum gaseste serviciul si ce il ajuta sa decida.",
+};

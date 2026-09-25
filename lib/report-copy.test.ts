@@ -172,3 +172,17 @@ describe("the report speaks only from its register", () => {
   });
 });
 
+describe("a lead site's report speaks of services, not of a shop (spec 2026-09-25 §5)", () => {
+  // "poze cumparate" (stock photos) is not shopping.
+  const SHOP = /produs\w*|\bcos(ul)?\b|categori\w*|magazin\w*|cumpar(?!ate)\w*|\bvand\w*/gi;
+  it("no shop word on any slide, desktop or phone", () => {
+    for (const phone of [false, true]) {
+      const text = visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: leadData, createdAt: Date.UTC(2026, 8, 25), phone })));
+      expect([...new Set(text.match(SHOP) ?? [])]).toEqual([]);
+    }
+  });
+  it("a shop's report keeps its words", () => {
+    expect(visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: tenData })))).toMatch(/categorii si produse/);
+  });
+});
+
