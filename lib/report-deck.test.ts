@@ -140,7 +140,7 @@ describe("paginateChecklist", () => {
     ];
     const d = buildDeck(base({ seo, checksRezultate: {} }));
     expect(d.seo.zones.map((z) => [z.name, z.score])).toEqual([["1. Paginile raspund corect", 100], ["2. Reguli pentru roboti (robots.txt)", 0], ["3. Continut vizibil fara incarcare ulterioara", null], ["4. Continutul paginii", 0]]);
-    expect(d.seo.problems.map((p) => [p.title, p.count])).toEqual([["robots.txt arata unde e lista de pagini", "de reparat"], ["Pozele produselor au descriere", "40 din 40 pagini de produs"]]);
+    expect(d.seo.problems.map((p) => [p.title, p.count])).toEqual([["robots.txt arata unde e lista de pagini", "de reparat"], ["Pozele produselor au descriere", "0 din 40 pagini de produs"]]);
     expect(d.seo.standard?.map((g) => [g.name, g.score, g.rows.map((r) => [r.state, r.title, r.result])])).toEqual([
       ["1. Paginile raspund corect", 100, [["ok", "Pagini care raspund corect", "60 din 60 pagini"], ["verify", "Site-ul raspunde cererilor automate", "de verificat"]]],
       ["2. Reguli pentru roboti (robots.txt)", 0, [["fail", "robots.txt arata unde e lista de pagini", "nu"]]],

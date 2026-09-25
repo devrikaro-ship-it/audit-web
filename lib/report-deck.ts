@@ -98,7 +98,7 @@ function tenComponents(seo: SeoComponent[], leads = false) {
   const faults = rows.filter((r) => rowPass(r) === false);
   const problems: Problem[] = faults.slice(0, 4).map((r) => ({
     title: copyOf(r.id).title,
-    count: copyOf(r.id).unit ? fill(WORD.outOf, { ok: r.total - r.ok, t: r.total, unit: copyOf(r.id).unit }) : WORD.repair,
+    count: copyOf(r.id).unit ? fill(WORD.outOf, { ok: r.ok, t: r.total, unit: copyOf(r.id).unit }) : WORD.repair,
     tone: r.ok / r.total < 0.5 ? "bad" : "warn",
     problem: copyOf(r.id).problem,
     fix: copyOf(r.id).fix,
