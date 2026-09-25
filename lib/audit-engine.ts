@@ -13,6 +13,7 @@ import { computeSeoComponents, seoScore } from "./seo-components";
 import { countOf, fill, NOUN, PROGRESS, SITE_KIND, UX_SIGNALS, WORD, type ProgressStepId } from "./copy-registry";
 import { hasRobotsRules } from "./robots-rules";
 import { runSeoProbes } from "./seo-probes";
+import { UX_LIMITS } from "./seo-limits";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
 const LLM_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "OAI-SearchBot", "CCBot", "Googlebot-Extended"];
@@ -861,7 +862,7 @@ export function computeUxStandard(
     { id: "home", rows: [
       yes("home_message", countH1(home) >= 1),
       yes("home_menu", hasNavUi(home)),
-      yes("home_paths", countInternalLinks(home, domain) >= 10),
+      yes("home_paths", countInternalLinks(home, domain) >= UX_LIMITS.homeLinks),
       yes("home_mobile", viewport),
     ] },
     { id: "categorie", rows: [
@@ -871,7 +872,7 @@ export function computeUxStandard(
       on(cat, "cat_intro", () => hasIntroText(cat)),
     ] },
     { id: "produs", rows: [
-      on(prod, "prod_images", () => contentImageCount(prod) >= 3),
+      on(prod, "prod_images", () => contentImageCount(prod) >= UX_LIMITS.productImages),
       on(prod, "prod_price", () => priceCount(prod) >= 1 && hasStockSignal(prod)),
       on(prod, "prod_cart", () => hasAddToCart(prod)),
       on(prod, "prod_description", () => countWords(prod) >= 200),

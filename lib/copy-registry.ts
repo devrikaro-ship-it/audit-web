@@ -3,7 +3,7 @@
 // with measured numbers or names; lib/report-copy.test.ts fails on any visible text that does not come from this
 // file and on a sentence written twice. To change a wording, change it here: one thing, one sentence.
 
-import { SEO_LIMITS } from "./seo-limits";
+import { SEO_LIMITS, UX_LIMITS } from "./seo-limits";
 
 export const fill = (tpl: string, v: Record<string, string | number> = {}): string =>
   tpl.replace(/\{(\w+)\}/g, (all, k: string) => (k in v ? String(v[k]) : all));
@@ -211,22 +211,22 @@ export const UX_SITE: Record<string, SiteCopy> = {
 export const UX_PAGES: Record<string, string> = { home: "Homepage", categorie: "Pagina de categorie", produs: "Pagina de produs", filtre: "Filtre si sortare" };
 // The UX signals the engine stores with each report: what a page type has (found) or lacks (missing), and the fix.
 export const UX_SIGNALS = {
-  home_message: { found: "mesaj clar la inceputul paginii", missing: "fara un mesaj clar la inceputul paginii", fix: "Pune sus pe prima pagina un titlu mare care spune ce vinzi si pentru cine." },
-  home_menu: { found: "meniu de navigare", missing: "meniu greu de gasit", fix: "Afiseaza meniul cu categoriile principale sus, vizibil si pe telefon." },
-  home_paths: { found: "categorii si cai spre produse", missing: "putine cai spre categorii/produse", fix: "Pune pe prima pagina legaturi catre categoriile principale si catre cateva produse vandute des." },
-  home_mobile: { found: "adaptat pentru mobil", missing: "nu e adaptat pentru mobil", fix: "Foloseste o tema care se aseaza corect pe telefon si verifica paginile principale de pe un telefon." },
-  cat_grid: { found: "grila de produse cu poza si pret", missing: "grila de produse neclara (poza/pret)", fix: "Afiseaza in lista de produse poza si pretul fiecarui produs." },
-  cat_trail: { found: "traseul paginii (stii unde esti)", missing: "fara traseul paginii (stii unde esti)", fix: "Afiseaza traseul (Acasa > Categorie > Produs) deasupra titlului, pe categorii si produse." },
-  cat_pagination: { found: "paginare", missing: "fara paginare vizibila", fix: "Adauga sub lista de produse numerotarea paginilor sau un buton 'Vezi mai multe'." },
-  cat_intro: { found: "text de intro pe categorie", missing: "fara text de intro (pierzi si SEO)", fix: "Scrie 2-3 fraze sub titlul categoriei: ce gaseste clientul acolo si cum alege." },
-  prod_images: { found: "imagini multiple", missing: "prea putine imagini de produs", fix: "Pune cel putin 3-4 poze pe produs: din mai multe unghiuri, in folosire, cu detalii." },
-  prod_price: { found: "pret + stoc", missing: "pret sau stoc neclar", fix: "Afiseaza langa butonul de comanda pretul si daca produsul e in stoc." },
-  prod_cart: { found: "buton 'Adauga in cos' clar", missing: "buton de comanda greu de gasit", fix: "Fa butonul 'Adauga in cos' mare si vizibil fara derulare, si pe telefon." },
-  prod_description: { found: "descriere de produs", missing: "descriere subtire", fix: "Scrie descrieri care raspund la ce intreaba clientii: la ce foloseste, dimensiuni, material, cum il alegi." },
-  prod_reviews: { found: "recenzii / rating", missing: "fara recenzii pe produs", fix: "Cere recenzii dupa livrare si afiseaza-le pe pagina produsului." },
-  prod_related: { found: "produse similare", missing: "fara produse similare", fix: "Afiseaza sub produs 4-8 produse similare sau complementare." },
-  filters: { found: "filtre (marime/culoare/pret/brand)", missing: "fara filtre pe categorii", fix: "Adauga filtre dupa pret, marca si caracteristicile principale ale produselor." },
-  sort: { found: "optiuni de sortare", missing: "fara sortare (pret, popularitate)", fix: "Adauga in lista de produse sortare dupa pret si dupa popularitate." },
+  home_message: { found: "un titlu mare sus spune ce vinzi", missing: "fara un mesaj clar la inceputul paginii", fix: "Pune sus pe prima pagina un titlu mare care spune ce vinzi si pentru cine." },
+  home_menu: { found: "meniul cu categoriile se vede sus", missing: "meniu greu de gasit", fix: "Afiseaza meniul cu categoriile principale sus, vizibil si pe telefon." },
+  home_paths: { found: fill("prima pagina duce spre categorii si produse (cel putin {homeLinks} legaturi)", UX_LIMITS), missing: "putine cai spre categorii/produse", fix: "Pune pe prima pagina legaturi catre categoriile principale si catre cateva produse vandute des." },
+  home_mobile: { found: "pagina se aseaza corect pe telefon", missing: "nu e adaptat pentru mobil", fix: "Foloseste o tema care se aseaza corect pe telefon si verifica paginile principale de pe un telefon." },
+  cat_grid: { found: "lista de produse arata poza si pretul fiecarui produs", missing: "grila de produse neclara (poza/pret)", fix: "Afiseaza in lista de produse poza si pretul fiecarui produs." },
+  cat_trail: { found: "traseul paginii (Acasa > Categorie) se vede deasupra titlului", missing: "fara traseul paginii (stii unde esti)", fix: "Afiseaza traseul (Acasa > Categorie > Produs) deasupra titlului, pe categorii si produse." },
+  cat_pagination: { found: "lista are numerotarea paginilor sau buton de mai multe produse", missing: "fara paginare vizibila", fix: "Adauga sub lista de produse numerotarea paginilor sau un buton 'Vezi mai multe'." },
+  cat_intro: { found: "categoria are un text de prezentare", missing: "fara text de intro (pierzi si SEO)", fix: "Scrie 2-3 fraze sub titlul categoriei: ce gaseste clientul acolo si cum alege." },
+  prod_images: { found: fill("cel putin {productImages} poze pe produs", UX_LIMITS), missing: "prea putine imagini de produs", fix: "Pune cel putin 3-4 poze pe produs: din mai multe unghiuri, in folosire, cu detalii." },
+  prod_price: { found: "pretul si stocul se vad pe pagina produsului", missing: "pret sau stoc neclar", fix: "Afiseaza langa butonul de comanda pretul si daca produsul e in stoc." },
+  prod_cart: { found: "butonul 'Adauga in cos' se vede clar", missing: "buton de comanda greu de gasit", fix: "Fa butonul 'Adauga in cos' mare si vizibil fara derulare, si pe telefon." },
+  prod_description: { found: "produsul are o descriere scrisa", missing: "descriere subtire", fix: "Scrie descrieri care raspund la ce intreaba clientii: la ce foloseste, dimensiuni, material, cum il alegi." },
+  prod_reviews: { found: "recenziile si nota clientilor apar pe produs", missing: "fara recenzii pe produs", fix: "Cere recenzii dupa livrare si afiseaza-le pe pagina produsului." },
+  prod_related: { found: "sub produs apar produse similare", missing: "fara produse similare", fix: "Afiseaza sub produs 4-8 produse similare sau complementare." },
+  filters: { found: "lista se poate filtra dupa pret, marca sau marime", missing: "fara filtre pe categorii", fix: "Adauga filtre dupa pret, marca si caracteristicile principale ale produselor." },
+  sort: { found: "lista se poate sorta dupa pret sau popularitate", missing: "fara sortare (pret, popularitate)", fix: "Adauga in lista de produse sortare dupa pret si dupa popularitate." },
 };
 // UX signals are stored with each report; reports saved before 2026-09-24 carry these older technical wordings.
 export const UX_SIGNAL_BEFORE_2026_09_24: Record<string, string> = {
@@ -234,6 +234,23 @@ export const UX_SIGNAL_BEFORE_2026_09_24: Record<string, string> = {
   "fara titlu-hero clar (H1)": UX_SIGNALS.home_message.missing,
   "breadcrumbs (stii unde esti)": UX_SIGNALS.cat_trail.found,
   "fara breadcrumbs": UX_SIGNALS.cat_trail.missing,
+  // Labels of reports saved on 2026-09-24 and 2026-09-25, before they said what each signal measures.
+  "mesaj clar la inceputul paginii": UX_SIGNALS.home_message.found,
+  "meniu de navigare": UX_SIGNALS.home_menu.found,
+  "categorii si cai spre produse": UX_SIGNALS.home_paths.found,
+  "adaptat pentru mobil": UX_SIGNALS.home_mobile.found,
+  "grila de produse cu poza si pret": UX_SIGNALS.cat_grid.found,
+  "traseul paginii (stii unde esti)": UX_SIGNALS.cat_trail.found,
+  "paginare": UX_SIGNALS.cat_pagination.found,
+  "text de intro pe categorie": UX_SIGNALS.cat_intro.found,
+  "imagini multiple": UX_SIGNALS.prod_images.found,
+  "pret + stoc": UX_SIGNALS.prod_price.found,
+  "buton 'Adauga in cos' clar": UX_SIGNALS.prod_cart.found,
+  "descriere de produs": UX_SIGNALS.prod_description.found,
+  "recenzii / rating": UX_SIGNALS.prod_reviews.found,
+  "produse similare": UX_SIGNALS.prod_related.found,
+  "filtre (marime/culoare/pret/brand)": UX_SIGNALS.filters.found,
+  "optiuni de sortare": UX_SIGNALS.sort.found,
 };
 // ── Part 2 as a ✓/✗ checklist (spec 2026-09-25 §4), both kinds of site. A shop's rows are its UX signals (title from
 // UX_SIGNALS.found, fix from UX_SIGNALS.fix); the speed rows and a lead site's rows are worded here. ──

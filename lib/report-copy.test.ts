@@ -86,7 +86,7 @@ describe("the report speaks the shop owner's language", () => {
     expect(text).toContain("Lista exista, contine paginile de servicii si de locatii, doar pagini care functioneaza, cu data schimbarii");
     // Part 2 as ✓/✗ rows, both kinds.
     expect(text).toContain("Formular scurt de contact, cu cel mult cinci campuri");
-    expect(text).toContain("Grila de produse cu poza si pret");
+    expect(text).toContain("Lista de produse arata poza si pretul fiecarui produs");
     expect(text).toContain("Paginile raspund corect");
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
     // Counts as Romanian writes them: "4 pagini", never "4 de pagini" (1-19 and 101-119 take no "de").
@@ -98,8 +98,17 @@ describe("the report speaks the shop owner's language", () => {
     const home = { id: "home", label: "Analiza homepage", status: "partial" as const, scor: 50, gasit: ["mesaj / hero clar (H1)"], lipsa: ["fara breadcrumbs"], problema: "", fix: "" };
     const old = { ...data, ux: { ...data.ux!, fields: [home, { ...home, id: "categorie", gasit: ["breadcrumbs (stii unde esti)"], lipsa: ["fara titlu-hero clar (H1)"] }] } };
     const text = visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: old })));
-    expect(text).toContain("mesaj clar la inceputul paginii");
+    expect(text).toMatch(/un titlu mare sus spune ce vinzi/i);
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
+  });
+
+  it("reads a report saved with the short labels of 2026-09-24/25 in the labels that say what was measured", () => {
+    const prod = { id: "produs", label: "Pagina de produs", status: "partial" as const, scor: 50, gasit: ["pret + stoc", "imagini multiple", "recenzii / rating"], lipsa: [], problema: "", fix: "" };
+    const saved = { ...data, ux: { ...data.ux!, fields: [prod] } };
+    const text = visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: saved })));
+    expect(text).toMatch(/pretul si stocul se vad pe pagina produsului/i);
+    expect(text).toMatch(/cel putin 3 poze pe produs/i);
+    expect(text).not.toMatch(/pret \+ stoc|imagini multiple|recenzii \/ rating/i);
   });
 
   it("every open checklist row says how to fix it", () => {
