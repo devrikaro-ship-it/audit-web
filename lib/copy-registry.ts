@@ -58,7 +58,7 @@ export const COMPONENTS: Record<string, ComponentCopy> = {
 // after round hundreds).
 export const NOUN = {
   page: ["pagina", "pagini"], category: ["categorie", "categorii"], product: ["produs", "produse"],
-  service: ["serviciu", "servicii"], location: ["locatie", "locatii"], otherPage: ["alta pagina", "alte pagini"],
+  service: ["serviciu", "servicii"], location: ["locatie", "locatii"],
 } as const;
 export const countOf = (n: number, [one, many]: readonly [string, string]): string =>
   n === 1 ? `1 ${one}` : `${n}${n >= 20 && (n % 100 === 0 || n % 100 >= 20) ? " de " : " "}${many}`;
@@ -388,9 +388,10 @@ export const PROGRESS = {
   robotsMissing: "fara robots.txt",
   sitemapFound: "sitemap gasit",
   sitemapMissing: "fara sitemap",
-  chosenShop: "{c} si {p}",
-  chosenLeads: "{s}, {l} si {o}",
+  pagesChosen: "Pagini alese: {n}",
   pagesRead: "Pagini citite: {n}",
+  pagesTyped: "Pagini citite: {n} · {split}",
+  pair: "{a}, {b}",
   lcp: "{s} pana apare continutul",
   noDescription: "{n} fara descriere",
   allDescribed: "toate paginile au descriere",

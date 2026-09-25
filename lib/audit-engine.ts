@@ -1025,10 +1025,8 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?:
     ({ urls: toAnalyze, planned } = select() as { urls: string[]; planned: Map<string, string> });
   }
 
-  const plannedOf = (t: string) => [...planned.values()].filter((x) => x === t).length;
-  step("alegere", "done", leads
-    ? fill(PROGRESS.chosenLeads, { s: countOf(plannedOf("service"), NOUN.service), l: countOf(plannedOf("location"), NOUN.location), o: countOf(plannedOf("other"), NOUN.otherPage) })
-    : fill(PROGRESS.chosenShop, { c: countOf(plannedOf("category"), NOUN.category), p: countOf(plannedOf("product"), NOUN.product) }));
+  // The split by type is shown once the pages are read: a lead page's type is known only from its content.
+  step("alegere", "done", fill(PROGRESS.pagesChosen, { n: toAnalyze.length - 1 }));
 
   // The small SEO checks (redirects, www, sitemap sample, sort parameter) before the page burst, like llms.txt.
   const listedSample = leads ? [...leadTyped.service, ...leadTyped.location, ...leadTyped.other].slice(0, 20) : [...typed.category.slice(0, 10), ...typed.product.slice(0, 10)];
@@ -1061,8 +1059,6 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?:
   await (browserFetcher as PageFetcher | null)?.close();
 
   const analyzedPages = pages.filter(p => p.ok);
-  step("pagini", "done", fill(PROGRESS.pagesRead, { n: analyzedPages.length }));
-  step("viteza", "running");
   const normUrl = (u: string) => u.replace(/\/$/, "");
   // A lead page is typed against the site's own template: what most pages read carry.
   const template = leadTemplate(analyzedPages.slice(1).map((p) => leadPageSignals(p.html)));
@@ -1071,6 +1067,10 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?:
   const pageType = new Map(leads ? [] : analyzedPages.slice(1).map((p) => [normUrl(p.url), classifyFetchedPage(p.html, (planned.get(normUrl(p.url)) ?? "other") as PageType)]));
   const products = [...pageType].filter(([, t]) => t === "product").map(([u]) => u);
   const categories = [...pageType].filter(([, t]) => t === "category").map(([u]) => u);
+  step("pagini", "done", fill(PROGRESS.pagesTyped, { n: analyzedPages.length, split: leadPages
+    ? fill(PROGRESS.pair, { a: countOf(leadPages.service.length, NOUN.service), b: countOf(leadPages.location.length, NOUN.location) })
+    : fill(PROGRESS.pair, { a: countOf(categories.length, NOUN.category), b: countOf(products.length, NOUN.product) }) }));
+  step("viteza", "running");
   const homepageData = analyzedPages[0] ?? pages[0] ?? { url: homepage, html: "", status: 0, headers: {}, ok: false };
 
   // Phase 3: PSI + TTFB + feed produse (parallel, homepage/origin only)

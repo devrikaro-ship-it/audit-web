@@ -39,8 +39,8 @@ describe("the waiting screen's steps", () => {
     expect(last.get("scor")?.result).toContain(String(data.scor));
     expect(last.get("citire")?.result).toBe("WooCommerce");
     expect(last.get("robots")?.result).toBe("robots.txt gasit · sitemap gasit");
-    expect(last.get("alegere")?.result).toBe("4 categorii si 12 produse");
-    expect(last.get("pagini")?.result).toBe(`Pagini citite: ${data.pagesAnalyzed}`);
+    expect(last.get("alegere")?.result).toBe("Pagini alese: 17");
+    expect(last.get("pagini")?.result).toBe(`Pagini citite: ${data.pagesAnalyzed} · 4 categorii, 12 produse`);
   }, 60000);
 
   it("a screen that throws never stops the audit", async () => {
