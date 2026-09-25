@@ -162,7 +162,9 @@ export function replacementsFor<K extends string>(failed: K[], typed: Record<K, 
   for (const t of Object.keys(typed) as K[]) need[t] = 0;
   for (const t of failed) need[t]++;
   for (const t of Object.keys(typed) as K[]) {
-    const fresh = typed[t].map(norm).filter((u) => !tried.has(u) && !planned.has(u));
+    // The same page under http/https or with and without www is one page (piontaniservices.ro read /servicii twice).
+    const triedKeys = new Set([...tried, ...planned.keys()].map(pageKey));
+    const fresh = [...new Map(typed[t].map(norm).map((u) => [pageKey(u), u])).values()].filter((u) => !triedKeys.has(pageKey(u)));
     for (const u of sampleEvenly(fresh, need[t])) { urls.push(u); planned.set(u, t); }
   }
   return { urls, planned };

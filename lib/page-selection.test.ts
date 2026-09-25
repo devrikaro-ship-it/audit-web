@@ -246,6 +246,11 @@ describe("lead sites: the pages that bring contacts (spec 2026-09-25 §2.4)", ()
     expect(urls).toEqual([D, "https://www.clinica.ro/servicii/a"]);
   });
 
+  it("a replacement is never a page already read under another scheme or host form", () => {
+    const typed = { service: [`http://www.clinica.ro/servicii/`, `${D}/servicii/b`], location: [], other: [] };
+    expect(replacementsFor(["service"], typed, new Set([`${D}/servicii`])).urls).toEqual([`${D}/servicii/b`]);
+  });
+
   it("pages under a services section are services before any page is read", () => {
     expect(completeLeadTypes({ service: [], location: [], other: [`${D}/servicii/curatenie-birouri/`, `${D}/media/`] })).toEqual({ service: [`${D}/servicii/curatenie-birouri/`], location: [], other: [`${D}/media/`] });
   });
