@@ -83,7 +83,7 @@ describe("the report speaks the shop owner's language", () => {
     const text = [tenData, leadData].map((d) => visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: d })))).join(" ");
     // The lead report is really rendered in its own words.
     expect(text).toContain("Google stie ca e o afacere locala, cu adresa si telefon");
-    expect(text).toContain("Exista, are paginile de servicii si de locatii, doar pagini valide, date");
+    expect(text).toContain("Lista exista, contine paginile de servicii si de locatii, doar pagini care functioneaza, cu data schimbarii");
     // Part 2 as ✓/✗ rows, both kinds.
     expect(text).toContain("Formular scurt de contact, cu cel mult cinci campuri");
     expect(text).toContain("Grila de produse cu poza si pret");

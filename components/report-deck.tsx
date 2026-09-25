@@ -112,9 +112,9 @@ export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData
     body: (<>
       <h2>{fill(T.seoTitle, { score: d.seo.score })}</h2>
       <table className={`perf${d.seo.zones.length > 6 ? " compact" : ""}`}>
-        <thead><tr><th>{d.seo.zones.length > 6 ? T.thComponent : T.thZone}</th><th>{T.thWhat}</th><th>{T.thScore}</th><th>{T.thVerdict}</th></tr></thead>
+        <thead><tr><th>{d.seo.zones.length > 6 ? T.thComponent : T.thZone}</th><th className="what">{T.thWhat}</th><th>{T.thScore}</th><th>{T.thVerdict}</th></tr></thead>
         <tbody>{d.seo.zones.map((z) => (
-          <tr key={z.name}><td><b>{z.name}</b></td><td className="muted">{z.what}</td><td className="n">{z.score ?? "—"}</td><td>{z.score === null
+          <tr key={z.name}><td><b>{z.name}</b><span className="muted inwhat">{z.what}</span></td><td className="muted what">{z.what}</td><td className="n">{z.score ?? "—"}</td><td>{z.score === null
             ? <span className="pill warn">{cap(WORD.verify)}</span>
             : <span className={`pill ${toneOf(z.score)}`}>{VERDICT_LABEL[verdict(z.score)]}</span>}</td></tr>
         ))}</tbody>

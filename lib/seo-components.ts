@@ -7,6 +7,7 @@ import { priceCount } from "./page-selection";
 import { hasRobotsRules, isAllowed } from "./robots-rules";
 import { duplicateTextPages, isNoindex, ownWrittenText, sameAsLinks } from "./audit-engine";
 import type { PageData } from "./net";
+import { SEO_LIMITS as L } from "./seo-limits";
 import type { SeoComponent, SeoRow } from "./types";
 export { componentScore, seoScore } from "./seo-score";
 
@@ -190,15 +191,15 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
       row("html_serviciu", count(services, (p) => words((p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").replace(/<[^>]+>/g, " ")).length > 0), services.length),
       // The phone as a link and a street address, in the code the server sends.
       row("html_contact", count(contactPages, (p) => telephones(htmlText(p)).size > 0 && STREET.test(htmlText(p).replace(/<[^>]+>/g, " "))), contactPages.length),
-      row("html_descriere_serviciu", count(services, (p) => ownChars(p) >= 200), services.length),
+      row("html_descriere_serviciu", count(services, (p) => ownChars(p) >= L.ownText), services.length),
     ]) : input.readWithBrowser ? [row("html_nume", 0, 0), row("html_pret", 0, 0), row("html_descriere", 0, 0)] : [
       row("html_nume", count(prods, (p) => words((p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").replace(/<[^>]+>/g, " ")).length > 0), prods.length),
       row("html_pret", count(prods, (p) => priceCount(p.html.replace(/<script[\s\S]*?<\/script>/gi, " ")) > 0), prods.length),
-      row("html_descriere", count(prods, (p) => ownChars(p) >= 200), prods.length),
+      row("html_descriere", count(prods, (p) => ownChars(p) >= L.ownText), prods.length),
     ] },
     { id: "titlu", rows: [
       row("titlu_exista", titled.length, pages.length),
-      row("titlu_lungime", count(titled, (p) => { const n = parseTitle(p.html).length; return n >= 15 && n <= 65; }), titled.length),
+      row("titlu_lungime", count(titled, (p) => { const n = parseTitle(p.html).length; return n >= L.titleMin && n <= L.titleMax; }), titled.length),
       row("titlu_unic", titled.length - repeated(titled, (p) => parseTitle(p.html)), titled.length),
       row("titlu_nume", count(nameInTitle, (p) => {
         const name = words((p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").replace(/<[^>]+>/g, " ")).slice(0, 3);
@@ -210,16 +211,16 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
     { id: "descriere", rows: [
       row("descriere_exista", described.length, pages.length),
       row("descriere_unica", described.length - repeated(described, (p) => parseMeta(p.html, "description")), described.length),
-      row("descriere_lungime", count(described, (p) => { const n = parseMeta(p.html, "description").length; return n >= 70 && n <= 160; }), described.length),
+      row("descriere_lungime", count(described, (p) => { const n = parseMeta(p.html, "description").length; return n >= L.descMin && n <= L.descMax; }), described.length),
     ] },
     { id: "continut", rows: [
       row("un_titlu_mare", count(pages, (p) => countH1(p.html) === 1), pages.length),
       row("text_propriu", pages.length - duplicateTextPages(pages), pages.length),
       ...(leads ? [
-        row("text_servicii", count(services, (p) => ownChars(p) >= 200), services.length),
+        row("text_servicii", count(services, (p) => ownChars(p) >= L.ownText), services.length),
         row("locatii_diferite", count(locations, (p) => !copiedLocation(p)), locations.length),
       ] : [
-        row("text_categorii", count(cats, (p) => ownChars(p) >= 200), cats.length),
+        row("text_categorii", count(cats, (p) => ownChars(p) >= L.ownText), cats.length),
         row("alt_imagini", count(withImages, (p) => productImages(p).every((im) => im.alt.trim().length > 0)), withImages.length),
       ]),
     ] },

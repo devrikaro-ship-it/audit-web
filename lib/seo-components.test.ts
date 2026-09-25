@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { componentScore, computeSeoComponents, seoScore, type SeoInput, type SeoProbes } from "./seo-components";
 import type { PageData } from "./net";
+import { SEO_LIMITS } from "./seo-limits";
+import { COMPONENTS, ROWS } from "./copy-registry";
 
 const O = "https://s.ro";
 const desc = (x: string) => `Descriere ${x}: produs de calitate, livrat rapid in toata tara, cu garantie si retur usor pentru orice client al magazinului.`;
@@ -204,6 +206,28 @@ describe("computeSeoComponents on a lead site", () => {
 
   it("without a sitemap the listing row is not measured, never more found than checked", () => {
     expect(rowsOf({ ...goodClinic(), sitemapXml: "" }).sitemap_servicii).toMatchObject({ ok: 0, total: 0 });
+  });
+});
+
+describe("the limits the report states are the limits the audit applies", () => {
+  it("judges a title at the stated edges and states those edges", () => {
+    const { titleMin: lo, titleMax: hi } = SEO_LIMITS;
+    const s = goodShop();
+    const titles = [lo - 1, lo, hi, hi + 1].map((n) => "T".repeat(n));
+    s.pages = titles.map((t, i) => page(`${O}/p${i}/`, { title: t, h1: "Produs", meta: desc(String(i)) }));
+    s.requested = s.pages;
+    expect(rowsOf(s).titlu_lungime).toMatchObject({ ok: 2, total: 4 });
+    expect(COMPONENTS.titlu.what).toContain(`${lo}-${hi} de caractere`);
+    expect(ROWS.titlu_lungime.title).toContain(`${lo}-${hi} de caractere`);
+  });
+  it("judges a description at the stated edges and states those edges", () => {
+    const { descMin: lo, descMax: hi } = SEO_LIMITS;
+    const s = goodShop();
+    s.pages = [lo - 1, lo, hi, hi + 1].map((n, i) => page(`${O}/d${i}/`, { title: `Produs ${i} din magazinul S`, h1: "Produs", meta: "d".repeat(n) }));
+    s.requested = s.pages;
+    expect(rowsOf(s).descriere_lungime).toMatchObject({ ok: 2, total: 4 });
+    expect(COMPONENTS.descriere.what).toContain(`${lo}-${hi} de caractere`);
+    expect(ROWS.descriere_lungime.title).toContain(`${lo}-${hi} de caractere`);
   });
 });
 

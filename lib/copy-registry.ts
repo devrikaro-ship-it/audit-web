@@ -3,6 +3,8 @@
 // with measured numbers or names; lib/report-copy.test.ts fails on any visible text that does not come from this
 // file and on a sentence written twice. To change a wording, change it here: one thing, one sentence.
 
+import { SEO_LIMITS } from "./seo-limits";
+
 export const fill = (tpl: string, v: Record<string, string | number> = {}): string =>
   tpl.replace(/\{(\w+)\}/g, (all, k: string) => (k in v ? String(v[k]) : all));
 // The same entry at the start of a sentence.
@@ -41,16 +43,16 @@ export const STAGES: Record<ComponentCopy["stage"], string> = {
 };
 
 export const COMPONENTS: Record<string, ComponentCopy> = {
-  raspuns: { stage: "A", name: "Paginile raspund corect", what: "Erori, conexiune securizata, redirectionari, acces pentru roboti" },
-  robots: { stage: "A", name: "Reguli pentru roboti (robots.txt)", what: "Google si Bing au voie, pagini si stiluri permise, sitemap declarat" },
-  sitemap: { stage: "A", name: "Lista de pagini pentru Google (sitemap)", what: "Exista, are categorii si produse, doar pagini valide, date" },
-  indexare: { stage: "A", name: "Pot aparea in Google", what: "Pagini neascunse, adresa principala, www, sortari" },
-  html: { stage: "A", name: "Continut vizibil fara incarcare ulterioara", what: "Numele, pretul si descrierea sunt in codul paginii" },
-  titlu: { stage: "B", name: "Titlul din Google", what: "Exista, lungime, nu se repeta, contine numele" },
-  descriere: { stage: "B", name: "Descrierea din Google", what: "Exista, nu se repeta, lungime" },
-  continut: { stage: "B", name: "Continutul paginii", what: "Un titlu mare, text propriu, text pe categorii, poze descrise" },
-  date_structurate: { stage: "B", name: "Date pentru Google", what: "Firma, pret si stoc, stele, traseu, livrare, pret corect" },
-  ai: { stage: "C", name: "Acces pentru asistentii AI", what: "ChatGPT, Perplexity, Claude; profilurile firmei" },
+  raspuns: { stage: "A", name: "Paginile raspund corect", what: "Paginile se deschid fara erori, pe conexiune securizata, fara redirectionari lungi, si nu refuza robotii" },
+  robots: { stage: "A", name: "Reguli pentru roboti (robots.txt)", what: "Google si Bing au voie sa citeasca paginile si stilurile; fisierul arata unde e lista de pagini" },
+  sitemap: { stage: "A", name: "Lista de pagini pentru Google (sitemap)", what: "Lista exista, contine categoriile si produsele, doar pagini care functioneaza, cu data schimbarii" },
+  indexare: { stage: "A", name: "Pot aparea in Google", what: "Nicio pagina ascunsa de Google, fiecare cu adresa ei, site-ul la o singura adresa (cu sau fara www), sortarile fara pagini noi" },
+  html: { stage: "A", name: "Continut vizibil fara incarcare ulterioara", what: "Numele, pretul si descrierea produsului sunt in pagina de la deschidere, nu adaugate apoi de scripturi" },
+  titlu: { stage: "B", name: "Titlul din Google", what: fill("Fiecare pagina are titlu propriu, de {titleMin}-{titleMax} de caractere, cu numele produsului sau al categoriei", SEO_LIMITS) },
+  descriere: { stage: "B", name: "Descrierea din Google", what: fill("Fiecare pagina are descriere proprie sub titlu, de {descMin}-{descMax} de caractere", SEO_LIMITS) },
+  continut: { stage: "B", name: "Continutul paginii", what: fill("Un singur titlu mare, text propriu pe fiecare pagina, cel putin {ownText} de caractere pe categorii, poze cu descriere", SEO_LIMITS) },
+  date_structurate: { stage: "B", name: "Date pentru Google", what: "Google primeste datele firmei, pretul si stocul, stelele, traseul paginii, livrarea; pretul declarat e cel afisat" },
+  ai: { stage: "C", name: "Acces pentru asistentii AI", what: "ChatGPT, Perplexity si Claude au voie sa citeasca site-ul, legat de profilurile oficiale ale firmei" },
 };
 
 // What a count counts. A check of the whole site counts nothing (none).
@@ -86,12 +88,12 @@ export const ROWS: Record<string, RowCopy> = {
   html_pret: { title: "Pretul e in pagina, nu incarcat ulterior", unit: UNIT.pagini_produs, problem: "Pretul nu e in codul trimis de server, asa ca asistentii AI nu il vad.", fix: "Afiseaza pretul direct in pagina, nu incarcat dupa deschidere prin JavaScript." },
   html_descriere: { title: "Descrierea produsului e scrisa in pagina", unit: UNIT.pagini_produs, problem: "Paginile de produs fara descriere proprie nu le spun clientilor, lui Google si asistentilor AI ce vinzi.", fix: "Scrie pentru fiecare produs o descriere proprie: la ce foloseste, dimensiuni, material, cum il alegi." },
   titlu_exista: { title: "Fiecare pagina are titlu in Google", unit: UNIT.pagini, problem: "Paginile fara titlu nu au ce afisa Google in rezultate.", fix: "Scrie pentru fiecare pagina un titlu propriu, care incepe cu numele produsului sau al categoriei." },
-  titlu_lungime: { title: "Titlurile au lungimea potrivita", unit: UNIT.pagini, problem: "Un titlu prea scurt nu spune ce vinzi; unul prea lung e taiat de Google.", fix: "Tine titlurile intre 15 si 65 de caractere, cu numele produsului la inceput." },
+  titlu_lungime: { title: fill("Titlurile au {titleMin}-{titleMax} de caractere", SEO_LIMITS), unit: UNIT.pagini, problem: "Un titlu prea scurt nu spune ce vinzi; unul prea lung e taiat de Google.", fix: fill("Tine titlurile intre {titleMin} si {titleMax} de caractere, cu numele produsului la inceput.", SEO_LIMITS) },
   titlu_unic: { title: "Titlurile nu se repeta", unit: UNIT.pagini, problem: "Paginile cu acelasi titlu se incurca in Google: nu stie pe care sa o arate.", fix: "Da fiecarei pagini un titlu propriu." },
   titlu_nume: { title: "Titlul contine numele produsului sau al categoriei", unit: UNIT.pagini, problem: "Titlul din Google nu contine numele scris pe pagina, asa ca clientul nu recunoaste produsul in rezultate.", fix: "Incepe titlul din Google cu numele produsului sau al categoriei, la fel ca pe pagina." },
   descriere_exista: { title: "Fiecare pagina are descriere in Google", unit: UNIT.pagini, problem: "Fara textul scurt de sub titlu, Google alege singur o bucata din pagina, de multe ori nepotrivita.", fix: "Scrie pentru fiecare pagina una-doua propozitii despre ce gaseste clientul acolo." },
   descriere_unica: { title: "Descrierile nu se repeta", unit: UNIT.pagini, problem: "Paginile cu aceeasi descriere arata la fel in rezultatele Google.", fix: "Scrie o descriere proprie pentru fiecare pagina." },
-  descriere_lungime: { title: "Descrierile au lungimea potrivita", unit: UNIT.pagini, problem: "O descriere prea scurta spune prea putin; una prea lunga e taiata de Google. Tinta e 70-160 de caractere.", fix: "Tine descrierile intre 70 si 160 de caractere." },
+  descriere_lungime: { title: fill("Descrierile au {descMin}-{descMax} de caractere", SEO_LIMITS), unit: UNIT.pagini, problem: "O descriere prea scurta spune prea putin; una prea lunga e taiata de Google. ", fix: fill("Tine descrierile intre {descMin} si {descMax} de caractere.", SEO_LIMITS) },
   un_titlu_mare: { title: "Fiecare pagina are un singur titlu mare", unit: UNIT.pagini, problem: "Fara un singur titlu mare, Google intelege mai greu despre ce e pagina.", fix: "Pune pe fiecare pagina un singur titlu mare, cu numele produsului sau al categoriei." },
   text_propriu: { title: "Textul fiecarei pagini e propriu", unit: UNIT.pagini, problem: "Textul copiat de pe alta pagina a magazinului nu ajuta nicio pagina sa urce in Google.", fix: "Scrie text propriu pentru fiecare pagina, incepand cu produsele cele mai vandute." },
   text_categorii: { title: "Categoriile au text de prezentare", unit: NOUN.category[1], problem: "Categoriile au doar lista de produse, fara text propriu, desi ele prind cautarile mari.", fix: "Scrie 2-3 paragrafe pe fiecare categorie: ce gaseste clientul acolo si cum alege." },
@@ -109,11 +111,12 @@ export const ROWS: Record<string, RowCopy> = {
 // A lead site (spec 2026-09-25 §3): what a component checks, and the rows only a lead site has. Rows shared with a
 // shop but worded for products and categories there take their lead wording from ROWS_LEADS.
 export const COMPONENTS_LEADS: Record<string, Pick<ComponentCopy, "what">> = {
-  sitemap: { what: "Exista, are paginile de servicii si de locatii, doar pagini valide, date" },
-  indexare: { what: "Pagini neascunse, adresa principala, www" },
-  html: { what: "Numele serviciului, telefonul si adresa, descrierea sunt in codul paginii" },
-  continut: { what: "Un titlu mare, text propriu, text pe servicii, locatii diferite" },
-  date_structurate: { what: "Afacere locala cu adresa si telefon, program, acelasi telefon, stele, traseu" },
+  sitemap: { what: "Lista exista, contine paginile de servicii si de locatii, doar pagini care functioneaza, cu data schimbarii" },
+  indexare: { what: "Nicio pagina ascunsa de Google, fiecare cu adresa ei, site-ul la o singura adresa (cu sau fara www)" },
+  html: { what: "Numele serviciului, telefonul, adresa si descrierea sunt in pagina de la deschidere, nu adaugate apoi de scripturi" },
+  titlu: { what: fill("Fiecare pagina are titlu propriu, de {titleMin}-{titleMax} de caractere, cu numele serviciului sau al locatiei", SEO_LIMITS) },
+  continut: { what: fill("Un singur titlu mare, text propriu pe fiecare pagina, cel putin {ownText} de caractere pe servicii, locatii diferite intre ele", SEO_LIMITS) },
+  date_structurate: { what: "Google primeste datele afacerii (adresa, telefon, program), acelasi telefon peste tot, stelele, traseul paginii" },
 };
 export const ROWS_LEADS: Record<string, Partial<RowCopy>> = {
   sitemap_servicii: { title: "Lista contine paginile de servicii si de locatii", unit: UNIT.pagini, problem: "Unele pagini de servicii sau de locatii lipsesc din lista de pagini pentru Google, asa ca Google afla mai greu de ele.", fix: "Include in lista de pagini toate paginile de servicii si de locatii." },
@@ -124,7 +127,7 @@ export const ROWS_LEADS: Record<string, Partial<RowCopy>> = {
   html_contact: { title: "Telefonul si adresa sunt in pagina", unit: UNIT.pagini, problem: "Pe unele pagini de servicii sau de locatii telefonul (ca legatura pe care se poate apasa) sau adresa lipsesc din codul trimis de server.", fix: "Pune pe fiecare pagina de serviciu si de locatie telefonul ca legatura pe care se poate apasa si adresa scrisa, nu intr-o imagine." },
   html_descriere_serviciu: { title: "Serviciul e descris in pagina", unit: UNIT.pagini_servicii, problem: "Paginile de servicii fara descriere proprie nu le spun clientilor, lui Google si asistentilor AI ce oferi.", fix: "Scrie pentru fiecare serviciu ce este, cui ii foloseste, cum decurge si cat dureaza." },
   titlu_exista: { fix: "Scrie pentru fiecare pagina un titlu propriu, care incepe cu numele serviciului sau al locatiei." },
-  titlu_lungime: { problem: "Un titlu prea scurt nu spune ce oferi; unul prea lung e taiat de Google.", fix: "Tine titlurile intre 15 si 65 de caractere, cu numele serviciului la inceput." },
+  titlu_lungime: { problem: "Un titlu prea scurt nu spune ce oferi; unul prea lung e taiat de Google.", fix: fill("Tine titlurile intre {titleMin} si {titleMax} de caractere, cu numele serviciului la inceput.", SEO_LIMITS) },
   titlu_nume: { title: "Titlul contine numele serviciului sau al locatiei", problem: "Titlul din Google nu contine numele scris pe pagina, asa ca clientul nu recunoaste serviciul in rezultate.", fix: "Incepe titlul din Google cu numele serviciului sau al locatiei, la fel ca pe pagina." },
   un_titlu_mare: { fix: "Pune pe fiecare pagina un singur titlu mare, cu numele serviciului sau al locatiei." },
   text_propriu: { problem: "Textul copiat de pe alta pagina a site-ului nu ajuta nicio pagina sa urce in Google.", fix: "Scrie text propriu pentru fiecare pagina, incepand cu serviciile cerute cel mai des." },

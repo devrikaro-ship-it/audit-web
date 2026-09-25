@@ -53,6 +53,13 @@ body:has(.deck){margin:0;background:#FAF8F4;-webkit-print-color-adjust:exact;pri
 .deck .perf .n{font-family:var(--f-num);font-weight:700;font-size:1.6rem;font-variant-numeric:tabular-nums}
 .deck .perf.compact td{padding:.42rem .6rem}
 .deck .perf.compact .n{font-size:1.3rem}
+/* On a narrow screen what a component checks goes under its name, so the text gets the full width. */
+.deck .perf .inwhat{display:none}
+@container deck (max-width:760px){.deck .perf .what{display:none}
+.deck .perf td{padding:.45rem .4rem}
+.deck .perf .n{font-size:1.25rem}
+.deck .perf .inwhat{display:block;font-size:.88rem;font-weight:400;margin-top:.25rem;line-height:1.35}
+}
 .deck .muted{color:var(--muted)}
 .deck .pill{display:inline-block;font-family:var(--f-num);font-weight:700;font-size:.8rem;letter-spacing:.06em;padding:.2rem .6rem;border-radius:.3rem;white-space:nowrap}
 .deck .probs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--lg)}
