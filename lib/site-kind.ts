@@ -54,6 +54,12 @@ export class SiteKindUnreadable extends Error {
 const readableText = (html: string) => html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ")
   .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 
+// What the page shows and declares: script bodies are emptied, except the data declared for search engines
+// (JSON-LD). A tracking module's settings name shop events ("woo_add_to_cart_conversion_track") on sites that sell
+// nothing: measured on piontaniservices.ro, a cleaning company read as a shop from that one string (2026-09-25).
+// Script tags keep their attributes, so an engine's script address still counts as an engine.
+const pageSource = (html: string) => html.replace(/(<script\b(?![^>]*application\/ld\+json)[^>]*>)[\s\S]*?(<\/script>)/gi, "$1$2");
+
 const matches = (markers: [string, RegExp, string?][], html: string): Signal[] => markers.flatMap(([id, re, strength]) => {
   const m = re.exec(html);
   return m ? [{ id, strength: strength ?? "lead", sample: m[0].slice(0, 120).replace(/\s+/g, " ").trim() }] : [];
@@ -62,8 +68,9 @@ const matches = (markers: [string, RegExp, string?][], html: string): Signal[] =
 export function classifySiteKind(html: string, url: string | null = null): SiteKindVerdict {
   const text = readableText(html ?? "");
   if (text.length < MIN_READABLE_CHARS) throw new SiteKindUnreadable(`${text.length} readable characters at ${url ?? "unknown url"}`);
-  const ecom = matches(ECOM_MARKERS, html);
-  const leads = matches(LEAD_MARKERS, html);
+  const source = pageSource(html);
+  const ecom = matches(ECOM_MARKERS, source);
+  const leads = matches(LEAD_MARKERS, source);
   const count = (s: string) => ecom.filter((h) => h.strength === s).length;
   const structural = count("structural"), platform = count("platform"), weak = count("weak");
   const verdict = (type: SiteKind, confidence: SiteKindVerdict["confidence"]): SiteKindVerdict =>

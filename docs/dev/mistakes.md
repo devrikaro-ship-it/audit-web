@@ -434,3 +434,13 @@ already live. Measured cause: the work happens on `fix/site-audit-page-selection
 behind and was what `git push origin main` sends. Recognition signal: `git branch -vv` shows `main [behind N]`.
 Repair: push the work branch's HEAD, `git push origin HEAD:main`, and check the deployment's `commit` field before
 calling it live.
+
+## 2026-09-25 — A tracking module's settings made a cleaning company a shop
+
+Symptom: piontaniservices.ro (a cleaning company: quote request, phone, contact page, no cart) was classified ecom,
+medium, on the single structural signal `add_to_cart`. Measured cause: the match was
+`woo_add_to_cart_conversion_track` inside the JSON settings of the PixelYourSite tracking module, in a script body;
+the rule taken from Darwin reads the whole page source. Recognition signal: an ecom verdict whose only evidence
+sample is an identifier with underscores. Repair: `lib/site-kind.ts` reads the markers from what the page shows and
+declares — script bodies emptied except JSON-LD, script tags kept. Darwin's `typeScan.js` reads the same way and
+carries the same defect.

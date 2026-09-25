@@ -32,6 +32,12 @@ describe("classifySiteKind (Darwin's rule, spec 2026-09-25 §1)", () => {
     expect(v.evidence.leads.map((s) => s.id)).toEqual(["appointment", "contact_form", "contact_route", "call_cta"]);
   });
 
+  it("a shop event named in a tracking module's settings is not a shop; product data declared for Google is", () => {
+    const tracking = '<script>var pys = {"google_ads":{"woo_add_to_cart_conversion_track":"current_event","woo_initiate_checkout_conversion_track":"current_event"}};</script>';
+    expect(classifySiteKind(page(tracking + ' Solicita oferta <a href="tel:0700">Suna</a>'), "https://www.piontaniservices.ro/")).toMatchObject({ type: "leads", confidence: "high" });
+    expect(classifySiteKind(page('<script type="application/ld+json">{"@type": "Product", "offers": {"@type": "Offer"}}</script>'))).toMatchObject({ type: "ecom", confidence: "high" });
+  });
+
   it("a page with under 200 readable characters is a defect of the reading, never a kind", () => {
     expect(() => classifySiteKind('<html><body><div id="app"></div><script>' + "x".repeat(5000) + "</script></body></html>")).toThrow(SiteKindUnreadable);
   });
