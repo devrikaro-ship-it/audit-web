@@ -117,12 +117,16 @@ const norm = (u: string) => u.replace(/\/$/, "");
 
 // Quotas first, then the spare budget in overflow order. "other" keeps its given order (callers put what matters
 // first); the typed pools are sampled evenly, never in sitemap order.
+// One page is one page with or without www and on http or https (piontaniservices.ro lists every page twice and
+// under www, while the audit starts from the address typed without it).
+const pageKey = (u: string) => norm(u).replace(/^https?:\/\/(www\.)?/i, "").toLowerCase();
+
 function selectByQuota<K extends string>(homepage: string, typed: Record<K, string[]>, quotas: Record<K, number>, overflow: K[], output: K[]): { urls: string[]; planned: Map<string, K> } {
   const home = norm(homepage);
-  const seen = new Set([home]);
+  const seen = new Set([pageKey(home)]);
   const pools = {} as Record<K, string[]>;
   for (const t of overflow) {
-    pools[t] = typed[t].map(norm).filter((u) => (seen.has(u) ? false : (seen.add(u), true)));
+    pools[t] = typed[t].map(norm).filter((u) => (seen.has(pageKey(u)) ? false : (seen.add(pageKey(u)), true)));
   }
   const take = {} as Record<K, number>;
   for (const t of overflow) take[t] = Math.min(quotas[t], pools[t].length);
@@ -192,15 +196,21 @@ export function classifyFetchedPage(html: string, planned: PageType): PageType {
 }
 
 // ── Lead sites (spec 2026-09-25 §2.4) ──
-// Articles are left out: a sitemap named for posts or news, or a path under a blog or article section.
-const ARTICLE_SITEMAP = /post|blog|articol|article|news|stiri|noutati/;
+// Articles are left out: a sitemap named for posts, news or their archives, or a path under a blog or article section.
+const ARTICLE_SITEMAP = /post|blog|articol|article|news|stiri|noutati|tag|categor|author|archive/;
 const ARTICLE_PATH = /\/(blog|articole?|articles?|news|stiri|noutati)(\/|$)/;
-// Sitemaps named for services or locations type their pages (service-sitemap.xml, locatii-sitemap.xml).
-const SERVICE_SITEMAP = /servic/;
-const LOCATION_SITEMAP = /locati|location|clinic|sedi/;
-// Among the pages that cannot be typed, contact and prices come first; the company's own information pages last.
-const CONTACT_OR_PRICES = /^\/[^/]*(contact|pret|tarif|price|cost)/;
-const INFO_PAGE = /^\/(despre|about|cariera|careers?|jobs?|echipa|team|politic|protectia|confidential|privacy|termeni|terms|cookie|gdpr|anpc)/;
+// Sitemaps of pages, services or locations are read first; the others only when a site has none of these.
+// The file's own name decides, from its start: slide-page-sitemap.xml is a slider, not the site's pages.
+const PAGE_SITEMAP = /\/(page|pagin|servic|locati|location|clinic|sedi|tratament|treatment)[^/]*$/;
+// A sitemap or a path section named for services or locations types its pages (service-sitemap.xml, /servicii/x/).
+const SERVICE_NAME = /servic|tratament|treatment|procedur/;
+const LOCATION_NAME = /locati|location|clinic|sedi/;
+const SERVICE_PATH = /^\/(servicii|services|tratamente|treatments|proceduri|procedures)\/[^/]+/;
+const LOCATION_PATH = /^\/(locatii|locations|clinici|clinics|sedii)\/[^/]+/;
+// Among the pages that cannot be typed, contact, prices and quote requests come first; the company's own information
+// pages last.
+const CONTACT_OR_PRICES = /^\/[^/]*(contact|pret|tarif|price|cost|ofert|quote)/;
+const INFO_PAGE = /^\/(despre|about|cariera|careers?|jobs?|echipa|team|politic|protectia|confidential|privacy|termeni|terms|cookie|gdpr|anpc|confirmare|multumim|thank)/;
 
 const firstSegment = (url: string) => pathOf(url).split("/").filter(Boolean)[0] ?? "";
 
@@ -211,32 +221,34 @@ export async function collectLeadUrls(
   { profile = GENERIC_PROFILE }: ReadOptions = {},
 ): Promise<LeadTypedUrls> {
   const out: LeadTypedUrls = { service: [], location: [], other: [] };
-  const typeOf = (sm: string): LeadPageType => (SERVICE_SITEMAP.test(pathOf(sm)) ? "service" : LOCATION_SITEMAP.test(pathOf(sm)) ? "location" : "other");
-  const add = (urls: string[], t: LeadPageType) => {
-    for (const u of urls) if (!ARTICLE_PATH.test(pathOf(u)) && !hasAny(pathOf(u), profile.urlSignals.skip)) out[t].push(u);
-  };
+  const typeOf = (sm: string): LeadPageType => (SERVICE_NAME.test(pathOf(sm)) ? "service" : LOCATION_NAME.test(pathOf(sm)) ? "location" : "other");
+  const add = (urls: string[], t: LeadPageType) => { for (const u of urls) if (!hasAny(pathOf(u), profile.urlSignals.skip)) out[t].push(u); };
   const children = extractLocs(xml, "sitemap");
   if (children.length === 0) { add(extractLocs(xml, "url"), typeOf(sitemapUrl)); return completeLeadTypes(out); }
-  const picked = children.filter((u) => !ARTICLE_SITEMAP.test(pathOf(u)) && !hasAny(pathOf(u), profile.sitemapSignals.skip)).slice(0, MAX_SELLING_SITEMAPS);
+  const readable = children.filter((u) => !ARTICLE_SITEMAP.test(pathOf(u)) && !hasAny(pathOf(u), profile.sitemapSignals.skip));
+  const pagesFirst = readable.filter((u) => PAGE_SITEMAP.test(pathOf(u)));
+  const picked = (pagesFirst.length > 0 ? pagesFirst : readable).slice(0, MAX_SELLING_SITEMAPS);
   const xmls = await mapWithConcurrency(picked, profile.concurrency, (u) => fetchText(u));
   picked.forEach((u, i) => add(extractLocs(xmls[i] ?? "", "url"), typeOf(u)));
   return completeLeadTypes(out);
 }
 
-// Untyped pages under a path family of typed ones take their type (/servicii/a and /servicii/b are services, so
-// /servicii/c is one too); the rest are ordered contact and prices first, information pages last.
+// Every list of lead pages passes here, whatever found it (sitemap, home page links): articles leave, pages under a
+// services or locations section or under the path family of typed pages take that type (/servicii/a and /servicii/b
+// are services, so /servicii/c is one too), and the rest are ordered contact and prices first, information last.
 export function completeLeadTypes(typed: LeadTypedUrls): LeadTypedUrls {
+  const keep = (urls: string[]) => urls.filter((u) => !ARTICLE_PATH.test(pathOf(u)));
   const families = (urls: string[]) => {
     const n = new Map<string, number>();
     for (const u of urls) { const f = firstSegment(u); if (f && pathOf(u).split("/").filter(Boolean).length > 1) n.set(f, (n.get(f) ?? 0) + 1); }
     return new Set([...n].filter(([, c]) => c >= 2).map(([f]) => f));
   };
-  const service = families(typed.service), location = families(typed.location);
-  const out: LeadTypedUrls = { service: [...typed.service], location: [...typed.location], other: [] };
-  for (const u of typed.other) {
-    const f = firstSegment(u);
-    if (service.has(f)) out.service.push(u);
-    else if (location.has(f)) out.location.push(u);
+  const out: LeadTypedUrls = { service: keep(typed.service), location: keep(typed.location), other: [] };
+  const service = families(out.service), location = families(out.location);
+  for (const u of keep(typed.other)) {
+    const f = firstSegment(u), path = pathOf(u);
+    if (service.has(f) || SERVICE_PATH.test(path)) out.service.push(u);
+    else if (location.has(f) || LOCATION_PATH.test(path)) out.location.push(u);
     else out.other.push(u);
   }
   const rank = (u: string) => (CONTACT_OR_PRICES.test(pathOf(u)) ? 0 : INFO_PAGE.test(pathOf(u)) ? 2 : 1);
@@ -244,24 +256,42 @@ export function completeLeadTypes(typed: LeadTypedUrls): LeadTypedUrls {
   return out;
 }
 
-// What a lead page shows beyond the site's own template: a map and opening hours sit on every page when the footer
-// carries them, so a page counts them only above the least any page read carries (measured on dentalview.ro,
-// 2026-09-25: phone, form and street address on all nine pages; map and hours only on the location page).
-export type LeadPageSignals = { map: number; hours: number };
+// What a lead page shows beyond the site's own template: a map, opening hours, a request to book or for a quote.
+// Headers and footers repeat some of them on every page, so a page counts a signal only above the site's template,
+// the value most pages read carry (measured 2026-09-25 on 52 dentalview.ro and 23 piontaniservices.ro pages: hours
+// twice and "programare" six times on every dentalview page; a map only on 17 of its 18 location pages; service pages
+// ask to book 7 to 16 times, information pages 6).
+export type LeadPageSignals = { map: number; hours: number; ask: number };
+const readable = (html: string) => html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ");
 export function leadPageSignals(html: string): LeadPageSignals {
+  const text = readable(html);
   return {
     map: (html.match(/google\.[a-z.]+\/maps|maps\.google\.|<iframe[^>]*maps/gi) ?? []).length,
-    hours: (html.match(/luni\s*[-–]\s*(vineri|sambata|sâmbătă)|\bL\s*[-–]\s*V\b|openingHours|opening hours|program(ul)?\s*(de lucru)?\s*:/gi) ?? []).length,
+    hours: (text.match(/luni\s*[-–]\s*(vineri|sambata|sâmbătă)|\bL\s*[-–]\s*V\b|opening hours|program(ul)?\s*(de lucru)?\s*:/gi) ?? []).length,
+    ask: (text.match(/programare|programeaz|solicit[ăa]\s+(o\s+)?ofert|cere(ti)?\s+(o\s+)?ofert|consulta[țt]ie\s+gratuit|book\s+(a\s+)?(consultation|appointment)|request\s+a\s+quote|get\s+a\s+quote/gi) ?? []).length,
   };
 }
 
-// A typed page keeps its type. An untyped one is a location when it shows a map or opening hours above the site's
-// template, an information or contact page stays "other", and any other page of a lead site offers a service.
+// The site's template: for each signal, the value most pages carry (ties go to the lower one).
+export function leadTemplate(pages: LeadPageSignals[]): LeadPageSignals {
+  const mode = (xs: number[]) => {
+    const n = new Map<number, number>();
+    for (const x of xs) n.set(x, (n.get(x) ?? 0) + 1);
+    return [...n].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]?.[0] ?? 0;
+  };
+  return { map: mode(pages.map((p) => p.map)), hours: mode(pages.map((p) => p.hours)), ask: mode(pages.map((p) => p.ask)) };
+}
+
+// A typed page keeps its type. An untyped one: contact, prices and information pages stay "other"; a map or opening
+// hours above the template make a location; a request to book or for a quote above the template, or a service
+// declared for Google, make a service; a page with none of these stays "other" (it fills the budget, is judged on
+// nothing that belongs to services).
 export function classifyFetchedLeadPage(url: string, html: string, planned: LeadPageType, template: LeadPageSignals): LeadPageType {
   if (planned !== "other") return planned;
-  const own = leadPageSignals(html);
   const path = pathOf(url);
   if (CONTACT_OR_PRICES.test(path) || INFO_PAGE.test(path)) return "other";
+  const own = leadPageSignals(html);
   if (own.map > template.map || own.hours > template.hours) return "location";
-  return "service";
+  if (own.ask > template.ask || /"@type"\s*:\s*"(Service|MedicalProcedure)"/i.test(html)) return "service";
+  return "other";
 }

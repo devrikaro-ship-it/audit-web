@@ -444,3 +444,19 @@ the rule taken from Darwin reads the whole page source. Recognition signal: an e
 sample is an identifier with underscores. Repair: `lib/site-kind.ts` reads the markers from what the page shows and
 declares — script bodies emptied except JSON-LD, script tags kept. Darwin's `typeScan.js` reads the same way and
 carries the same defect.
+
+## 2026-09-25 — The first lead page selection read stylesheets and called most pages locations
+
+Symptom: the first production audit of dentalview.ro after lead selection shipped read 8 stylesheets as service pages,
+7 articles, and typed 47 pages as locations (about 15 exist); piontaniservices.ro counted its own home page, "media"
+and "portofoliu" as services. Measured causes: (1) links were taken from every `href`, `<link>` stylesheets included,
+and the file filter matched only addresses ending in `.css`, not `style.css?ver=7.1` — true for shops too;
+(2) home page links bypassed the article filter, which ran only on sitemap URLs; (3) the site's template was the
+minimum over pages read, and a stylesheet with zero signals set it to zero, so the footer's opening hours made every
+page a location; (4) an untyped page defaulted to "service", against the spec ("stays other"); (5) the home page was
+read twice, once with www. Recognition signal: lead pages that are files, or a location count near the page count.
+Repair: follow `<a href>` only; filter files with a query too; filter articles wherever lead URLs come from; the
+template is the value most pages carry; a service needs a request to book or for a quote above the template, a
+services section or declared Service data, else the page stays "other"; compare pages without scheme and www.
+Measured on 52 + 23 real pages before choosing the signals. Unit tests had passed all along: they held one clean
+fixture per rule, never a real page set.

@@ -3,7 +3,7 @@ import { detectEcom, detectPlatform } from "./site-signals";
 import { classifySiteKind, SiteKindUnreadable, type SiteKind, type SiteKindVerdict } from "./site-kind";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { decodeEntities, parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
-import { classifyFetchedLeadPage, classifyFetchedPage, collectLeadUrls, collectTypedUrls, completeLeadTypes, hasAddToCart, leadPageSignals, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectLeadPages, selectPages, type LeadPageType, type LeadTypedUrls, type PageType, type TypedUrls } from "./page-selection";
+import { classifyFetchedLeadPage, classifyFetchedPage, collectLeadUrls, collectTypedUrls, completeLeadTypes, hasAddToCart, leadPageSignals, leadTemplate, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectLeadPages, selectPages, type LeadPageType, type LeadTypedUrls, type PageType, type TypedUrls } from "./page-selection";
 import { PROFILES, profileFor } from "./platform-knowledge";
 import { computeLearning, effectiveProfile, readApprovals } from "./learning";
 import { appendObservation, pathPrefixes, readObservations } from "./observations";
@@ -51,13 +51,16 @@ function extractSitemapFromRobots(robotsTxt: string, origin: string): string {
   return m?.[1]?.trim() ?? `${origin}/sitemap.xml`;
 }
 
+// A lead site's contact page is one of the pages that bring contacts (spec 2026-09-25 §2.4): read there, excluded
+// on a shop.
+const CONTACT_PAGE = /\/contact(\/|$)/i;
 const EXCLUDE_PATTERNS = [
-  /\/contact(\/|$)/i, /\/despre(-noi)?(\/|$)/i, /\/about(\/|$)/i,
+  CONTACT_PAGE, /\/despre(-noi)?(\/|$)/i, /\/about(\/|$)/i,
   /\/termeni(\/|$)/i, /\/terms(\/|$)/i, /\/privac|confidential|gdpr|cookie/i,
   /\/retur|return|livrare|shipping/i, /\/galerie|gallery|echipa|team/i,
   /\/cart|\/checkout|\/my-account|\/contul|\/wishlist/i,
   /\/wp-login|\/wp-admin|\/wp-json|\/feed|\/xmlrpc/i,
-  /[?&](utm_|ref=|session|token)/i, /\.(xml|pdf|jpg|png|gif|css|js)$/i,
+  /[?&](utm_|ref=|session|token)/i, /\.(xml|pdf|jpe?g|png|gif|webp|svg|ico|css|js|woff2?|ttf|mp4)(\?|$)/i,
 ];
 
 // Potrivire pe host ignorand "www." — robots.txt indica des sitemap pe www
@@ -68,11 +71,11 @@ function sameHost(a: string, b: string): boolean {
   } catch { return false; }
 }
 
-function filterUrls(urls: string[], origin: string): string[] {
+export function filterUrls(urls: string[], origin: string, keepContact = false): string[] {
   const seen = new Set<string>();
   return urls.filter(u => {
     if (!sameHost(u, origin)) return false;
-    if (EXCLUDE_PATTERNS.some(re => re.test(u))) return false;
+    if (EXCLUDE_PATTERNS.some((re) => !(keepContact && re === CONTACT_PAGE) && re.test(u))) return false;
     const key = u.replace(/\/$/, "");
     if (seen.has(key)) return false;
     seen.add(key);
@@ -81,9 +84,10 @@ function filterUrls(urls: string[], origin: string): string[] {
 }
 
 // Extrage link-uri interne dintr-o pagina (fallback cand sitemap-ul e subtire/absent).
-function extractInternalLinks(html: string, origin: string): string[] {
+export function extractInternalLinks(html: string, origin: string): string[] {
   const out: string[] = [];
-  const re = /href=["']([^"'#]+)["']/gi;
+  // Links a visitor follows (<a href>), not the stylesheets and icons of <link href>.
+  const re = /<a\b[^>]*?\bhref=["']([^"'#]+)["']/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(html)) !== null) {
     const href = m[1].trim();
@@ -842,7 +846,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
     if (!xml) continue;
     if (leads) {
       const found = await collectLeadUrls(xml, readText, sm, { profile });
-      const own: LeadTypedUrls = { service: filterUrls(found.service, origin), location: filterUrls(found.location, origin), other: filterUrls(found.other, origin) };
+      const own: LeadTypedUrls = { service: filterUrls(found.service, origin, true), location: filterUrls(found.location, origin, true), other: filterUrls(found.other, origin, true) };
       if (own.service.length + own.location.length + own.other.length > 0) { leadTyped = own; typed = { product: [], category: [], other: [...own.service, ...own.location, ...own.other] }; break; }
       continue;
     }
@@ -899,8 +903,8 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
 
   const analyzedPages = pages.filter(p => p.ok);
   const normUrl = (u: string) => u.replace(/\/$/, "");
-  // A lead page is typed against the site's own template: the least map and hours signal any page read carries.
-  const template = analyzedPages.map((p) => leadPageSignals(p.html)).reduce((a, b) => ({ map: Math.min(a.map, b.map), hours: Math.min(a.hours, b.hours) }), { map: Infinity, hours: Infinity });
+  // A lead page is typed against the site's own template: what most pages read carry.
+  const template = leadTemplate(analyzedPages.slice(1).map((p) => leadPageSignals(p.html)));
   const leadPageType = new Map(leads ? analyzedPages.slice(1).map((p) => [normUrl(p.url), classifyFetchedLeadPage(p.url, p.html, (planned.get(normUrl(p.url)) ?? "other") as LeadPageType, template)]) : []);
   const leadPages = leads ? { service: [...leadPageType].filter(([, t]) => t === "service").map(([u]) => u), location: [...leadPageType].filter(([, t]) => t === "location").map(([u]) => u) } : undefined;
   const pageType = new Map(leads ? [] : analyzedPages.slice(1).map((p) => [normUrl(p.url), classifyFetchedPage(p.html, (planned.get(normUrl(p.url)) ?? "other") as PageType)]));

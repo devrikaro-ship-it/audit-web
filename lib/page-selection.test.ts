@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyFetchedLeadPage, classifyFetchedPage, classifySitemap, collectLeadUrls, collectTypedUrls, selectLeadPages, mapWithConcurrency, PAGE_BUDGET, replacementsFor, sampleEvenly, selectPages } from "./page-selection";
+import { classifyFetchedLeadPage, classifyFetchedPage, classifySitemap, collectLeadUrls, collectTypedUrls, completeLeadTypes, leadTemplate, selectLeadPages, mapWithConcurrency, PAGE_BUDGET, replacementsFor, sampleEvenly, selectPages } from "./page-selection";
 import { PROFILES, profileFor } from "./platform-knowledge";
 
 const O = "https://shop.example";
@@ -179,6 +179,8 @@ describe("lead sites: the pages that bring contacts (spec 2026-09-25 §2.4)", ()
     [`${D}/post-sitemap1.xml`]: urlset(["/cum-alegi-un-implant/", "/ce-este-un-cbct/"]),
     [`${D}/page-sitemap.xml`]: urlset(["/", "/radiografie-panoramica/", "/radiografie-dentara-vitan/", "/contact/", "/cariera/", "/pret-ct-dentar/", "/tomografia-dentara/"]),
     [`${D}/service-sitemap.xml`]: urlset(["/articole/specialitate/recuperare-cardiovasculara/"]),
+    // piontaniservices.ro: a slider's slides have a sitemap whose name contains "page".
+    [`${D}/slide-page-sitemap.xml`]: urlset(["/slide-page/avada-home/"]),
   };
   const index = `<sitemapindex>${Object.keys(files).map((u) => `<sitemap><loc>${u}</loc></sitemap>`).join("")}</sitemapindex>`;
   const fetchText = async (u: string) => files[u] ?? "";
@@ -186,7 +188,7 @@ describe("lead sites: the pages that bring contacts (spec 2026-09-25 §2.4)", ()
   it("leaves articles out, by the sitemap they are listed in and by their path", async () => {
     const t = await collectLeadUrls(index, fetchText, `${D}/sitemap_index.xml`);
     const all = [...t.service, ...t.location, ...t.other];
-    expect(all.some((u) => /implant|ce-este-un-cbct|articole/.test(u))).toBe(false);
+    expect(all.some((u) => /implant|ce-este-un-cbct|articole|slide-page/.test(u))).toBe(false);
     expect(all).toContain(`${D}/radiografie-dentara-vitan/`);
   });
 
@@ -218,15 +220,33 @@ describe("lead sites: the pages that bring contacts (spec 2026-09-25 §2.4)", ()
     expect([count("service"), count("location"), count("other")]).toEqual([30, 20, 9]);
   });
 
-  it("an untyped page is a location only with a map or opening hours above the site's template", () => {
-    const template = { map: 0, hours: 0 };
-    const withMap = '<iframe src="https://www.google.com/maps/embed?pb=1"></iframe> Luni - Vineri 8-20';
-    expect(classifyFetchedLeadPage(`${D}/radiografie-dentara-vitan/`, withMap, "other", template)).toBe("location");
-    expect(classifyFetchedLeadPage(`${D}/radiografie-panoramica/`, "<p>Radiografie panoramica</p>", "other", template)).toBe("service");
+  it("an untyped page is typed by what it shows above the site's template", () => {
+    const template = { map: 0, hours: 2, ask: 6 };
+    const map = '<iframe src="https://www.google.com/maps/embed?pb=1"></iframe>';
+    const ask = (n: number) => "<p>Fa-ti o programare.</p>".repeat(n);
+    expect(classifyFetchedLeadPage(`${D}/radiografie-dentara-vitan/`, map + ask(14), "other", template)).toBe("location");
+    expect(classifyFetchedLeadPage(`${D}/radiografie-panoramica/`, ask(10), "other", template)).toBe("service");
+    // At the template: an information page with the header's six booking buttons stays "other".
+    expect(classifyFetchedLeadPage(`${D}/specialitati/`, ask(6), "other", template)).toBe("other");
+    expect(classifyFetchedLeadPage(`${D}/tomografia/`, '<script type="application/ld+json">{"@type": "MedicalProcedure"}</script>', "other", template)).toBe("service");
     // A footer map on every page is the template, not the page.
-    expect(classifyFetchedLeadPage(`${D}/radiografie-panoramica/`, withMap, "other", { map: 1, hours: 1 })).toBe("service");
-    expect(classifyFetchedLeadPage(`${D}/contact/`, withMap, "other", template)).toBe("other");
-    expect(classifyFetchedLeadPage(`${D}/cariera/`, "<p>Cariera</p>", "other", template)).toBe("other");
+    expect(classifyFetchedLeadPage(`${D}/radiografie-panoramica/`, map + ask(10), "other", { ...template, map: 1 })).toBe("service");
+    expect(classifyFetchedLeadPage(`${D}/contact/`, map, "other", template)).toBe("other");
+    expect(classifyFetchedLeadPage(`${D}/cariera/`, ask(12), "other", template)).toBe("other");
     expect(classifyFetchedLeadPage(`${D}/clinici/vitan/`, "<p>x</p>", "location", template)).toBe("location");
+  });
+
+  it("the template is what most pages carry, so one odd page does not move it", () => {
+    const pages = [...Array(9).fill({ map: 0, hours: 2, ask: 6 }), { map: 0, hours: 0, ask: 0 }, { map: 1, hours: 3, ask: 14 }];
+    expect(leadTemplate(pages)).toEqual({ map: 0, hours: 2, ask: 6 });
+  });
+
+  it("a page listed twice, or under www while the audit starts without it, is read once", () => {
+    const { urls } = selectLeadPages(`${D}/`, { service: [`https://www.clinica.ro/servicii/a/`, `${D}/servicii/a`], location: [], other: ["https://www.clinica.ro/"] });
+    expect(urls).toEqual([D, "https://www.clinica.ro/servicii/a"]);
+  });
+
+  it("pages under a services section are services before any page is read", () => {
+    expect(completeLeadTypes({ service: [], location: [], other: [`${D}/servicii/curatenie-birouri/`, `${D}/media/`] })).toEqual({ service: [`${D}/servicii/curatenie-birouri/`], location: [], other: [`${D}/media/`] });
   });
 });
