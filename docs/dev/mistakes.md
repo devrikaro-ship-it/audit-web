@@ -1,5 +1,17 @@
 # seo-audit — dev mistakes
 
+## 2026-09-25 — Report labels named a topic instead of the condition measured
+
+Symptom: the operator read the SEO components table and could not tell what was checked ("Exista, lungime, nu se
+repeta" — which length?; "Pagini neascunse, adresa principala, www"). The same day: a fault's pill counted failing
+pages under a title stated as the goal ("Pozele produselor au descriere — 40 din 40" meant none had one), counts
+read "4 de pagini", and shop UX labels were tags ("pret + stoc", "imagini multiple"). Cause: labels were written
+as short notes for us, and thresholds were typed into sentences apart from the code that judges by them.
+Recognition signal: a label a stranger cannot turn into a yes/no question; a number in a sentence that no constant
+supplies; "X din Y" whose X is not what the title claims. Repair: every label states the condition in a sentence,
+with the threshold filled from lib/seo-limits.ts (the engine reads the same constants); "X din Y" always counts
+what passes; counts go through countOf; stored reports map old labels through UX_SIGNAL_BEFORE_2026_09_24.
+
 ## 2026-09-25 — A lead site's audit froze the whole server for 67 seconds
 
 Symptom: on production, a dentalview.ro audit's waiting screen stayed on "Masuram viteza pe mobil" for about 70 s,
