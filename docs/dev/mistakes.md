@@ -417,3 +417,20 @@ Symptom: the operator generated a MagazinFitness.ro Google Ads report, then saw 
 ## 2026-09-09 — Preserve the closed public module graph during lifecycle repairs
 
 Symptom: the first final suite had 597 passing tests and one failing public-reachability inventory check. Measured cause: automatic persistence introduced a runtime module outside the declared 54-file graph. Recognition signal: focused lifecycle tests pass while the graph inventory reports an additional reachable file. Repair: consolidate persistence into the existing pending-report lifecycle module, preserving the graph guard and manifest unchanged. Witness the graph failure, then confirm 107 focused checks and all 598 repository tests pass.
+
+## 2026-09-25 — A template made only of placeholders accepted every sentence
+
+Symptom: the first version of the register gate (every visible report text must come from `lib/copy-registry.ts`)
+passed with "Ai intrebari despre raport?" written straight into the component. Measured cause: templates such as
+`WORD.countOf` = "{n} {what}" became the regex `^.+ .+$`, which any sentence with a space matches. Recognition
+signal: a gate built from templates passes a text that is in no entry; test it with a literal sentence first.
+Repair: a template matches only when every placeholder holds known text (data or another entry), checked
+recursively; the literal and a hand-composed "<page> - <fix>" both fail it now.
+
+## 2026-09-25 — `git push origin main` from the work branch pushed a stale local main
+
+Symptom: the push was rejected (non-fast-forward) and the Coolify deploy started right after it rebuilt the commit
+already live. Measured cause: the work happens on `fix/site-audit-page-selection`; local `main` was 160 commits
+behind and was what `git push origin main` sends. Recognition signal: `git branch -vv` shows `main [behind N]`.
+Repair: push the work branch's HEAD, `git push origin HEAD:main`, and check the deployment's `commit` field before
+calling it live.
