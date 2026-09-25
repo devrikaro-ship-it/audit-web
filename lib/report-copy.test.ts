@@ -82,12 +82,12 @@ describe("the report speaks the shop owner's language", () => {
   it("shows no technical term on a report built from the ten SEO components", () => {
     const text = [tenData, leadData].map((d) => visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: d })))).join(" ");
     // The lead report is really rendered in its own words.
-    expect(text).toContain("Google stie ca e o afacere locala, cu adresa si telefon");
-    expect(text).toContain("Lista exista, contine paginile de servicii si de locatii, doar pagini care functioneaza, cu data schimbarii");
+    expect(text).toContain("Google primeste adresa si telefonul afacerii");
+    expect(text).toContain("Site-ul ii da lui Google lista paginilor de servicii si de locatii, fara pagini sterse, cu data ultimei schimbari");
     // Part 2 as ✓/✗ rows, both kinds.
-    expect(text).toContain("Formular scurt de contact, cu cel mult cinci campuri");
+    expect(text).toContain("Formularul de contact are cel mult cinci campuri");
     expect(text).toContain("Lista de produse arata poza si pretul fiecarui produs");
-    expect(text).toContain("Paginile raspund corect");
+    expect(text).toContain("Paginile se deschid corect");
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
     // Counts as Romanian writes them: "4 pagini", never "4 de pagini" (1-19 and 101-119 take no "de").
     expect(text).toContain("citit pe 4 pagini");
