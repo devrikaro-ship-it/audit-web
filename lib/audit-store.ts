@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import type { AuditJob } from "./types";
+import type { AuditJob, ProgressStep } from "./types";
 import type { StartMeta, FinalizeInput } from "./audit-request";
 import { runAudit } from "./audit-engine";
 import { saveAudit, getAudit } from "./leads-store";
@@ -20,7 +20,17 @@ const update = (id: string, u: Partial<AuditJob>) => {
   if (job) store.set(id, { ...job, ...u });
 };
 
-export type JobView = { id: string; url: string; status: AuditJob["status"]; data: AuditJob["data"] | null; error: string | null; createdAt: number };
+export type JobView = { id: string; url: string; status: AuditJob["status"]; data: AuditJob["data"] | null; error: string | null; createdAt: number; steps: ProgressStep[] };
+
+// A step keeps its place in the list; a later report of the same step replaces its state and result.
+function reportStep(id: string, step: ProgressStep) {
+  const job = store.get(id);
+  if (!job) return;
+  const steps = [...(job.steps ?? [])];
+  const at = steps.findIndex((s) => s.id === step.id);
+  if (at >= 0) steps[at] = step; else steps.push(step);
+  update(id, { steps, ...(job.status === "pending" ? { status: "running" as const } : {}) });
+}
 
 // Porneste auditul de la URL si il ruleaza in fundal. Returneaza id-ul imediat.
 // A start that replaces an earlier run (the visitor corrected the kind of site) marks that run, which then is never
@@ -32,7 +42,7 @@ export function startJob(url: string, meta: StartMeta = {}): string {
   store.set(id, { id, url, ...rest, status: "pending", createdAt: Date.now() });
   (async () => {
     try {
-      const data = await runAudit(url, { kind: rest.siteKind });
+      const data = await runAudit(url, { kind: rest.siteKind, onStep: (step, state, result) => reportStep(id, { id: step, state, ...(result ? { result } : {}) }) });
       update(id, { status: "done", data });
       await tryFinalize(id);
     } catch (err) {
@@ -52,9 +62,9 @@ export async function finalizeJob(id: string, input: FinalizeInput): Promise<boo
 
 export async function getJobView(id: string): Promise<JobView | null> {
   const job = store.get(id);
-  if (job) return { id: job.id, url: job.url, status: job.status, data: job.data ?? null, error: job.error ?? null, createdAt: job.createdAt };
+  if (job) return { id: job.id, url: job.url, status: job.status, data: job.data ?? null, error: job.error ?? null, createdAt: job.createdAt, steps: job.steps ?? [] };
   const stored = await getAudit(id);
-  if (stored) return { id: stored.id, url: stored.url, status: "done", data: stored.data, error: null, createdAt: stored.createdAt };
+  if (stored) return { id: stored.id, url: stored.url, status: "done", data: stored.data, error: null, createdAt: stored.createdAt, steps: [] };
   return null;
 }
 

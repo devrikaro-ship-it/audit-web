@@ -354,3 +354,37 @@ export const UI_LEADS: Partial<Record<keyof typeof UI, string>> = {
   part2Title: "UX / UI: cat de usor te contacteaza",
   part2Lead: "Ce traieste un vizitator de la prima pagina pana la programare sau contact: cat asteapta, cum gaseste serviciul si ce il ajuta sa decida.",
 };
+
+// ── The waiting screen (spec 2026-09-25 §6): the audit's real steps in the order the engine runs them, and what each
+// one measured. A step that could not measure says WORD.verify. ──
+export const PROGRESS_STEPS = [
+  { id: "citire", label: "Citim site-ul" },
+  { id: "robots", label: "Verificam robots.txt si sitemap-ul" },
+  { id: "alegere", label: "Alegem paginile care conteaza" },
+  { id: "pagini", label: "Citim paginile" },
+  { id: "viteza", label: "Masuram viteza pe mobil" },
+  { id: "verificari", label: "Verificam titlurile, descrierile si datele pentru Google" },
+  { id: "ai", label: "Verificam accesul asistentilor AI" },
+  { id: "scor", label: "Calculam scorul" },
+] as const;
+export type ProgressStepId = (typeof PROGRESS_STEPS)[number]["id"];
+export const PROGRESS = {
+  title: "Analizam site-ul tau",
+  stepOf: "Pasul {i} din {n}",
+  elapsed: "{s} s",
+  note: "Auditul dureaza de obicei un minut sau doua. Nu inchide aceasta fereastra.",
+  platformKind: "{platform} · {kind}",
+  anySite: "Site",
+  robotsFound: "robots.txt gasit",
+  robotsMissing: "fara robots.txt",
+  sitemapPages: "sitemap cu {n} de pagini",
+  sitemapMissing: "fara sitemap",
+  chosenShop: "{c} categorii si {p} produse",
+  chosenLeads: "{n} pagini de servicii, locatii si contact",
+  pagesRead: "{n} de pagini citite",
+  lcp: "{s} pana apare continutul",
+  noDescription: "{n} pagini fara descriere",
+  allDescribed: "toate paginile au descriere",
+  aiAccess: "{ok} din {t} roboti AI au acces",
+  score: "Scor {score}/100",
+};

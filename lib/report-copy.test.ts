@@ -163,9 +163,9 @@ describe("the report speaks only from its register", () => {
 
   it("one thing, one wording: no sentence is written twice in the register", () => {
     // A second entry for the same thing points at the first (ROWS.x.fix), so a sentence appears as text only once.
-    // Codes are not wording: the stage letter and the kind of result.
+    // Codes are not wording: the stage letter, the kind of result, an id.
     const src = readFileSync(path.join(process.cwd(), "lib/copy-registry.ts"), "utf8").replace(/^\s*\/\/.*$/gm, "");
-    const literals = [...src.matchAll(/(\w+:\s*)?"((?:[^"\\]|\\.)*)"/g)].filter((m) => !/^(stage|kind):/.test(m[1] ?? "") && m[2]).map((m) => m[2].toLowerCase());
+    const literals = [...src.matchAll(/(\w+:\s*)?"((?:[^"\\]|\\.)*)"/g)].filter((m) => !/^(stage|kind|id):/.test(m[1] ?? "") && m[2]).map((m) => m[2].toLowerCase());
     const seen = new Map<string, number>();
     for (const t of literals) seen.set(t, (seen.get(t) ?? 0) + 1);
     expect([...seen].filter(([, n]) => n > 1).map(([t]) => t)).toEqual([]);

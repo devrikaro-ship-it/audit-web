@@ -34,6 +34,29 @@ describe("audit job persistence", () => {
     await vi.waitFor(() => expect(saved[second]).toBeDefined());
     await new Promise((r) => setTimeout(r, 20));
     expect(Object.keys(saved)).toEqual([second]);
-    expect(runAudit).toHaveBeenLastCalledWith("https://clinica.ro", { kind: "leads" });
+    expect(runAudit).toHaveBeenLastCalledWith("https://clinica.ro", expect.objectContaining({ kind: "leads" }));
+  });
+
+  it("the job view carries the engine's steps in order, a repeated step keeping its place", async () => {
+    const { startJob, getJobView } = await import("./audit-store");
+    const { runAudit } = await import("./audit-engine");
+    let release!: () => void;
+    vi.mocked(runAudit).mockImplementationOnce(async (_u, opts) => {
+      opts?.onStep?.("citire", "running");
+      opts?.onStep?.("citire", "done", "WooCommerce · magazin online");
+      opts?.onStep?.("pagini", "running", "3 de pagini citite");
+      opts?.onStep?.("pagini", "running", "4 de pagini citite");
+      await new Promise<void>((r) => { release = r; });
+      return { domain: "shop.ro", scor: 70 } as never;
+    });
+    const id = startJob("https://shop.ro");
+    await vi.waitFor(() => expect(release).toBeDefined());
+    const view = await getJobView(id);
+    expect(view?.status).toBe("running");
+    expect(view?.steps).toEqual([
+      { id: "citire", state: "done", result: "WooCommerce · magazin online" },
+      { id: "pagini", state: "running", result: "4 de pagini citite" },
+    ]);
+    release();
   });
 });

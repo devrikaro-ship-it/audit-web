@@ -6,6 +6,7 @@ export type SiteKindInfo = {
   confidence: "high" | "medium" | "low" | null;
   evidence: { url: string | null; readChars: number; ecom: SiteKindSignal[]; leads: SiteKindSignal[] } | null;
 };
+export type ProgressStep = { id: string; state: "running" | "done" | "unmeasured"; result?: string };
 export type AuditStatus = "pending" | "running" | "done" | "error";
 
 export type CheckResult = { status: StatusCheck; value: string };
@@ -86,6 +87,7 @@ export type AuditJob = {
   finalizeRequested?: boolean; // the funnel sent the contact (finalize)
   siteKind?: "ecom" | "leads"; // the visitor's correction of the scanned kind
   replacedBy?: string;         // restarted with the visitor's kind: this run is never saved
+  steps?: ProgressStep[];      // the waiting screen: the engine's steps as they run (spec 2026-09-25 §6)
   status: AuditStatus;
   createdAt: number;
   data?: AuditData;

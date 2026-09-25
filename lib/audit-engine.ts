@@ -10,7 +10,8 @@ import { appendObservation, pathPrefixes, readObservations } from "./observation
 import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, openWithRetry, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, UNAVAILABLE, type PageData, type PSIResult } from "./net";
 import { computeSeoComponents, seoScore } from "./seo-components";
-import { UX_SIGNALS } from "./copy-registry";
+import { fill, PROGRESS, SITE_KIND, UX_SIGNALS, WORD, type ProgressStepId } from "./copy-registry";
+import { hasRobotsRules } from "./robots-rules";
 import { runSeoProbes } from "./seo-probes";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
@@ -931,7 +932,10 @@ export function decideSiteKind(homeHtml: string, url: string, visitor?: SiteKind
 // ── Conversie / bani pierduti (PPC) ──────────────────────────────────────────
 
 // kind: the visitor's correction of the kind of site; it wins over the scan, whose verdict is kept as evidence.
-export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): Promise<AuditData> {
+// onStep: the waiting screen's steps (spec 2026-09-25 §6), reported as the engine runs them, each with what it measured.
+export type StepReport = (id: ProgressStepId, state: "running" | "done" | "unmeasured", result?: string) => void;
+export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?: StepReport } = {}): Promise<AuditData> {
+  const step: StepReport = (id, state, result) => { try { opts.onStep?.(id, state, result); } catch { /* the audit never depends on the screen */ } };
   const startedAt = Date.now();
   let url = rawUrl.trim();
   if (!url.startsWith("http")) url = "https://" + url;
@@ -941,6 +945,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
 
   // Phase 1: platform first (its profile says how to read the site), then robots.txt + sitemap -> pages that sell
   const homepage = origin + "/";
+  step("citire", "running");
   const homeDirect = await fetchPage(homepage);
   // A shop that blocks the server's datacenter IP is read through the real browser (lib/browser-fetch.ts).
   let browserFetcher: PageFetcher | null = null;
@@ -956,16 +961,19 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
   const learning = computeLearning(await readObservations(), PROFILES, await readApprovals());
   const profile = effectiveProfile(profileFor(detectPlatform(homeHtmlEarly.slice(0, 400000))), learning);
   const language = homeHtmlEarly.match(/<html[^>]*\blang=["']?([a-z]{2})/i)?.[1]?.toLowerCase() ?? null;
+  const platformName = detectPlatform(homeHtmlEarly.slice(0, 400000));
+  // The kind of site decides which pages are read: a shop's categories and products, or a lead site's services and
+  // locations (spec 2026-09-25 §2).
+  const siteKind = decideSiteKind(homeHtmlEarly, homepage, opts.kind);
+  const leads = siteKind?.type === "leads";
+  step("citire", "done", siteKind ? fill(PROGRESS.platformKind, { platform: platformName ?? PROGRESS.anySite, kind: SITE_KIND[siteKind.type] }) : platformName ?? PROGRESS.anySite);
+  step("robots", "running");
   const robotsTxt = await readText(`${origin}/robots.txt`);
   // Read before the page burst: rate-limiting shops (Shopify) refuse small files requested right after it.
   const llmsTxt = await readText(`${origin}/llms.txt`);
   const sitemapUrl = extractSitemapFromRobots(robotsTxt, origin);
   const sitemapXml = await readText(sitemapUrl);
   const sitemapCandidates = [sitemapUrl, ...profile.sitemapEntryPoints.map((p) => origin + p)];
-  // The kind of site decides which pages are read: a shop's categories and products, or a lead site's services and
-  // locations (spec 2026-09-25 §2).
-  const siteKind = decideSiteKind(homeHtmlEarly, homepage, opts.kind);
-  const leads = siteKind?.type === "leads";
   let typed: TypedUrls = { product: [], category: [], other: [] };
   let leadTyped: LeadTypedUrls = { service: [], location: [], other: [] };
   // The sitemap the pages were actually read from: robots.txt may not declare it (piontaniservices.ro) while the
@@ -984,6 +992,10 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
     const own: TypedUrls = { product: filterUrls(found.product, origin), category: filterUrls(found.category, origin), other: filterUrls(found.other, origin) };
     if (own.product.length + own.category.length + own.other.length > 0) { foundSitemapXml = xml; typed = own; break; }
   }
+
+  const listedCount = typed.product.length + typed.category.length + typed.other.length;
+  step("robots", "done", [hasRobotsRules(robotsTxt) ? PROGRESS.robotsFound : PROGRESS.robotsMissing, listedCount ? fill(PROGRESS.sitemapPages, { n: listedCount }) : PROGRESS.sitemapMissing].join(" · "));
+  step("alegere", "running");
 
   // Every page the sitemap lists, before home page links are added: a lead site's "listed in the sitemap" row.
   const siteKey = (u: string) => u.replace(/^https?:\/\/(www\.)?/i, "").replace(/[#?].*$/, "").replace(/\/$/, "").toLowerCase();
@@ -1013,30 +1025,42 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
     ({ urls: toAnalyze, planned } = select() as { urls: string[]; planned: Map<string, string> });
   }
 
+  const plannedOf = (t: string) => [...planned.values()].filter((x) => x === t).length;
+  step("alegere", "done", leads ? fill(PROGRESS.chosenLeads, { n: toAnalyze.length - 1 }) : fill(PROGRESS.chosenShop, { c: plannedOf("category"), p: plannedOf("product") }));
+
   // The small SEO checks (redirects, www, sitemap sample, sort parameter) before the page burst, like llms.txt.
   const listedSample = leads ? [...leadTyped.service, ...leadTyped.location, ...leadTyped.other].slice(0, 20) : [...typed.category.slice(0, 10), ...typed.product.slice(0, 10)];
   const probes = await runSeoProbes(origin, listedSample, leads ? null : typed.category[0] ?? null, foundSitemapXml)
     .catch(() => ({ sitemapLastmod: null, httpToHttps: null, maxRedirectHops: null, variantsSameHost: null, sitemapSample: { ok: 0, total: 0 }, sortParamHandled: null }));
 
-  // Phase 2: Fetch pages at the pace the platform accepts (profile.concurrency)
+  // Phase 2: Fetch pages at the pace the platform accepts (profile.concurrency); the screen counts them as they come.
+  step("pagini", "running");
+  let readCount = 0;
+  const counted = (read: (u: string) => Promise<PageData>) => async (u: string) => {
+    const p = await read(u);
+    if (p.ok) step("pagini", "running", fill(PROGRESS.pagesRead, { n: ++readCount }));
+    return p;
+  };
   const fetchDeadline = Date.now() + PAGE_FETCH_BUDGET_MS;
   const fetched = (list: (PageData | undefined)[]) => list.filter((p): p is PageData => !!p);
   const viaBrowser = (fetcher: PageFetcher) => async (urls: string[]) =>
-    fetched(await mapWithConcurrency(urls, profile.concurrency, (u) => fetcher.fetchPage(u), Date.now() + PAGE_FETCH_BUDGET_MS));
+    fetched(await mapWithConcurrency(urls, profile.concurrency, counted((u) => fetcher.fetchPage(u)), Date.now() + PAGE_FETCH_BUDGET_MS));
   const { pages, usedBrowser } = await fetchPagesWithProbe<PageData>(
     toAnalyze,
-    async (urls) => fetched(await mapWithConcurrency(urls, profile.concurrency, readPage, fetchDeadline)),
+    async (urls) => fetched(await mapWithConcurrency(urls, profile.concurrency, counted(readPage), fetchDeadline)),
     async () => { const f = await openFetcher(); return f ? viaBrowser(f) : null; },
   );
   const failedTypes = pages.slice(1).filter((p) => !p.ok).map((p) => planned.get(p.url) ?? "other");
   if (failedTypes.length > 0 && Date.now() < fetchDeadline) {
     const refill = leads ? replacementsFor(failedTypes as LeadPageType[], leadTyped, new Set(toAnalyze)) : replacementsFor(failedTypes as PageType[], typed, new Set(toAnalyze));
-    pages.push(...fetched(await mapWithConcurrency(refill.urls, profile.concurrency, readPage, fetchDeadline)));
+    pages.push(...fetched(await mapWithConcurrency(refill.urls, profile.concurrency, counted(readPage), fetchDeadline)));
     refill.planned.forEach((t, u) => planned.set(u, t));
   }
   await (browserFetcher as PageFetcher | null)?.close();
 
   const analyzedPages = pages.filter(p => p.ok);
+  step("pagini", "done", fill(PROGRESS.pagesRead, { n: analyzedPages.length }));
+  step("viteza", "running");
   const normUrl = (u: string) => u.replace(/\/$/, "");
   // A lead page is typed against the site's own template: what most pages read carry.
   const template = leadTemplate(analyzedPages.slice(1).map((p) => leadPageSignals(p.html)));
@@ -1058,6 +1082,9 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
   const desktop = desktopResult.status === "fulfilled" ? desktopResult.value : null;
   const ttfbMs = ttfbResult.status === "fulfilled" ? ttfbResult.value : null;
   const hasProductFeed = feedResult.status === "fulfilled" ? feedResult.value : false;
+  if (mobile?.lcp && mobile.lcp !== UNAVAILABLE) step("viteza", "done", fill(PROGRESS.lcp, { s: mobile.lcp }));
+  else step("viteza", "unmeasured", WORD.verify);
+  step("verificari", "running");
 
 
   const avertisment = detectBlocker(homepageData.html) ?? undefined;
@@ -1077,6 +1104,15 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
     refusedServer: looksBlocked(homeDirect.ok, homeDirect.html) || readThroughBrowser, readWithBrowser: readThroughBrowser, probes,
     ...(leadPages ? { kind: "leads" as const, services: leadPages.service, locations: leadPages.location, inSitemap: (u: string) => listedInSitemap.has(siteKey(u)) } : {}),
   });
+  const seoRow = (id: string) => seo.flatMap((c) => c.rows).find((r) => r.id === id);
+  const described = seoRow("descriere_exista");
+  if (described && described.total > 0) step("verificari", "done", described.ok < described.total ? fill(PROGRESS.noDescription, { n: described.total - described.ok }) : PROGRESS.allDescribed);
+  else step("verificari", "unmeasured", WORD.verify);
+  const aiRow = seoRow("ai_roboti");
+  step("ai", "running");
+  if (aiRow && aiRow.total > 0) step("ai", "done", fill(PROGRESS.aiAccess, { ok: aiRow.ok, t: aiRow.total }));
+  else step("ai", "unmeasured", WORD.verify);
+  step("scor", "running");
   const social = computeSocialChecks(homepageData);
   const securitate = computeSecurityChecks(homepageData);
 
@@ -1090,6 +1126,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
   const ux = uxStd ? { scor: seoScore(uxStd), fields: uxFields?.fields ?? [] } : undefined;
   // The overall score is the mean of the two parts the cover shows (docs/superpowers/specs/2026-09-24-seo-ten-...).
   const scor = ux ? Math.round((seoScore(seo) + ux.scor) / 2) : seoScore(seo);
+  step("scor", "done", fill(PROGRESS.score, { score: scor }));
 
   const checksRezultate = { ...viteza, ...schema, ...social, ...securitate };
   const failedPageChecks = [...seoChecks, ...continutChecks, ...keywordsChecks, ...structuraChecks, ...aiChecks]
