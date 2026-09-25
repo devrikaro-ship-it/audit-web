@@ -172,6 +172,17 @@ describe("computeSeoComponents on a lead site", () => {
     s.pages[1] = { ...svc, url: svc.url.replace("https://", "http://"), finalUrl: svc.url };
     s.services = [s.pages[1].url];
     expect(rowsOf(s).canonical_propriu).toMatchObject({ ok: 3, total: 3 });
+    // Served on http:// with no redirect, declaring its https:// address: still its own, but the site is not all
+    // on the secure connection.
+    s.pages[1] = { ...svc, url: svc.url.replace("https://", "http://") };
+    s.services = [s.pages[1].url];
+    s.requested = s.pages;
+    expect(rowsOf(s).canonical_propriu).toMatchObject({ ok: 3, total: 3 });
+    expect(rowsOf(s).https).toMatchObject({ ok: 0, total: 1 });
+    // An https page declaring an http address points elsewhere.
+    s.pages[1] = { ...svc, html: svc.html.replace(`href="${svc.url}"`, `href="${svc.url.replace("https://", "http://")}"`) };
+    s.services = [svc.url];
+    expect(rowsOf(s).canonical_propriu).toMatchObject({ ok: 2, total: 3 });
   });
 
   it("without a sitemap the listing row is not measured, never more found than checked", () => {

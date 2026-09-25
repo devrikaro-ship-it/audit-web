@@ -154,7 +154,9 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
   return [
     { id: "raspuns", rows: [
       row("pagini_200", count(answered, (p) => p.status === 200), answered.length),
-      row("https", input.origin.startsWith("https://") && probes.httpToHttps !== false ? 1 : 0, 1),
+      // The whole site: the home page's http:// redirect, and no page read answering on http:// without one
+      // (piontaniservices.ro redirects its home page and serves the rest on http://).
+      row("https", input.origin.startsWith("https://") && probes.httpToHttps !== false && !answered.some((p) => p.status === 200 && /^http:/i.test(p.finalUrl ?? p.url)) ? 1 : 0, 1),
       // Google follows up to 10 hops; two (http://www -> https://www -> https://) is the common setup, three or more a chain.
       row("redirect_scurt", probes.maxRedirectHops !== null && probes.maxRedirectHops <= 2 ? 1 : 0, probes.maxRedirectHops === null ? 0 : 1),
       row("acces_server", input.refusedServer ? 0 : 1, 1, input.refusedServer),
@@ -175,9 +177,9 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
     ] },
     { id: "indexare", rows: [
       row("fara_noindex", count(money, (p) => !isNoindex(p)), money.length),
-      // Compared with the address the page ends on: a sitemap listing http:// pages that redirect to https:// does not
-      // make their https canonical wrong (piontaniservices.ro).
-      row("canonical_propriu", count(money, (p) => { const c = parseCanonical(p.html); if (!c) return false; const at = p.finalUrl ?? p.url; try { return norm(new URL(c, at).href) === norm(at); } catch { return false; } }), money.length),
+      // Compared with the secure form of the address the page ends on: a page reached on http:// (piontaniservices.ro
+      // lists and serves them) that declares its https:// address declares itself. The reverse stays wrong.
+      row("canonical_propriu", count(money, (p) => { const c = parseCanonical(p.html); if (!c) return false; const at = (p.finalUrl ?? p.url).replace(/^http:/i, "https:"); try { return norm(new URL(c, at).href) === norm(at); } catch { return false; } }), money.length),
       row("www_unic", probes.variantsSameHost ? 1 : 0, probes.variantsSameHost === null ? 0 : 1),
       // A lead site has no product lists to sort.
       ...(leads ? [] : [row("parametri", probes.sortParamHandled ? 1 : 0, probes.sortParamHandled === null ? 0 : 1)]),
