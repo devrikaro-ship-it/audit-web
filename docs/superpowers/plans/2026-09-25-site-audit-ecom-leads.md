@@ -130,7 +130,7 @@ instead of products, "programare/contact" instead of "cos"); `lib/report-copy.te
   bar "Pasul N din 8" and elapsed time; drop the rotating fixed sentences)
 - Test: `lib/audit-steps.test.ts` (steps advance in engine order; a step that could not measure ends "unmeasured")
 
-- [ ] Steps: failing test, implement, run, commit, deploy; watch a production audit's waiting page (screenshots
+- [x] Steps (delivered 2026-09-25: eb22f50, 0287562, 193490a; the freeze it exposed fixed in 1a50def): failing test, implement, run, commit, deploy; watch a production audit's waiting page (screenshots
   every few seconds) and match each result with the report.
 
 ### Task 9: Final verification
