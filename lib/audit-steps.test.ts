@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { PROGRESS_STEPS, WORD } from "./copy-registry";
+import { countOf, NOUN, PROGRESS_STEPS, WORD } from "./copy-registry";
 
 vi.mock("./observations", async (orig) => ({ ...(await orig<typeof import("./observations")>()), appendObservation: vi.fn(async () => {}), readObservations: vi.fn(async () => []) }));
 vi.mock("./learning", async (orig) => ({ ...(await orig<typeof import("./learning")>()), readApprovals: vi.fn(async () => []) }));
@@ -37,7 +37,10 @@ describe("the waiting screen's steps", () => {
     for (const s of PROGRESS_STEPS) expect(["done", "unmeasured"]).toContain(last.get(s.id)?.state);
     expect(last.get("viteza")).toEqual({ id: "viteza", state: "unmeasured", result: WORD.verify });
     expect(last.get("scor")?.result).toContain(String(data.scor));
-    expect(last.get("robots")?.result).toContain("16");
+    expect(last.get("citire")?.result).toBe("WooCommerce");
+    expect(last.get("robots")?.result).toBe("robots.txt gasit · sitemap gasit");
+    expect(last.get("alegere")?.result).toBe("4 categorii si 12 produse");
+    expect(last.get("pagini")?.result).toBe(`Pagini citite: ${data.pagesAnalyzed}`);
   }, 60000);
 
   it("a screen that throws never stops the audit", async () => {
@@ -47,3 +50,12 @@ describe("the waiting screen's steps", () => {
     expect(typeof data.scor).toBe("number");
   }, 60000);
 });
+
+describe("a counted noun", () => {
+  it("writes Romanian counts: one, a few, 'de' after 20-99 and round hundreds", () => {
+    expect([0, 1, 5, 19, 20, 51, 100, 101, 119, 120].map((n) => countOf(n, NOUN.page))).toEqual([
+      "0 pagini", "1 pagina", "5 pagini", "19 pagini", "20 de pagini", "51 de pagini", "100 de pagini", "101 pagini", "119 pagini", "120 de pagini",
+    ]);
+  });
+});
+

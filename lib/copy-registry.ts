@@ -54,7 +54,16 @@ export const COMPONENTS: Record<string, ComponentCopy> = {
 };
 
 // What a count counts. A check of the whole site counts nothing (none).
-export const UNIT = { none: "", pagini: "pagini", pagini_produs: "pagini de produs", pagini_servicii: "pagini de servicii", pagini_locatii: "pagini de locatii", crawlere: "roboti AI", criterii: "conditii", fisier: "fisier", legaturi: "legaturi" } as Record<string, string>;
+// A counted noun as Romanian writes it: "1 pagina", "5 pagini", "51 de pagini", "101 pagini" ("de" after 20-99 and
+// after round hundreds).
+export const NOUN = {
+  page: ["pagina", "pagini"], category: ["categorie", "categorii"], product: ["produs", "produse"],
+  service: ["serviciu", "servicii"], location: ["locatie", "locatii"], otherPage: ["alta pagina", "alte pagini"],
+} as const;
+export const countOf = (n: number, [one, many]: readonly [string, string]): string =>
+  n === 1 ? `1 ${one}` : `${n}${n >= 20 && (n % 100 === 0 || n % 100 >= 20) ? " de " : " "}${many}`;
+
+export const UNIT = { none: "", pagini: NOUN.page[1], pagini_produs: "pagini de produs", pagini_servicii: "pagini de servicii", pagini_locatii: "pagini de locatii", crawlere: "roboti AI", criterii: "conditii", fisier: "fisier", legaturi: "legaturi" } as Record<string, string>;
 
 export const ROWS: Record<string, RowCopy> = {
   pagini_200: { title: "Pagini care raspund corect", unit: UNIT.pagini, problem: "Unele pagini citite raspund cu eroare: nu exista sau serverul da gres.", fix: "Repara paginile cu eroare sau trimite-le automat catre cea mai apropiata pagina care exista." },
@@ -85,7 +94,7 @@ export const ROWS: Record<string, RowCopy> = {
   descriere_lungime: { title: "Descrierile au lungimea potrivita", unit: UNIT.pagini, problem: "O descriere prea scurta spune prea putin; una prea lunga e taiata de Google. Tinta e 70-160 de caractere.", fix: "Tine descrierile intre 70 si 160 de caractere." },
   un_titlu_mare: { title: "Fiecare pagina are un singur titlu mare", unit: UNIT.pagini, problem: "Fara un singur titlu mare, Google intelege mai greu despre ce e pagina.", fix: "Pune pe fiecare pagina un singur titlu mare, cu numele produsului sau al categoriei." },
   text_propriu: { title: "Textul fiecarei pagini e propriu", unit: UNIT.pagini, problem: "Textul copiat de pe alta pagina a magazinului nu ajuta nicio pagina sa urce in Google.", fix: "Scrie text propriu pentru fiecare pagina, incepand cu produsele cele mai vandute." },
-  text_categorii: { title: "Categoriile au text de prezentare", unit: "categorii", problem: "Categoriile au doar lista de produse, fara text propriu, desi ele prind cautarile mari.", fix: "Scrie 2-3 paragrafe pe fiecare categorie: ce gaseste clientul acolo si cum alege." },
+  text_categorii: { title: "Categoriile au text de prezentare", unit: NOUN.category[1], problem: "Categoriile au doar lista de produse, fara text propriu, desi ele prind cautarile mari.", fix: "Scrie 2-3 paragrafe pe fiecare categorie: ce gaseste clientul acolo si cum alege." },
   alt_imagini: { title: "Pozele produselor au descriere", unit: UNIT.pagini_produs, problem: "Poza produsului nu are descriere, asa ca Google Imagini si asistentii AI nu stiu ce arata.", fix: "Completeaza descrierea (textul alternativ) fiecarei poze de produs cu numele produsului." },
   schema_firma: { title: "Google stie ca site-ul e un magazin", unit: UNIT.none, problem: "Site-ul nu declara pentru Google datele firmei: nume, logo, contact.", fix: "Activeaza datele firmei din modulul SEO sau din tema." },
   schema_produs: { title: "Pret si stoc declarate pentru Google", unit: UNIT.pagini_produs, problem: "Fara pret si stoc declarate, produsele nu apar in rezultatele Google cu pret.", fix: "Activeaza datele de produs (pret, moneda, stoc) pe toate paginile de produs." },
@@ -377,13 +386,13 @@ export const PROGRESS = {
   anySite: "Site",
   robotsFound: "robots.txt gasit",
   robotsMissing: "fara robots.txt",
-  sitemapPages: "sitemap cu {n} de pagini",
+  sitemapFound: "sitemap gasit",
   sitemapMissing: "fara sitemap",
-  chosenShop: "{c} categorii si {p} produse",
-  chosenLeads: "{n} pagini de servicii, locatii si contact",
-  pagesRead: "{n} de pagini citite",
+  chosenShop: "{c} si {p}",
+  chosenLeads: "{s}, {l} si {o}",
+  pagesRead: "Pagini citite: {n}",
   lcp: "{s} pana apare continutul",
-  noDescription: "{n} pagini fara descriere",
+  noDescription: "{n} fara descriere",
   allDescribed: "toate paginile au descriere",
   aiAccess: "{ok} din {t} roboti AI au acces",
   score: "Scor {score}/100",

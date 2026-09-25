@@ -10,7 +10,7 @@ import { appendObservation, pathPrefixes, readObservations } from "./observation
 import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, openWithRetry, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, UNAVAILABLE, type PageData, type PSIResult } from "./net";
 import { computeSeoComponents, seoScore } from "./seo-components";
-import { fill, PROGRESS, SITE_KIND, UX_SIGNALS, WORD, type ProgressStepId } from "./copy-registry";
+import { countOf, fill, NOUN, PROGRESS, SITE_KIND, UX_SIGNALS, WORD, type ProgressStepId } from "./copy-registry";
 import { hasRobotsRules } from "./robots-rules";
 import { runSeoProbes } from "./seo-probes";
 
@@ -966,7 +966,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?:
   // locations (spec 2026-09-25 §2).
   const siteKind = decideSiteKind(homeHtmlEarly, homepage, opts.kind);
   const leads = siteKind?.type === "leads";
-  step("citire", "done", siteKind ? fill(PROGRESS.platformKind, { platform: platformName ?? PROGRESS.anySite, kind: SITE_KIND[siteKind.type] }) : platformName ?? PROGRESS.anySite);
+  step("citire", "done", siteKind ? fill(PROGRESS.platformKind, { platform: platformName ?? PROGRESS.anySite, kind: SITE_KIND[siteKind.type].toLowerCase() }) : platformName ?? PROGRESS.anySite);
   step("robots", "running");
   const robotsTxt = await readText(`${origin}/robots.txt`);
   // Read before the page burst: rate-limiting shops (Shopify) refuse small files requested right after it.
@@ -993,8 +993,8 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?:
     if (own.product.length + own.category.length + own.other.length > 0) { foundSitemapXml = xml; typed = own; break; }
   }
 
-  const listedCount = typed.product.length + typed.category.length + typed.other.length;
-  step("robots", "done", [hasRobotsRules(robotsTxt) ? PROGRESS.robotsFound : PROGRESS.robotsMissing, listedCount ? fill(PROGRESS.sitemapPages, { n: listedCount }) : PROGRESS.sitemapMissing].join(" · "));
+  // Only the sitemaps that list selling pages are read (articles and extra sitemaps are skipped), so no total is shown.
+  step("robots", "done", [hasRobotsRules(robotsTxt) ? PROGRESS.robotsFound : PROGRESS.robotsMissing, foundSitemapXml ? PROGRESS.sitemapFound : PROGRESS.sitemapMissing].join(" · "));
   step("alegere", "running");
 
   // Every page the sitemap lists, before home page links are added: a lead site's "listed in the sitemap" row.
@@ -1026,7 +1026,9 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?:
   }
 
   const plannedOf = (t: string) => [...planned.values()].filter((x) => x === t).length;
-  step("alegere", "done", leads ? fill(PROGRESS.chosenLeads, { n: toAnalyze.length - 1 }) : fill(PROGRESS.chosenShop, { c: plannedOf("category"), p: plannedOf("product") }));
+  step("alegere", "done", leads
+    ? fill(PROGRESS.chosenLeads, { s: countOf(plannedOf("service"), NOUN.service), l: countOf(plannedOf("location"), NOUN.location), o: countOf(plannedOf("other"), NOUN.otherPage) })
+    : fill(PROGRESS.chosenShop, { c: countOf(plannedOf("category"), NOUN.category), p: countOf(plannedOf("product"), NOUN.product) }));
 
   // The small SEO checks (redirects, www, sitemap sample, sort parameter) before the page burst, like llms.txt.
   const listedSample = leads ? [...leadTyped.service, ...leadTyped.location, ...leadTyped.other].slice(0, 20) : [...typed.category.slice(0, 10), ...typed.product.slice(0, 10)];
@@ -1106,7 +1108,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?:
   });
   const seoRow = (id: string) => seo.flatMap((c) => c.rows).find((r) => r.id === id);
   const described = seoRow("descriere_exista");
-  if (described && described.total > 0) step("verificari", "done", described.ok < described.total ? fill(PROGRESS.noDescription, { n: described.total - described.ok }) : PROGRESS.allDescribed);
+  if (described && described.total > 0) step("verificari", "done", described.ok < described.total ? fill(PROGRESS.noDescription, { n: countOf(described.total - described.ok, NOUN.page) }) : PROGRESS.allDescribed);
   else step("verificari", "unmeasured", WORD.verify);
   const aiRow = seoRow("ai_roboti");
   step("ai", "running");
