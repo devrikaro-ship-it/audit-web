@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { detectPlatform, detectEcom } from "@/lib/site-signals";
 import { BROWSER_UA } from "@/lib/net";
+import { classifySiteKind } from "@/lib/site-kind";
 
 // Quick scan (~2-5 s) of the raw homepage for the funnel's "here is what we found" card: platform and whether it
 // is a shop. The full audit runs separately. Detection comes from lib/site-signals, the same as the audit.
@@ -29,14 +30,18 @@ export async function POST(req: NextRequest) {
     html = await res.text();
   } catch {
     // best-effort: raspundem cu ce stim, nu blocam funnel-ul
-    return NextResponse.json({ origin, reachable: false, platform: null, isEcom: null });
+    return NextResponse.json({ origin, reachable: false, platform: null, isEcom: null, siteKind: null });
   } finally {
     clearTimeout(timer);
   }
 
   const head = html.slice(0, 400000);
   const platform = detectPlatform(head);
-  const isEcom = detectEcom(head, platform);
+  // The kind of site by the audit's own rule; a page too thin to read has none, and the visitor can still choose.
+  let siteKind: "ecom" | "leads" | null = null;
+  try { siteKind = classifySiteKind(head, origin).type; } catch { siteKind = null; }
+  // isEcom stays for clients that still read it.
+  const isEcom = siteKind ? siteKind === "ecom" : detectEcom(head, platform);
 
-  return NextResponse.json({ origin, reachable: true, platform, isEcom });
+  return NextResponse.json({ origin, reachable: true, platform, isEcom, siteKind });
 }

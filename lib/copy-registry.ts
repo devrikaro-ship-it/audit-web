@@ -22,6 +22,10 @@ export const WORD = {
   ratio: "{ok}/{t}",
 };
 
+// The kind of site (lib/site-kind.ts) and who decided it: the scan, or the visitor who corrected it.
+export const SITE_KIND = { ecom: "Magazin online", leads: "Site de servicii" } as const;
+export const SITE_KIND_BY = { scan: "dedus din site", visitor: "ales de vizitator" } as const;
+
 export const VERDICT = { bun: "Bun", "de-reglat": "De reglat", slab: "Slab" } as const;
 
 export const MONTHS = ["ianuarie", "februarie", "martie", "aprilie", "mai", "iunie", "iulie", "august", "septembrie", "octombrie", "noiembrie", "decembrie"];

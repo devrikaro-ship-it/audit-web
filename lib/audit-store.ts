@@ -23,12 +23,16 @@ const update = (id: string, u: Partial<AuditJob>) => {
 export type JobView = { id: string; url: string; status: AuditJob["status"]; data: AuditJob["data"] | null; error: string | null; createdAt: number };
 
 // Porneste auditul de la URL si il ruleaza in fundal. Returneaza id-ul imediat.
+// A start that replaces an earlier run (the visitor corrected the kind of site) marks that run, which then is never
+// saved: one visitor, one audit in the dashboard.
 export function startJob(url: string, meta: StartMeta = {}): string {
   const id = randomUUID();
-  store.set(id, { id, url, ...meta, status: "pending", createdAt: Date.now() });
+  const { replaces, ...rest } = meta;
+  if (replaces) update(replaces, { replacedBy: id });
+  store.set(id, { id, url, ...rest, status: "pending", createdAt: Date.now() });
   (async () => {
     try {
-      const data = await runAudit(url);
+      const data = await runAudit(url, { kind: rest.siteKind });
       update(id, { status: "done", data });
       await tryFinalize(id);
     } catch (err) {
@@ -58,7 +62,7 @@ export async function getJobView(id: string): Promise<JobView | null> {
 // a lead in the dashboard; when the funnel sends the contact later, the same record is updated (upsert by id).
 async function tryFinalize(id: string): Promise<void> {
   const job = store.get(id);
-  if (!job || !job.data) return;
+  if (!job || !job.data || job.replacedBy) return;
   await saveAudit({
     id, url: job.url, domain: job.data.domain, scor: job.data.scor, createdAt: job.createdAt,
     nume: job.nume, email: job.email, telefon: job.telefon,

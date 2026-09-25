@@ -8,6 +8,8 @@ export type StartMeta = {
   tipBusiness?: string; platforma?: string;
   nume?: string; email?: string; telefon?: string; probleme?: string[];
   finalizeRequested?: boolean;
+  siteKind?: "ecom" | "leads"; // the visitor's correction of the scanned kind
+  replaces?: string;             // the audit this one restarts with the visitor's kind
 };
 export type FinalizeInput = {
   nume?: string; email?: string; telefon?: string; probleme?: string[];
@@ -15,9 +17,9 @@ export type FinalizeInput = {
 
 // ── Forma pe fir (ce trimite clientul) ──
 export type AuditRequestBody =
-  | { phase: "start"; url: string; tipBusiness?: string; platforma?: string }
+  | { phase: "start"; url: string; tipBusiness?: string; platforma?: string; siteKind?: "ecom" | "leads"; replaces?: string }
   | { phase: "finalize"; id: string; nume?: string; email?: string; telefon?: string; probleme?: string[] }
-  | { phase?: undefined; url: string; tipBusiness?: string; platforma?: string; nume?: string; email?: string; telefon?: string; probleme?: string[] };
+  | { phase?: undefined; url: string; tipBusiness?: string; platforma?: string; siteKind?: "ecom" | "leads"; nume?: string; email?: string; telefon?: string; probleme?: string[] };
 
 // ── Comanda parsata (ce executa ruta) ──
 export type ParsedRequest =
@@ -41,6 +43,8 @@ export function parseAuditRequest(body: unknown): ParsedRequest {
 
   // start sau legacy single-submit: ambele pornesc auditul de la URL.
   if (typeof b.url !== "string" || !b.url) return { kind: "error", status: 400, error: "URL invalid" };
+  if (b.siteKind !== undefined && b.siteKind !== "ecom" && b.siteKind !== "leads") return { kind: "error", status: 400, error: "siteKind invalid" };
+  if (b.replaces !== undefined && (typeof b.replaces !== "string" || !b.replaces)) return { kind: "error", status: 400, error: "replaces invalid" };
   const hasContact = !!(b.nume || b.email || b.telefon);
   return {
     kind: "start", url: b.url,
@@ -48,6 +52,8 @@ export function parseAuditRequest(body: unknown): ParsedRequest {
       tipBusiness: b.tipBusiness as string, platforma: b.platforma as string,
       nume: b.nume as string, email: b.email as string, telefon: b.telefon as string, probleme: b.probleme as string[],
       finalizeRequested: hasContact, // legacy = contactul vine odata cu URL-ul
+      ...(b.siteKind ? { siteKind: b.siteKind as "ecom" | "leads" } : {}),
+      ...(b.replaces ? { replaces: b.replaces as string } : {}),
     },
   };
 }

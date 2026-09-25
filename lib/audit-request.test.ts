@@ -30,4 +30,14 @@ describe("parseAuditRequest", () => {
     expect(r.kind).toBe("start");
     if (r.kind === "start") expect(r.meta.finalizeRequested).toBe(true);
   });
+
+  it("start: the visitor's kind of site is ecom or leads, anything else is refused", () => {
+    expect(parseAuditRequest({ phase: "start", url: "clinica.ro", siteKind: "leads", replaces: "old" })).toMatchObject({ kind: "start", meta: { siteKind: "leads", replaces: "old" } });
+    expect(parseAuditRequest({ phase: "start", url: "shop.ro", siteKind: "ecom" })).toMatchObject({ kind: "start", meta: { siteKind: "ecom" } });
+    expect(parseAuditRequest({ phase: "start", url: "shop.ro", siteKind: "blog" })).toEqual({ kind: "error", status: 400, error: "siteKind invalid" });
+    expect(parseAuditRequest({ phase: "start", url: "shop.ro", replaces: 7 })).toEqual({ kind: "error", status: 400, error: "replaces invalid" });
+    const plain = parseAuditRequest({ phase: "start", url: "shop.ro" });
+    expect(plain.kind === "start" && "siteKind" in plain.meta).toBe(false);
+  });
 });
+

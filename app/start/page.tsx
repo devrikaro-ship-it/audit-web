@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import type { AuditRequestBody } from "@/lib/audit-request";
+import { SITE_KIND } from "@/lib/copy-registry";
 import { withCountryCode } from "@/lib/phone";
 
 const TARI = [
@@ -95,9 +96,12 @@ function PrimaryButton({ children, onClick, disabled = false }: { children: Reac
 }
 
 
-type ScanResult = { origin: string; reachable: boolean; platform: string | null; isEcom: boolean | null };
+type SiteKind = "ecom" | "leads";
+type ScanResult = { origin: string; reachable: boolean; platform: string | null; isEcom: boolean | null; siteKind?: SiteKind | null };
 
-function ScanCard({ scan }: { scan: ScanResult }) {
+// The kind of site the scan read, with "Schimba": a visitor who knows better corrects it, and the audit restarts
+// with the corrected kind.
+function ScanCard({ scan, kind, onKind }: { scan: ScanResult; kind: SiteKind | null; onKind: (k: SiteKind) => void }) {
   const row = (label: string, val: React.ReactNode) => (
     <div className="flex items-center justify-between py-2.5 border-b" style={{ borderColor: "#f1f5f9" }}>
       <span className="text-sm text-gray-500">{label}</span>
@@ -107,7 +111,17 @@ function ScanCard({ scan }: { scan: ScanResult }) {
   return (
     <div className="rounded-xl border p-5 mb-6" style={{ borderColor: "#e2e8f0", background: "#fafbff" }}>
       {row("Platforma", scan.platform ?? "o detectam in analiza")}
-      {row("Tip site", scan.isEcom ? "Magazin online" : "Site")}
+      {row("Tip site", kind ? (
+        <span className="flex items-center gap-2">{SITE_KIND[kind]}
+          <button type="button" onClick={() => onKind(kind === "ecom" ? "leads" : "ecom")} className="text-xs font-semibold underline" style={{ color: "#47499E" }}>Schimba</button>
+        </span>
+      ) : (
+        <span className="flex items-center gap-2">
+          {(["ecom", "leads"] as const).map((k) => (
+            <button key={k} type="button" onClick={() => onKind(k)} className="text-xs font-semibold underline" style={{ color: "#47499E" }}>{SITE_KIND[k]}</button>
+          ))}
+        </span>
+      ))}
       <p className="text-xs text-gray-400 mt-4 leading-relaxed">
         E doar o privire rapida. In analiza completa citim paginile care vand — categorii si produse — si verificam cum te gaseste Google si cat de usor cumpara un vizitator.
       </p>
@@ -123,6 +137,7 @@ export default function StartPage() {
   const [url, setUrl] = useState("");
   const [scan, setScan] = useState<ScanResult | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
+  const [kind, setKind] = useState<SiteKind | null>(null);
 
   const [probleme, setProbleme] = useState<string[]>([]);
 
@@ -162,10 +177,20 @@ export default function StartPage() {
       });
       const data = await res.json();
       setScan(data as ScanResult);
+      setKind((data as ScanResult).siteKind ?? null);
     } catch {
       setScan({ origin: url, reachable: false, platform: null, isEcom: null });
     }
     setScreen("found");
+  }
+
+  // The visitor corrects the kind: the audit restarts with it and replaces the run already going.
+  function chooseKind(k: SiteKind) {
+    setKind(k);
+    fetch("/api/audit", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phase: "start", url, tipBusiness: "magazin", siteKind: k, ...(jobId ? { replaces: jobId } : {}) } satisfies AuditRequestBody),
+    }).then((r) => r.json()).then((d) => { if (d?.id) setJobId(d.id); }).catch(() => {});
   }
 
   function qNext() { setQstep((s) => Math.min(s + 1, TOTAL_STEPS)); }
@@ -188,7 +213,7 @@ export default function StartPage() {
         // fallback: auditul nu s-a pornit la scan -> submit intr-un pas
         const res = await fetch("/api/audit", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url, tipBusiness: "magazin", platforma: scan?.platform ?? undefined, nume, email, telefon: telefonComplet, probleme } satisfies AuditRequestBody),
+          body: JSON.stringify({ url, tipBusiness: "magazin", platforma: scan?.platform ?? undefined, ...(kind ? { siteKind: kind } : {}), nume, email, telefon: telefonComplet, probleme } satisfies AuditRequestBody),
         });
         id = (await res.json())?.id;
       }
@@ -254,7 +279,7 @@ export default function StartPage() {
               </div>
               <h1 className="text-2xl font-black text-gray-900 mb-1">Uite ce am gasit</h1>
               <p className="text-sm text-gray-400 mb-5">Analizam magazinul in fundal chiar acum. Pana e gata, spune-ne ce te preocupa si unde trimitem raportul.</p>
-              <ScanCard scan={scan} />
+              <ScanCard scan={scan} kind={kind} onKind={chooseKind} />
               <PrimaryButton onClick={() => { setScreen("q"); setQstep(1); }}>Continua →</PrimaryButton>
               <button onClick={() => setScreen("url")} className="w-full text-center text-xs text-gray-400 hover:text-gray-600 mt-3">
                 Alta adresa

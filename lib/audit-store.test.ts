@@ -25,4 +25,15 @@ describe("audit job persistence", () => {
     expect(saved[id]).toMatchObject({ nume: "Ana", email: "ana@shop.ro" });
     expect(Object.keys(saved)).toEqual([id]);
   });
+
+  it("a restart with the visitor's kind replaces the run already going: one visitor, one saved audit", async () => {
+    const { startJob } = await import("./audit-store");
+    const { runAudit } = await import("./audit-engine");
+    const first = startJob("https://clinica.ro");
+    const second = startJob("https://clinica.ro", { siteKind: "leads", replaces: first });
+    await vi.waitFor(() => expect(saved[second]).toBeDefined());
+    await new Promise((r) => setTimeout(r, 20));
+    expect(Object.keys(saved)).toEqual([second]);
+    expect(runAudit).toHaveBeenLastCalledWith("https://clinica.ro", { kind: "leads" });
+  });
 });

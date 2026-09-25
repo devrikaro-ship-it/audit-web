@@ -28,6 +28,12 @@ describe("buildRows", () => {
     expect(g.observatii.raport).toBe("/dashboard/google-ads/reports/acc1");
   });
 
+  it("shows the kind of site and who decided it", () => {
+    const withKind = (by: "scan" | "visitor") => audit("k", 1, { data: { siteKind: { type: "leads", by, confidence: "high", evidence: null } } as StoredAudit["data"] });
+    expect(buildRows([withKind("scan")], [], {})[0].observatii.rezultat).toBe("Scor 72/100 · Site de servicii, dedus din site");
+    expect(buildRows([withKind("visitor")], [], {})[0].observatii.rezultat).toBe("Scor 72/100 · Site de servicii, ales de vizitator");
+  });
+
   it("marks a website audit left without contact", () => {
     const [b] = buildRows([audit("b", 1)], [], {});
     expect(b.observatii.preocupare).toBe("Nu a lasat date de contact");

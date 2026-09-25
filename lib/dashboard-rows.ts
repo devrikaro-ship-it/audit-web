@@ -2,6 +2,7 @@
 // of prospects, each with a sales status the team moves through the Devrika selling process.
 import type { StoredAudit } from "./leads-store";
 import type { ManagerAccount } from "./gads-manager";
+import { SITE_KIND, SITE_KIND_BY } from "./copy-registry";
 
 // Same stages as the team's selling process in the CRM (setter -> closer -> closing).
 export const LEAD_STATUSES = [
@@ -49,7 +50,7 @@ export function buildRows(
     email: a.email ?? "",
     telefon: a.telefon ?? "",
     observatii: {
-      rezultat: `Scor ${a.scor}/100`,
+      rezultat: `Scor ${a.scor}/100${a.data?.siteKind ? ` · ${SITE_KIND[a.data.siteKind.type]}, ${SITE_KIND_BY[a.data.siteKind.by]}` : ""}`,
       preocupare: a.email || a.telefon ? (a.probleme ?? []).join(", ") : "Nu a lasat date de contact",
       raport: `/r/${a.id}`,
     },

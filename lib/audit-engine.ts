@@ -1,5 +1,6 @@
-import type { AuditData, CheckResult, PageCheck, StatusCheck, ProductSignal, UxAudit, UxField } from "./types";
+import type { AuditData, CheckResult, PageCheck, StatusCheck, ProductSignal, UxAudit, UxField, SiteKindInfo } from "./types";
 import { detectEcom, detectPlatform } from "./site-signals";
+import { classifySiteKind, SiteKindUnreadable, type SiteKind, type SiteKindVerdict } from "./site-kind";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { decodeEntities, parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
 import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
@@ -787,9 +788,19 @@ function computeProductSignal(pages: PageData[], productUrls: string[], hasProdu
   return { checked, weakTitles, missingMeta, hasFeed: hasProductFeed, headline, message };
 }
 
+// The kind of site from the home page (lib/site-kind.ts); a visitor's choice wins. A home page too thin to read gives
+// no scan verdict: then only a visitor's choice decides, else the old page-wide shop test does (null here).
+export function decideSiteKind(homeHtml: string, url: string, visitor?: SiteKind): SiteKindInfo | null {
+  let scan: SiteKindVerdict | null = null;
+  try { scan = classifySiteKind(homeHtml, url); } catch (e) { if (!(e instanceof SiteKindUnreadable)) throw e; }
+  if (visitor) return { type: visitor, by: "visitor", confidence: scan?.confidence ?? null, evidence: scan?.evidence ?? null };
+  return scan ? { type: scan.type, by: "scan", confidence: scan.confidence, evidence: scan.evidence } : null;
+}
+
 // ── Conversie / bani pierduti (PPC) ──────────────────────────────────────────
 
-export async function runAudit(rawUrl: string): Promise<AuditData> {
+// kind: the visitor's correction of the kind of site; it wins over the scan, whose verdict is kept as evidence.
+export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): Promise<AuditData> {
   const startedAt = Date.now();
   let url = rawUrl.trim();
   if (!url.startsWith("http")) url = "https://" + url;
@@ -908,7 +919,8 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
   const social = computeSocialChecks(homepageData);
   const securitate = computeSecurityChecks(homepageData);
 
-  const isEcom = detectEcom(analyzedPages.map((p) => p.html).join("\n").toLowerCase());
+  const siteKind = decideSiteKind(homeHtmlEarly, homepage, opts.kind);
+  const isEcom = siteKind ? siteKind.type === "ecom" : detectEcom(analyzedPages.map((p) => p.html).join("\n").toLowerCase());
   const productSignal = isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
   const ux = isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
   // The overall score is the mean of the two parts the cover shows (docs/superpowers/specs/2026-09-24-seo-ten-...).
@@ -943,6 +955,7 @@ export async function runAudit(rawUrl: string): Promise<AuditData> {
     structuraChecks,
     aiChecks,
     isEcom,
+    ...(siteKind ? { siteKind } : {}),
     productSignal,
     ux,
     seo,

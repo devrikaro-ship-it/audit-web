@@ -1,4 +1,11 @@
 export type StatusCheck = "ok" | "atentie" | "critic";
+// The kind of site the audit judged. The scan's verdict and evidence are kept even when the visitor corrected it.
+export type SiteKindSignal = { id: string; strength: string; sample: string };
+export type SiteKindInfo = {
+  type: "ecom" | "leads"; by: "scan" | "visitor";
+  confidence: "high" | "medium" | "low" | null;
+  evidence: { url: string | null; readChars: number; ecom: SiteKindSignal[]; leads: SiteKindSignal[] } | null;
+};
 export type AuditStatus = "pending" | "running" | "done" | "error";
 
 export type CheckResult = { status: StatusCheck; value: string };
@@ -26,6 +33,7 @@ export type AuditData = {
   structuraChecks: PageCheck[];
   aiChecks?: PageCheck[];          // GEO / AI search: AI crawlers, llms.txt, entity links (older reports have none)
   isEcom?: boolean;
+  siteKind?: SiteKindInfo;         // shop or lead site, who decided, and the scan's evidence (2026-09-25)
   productSignal?: ProductSignal;   // product titles and descriptions, shown in the SEO rubric (shops only)
   ux?: UxAudit;                    // UX/UI by page type (shops only)
   seo?: SeoComponent[];            // Part 1: the ten SEO components (2026-09-24); absent on older reports
@@ -74,6 +82,8 @@ export type AuditJob = {
   telefon?: string;
   probleme?: string[];
   finalizeRequested?: boolean; // the funnel sent the contact (finalize)
+  siteKind?: "ecom" | "leads"; // the visitor's correction of the scanned kind
+  replacedBy?: string;         // restarted with the visitor's kind: this run is never saved
   status: AuditStatus;
   createdAt: number;
   data?: AuditData;
