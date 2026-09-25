@@ -73,10 +73,31 @@ What cannot be read from outside is "de verificat" and counts in no score (AUDIT
 Same structure (cover, summary, Part 1, Part 2, contact). Wording follows the kind: "servicii" for "produse",
 "programare/contact" for "cos". Reports saved before keep their rendering.
 
-## 6. Testing
+## 6. The progress screen (operator, 2026-09-25)
+
+The waiting page shows the audit's REAL steps, as the engine runs them, and each finished step shows what it measured
+(the idea seen in a competitor's audit, kept to the site). Today's page rotates fixed sentences every 3.5 s,
+unrelated to what the engine is doing; that goes.
+
+1. The engine reports each step as it starts and ends into the job (`steps: { id, state: "running" | "done" |
+   "unmeasured", result? }[]`), and `GET /api/audit?id=` returns them; the page polls every 1.5 s as today.
+2. Steps, in the order the engine runs them, each with the measured result it shows when done, e.g.:
+   1. "Citim site-ul" -> "WooCommerce · magazin online" / "WordPress · site de servicii"
+   2. "Verificam robots.txt si sitemap-ul" -> "robots.txt gasit · sitemap cu 824 de pagini"
+   3. "Alegem paginile care vand" -> "15 categorii si 35 de produse" / "12 servicii si 9 locatii"
+   4. "Citim paginile" -> "60 de pagini citite" (a live count while it runs)
+   5. "Masuram viteza pe mobil" -> "3,6 s pana apare continutul" or "de verificat"
+   6. "Verificam titlurile, descrierile si datele pentru Google" -> "5 pagini fara descriere"
+   7. "Verificam accesul asistentilor AI" -> "3 din 3 roboti AI au acces"
+   8. "Calculam scorul" -> "Scor 76/100"
+3. A progress bar ("Pasul 4 din 8") and the elapsed time. Every result line is a measured fact from this audit; a
+   step that could not measure says "de verificat". No estimates, no money, nothing outside the site.
+
+## 7. Testing
 
 1. The classifier on real page bodies: dentalview.ro = leads, high confidence; magazinfitness.ro and diente.ro =
    ecom; a WooCommerce plugin plus one price stays leads (the case that produced the rule).
 2. Lead page selection on dentalview.ro: services and locations chosen, articles left out.
 3. Every new row with a case that must fail and one that must pass, each seen failing with the fault put back.
 4. A full production audit of dentalview.ro read slide by slide, desktop and phone PDF.
+5. The progress screen watched through a real audit: steps advance in engine order, each result matches the report.
