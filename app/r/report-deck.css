@@ -51,10 +51,11 @@ body:has(.deck){margin:0;background:#FAF8F4;-webkit-print-color-adjust:exact;pri
 .deck .perf th{text-align:left;font-family:var(--f-num);font-weight:700;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--ink);padding:.5rem .6rem}
 .deck .perf td{border-bottom:1px solid var(--line);padding:.75rem .6rem;vertical-align:middle}
 .deck .perf .n{font-family:var(--f-num);font-weight:700;font-size:1.6rem;font-variant-numeric:tabular-nums}
-.deck .perf.compact td{padding:.42rem .6rem}
+.deck .perf.compact td{padding:.34rem .6rem}
 .deck .perf.compact .n{font-size:1.3rem}
 /* On a narrow screen what a component checks goes under its name, so the text gets the full width. */
 .deck .perf .inwhat{display:none}
+.deck .perf td.what{font-size:.88rem;line-height:1.35}
 @container deck (max-width:760px){.deck .perf .what{display:none}
 .deck .perf td{padding:.45rem .4rem}
 .deck .perf .n{font-size:1.25rem}

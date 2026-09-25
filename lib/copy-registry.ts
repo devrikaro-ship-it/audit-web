@@ -28,7 +28,7 @@ export const WORD = {
 export const SITE_KIND = { ecom: "Magazin online", leads: "Site de servicii" } as const;
 export const SITE_KIND_BY = { scan: "dedus din site", visitor: "ales de vizitator" } as const;
 
-export const VERDICT = { bun: "Bun", "de-reglat": "De reglat", slab: "Slab" } as const;
+export const VERDICT = { bun: "Bun", "de-reglat": "De reglat", slab: "Rau" } as const;
 
 export const MONTHS = ["ianuarie", "februarie", "martie", "aprilie", "mai", "iunie", "iulie", "august", "septembrie", "octombrie", "noiembrie", "decembrie"];
 
@@ -60,7 +60,7 @@ export const COMPONENTS: Record<string, ComponentCopy> = {
 // after round hundreds).
 export const NOUN = {
   page: ["pagina", "pagini"], category: ["categorie", "categorii"], product: ["produs", "produse"],
-  service: ["serviciu", "servicii"], location: ["locatie", "locatii"],
+  service: ["serviciu", "servicii"], location: ["locatie", "locatii"], check: ["verificare", "verificari"],
 } as const;
 export const countOf = (n: number, [one, many]: readonly [string, string]): string =>
   n === 1 ? `1 ${one}` : `${n}${n >= 20 && (n % 100 === 0 || n % 100 >= 20) ? " de " : " "}${many}`;
@@ -337,6 +337,20 @@ export const UI = {
   thComponent: "Componenta",
   thZone: "Zona",
   thWhat: "Ce verificam",
+  thWhy: "De ce acest scor",
+  // A component's score is the share of its checks that pass; the line says which pass and which do not.
+  whyGood: "De ce e bun: trec toate cele {n} verificari. {what}",
+  whyGoodOne: "De ce e bun: verificarea trece. {what}",
+  whyGoodBut: "De ce e bun: trec {ok} din {n} verificari. Ramane de reparat: {faults}.",
+  whyMid: "De ce e de reglat: trec doar {ok} din {n} verificari. De reparat: {faults}.",
+  whyBad: "De ce e rau: trec doar {ok} din {n} verificari. De reparat: {faults}.",
+  whyBadNone: "De ce e rau: nu trece nicio verificare din {n}. De reparat: {faults}.",
+  whyFault: "{title}: {fault}",
+  whyMoreFaults: "{faults} si inca {k}",
+  // A rule that fails is always said to fail, next to it: never a count that reads like praise.
+  faultOn: "nu e indeplinit pe {fail} din {t} {unit}",
+  faultNot: "nu e indeplinit",
+  whyUnmeasured: "{text} Nu am putut masura din afara site-ului: {v}.",
   thScore: "Scor",
   thVerdict: "Verdict",
   problemsTitle: "Ce e de reparat pe pagini",

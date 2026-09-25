@@ -83,7 +83,9 @@ describe("the report speaks the shop owner's language", () => {
     const text = [tenData, leadData].map((d) => visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: d })))).join(" ");
     // The lead report is really rendered in its own words.
     expect(text).toContain("Google primeste adresa si telefonul afacerii");
-    expect(text).toContain("Site-ul ii da lui Google lista paginilor de servicii si de locatii, fara pagini sterse, cu data ultimei schimbari");
+    // Each component says why it has its verdict; a failing rule is said to fail, never shown as a count alone.
+    expect(text).toMatch(/De ce e (bun|de reglat|rau): /);
+    expect(text).toContain("Tot site-ul se deschide pe conexiune securizata (https): nu e indeplinit");
     // Part 2 as ✓/✗ rows, both kinds.
     expect(text).toContain("Formularul de contact are cel mult cinci campuri");
     expect(text).toContain("Lista de produse arata poza si pretul fiecarui produs");
@@ -150,7 +152,14 @@ const segments = (html: string) => html.replace(/<style[\s\S]*?<\/style>/g, " ")
 // Entries are matched whatever the case of their first letter (a sentence starts with a capital).
 const outsideRegistry = (html: string) => {
   const ts = templates();
-  const known = (raw: string, depth = 2): boolean => {
+  // Remembered per text and depth: a composed sentence (a verdict line with its list of faults) nests templates.
+  const seen = new Map<string, boolean>();
+  const known = (raw: string, depth = 7): boolean => {
+    const key = `${depth}|${raw}`;
+    if (!seen.has(key)) { seen.set(key, false); seen.set(key, check(raw, depth)); }
+    return seen.get(key)!;
+  };
+  const check = (raw: string, depth: number): boolean => {
     const t = raw.trim();
     if (!t || DATA.test(t) || DOMAIN.test(t) || COUNTED.test(t)) return true;
     for (const v of [t, t.charAt(0).toLowerCase() + t.slice(1), t.charAt(0).toUpperCase() + t.slice(1)]) {
@@ -161,6 +170,8 @@ const outsideRegistry = (html: string) => {
     }
     // Two known texts side by side: "<a> · <b>", or a title followed by its page counter "(1/4)".
     if (depth > 0 && t.includes(" · ") && t.split(" · ").every((p) => known(p, depth - 1))) return true;
+    // A list of faults joined by "; ".
+    if (depth > 0 && t.includes("; ") && t.split("; ").every((p) => known(p, depth - 1))) return true;
     const paren = t.lastIndexOf(" (");
     if (depth > 0 && paren > 0 && known(t.slice(0, paren), depth - 1) && known(t.slice(paren), depth - 1)) return true;
     return false;

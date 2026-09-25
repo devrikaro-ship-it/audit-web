@@ -4,11 +4,11 @@ import { CHECKS } from "./problems-db";
 import { statusScore, verdict, type Verdict } from "./scoring";
 import type { AuditData, CheckResult, PageCheck, SeoComponent, UxField } from "./types";
 import { componentScore, rowPass, seoScore as tenScore } from "./seo-score";
-import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, fill, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_GROUPS, UX_ROWS, UX_SIGNAL_BEFORE_2026_09_24, UX_SIGNALS, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
+import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, countOf, fill, NOUN, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_GROUPS, UX_ROWS, UX_SIGNAL_BEFORE_2026_09_24, UX_SIGNALS, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
 export { PAGE_COPY } from "./copy-registry";
 
 export type Tone = "good" | "warn" | "bad";
-export type Zone = { name: string; what: string; score: number | null };
+export type Zone = { name: string; what: string; score: number | null; why?: string };
 export type Problem = { title: string; count: string; tone: Tone; problem: string; fix: string };
 export type CheckRow = { done: boolean; title: string; note: string; result: string };
 export type AiCard = { label: string; big: string; text: string; why: string; tone: Tone };
@@ -92,13 +92,32 @@ function tenComponents(seo: SeoComponent[], leads = false) {
   const component = (id: string) => ({ ...COMPONENTS[id], ...(leads ? COMPONENTS_LEADS[id] : {}) });
   const known = (id: string) => !!ROWS[id] || (leads && !!ROWS_LEADS[id]);
   const copyOf = (id: string) => ({ ...ROWS[id], ...(leads ? ROWS_LEADS[id] : {}) }) as RowCopy;
-  const zones: Zone[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({ name: fill(UI.numbered, { i: i + 1, name: component(c.id).name }), what: component(c.id).what, score: componentScore(c) }));
-  const rows = seo.flatMap((c) => c.rows).filter((r) => known(r.id));
   const result = (r: SeoComponent["rows"][number]) => (copyOf(r.id).unit ? fill(WORD.outOf, { ok: r.ok, t: r.total, unit: copyOf(r.id).unit }) : r.ok === r.total ? WORD.yes : WORD.no);
+  const fault = (r: SeoComponent["rows"][number]) => (copyOf(r.id).unit ? fill(UI.faultOn, { fail: r.total - r.ok, t: r.total, unit: copyOf(r.id).unit }) : UI.faultNot);
+  // Why a component scored what it did: its score is the share of its measured checks that pass (seo-score.ts).
+  const why = (c: SeoComponent): string => {
+    const own = c.rows.filter((r) => known(r.id));
+    const judged = own.filter((r) => rowPass(r) !== null);
+    const failing = judged.filter((r) => rowPass(r) === false);
+    const unmeasured = own.length - judged.length;
+    if (judged.length === 0) return WORD.notMeasured;
+    const listed = failing.slice(0, 2).map((r) => fill(UI.whyFault, { title: copyOf(r.id).title, fault: fault(r) })).join("; ");
+    const faults = failing.length > 2 ? fill(UI.whyMoreFaults, { faults: listed, k: failing.length - 2 }) : listed;
+    const ok = judged.length - failing.length, n = judged.length;
+    // Each verdict has its own sentence; the verdict is the one the pill shows (scoring.ts).
+    const v = verdict(componentScore(c) ?? 0);
+    const text = failing.length === 0 ? fill(n === 1 ? UI.whyGoodOne : UI.whyGood, { n, what: component(c.id).what })
+      : v === "bun" ? fill(UI.whyGoodBut, { ok, n, faults })
+      : v === "de-reglat" ? fill(UI.whyMid, { ok, n, faults })
+      : fill(ok === 0 ? UI.whyBadNone : UI.whyBad, { ok, n, faults });
+    return unmeasured ? fill(UI.whyUnmeasured, { text, v: countOf(unmeasured, NOUN.check) }) : text;
+  };
+  const zones: Zone[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({ name: fill(UI.numbered, { i: i + 1, name: component(c.id).name }), what: component(c.id).what, score: componentScore(c), why: why(c) }));
+  const rows = seo.flatMap((c) => c.rows).filter((r) => known(r.id));
   const faults = rows.filter((r) => rowPass(r) === false);
   const problems: Problem[] = faults.slice(0, 4).map((r) => ({
     title: copyOf(r.id).title,
-    count: copyOf(r.id).unit ? fill(WORD.outOf, { ok: r.ok, t: r.total, unit: copyOf(r.id).unit }) : WORD.repair,
+    count: cap(fault(r)),
     tone: r.ok / r.total < 0.5 ? "bad" : "warn",
     problem: copyOf(r.id).problem,
     fix: copyOf(r.id).fix,
