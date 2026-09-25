@@ -31,7 +31,30 @@ export type SeoInput = {
   refusedServer: boolean;
   readWithBrowser: boolean;
   probes: SeoProbes;
+  // A lead site (spec 2026-09-25 §3): its service and location pages, and whether the sitemap lists each page read.
+  kind?: "ecom" | "leads";
+  services?: string[];
+  locations?: string[];
+  inSitemap?: (url: string) => boolean;
 };
+
+// schema.org LocalBusiness and its subtypes that a site collecting contacts declares (clinics, offices, services).
+const LOCAL_BUSINESS = ["LocalBusiness", "ProfessionalService", "MedicalBusiness", "MedicalClinic", "Dentist", "Physician", "Hospital",
+  "Optician", "Pharmacy", "HealthAndBeautyBusiness", "BeautySalon", "DaySpa", "HairSalon", "LegalService", "Attorney", "Notary",
+  "AccountingService", "FinancialService", "InsuranceAgency", "RealEstateAgent", "HomeAndConstructionBusiness", "Electrician",
+  "Plumber", "HVACBusiness", "HousePainter", "Locksmith", "MovingCompany", "RoofingContractor", "GeneralContractor",
+  "AutomotiveBusiness", "AutoRepair", "EmergencyService", "ChildCare", "EducationalOrganization", "SportsActivityLocation",
+  "ExerciseGym", "TravelAgency", "EmploymentAgency", "LodgingBusiness", "FoodEstablishment", "Restaurant"];
+
+// Five-word sequences of a page's own text: a location page that changes only the district's name shares most of
+// them with another location page (measured on dentalview.ro, 2026-09-25: 8 of 15 location pages share 66 to 82%
+// of their own text with another one, the other 7 share 25 to 48%).
+const sequences = (blocks: string[]) => {
+  const out = new Set<string>();
+  for (const b of blocks) { const w = b.split(/\s+/); for (let i = 0; i + 5 <= w.length; i++) out.add(w.slice(i, i + 5).join(" ")); }
+  return out;
+};
+const telephones = (html: string) => new Set([...html.matchAll(/href=["']tel:([^"']+)["']/gi)].map((m) => m[1].replace(/\D/g, "").replace(/^(40|0040)/, "0")).filter((t) => t.length >= 9));
 
 const row = (id: string, ok: number, total: number, verify = false): SeoRow => ({ id, ok, total, ...(verify ? { verify } : {}) });
 const norm = (u: string) => u.replace(/#.*$/, "").replace(/\/$/, "").toLowerCase();
@@ -80,7 +103,7 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
   const pick = (urls: string[]) => urls.map((u) => byUrl.get(norm(u))).filter((p): p is PageData => !!p);
   const cats = pick(input.categories);
   const prods = pick(input.products);
-  const money = [...cats, ...prods];
+  const money = input.kind === "leads" ? [...pick(input.services ?? []), ...pick(input.locations ?? [])] : [...cats, ...prods];
   const own = new Map(ownWrittenText(pages).map((o, i) => [norm(pages[i].url), o.own]));
   const ownChars = (p: PageData) => (own.get(norm(p.url)) ?? []).reduce((n, b) => n + b.length, 0);
   const path = (u: string) => { try { const x = new URL(u); return x.pathname + x.search; } catch { return u; } };
@@ -106,6 +129,23 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
     return parseImages(p.html).filter((im) => im.src && declared.includes(fileOf(im.src)));
   };
   const withImages = prods.filter((p) => productImages(p).length > 0);
+
+  // ── A lead site's pages: services and locations take the place of categories and products ──
+  const leads = input.kind === "leads";
+  const services = pick(input.services ?? []);
+  const locations = pick(input.locations ?? []);
+  const contactPages = [...services, ...locations];
+  const ownOf = (p: PageData) => own.get(norm(p.url)) ?? [];
+  const copiedLocation = (p: PageData) => {
+    const mine = sequences(ownOf(p));
+    if (mine.size === 0) return false;
+    return locations.some((q) => q !== p && [...mine].filter((x) => sequences(ownOf(q)).has(x)).length * 2 >= mine.size);
+  };
+  const localNodes = pages.flatMap((p) => LOCAL_BUSINESS.flatMap((t) => nodesOfType(p.html, t)));
+  const phoneCount = new Map<string, number>();
+  for (const p of pages) for (const t of telephones(p.html)) phoneCount.set(t, (phoneCount.get(t) ?? 0) + 1);
+  const mainPhone = [...phoneCount].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const htmlText = (p: PageData) => p.html.replace(/<script[\s\S]*?<\/script>/gi, " ");
   const priced = prods.filter((p) => nodesOfType(p.html, "Product").some((n) => offersOf(n).some((o) => priceOf(o) > 0)));
 
   return [
@@ -124,7 +164,9 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
     ] },
     { id: "sitemap", rows: [
       row("sitemap_exista", hasSitemap ? 1 : 0, 1),
-      row("sitemap_tipuri", (input.listed.categories > 0 ? 1 : 0) + (input.listed.products > 0 ? 1 : 0), hasSitemap && listedTyped ? 2 : 0),
+      leads
+        ? row("sitemap_servicii", count(contactPages, (p) => input.inSitemap?.(p.url) ?? false), hasSitemap ? contactPages.length : 0)
+        : row("sitemap_tipuri", (input.listed.categories > 0 ? 1 : 0) + (input.listed.products > 0 ? 1 : 0), hasSitemap && listedTyped ? 2 : 0),
       row("sitemap_valide", probes.sitemapSample.ok, probes.sitemapSample.total),
       row("sitemap_lastmod", probes.sitemapLastmod ? 1 : 0, hasSitemap && probes.sitemapLastmod !== null ? 1 : 0),
     ] },
@@ -132,9 +174,15 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
       row("fara_noindex", count(money, (p) => !isNoindex(p)), money.length),
       row("canonical_propriu", count(money, (p) => { const c = parseCanonical(p.html); if (!c) return false; try { return norm(new URL(c, p.url).href) === norm(p.url); } catch { return false; } }), money.length),
       row("www_unic", probes.variantsSameHost ? 1 : 0, probes.variantsSameHost === null ? 0 : 1),
-      row("parametri", probes.sortParamHandled ? 1 : 0, probes.sortParamHandled === null ? 0 : 1),
+      // A lead site has no product lists to sort.
+      ...(leads ? [] : [row("parametri", probes.sortParamHandled ? 1 : 0, probes.sortParamHandled === null ? 0 : 1)]),
     ] },
-    { id: "html", rows: input.readWithBrowser ? [row("html_nume", 0, 0), row("html_pret", 0, 0), row("html_descriere", 0, 0)] : [
+    { id: "html", rows: leads ? (input.readWithBrowser ? [row("html_serviciu", 0, 0), row("html_contact", 0, 0), row("html_descriere_serviciu", 0, 0)] : [
+      row("html_serviciu", count(services, (p) => words((p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").replace(/<[^>]+>/g, " ")).length > 0), services.length),
+      // The phone as a link and a street address, in the code the server sends.
+      row("html_contact", count(contactPages, (p) => telephones(htmlText(p)).size > 0 && /\b(str\.|strada|bd\.|bdul|bulevardul|calea|sos\.|soseaua|șos\.|aleea|piata|piața)\s/i.test(htmlText(p).replace(/<[^>]+>/g, " "))), contactPages.length),
+      row("html_descriere_serviciu", count(services, (p) => ownChars(p) >= 200), services.length),
+    ]) : input.readWithBrowser ? [row("html_nume", 0, 0), row("html_pret", 0, 0), row("html_descriere", 0, 0)] : [
       row("html_nume", count(prods, (p) => words((p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").replace(/<[^>]+>/g, " ")).length > 0), prods.length),
       row("html_pret", count(prods, (p) => priceCount(p.html.replace(/<script[\s\S]*?<\/script>/gi, " ")) > 0), prods.length),
       row("html_descriere", count(prods, (p) => ownChars(p) >= 200), prods.length),
@@ -158,10 +206,22 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
     { id: "continut", rows: [
       row("un_titlu_mare", count(pages, (p) => countH1(p.html) === 1), pages.length),
       row("text_propriu", pages.length - duplicateTextPages(pages), pages.length),
-      row("text_categorii", count(cats, (p) => ownChars(p) >= 200), cats.length),
-      row("alt_imagini", count(withImages, (p) => productImages(p).every((im) => im.alt.trim().length > 0)), withImages.length),
+      ...(leads ? [
+        row("text_servicii", count(services, (p) => ownChars(p) >= 200), services.length),
+        row("locatii_diferite", count(locations, (p) => !copiedLocation(p)), locations.length),
+      ] : [
+        row("text_categorii", count(cats, (p) => ownChars(p) >= 200), cats.length),
+        row("alt_imagini", count(withImages, (p) => productImages(p).every((im) => im.alt.trim().length > 0)), withImages.length),
+      ]),
     ] },
-    { id: "date_structurate", rows: [
+    { id: "date_structurate", rows: leads ? [
+      row("schema_afacere_locala", localNodes.some((n) => !!n.address && !!n.telephone) ? 1 : 0, pages.length ? 1 : 0),
+      row("schema_program", localNodes.some((n) => !!(n.openingHours || n.openingHoursSpecification)) ? 1 : 0, pages.length ? 1 : 0),
+      // The phone most pages link to, on every page read: one business, one number the visitor and Google both see.
+      row("contact_consecvent", mainPhone ? count(pages, (p) => telephones(p.html).has(mainPhone)) : 0, mainPhone ? pages.length : 0),
+      row("schema_rating", pages.some((p) => nodesOfType(p.html, "AggregateRating").length > 0) ? 1 : 0, pages.length ? 1 : 0),
+      row("schema_traseu", count(contactPages, (p) => nodesOfType(p.html, "BreadcrumbList").length > 0), contactPages.length),
+    ] : [
       row("schema_firma", pages.some((p) => ["Organization", "OnlineStore", "Store", "LocalBusiness"].some((t) => nodesOfType(p.html, t).length > 0)) ? 1 : 0, pages.length ? 1 : 0),
       row("schema_produs", count(prods, (p) => nodesOfType(p.html, "Product").some((n) => offersOf(n).some((o) => priceOf(o) > 0 && !!o.availability))), prods.length),
       row("schema_rating", count(prods, (p) => nodesOfType(p.html, "AggregateRating").length > 0), prods.length),

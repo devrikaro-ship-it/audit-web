@@ -104,3 +104,57 @@ describe("componentScore", () => {
     expect(seoScore([{ id: "x", rows: [{ id: "a", ok: 1, total: 1 }] }, { id: "y", rows: [{ id: "b", ok: 1, total: 1 }, { id: "c", ok: 0, total: 1 }, { id: "d", ok: 0, total: 1 }] }])).toBe(50);
   });
 });
+
+// ── A lead site (spec 2026-09-25 §3) ──
+const C = "https://clinica.ro";
+const clinicLd = `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "Dentist", name: "Clinica", telephone: "+40 721 000 111", address: { "@type": "PostalAddress", streetAddress: "Str. Florilor 3" }, openingHours: "Mo-Fr 08:00-20:00", aggregateRating: { "@type": "AggregateRating", ratingValue: 4.9, reviewCount: 80 }, sameAs: ["https://facebook.com/c", "https://instagram.com/c"] })}</script>`;
+const contact = '<a href="tel:+40721000111">0721 000 111</a> <p>Str. Florilor 3, Bucuresti</p>';
+const own = (x: string) => `<p>${`Despre ${x}: explicam pe larg cum decurge fiecare etapa si ce trebuie sa stie pacientul inainte. `.repeat(3)}</p>`;
+const vitan = "<p>Clinica din Vitan are parcare proprie in curte si intrare separata pentru pacientii cu scaun cu rotile. Ajungi cu autobuzul 102 pana la statia Mall Vitan, apoi mergi doua minute pe jos. Programul de sambata e mai lung decat in celelalte clinici ale noastre.</p>";
+const unirii = "<p>La Unirii suntem la etajul doi, deasupra farmaciei, cu lift din holul cladirii. Metroul Piata Unirii e la trei minute, iesirea spre Bulevardul Corneliu Coposu. Aici lucreaza medicul specializat in tomografii pentru implanturi si chirurgie.</p>";
+function goodClinic(): SeoInput {
+  const home = page(`${C}/`, { title: "Clinica - radiologie dentara in Bucuresti", h1: "Clinica", meta: desc("clinica"), head: clinicLd, body: contact + own("clinica") });
+  const svc = page(`${C}/radiografie-panoramica/`, { title: "Radiografie panoramica | Clinica", h1: "Radiografie panoramica", meta: desc("panoramica"), head: crumbs, body: contact + own("radiografia panoramica") });
+  const loc1 = page(`${C}/clinica-vitan/`, { title: "Clinica Vitan - radiologie dentara", h1: "Clinica Vitan", meta: desc("vitan"), head: crumbs, body: contact + vitan });
+  const loc2 = page(`${C}/clinica-unirii/`, { title: "Clinica Unirii - radiologie dentara", h1: "Clinica Unirii", meta: desc("unirii"), head: crumbs, body: contact + unirii });
+  const all = [home, svc, loc1, loc2];
+  return {
+    origin: C, requested: all, pages: all, categories: [], products: [], robotsTxt: "User-agent: *\nSitemap: https://clinica.ro/sitemap.xml", sitemapXml: sitemap,
+    listed: { categories: 0, products: 0, other: 4 }, refusedServer: false, readWithBrowser: false, probes: { ...goodProbes, sortParamHandled: null },
+    kind: "leads", services: [svc.url], locations: [loc1.url, loc2.url], inSitemap: () => true,
+  };
+}
+
+describe("computeSeoComponents on a lead site", () => {
+  it("a clinic that does everything right has every measured row ok, with the lead rows in place of the shop rows", () => {
+    const r = rowsOf(goodClinic());
+    expect(Object.values(r).filter((x) => x.total > 0 && x.ok !== x.total).map((x) => x.id)).toEqual([]);
+    for (const id of ["sitemap_servicii", "html_serviciu", "html_contact", "html_descriere_serviciu", "text_servicii", "locatii_diferite", "schema_afacere_locala", "schema_program", "contact_consecvent", "schema_rating", "schema_traseu"]) expect(r[id]?.total, id).toBeGreaterThan(0);
+    for (const id of ["sitemap_tipuri", "parametri", "html_nume", "html_pret", "text_categorii", "alt_imagini", "schema_produs", "schema_livrare"]) expect(r[id], id).toBeUndefined();
+  });
+
+  it("finds each lead fault where it is", () => {
+    const s = goodClinic();
+    const [home, svc, loc1] = s.pages;
+    // A location page that only swaps the district name, a thin service page without phone or address, a page
+    // missing from the sitemap, no local business data.
+    const copy = page(`${C}/clinica-berceni/`, { title: "Clinica Berceni - radiologie dentara", h1: "Clinica Berceni", meta: desc("berceni"), head: crumbs, body: contact + vitan.replace(/Vitan/g, "Berceni") });
+    const thin = page(`${C}/scanare/`, { title: "Scanare | Clinica", h1: "Scanare intraorala", meta: desc("scanare"), head: crumbs, body: "<p>Str. Florilor 3, Bucuresti</p><p>Scanare.</p>" });
+    s.pages = [page(`${C}/`, { title: "Clinica - radiologie dentara", h1: "Clinica", meta: desc("c"), body: contact + own("clinica") }), svc, loc1, copy, thin];
+    s.requested = s.pages;
+    s.services = [svc.url, thin.url];
+    s.locations = [loc1.url, copy.url];
+    s.inSitemap = (u) => u !== thin.url;
+    const r = rowsOf(s);
+    expect(r.locatii_diferite).toMatchObject({ ok: 0, total: 2 });
+    expect(r.text_servicii).toMatchObject({ ok: 1, total: 2 });
+    expect(r.html_descriere_serviciu).toMatchObject({ ok: 1, total: 2 });
+    expect(r.html_contact).toMatchObject({ ok: 3, total: 4 });
+    expect(r.contact_consecvent).toMatchObject({ ok: 4, total: 5 });
+    expect(r.sitemap_servicii).toMatchObject({ ok: 3, total: 4 });
+    expect(r.schema_afacere_locala).toMatchObject({ ok: 0, total: 1 });
+    expect(r.schema_program).toMatchObject({ ok: 0, total: 1 });
+    expect(r.schema_rating).toMatchObject({ ok: 0, total: 1 });
+    void home;
+  });
+});

@@ -48,6 +48,19 @@ const tenData: AuditData = {
   }),
 };
 
+// A lead site's report: every lead row failing, so each lead title and fix is rendered.
+const leadData: AuditData = {
+  ...data,
+  siteKind: { type: "leads", by: "scan", confidence: "high", evidence: null },
+  seo: computeSeoComponents({
+    origin: "https://s.ro", requested: pages, pages, categories: [], products: [],
+    robotsTxt: "User-agent: *\nDisallow: /categorie/", sitemapXml: "<urlset></urlset>", listed: { categories: 0, products: 0, other: 3 },
+    refusedServer: false, readWithBrowser: false,
+    probes: { sitemapLastmod: false, httpToHttps: true, maxRedirectHops: 1, variantsSameHost: true, sitemapSample: { ok: 1, total: 2 }, sortParamHandled: null },
+    kind: "leads", services: [pages[1].url, pages[2].url], locations: [pages[3].url, pages[1].url], inSitemap: () => false,
+  }),
+};
+
 // Words a shop owner does not use. File names the owner hands to a developer (robots.txt, llms.txt) are allowed.
 const JARGON = /\b(keywords?|kw|h[1-6]|url|url-uri|slug|301|canonical|meta|snippets?|serp|schema|json-ld|breadcrumbs?|breadcrumblist|llms?(?!\.txt)|llm-urile|crawl\w*|noindex|headere?|hsts|og:\w+|favicon|apple-touch-icon|webp|avif|rich result|featured|targetat|rankeaza|canibalizare|on-page|title tag|alt text|organization|product|hero|lastmod|x-frame-options)\b/gi;
 const visibleText = (html: string) => html.replace(/<style[\s\S]*?<\/style>/g, " ").replace(/<[^>]+>/g, " ").replace(/&[a-z#0-9]+;/g, " ").replace(/\s+/g, " ");
@@ -65,7 +78,10 @@ describe("the report speaks the shop owner's language", () => {
   });
 
   it("shows no technical term on a report built from the ten SEO components", () => {
-    const text = visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: tenData })));
+    const text = [tenData, leadData].map((d) => visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: d })))).join(" ");
+    // The lead report is really rendered in its own words.
+    expect(text).toContain("Google stie ca e o afacere locala, cu adresa si telefon");
+    expect(text).toContain("Exista, are paginile de servicii si de locatii, doar pagini valide, date");
     expect(text).toContain("Paginile raspund corect");
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
   });
@@ -135,7 +151,7 @@ const outsideRegistry = (html: string) => {
 
 describe("the report speaks only from its register", () => {
   it("every visible text of a report, old or with the ten components, desktop or phone, comes from the register", () => {
-    for (const d of [data, tenData]) for (const phone of [false, true]) {
+    for (const d of [data, tenData, leadData]) for (const phone of [false, true]) {
       expect(outsideRegistry(renderToStaticMarkup(createElement(ReportDeck, { data: d, createdAt: Date.UTC(2026, 8, 24), phone })))).toEqual([]);
     }
   });

@@ -4,7 +4,7 @@ import { CHECKS } from "./problems-db";
 import { statusScore, verdict, type Verdict } from "./scoring";
 import type { AuditData, CheckResult, PageCheck, SeoComponent, UxField } from "./types";
 import { componentScore, rowPass, seoScore as tenScore } from "./seo-score";
-import { AI_CARDS, cap, COMPONENTS, fill, LEGACY_ZONES, PAGE_COPY, ROWS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_SIGNAL_BEFORE_2026_09_24, UX_SITE, VERDICT, WORD, type SiteCopy } from "./copy-registry";
+import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, fill, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_SIGNAL_BEFORE_2026_09_24, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
 export { PAGE_COPY } from "./copy-registry";
 
 export type Tone = "good" | "warn" | "bad";
@@ -87,23 +87,27 @@ function aiCards(checks: PageCheck[]): AiCard[] {
 
 // Part 1 from the ten SEO components (reports from 2026-09-24): the components as the zone table, the first four
 // faults in chain order (an earlier component matters more), and every row in the checklist.
-function tenComponents(seo: SeoComponent[]) {
-  const zones: Zone[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({ name: fill(UI.numbered, { i: i + 1, name: COMPONENTS[c.id].name }), what: COMPONENTS[c.id].what, score: componentScore(c) }));
-  const rows = seo.flatMap((c) => c.rows).filter((r) => ROWS[r.id]);
-  const result = (r: SeoComponent["rows"][number]) => (ROWS[r.id].unit ? fill(WORD.outOf, { ok: r.ok, t: r.total, unit: ROWS[r.id].unit }) : r.ok === r.total ? WORD.yes : WORD.no);
+// A lead site reads the same components in its own words (COMPONENTS_LEADS, ROWS_LEADS) and has rows of its own.
+function tenComponents(seo: SeoComponent[], leads = false) {
+  const component = (id: string) => ({ ...COMPONENTS[id], ...(leads ? COMPONENTS_LEADS[id] : {}) });
+  const known = (id: string) => !!ROWS[id] || (leads && !!ROWS_LEADS[id]);
+  const copyOf = (id: string) => ({ ...ROWS[id], ...(leads ? ROWS_LEADS[id] : {}) }) as RowCopy;
+  const zones: Zone[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({ name: fill(UI.numbered, { i: i + 1, name: component(c.id).name }), what: component(c.id).what, score: componentScore(c) }));
+  const rows = seo.flatMap((c) => c.rows).filter((r) => known(r.id));
+  const result = (r: SeoComponent["rows"][number]) => (copyOf(r.id).unit ? fill(WORD.outOf, { ok: r.ok, t: r.total, unit: copyOf(r.id).unit }) : r.ok === r.total ? WORD.yes : WORD.no);
   const faults = rows.filter((r) => rowPass(r) === false);
   const problems: Problem[] = faults.slice(0, 4).map((r) => ({
-    title: ROWS[r.id].title,
-    count: ROWS[r.id].unit ? fill(WORD.outOf, { ok: r.total - r.ok, t: r.total, unit: ROWS[r.id].unit }) : WORD.repair,
+    title: copyOf(r.id).title,
+    count: copyOf(r.id).unit ? fill(WORD.outOf, { ok: r.total - r.ok, t: r.total, unit: copyOf(r.id).unit }) : WORD.repair,
     tone: r.ok / r.total < 0.5 ? "bad" : "warn",
-    problem: ROWS[r.id].problem,
-    fix: ROWS[r.id].fix,
+    problem: copyOf(r.id).problem,
+    fix: copyOf(r.id).fix,
   }));
   const standard: StdGroup[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({
-    name: fill(UI.numbered, { i: i + 1, name: COMPONENTS[c.id].name }),
+    name: fill(UI.numbered, { i: i + 1, name: component(c.id).name }),
     score: componentScore(c),
-    rows: c.rows.filter((r) => ROWS[r.id]).map((r): StdRow => {
-      const copy = ROWS[r.id];
+    rows: c.rows.filter((r) => known(r.id)).map((r): StdRow => {
+      const copy = copyOf(r.id);
       const pass = rowPass(r);
       if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, note: r.total === 0 ? WORD.notMeasured : copy.fix };
       return pass ? { state: "ok", title: copy.title, result: result(r), note: "" } : { state: "fail", title: copy.title, result: result(r), note: copy.fix };
@@ -170,7 +174,7 @@ export function buildDeck(data: AuditData): Deck {
   const measured = (k: string) => (cr[k] && !UNMEASURED.test(cr[k].value) ? cr[k].value : "—");
 
   const lcpSlow = cr.lcp && cr.lcp.status !== "ok" && !UNMEASURED.test(cr.lcp.value);
-  const ten = data.seo?.length ? tenComponents(data.seo) : null;
+  const ten = data.seo?.length ? tenComponents(data.seo, data.siteKind?.type === "leads") : null;
   const topProblem = ten ? ten.problems[0] : problems[0];
   const first = lcpSlow
     ? { title: UI.firstSlowTitle, text: fill(UI.firstSlowText, { lcp: cr.lcp.value }) }

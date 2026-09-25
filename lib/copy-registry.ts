@@ -54,7 +54,7 @@ export const COMPONENTS: Record<string, ComponentCopy> = {
 };
 
 // What a count counts. A check of the whole site counts nothing (none).
-export const UNIT = { none: "", pagini: "pagini", pagini_produs: "pagini de produs", crawlere: "roboti AI", criterii: "conditii", fisier: "fisier", legaturi: "legaturi" } as Record<string, string>;
+export const UNIT = { none: "", pagini: "pagini", pagini_produs: "pagini de produs", pagini_servicii: "pagini de servicii", pagini_locatii: "pagini de locatii", crawlere: "roboti AI", criterii: "conditii", fisier: "fisier", legaturi: "legaturi" } as Record<string, string>;
 
 export const ROWS: Record<string, RowCopy> = {
   pagini_200: { title: "Pagini care raspund corect", unit: UNIT.pagini, problem: "Unele pagini citite raspund cu eroare: nu exista sau serverul da gres.", fix: "Repara paginile cu eroare sau trimite-le automat catre cea mai apropiata pagina care exista." },
@@ -95,6 +95,40 @@ export const ROWS: Record<string, RowCopy> = {
   schema_pret_vizibil: { title: "Pretul declarat e cel afisat", unit: UNIT.pagini_produs, problem: "Pretul declarat pentru Google difera de cel afisat, iar Google poate respinge datele.", fix: "Fa ca pretul din datele pentru Google sa fie exact pretul afisat pe pagina." },
   ai_roboti: { title: "ChatGPT, Perplexity si Claude au voie sa citeasca site-ul", unit: "roboti de cautare AI", problem: "robots.txt opreste robotii de cautare AI (ChatGPT, Perplexity sau Claude), asa ca magazinul nu apare in raspunsurile lor.", fix: "Permite in robots.txt robotii OAI-SearchBot, PerplexityBot si Claude-SearchBot." },
   ai_profiluri: { title: "Magazinul e legat de profilurile firmei", unit: UNIT.legaturi, problem: "Paginile nu leaga magazinul de profilurile oficiale ale firmei (Facebook, Instagram), asa ca asistentii AI il recunosc mai greu.", fix: "Adauga in datele firmei pentru Google legaturile catre profilurile oficiale." },
+};
+
+// A lead site (spec 2026-09-25 §3): what a component checks, and the rows only a lead site has. Rows shared with a
+// shop but worded for products and categories there take their lead wording from ROWS_LEADS.
+export const COMPONENTS_LEADS: Record<string, Pick<ComponentCopy, "what">> = {
+  sitemap: { what: "Exista, are paginile de servicii si de locatii, doar pagini valide, date" },
+  indexare: { what: "Pagini neascunse, adresa principala, www" },
+  html: { what: "Numele serviciului, telefonul si adresa, descrierea sunt in codul paginii" },
+  continut: { what: "Un titlu mare, text propriu, text pe servicii, locatii diferite" },
+  date_structurate: { what: "Afacere locala cu adresa si telefon, program, acelasi telefon, stele, traseu" },
+};
+export const ROWS_LEADS: Record<string, Partial<RowCopy>> = {
+  sitemap_servicii: { title: "Lista contine paginile de servicii si de locatii", unit: UNIT.pagini, problem: "Unele pagini de servicii sau de locatii lipsesc din lista de pagini pentru Google, asa ca Google afla mai greu de ele.", fix: "Include in lista de pagini toate paginile de servicii si de locatii." },
+  robots_pagini: { title: "Serviciile, locatiile si stilurile nu sunt blocate", problem: "robots.txt blocheaza pagini de servicii, de locatii sau fisiere de stil, asa ca Google nu le poate citi.", fix: "Scoate din robots.txt regulile care blocheaza paginile de servicii, de locatii sau fisierele de stil." },
+  fara_noindex: { title: "Serviciile si locatiile pot aparea in Google", problem: "Unele pagini de servicii sau de locatii sunt marcate sa nu apara in Google.", fix: "Scoate marcajul care ascunde paginile de servicii si de locatii; lasa-l doar pe paginile de confirmare si pe cele interne." },
+  canonical_propriu: { fix: "Fa ca fiecare pagina de serviciu si de locatie sa-si declare propria adresa ca adresa principala." },
+  html_serviciu: { title: "Numele serviciului e in pagina, nu incarcat ulterior", unit: UNIT.pagini_servicii, problem: "Numele serviciului nu e in codul trimis de server, asa ca ChatGPT si Claude nu il vad.", fix: "Afiseaza numele serviciului ca titlu mare direct in pagina, nu incarcat dupa deschidere prin JavaScript." },
+  html_contact: { title: "Telefonul si adresa sunt in pagina", unit: UNIT.pagini, problem: "Pe unele pagini de servicii sau de locatii telefonul (ca legatura pe care se poate apasa) sau adresa lipsesc din codul trimis de server.", fix: "Pune pe fiecare pagina de serviciu si de locatie telefonul ca legatura pe care se poate apasa si adresa scrisa, nu intr-o imagine." },
+  html_descriere_serviciu: { title: "Serviciul e descris in pagina", unit: UNIT.pagini_servicii, problem: "Paginile de servicii fara descriere proprie nu le spun clientilor, lui Google si asistentilor AI ce oferi.", fix: "Scrie pentru fiecare serviciu ce este, cui ii foloseste, cum decurge si cat dureaza." },
+  titlu_exista: { fix: "Scrie pentru fiecare pagina un titlu propriu, care incepe cu numele serviciului sau al locatiei." },
+  titlu_lungime: { problem: "Un titlu prea scurt nu spune ce oferi; unul prea lung e taiat de Google.", fix: "Tine titlurile intre 15 si 65 de caractere, cu numele serviciului la inceput." },
+  titlu_nume: { title: "Titlul contine numele serviciului sau al locatiei", problem: "Titlul din Google nu contine numele scris pe pagina, asa ca clientul nu recunoaste serviciul in rezultate.", fix: "Incepe titlul din Google cu numele serviciului sau al locatiei, la fel ca pe pagina." },
+  un_titlu_mare: { fix: "Pune pe fiecare pagina un singur titlu mare, cu numele serviciului sau al locatiei." },
+  text_propriu: { problem: "Textul copiat de pe alta pagina a site-ului nu ajuta nicio pagina sa urce in Google.", fix: "Scrie text propriu pentru fiecare pagina, incepand cu serviciile cerute cel mai des." },
+  text_servicii: { title: "Serviciile au text de prezentare", unit: UNIT.pagini_servicii, problem: "Unele pagini de servicii au prea putin text propriu ca Google sa inteleaga ce oferi acolo.", fix: "Scrie 2-3 paragrafe pe fiecare serviciu: ce este, cui ii foloseste, cum decurge." },
+  locatii_diferite: { title: "Paginile de locatii au text propriu", unit: UNIT.pagini_locatii, problem: "Unele pagini de locatii repeta textul altei locatii si schimba doar numele zonei, iar Google le poate trata ca pagini fara valoare.", fix: "Scrie pentru fiecare locatie ce e specific acolo: adresa, cum ajungi, program, echipa, ce servicii sunt disponibile." },
+  schema_firma: { title: "Google stie ce firma e in spatele site-ului" },
+  schema_afacere_locala: { title: "Google stie ca e o afacere locala, cu adresa si telefon", unit: UNIT.none, problem: "Site-ul nu se declara pentru Google ca afacere locala (clinica, cabinet, firma de servicii) cu adresa si telefon.", fix: "Declara in datele pentru Google tipul exact al afacerii (de exemplu clinica sau cabinet), adresa si telefonul, din modulul SEO." },
+  schema_program: { title: "Programul declarat pentru Google", unit: UNIT.none, problem: "Programul nu e declarat pentru Google, asa ca nu apare langa numele afacerii in rezultate.", fix: "Adauga programul in datele afacerii locale, zi cu zi, din modulul SEO." },
+  contact_consecvent: { title: "Acelasi telefon pe toate paginile", unit: UNIT.pagini, problem: "Telefonul principal nu apare pe toate paginile, asa ca unii vizitatori nu au pe ce sa apese ca sa sune.", fix: "Pune acelasi telefon, ca legatura pe care se poate apasa, in antetul sau subsolul tuturor paginilor." },
+  schema_rating: { unit: UNIT.none, problem: "Fara nota clientilor declarata, langa site nu apar stele in Google.", fix: "Cere recenzii dupa fiecare serviciu si afiseaza-le pe site, cu nota inclusa in datele pentru Google; stelele apar doar din recenzii reale." },
+  schema_traseu: { problem: "Traseul (Acasa > Servicii > Serviciu) nu e declarat pentru Google." },
+  ai_roboti: { problem: "robots.txt opreste robotii de cautare AI (ChatGPT, Perplexity sau Claude), asa ca firma nu apare in raspunsurile lor." },
+  ai_profiluri: { title: "Site-ul e legat de profilurile firmei", problem: "Paginile nu leaga site-ul de profilurile oficiale ale firmei (Facebook, Instagram), asa ca asistentii AI il recunosc mai greu." },
 };
 
 // ── Part 1 of reports saved before the ten components (2026-09-24): n = pages with the problem, t = checked ──
