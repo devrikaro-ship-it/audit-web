@@ -139,10 +139,12 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
   const locations = pick(input.locations ?? []);
   const contactPages = [...services, ...locations];
   const ownOf = (p: PageData) => own.get(norm(p.url)) ?? [];
+  // Each page's sequences are built once: rebuilt inside the comparison, 14 location pages blocked the server 67 s.
+  const seqOf = new Map(locations.map((p) => [p, sequences(ownOf(p))]));
   const copiedLocation = (p: PageData) => {
-    const mine = sequences(ownOf(p));
+    const mine = seqOf.get(p)!;
     if (mine.size === 0) return false;
-    return locations.some((q) => q !== p && [...mine].filter((x) => sequences(ownOf(q)).has(x)).length * 2 >= mine.size);
+    return locations.some((q) => { const theirs = seqOf.get(q)!; return q !== p && [...mine].filter((x) => theirs.has(x)).length * 2 >= mine.size; });
   };
   const localNodes = pages.flatMap((p) => LOCAL_BUSINESS.flatMap((t) => nodesOfType(p.html, t)));
   const phoneCount = new Map<string, number>();

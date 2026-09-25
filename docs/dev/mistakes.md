@@ -1,5 +1,19 @@
 # seo-audit — dev mistakes
 
+## 2026-09-25 — A lead site's audit froze the whole server for 67 seconds
+
+Symptom: on production, a dentalview.ro audit's waiting screen stayed on "Masuram viteza pe mobil" for about 70 s,
+then every step turned done at once; a GET /api/audit polled every 2 s took 67.1 s to answer, so every other page of
+the app was frozen too. A shop audit (magazinfitness.ro) did not freeze. Measured cause (CPU profile of the engine on
+dentalview.ro, locally): 18.7 s of 20 s in `sequences` called from `copiedLocation` in `lib/seo-components.ts`, which
+rebuilt the other page's five-word sequences for every sequence of the page being compared: 15 location pages with
+long own text meant tens of millions of rebuilt sets instead of 15. Recognition signal: a sync step between two
+engine awaits that grows with the square or cube of page text; an API request that hangs only during the analysis
+phase. Repair: each location page's sequences are built once (`seqOf`); the test with 15 pages of 1,500 own words
+fails at 117 s with the fault put back and passes in milliseconds. Class search: no other call that rebuilds a set
+inside a filter/some/every callback in lib/ or app/. Note for tests: a text block counts as written text only if it
+ends with sentence punctuation, so a fixture without a full stop silently skips the comparison.
+
 ## 2026-09-24 — The report page broke when its builder imported a score function from the engine
 
 Symptom: a report with the ten SEO components never rendered locally (no slides after 30 s) and the dev server stopped answering. Measured cause: `lib/report-deck.ts` (rendered in the browser) imported `componentScore` from `lib/seo-components.ts`, which imports the audit engine, so playwright-core and node:fs entered the client bundle ("Code generation for chunk item errored"). Recognition signal: a client chunk error naming playwright-core or node: modules. Repair: the scores live in `lib/seo-score.ts` (types only); `lib/report-client-imports.test.ts` walks every import the report page reaches and fails on node:, fs, net, child_process or playwright-core.

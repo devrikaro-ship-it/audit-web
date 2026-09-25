@@ -125,6 +125,23 @@ function goodClinic(): SeoInput {
   };
 }
 
+describe("computeSeoComponents on a lead site with many long location pages", () => {
+  // dentalview.ro, 2026-09-25: 14 location pages blocked the server for 67 s, because each page's five-word sequences
+  // were rebuilt for every sequence of the page compared with it.
+  it("compares the location pages in well under a second each, and still tells distinct pages apart", () => {
+    const para = (n: number, k: number) => `<p>${Array.from({ length: 100 }, (_, i) => `cuvant${n}x${k}x${i}`).join(" ")}.</p>`;
+    const locs = Array.from({ length: 15 }, (_, n) => page(`${C}/clinica-${n}/`, { title: `Clinica ${n} - radiologie dentara`, h1: `Clinica ${n}`, meta: desc(`c${n}`), head: crumbs, body: contact + Array.from({ length: 15 }, (_, k) => para(n, k)).join("") }));
+    const s = goodClinic();
+    s.pages = [...s.pages, ...locs];
+    s.requested = s.pages;
+    s.locations = locs.map((l) => l.url);
+    const t = Date.now();
+    const r = rowsOf(s);
+    expect(Date.now() - t).toBeLessThan(5000);
+    expect(r.locatii_diferite).toMatchObject({ ok: 15, total: 15 });
+  }, 20000);
+});
+
 describe("computeSeoComponents on a lead site", () => {
   it("a clinic that does everything right has every measured row ok, with the lead rows in place of the shop rows", () => {
     const r = rowsOf(goodClinic());
