@@ -35,6 +35,9 @@ const ECOM_PLATFORMS = new Set<Platform>([
 // Semnale de "magazin" independente de platforma (cos / checkout / pret).
 const CART_SIGNALS = /add[_-]?to[_-]?cart|adaug[aă]\s+[iî]n\s+co[sș]|adauga in cos|adaug[aă] [iî]n co[sș]|\/cart\b|\/cos\b|\/checkout|\/comanda|product-price|woocommerce-price/i;
 
+// The shop engines among the platforms, with their markers: an engine in the page source (used by lib/site-kind.ts).
+export const COMMERCE_PLATFORM_PATTERNS = PLATFORM_PATTERNS.filter((p) => ECOM_PLATFORMS.has(p.id));
+
 export function detectPlatform(html: string): Platform | null {
   for (const p of PLATFORM_PATTERNS) if (p.re.test(html)) return p.id;
   return null;
