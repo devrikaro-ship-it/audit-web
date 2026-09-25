@@ -460,3 +460,16 @@ template is the value most pages carry; a service needs a request to book or for
 services section or declared Service data, else the page stays "other"; compare pages without scheme and www.
 Measured on 52 + 23 real pages before choosing the signals. Unit tests had passed all along: they held one clean
 fixture per rule, never a real page set.
+
+## 2026-09-25 — Lead SEO rows read wrong on the first production run
+
+Symptom: dentalview.ro showed no phone on any page (html_contact 0/26, contact_consecvent 0/0) though every page
+links a phone; piontaniservices.ro showed "no sitemap" though its pages were read from one, sitemap_servicii 10/0
+(more found than checked) and 2 of 10 pages with their own canonical. Measured causes: (1) phone numbers under 9
+digits were dropped, and dentalview's number is "021 9878" (7); (2) an address needed "Str." with a dot, piontani
+writes "Str Papiu Ilarian nr 17"; (3) the sitemap rows judged only the file robots.txt declares, while the pages came
+from the platform's usual address, and the listing row counted with no sitemap; (4) the canonical was compared with
+the address asked for, http:// from the sitemap, instead of the https:// page it redirects to — shops too.
+Recognition signal: a row at 0 on every page of a site whose pages visibly carry the thing. Repair: phones from 6
+digits; a street word with or without its dot before a capitalised name; the sitemap actually used for the sitemap
+rows and probes, ok 0 when not measured; PageData.finalUrl from the response, canonical compared with it.

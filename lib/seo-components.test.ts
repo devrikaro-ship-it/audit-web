@@ -157,4 +157,25 @@ describe("computeSeoComponents on a lead site", () => {
     expect(r.schema_rating).toMatchObject({ ok: 0, total: 1 });
     void home;
   });
+
+  it("reads the real shapes seen on production: a short phone, a street without its dot, an http sitemap address", () => {
+    const s = goodClinic();
+    // dentalview.ro calls on "021 9878" (7 digits); piontaniservices.ro writes "Str Papiu Ilarian nr 17".
+    const short = '<a href="tel:021 9878">021 9878</a> <p>Str Papiu Ilarian nr 17, Sector 3</p>';
+    s.pages = s.pages.map((p) => ({ ...p, html: p.html.replace(contact, short) }));
+    s.requested = s.pages;
+    const r = rowsOf(s);
+    expect(r.html_contact).toMatchObject({ ok: 3, total: 3 });
+    expect(r.contact_consecvent).toMatchObject({ ok: 4, total: 4 });
+    // The sitemap lists http://, the page ends on https:// and declares that: its own address.
+    const svc = s.pages[1];
+    s.pages[1] = { ...svc, url: svc.url.replace("https://", "http://"), finalUrl: svc.url };
+    s.services = [s.pages[1].url];
+    expect(rowsOf(s).canonical_propriu).toMatchObject({ ok: 3, total: 3 });
+  });
+
+  it("without a sitemap the listing row is not measured, never more found than checked", () => {
+    expect(rowsOf({ ...goodClinic(), sitemapXml: "" }).sitemap_servicii).toMatchObject({ ok: 0, total: 0 });
+  });
 });
+

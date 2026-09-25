@@ -841,18 +841,21 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
   const leads = siteKind?.type === "leads";
   let typed: TypedUrls = { product: [], category: [], other: [] };
   let leadTyped: LeadTypedUrls = { service: [], location: [], other: [] };
+  // The sitemap the pages were actually read from: robots.txt may not declare it (piontaniservices.ro) while the
+  // platform's usual address has it.
+  let foundSitemapXml = sitemapXml;
   for (const sm of [...new Set(sitemapCandidates)]) {
     const xml = sm === sitemapUrl ? sitemapXml : await readText(sm);
     if (!xml) continue;
     if (leads) {
       const found = await collectLeadUrls(xml, readText, sm, { profile });
       const own: LeadTypedUrls = { service: filterUrls(found.service, origin, true), location: filterUrls(found.location, origin, true), other: filterUrls(found.other, origin, true) };
-      if (own.service.length + own.location.length + own.other.length > 0) { leadTyped = own; typed = { product: [], category: [], other: [...own.service, ...own.location, ...own.other] }; break; }
+      if (own.service.length + own.location.length + own.other.length > 0) { foundSitemapXml = xml; leadTyped = own; typed = { product: [], category: [], other: [...own.service, ...own.location, ...own.other] }; break; }
       continue;
     }
     const found = await collectTypedUrls(xml, readText, sm, { profile, language });
     const own: TypedUrls = { product: filterUrls(found.product, origin), category: filterUrls(found.category, origin), other: filterUrls(found.other, origin) };
-    if (own.product.length + own.category.length + own.other.length > 0) { typed = own; break; }
+    if (own.product.length + own.category.length + own.other.length > 0) { foundSitemapXml = xml; typed = own; break; }
   }
 
   // Every page the sitemap lists, before home page links are added: a lead site's "listed in the sitemap" row.
@@ -885,7 +888,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
 
   // The small SEO checks (redirects, www, sitemap sample, sort parameter) before the page burst, like llms.txt.
   const listedSample = leads ? [...leadTyped.service, ...leadTyped.location, ...leadTyped.other].slice(0, 20) : [...typed.category.slice(0, 10), ...typed.product.slice(0, 10)];
-  const probes = await runSeoProbes(origin, listedSample, leads ? null : typed.category[0] ?? null, sitemapXml)
+  const probes = await runSeoProbes(origin, listedSample, leads ? null : typed.category[0] ?? null, foundSitemapXml)
     .catch(() => ({ sitemapLastmod: null, httpToHttps: null, maxRedirectHops: null, variantsSameHost: null, sitemapSample: { ok: 0, total: 0 }, sortParamHandled: null }));
 
   // Phase 2: Fetch pages at the pace the platform accepts (profile.concurrency)
@@ -942,7 +945,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
   const schema = computeSchemaChecks(analyzedPages, { categories, products });
   const readThroughBrowser = usedBrowser || !!browserFetcher;
   const seo = computeSeoComponents({
-    origin, requested: pages, pages: analyzedPages, categories, products, robotsTxt, sitemapXml,
+    origin, requested: pages, pages: analyzedPages, categories, products, robotsTxt, sitemapXml: foundSitemapXml,
     listed: { categories: typed.category.length, products: typed.product.length, other: typed.other.length },
     refusedServer: looksBlocked(homeDirect.ok, homeDirect.html) || readThroughBrowser, readWithBrowser: readThroughBrowser, probes,
     ...(leadPages ? { kind: "leads" as const, services: leadPages.service, locations: leadPages.location, inSitemap: (u: string) => listedInSitemap.has(siteKey(u)) } : {}),

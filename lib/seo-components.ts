@@ -54,7 +54,10 @@ const sequences = (blocks: string[]) => {
   for (const b of blocks) { const w = b.split(/\s+/); for (let i = 0; i + 5 <= w.length; i++) out.add(w.slice(i, i + 5).join(" ")); }
   return out;
 };
-const telephones = (html: string) => new Set([...html.matchAll(/href=["']tel:([^"']+)["']/gi)].map((m) => m[1].replace(/\D/g, "").replace(/^(40|0040)/, "0")).filter((t) => t.length >= 9));
+const telephones = (html: string) => new Set([...html.matchAll(/href=["']tel:([^"']+)["']/gi)].map((m) => m[1].replace(/\D/g, "").replace(/^(40|0040)/, "0")).filter((t) => t.length >= 6));
+// A street address: a street word, with or without its dot, then a capitalised name ("Str Papiu Ilarian nr 17",
+// "Bulevardul Bucurestii Noi 53A").
+const STREET = /\b(?:[Ss]tr|STR|[Ss]trada|[Bb]d|[Bb]dul|[Bb]ulevardul|[Cc]alea|[Ss]os|[Șș]os|[Ss]oseaua|[Șș]oseaua|[Aa]leea|[Pp]iata|[Pp]iața|[Ii]ntrarea|[Ss]plaiul)\.?\s+[A-ZĂÂÎȘŞȚŢ0-9]/;
 
 const row = (id: string, ok: number, total: number, verify = false): SeoRow => ({ id, ok, total, ...(verify ? { verify } : {}) });
 const norm = (u: string) => u.replace(/#.*$/, "").replace(/\/$/, "").toLowerCase();
@@ -165,14 +168,16 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
     { id: "sitemap", rows: [
       row("sitemap_exista", hasSitemap ? 1 : 0, 1),
       leads
-        ? row("sitemap_servicii", count(contactPages, (p) => input.inSitemap?.(p.url) ?? false), hasSitemap ? contactPages.length : 0)
+        ? row("sitemap_servicii", hasSitemap ? count(contactPages, (p) => input.inSitemap?.(p.url) ?? false) : 0, hasSitemap ? contactPages.length : 0)
         : row("sitemap_tipuri", (input.listed.categories > 0 ? 1 : 0) + (input.listed.products > 0 ? 1 : 0), hasSitemap && listedTyped ? 2 : 0),
       row("sitemap_valide", probes.sitemapSample.ok, probes.sitemapSample.total),
       row("sitemap_lastmod", probes.sitemapLastmod ? 1 : 0, hasSitemap && probes.sitemapLastmod !== null ? 1 : 0),
     ] },
     { id: "indexare", rows: [
       row("fara_noindex", count(money, (p) => !isNoindex(p)), money.length),
-      row("canonical_propriu", count(money, (p) => { const c = parseCanonical(p.html); if (!c) return false; try { return norm(new URL(c, p.url).href) === norm(p.url); } catch { return false; } }), money.length),
+      // Compared with the address the page ends on: a sitemap listing http:// pages that redirect to https:// does not
+      // make their https canonical wrong (piontaniservices.ro).
+      row("canonical_propriu", count(money, (p) => { const c = parseCanonical(p.html); if (!c) return false; const at = p.finalUrl ?? p.url; try { return norm(new URL(c, at).href) === norm(at); } catch { return false; } }), money.length),
       row("www_unic", probes.variantsSameHost ? 1 : 0, probes.variantsSameHost === null ? 0 : 1),
       // A lead site has no product lists to sort.
       ...(leads ? [] : [row("parametri", probes.sortParamHandled ? 1 : 0, probes.sortParamHandled === null ? 0 : 1)]),
@@ -180,7 +185,7 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
     { id: "html", rows: leads ? (input.readWithBrowser ? [row("html_serviciu", 0, 0), row("html_contact", 0, 0), row("html_descriere_serviciu", 0, 0)] : [
       row("html_serviciu", count(services, (p) => words((p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").replace(/<[^>]+>/g, " ")).length > 0), services.length),
       // The phone as a link and a street address, in the code the server sends.
-      row("html_contact", count(contactPages, (p) => telephones(htmlText(p)).size > 0 && /\b(str\.|strada|bd\.|bdul|bulevardul|calea|sos\.|soseaua|șos\.|aleea|piata|piața)\s/i.test(htmlText(p).replace(/<[^>]+>/g, " "))), contactPages.length),
+      row("html_contact", count(contactPages, (p) => telephones(htmlText(p)).size > 0 && STREET.test(htmlText(p).replace(/<[^>]+>/g, " "))), contactPages.length),
       row("html_descriere_serviciu", count(services, (p) => ownChars(p) >= 200), services.length),
     ]) : input.readWithBrowser ? [row("html_nume", 0, 0), row("html_pret", 0, 0), row("html_descriere", 0, 0)] : [
       row("html_nume", count(prods, (p) => words((p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").replace(/<[^>]+>/g, " ")).length > 0), prods.length),

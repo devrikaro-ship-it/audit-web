@@ -172,6 +172,7 @@ export type PageData = {
   status: number;
   headers: Record<string, string>;
   ok: boolean;
+  finalUrl?: string; // the address after redirects, when it differs from the one asked for
 };
 
 export async function fetchPage(url: string): Promise<PageData> {
@@ -180,7 +181,7 @@ export async function fetchPage(url: string): Promise<PageData> {
     const html = r.ok ? await r.text() : "";
     const headers: Record<string, string> = {};
     r.headers.forEach((v, k) => { headers[k.toLowerCase()] = v; });
-    return { url, html, status: r.status, headers, ok: r.ok };
+    return { url, html, status: r.status, headers, ok: r.ok, ...(r.url && r.url !== url ? { finalUrl: r.url } : {}) };
   } catch {
     return { url, html: "", status: 0, headers: {}, ok: false };
   }
