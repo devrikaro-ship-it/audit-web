@@ -473,3 +473,14 @@ the address asked for, http:// from the sitemap, instead of the https:// page it
 Recognition signal: a row at 0 on every page of a site whose pages visibly carry the thing. Repair: phones from 6
 digits; a street word with or without its dot before a capitalised name; the sitemap actually used for the sitemap
 rows and probes, ok 0 when not measured; PageData.finalUrl from the response, canonical compared with it.
+
+## 2026-09-25 — The production build fetched five fonts from Google and failed when the fetch did
+
+Symptom: two Coolify deploys of the same commit failed; the log shows `Turbopack build failed ... Can't resolve
+'@vercel/turbopack-next/internal/font/google/font'` for DM Sans; an earlier local pre-flight build had exited 1 once
+and passed on the rerun. Measured cause: app/layout.tsx loaded Geist, Geist Mono, Sora, Inter and DM Sans through
+`next/font/google`, which downloads them during `next build`; a failed download fails the build. Recognition signal: a
+build error naming `internal/font/google`, passing on a retry. Repair: the ten woff2 files (latin and latin-ext) live
+in public/fonts, app/fonts.css declares them with Google's unicode ranges and sets the same CSS variables;
+lib/no-build-time-fonts.test.ts fails on any `next/font/google` or Google Fonts stylesheet. Side effect accepted: the
+arrow "→" is outside Google's latin range and falls back to the system font.
