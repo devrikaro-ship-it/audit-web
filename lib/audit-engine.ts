@@ -3,7 +3,7 @@ import { detectEcom, detectPlatform } from "./site-signals";
 import { classifySiteKind, SiteKindUnreadable, type SiteKind, type SiteKindVerdict } from "./site-kind";
 import { scoreToStatus, scoreToUxStatus, VERDICT_GOOD } from "./scoring";
 import { decodeEntities, parseTitle, parseMeta, parseMetaOG, parseCanonical, countH1, hasH2, parseJsonLD, schemaTypes, parseImages, countInternalLinks, countWords, hasBreadcrumbs, hasFAQ } from "./parse-page";
-import { classifyFetchedPage, collectTypedUrls, hasAddToCart, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectPages, type TypedUrls } from "./page-selection";
+import { classifyFetchedLeadPage, classifyFetchedPage, collectLeadUrls, collectTypedUrls, completeLeadTypes, hasAddToCart, leadPageSignals, mapWithConcurrency, PAGE_BUDGET, PAGE_FETCH_BUDGET_MS, priceCount, replacementsFor, selectLeadPages, selectPages, type LeadPageType, type LeadTypedUrls, type PageType, type TypedUrls } from "./page-selection";
 import { PROFILES, profileFor } from "./platform-knowledge";
 import { computeLearning, effectiveProfile, readApprovals } from "./learning";
 import { appendObservation, pathPrefixes, readObservations } from "./observations";
@@ -831,10 +831,21 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
   const sitemapUrl = extractSitemapFromRobots(robotsTxt, origin);
   const sitemapXml = await readText(sitemapUrl);
   const sitemapCandidates = [sitemapUrl, ...profile.sitemapEntryPoints.map((p) => origin + p)];
+  // The kind of site decides which pages are read: a shop's categories and products, or a lead site's services and
+  // locations (spec 2026-09-25 §2).
+  const siteKind = decideSiteKind(homeHtmlEarly, homepage, opts.kind);
+  const leads = siteKind?.type === "leads";
   let typed: TypedUrls = { product: [], category: [], other: [] };
+  let leadTyped: LeadTypedUrls = { service: [], location: [], other: [] };
   for (const sm of [...new Set(sitemapCandidates)]) {
     const xml = sm === sitemapUrl ? sitemapXml : await readText(sm);
     if (!xml) continue;
+    if (leads) {
+      const found = await collectLeadUrls(xml, readText, sm, { profile });
+      const own: LeadTypedUrls = { service: filterUrls(found.service, origin), location: filterUrls(found.location, origin), other: filterUrls(found.other, origin) };
+      if (own.service.length + own.location.length + own.other.length > 0) { leadTyped = own; typed = { product: [], category: [], other: [...own.service, ...own.location, ...own.other] }; break; }
+      continue;
+    }
     const found = await collectTypedUrls(xml, readText, sm, { profile, language });
     const own: TypedUrls = { product: filterUrls(found.product, origin), category: filterUrls(found.category, origin), other: filterUrls(found.other, origin) };
     if (own.product.length + own.category.length + own.other.length > 0) { typed = own; break; }
@@ -845,7 +856,13 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
     const homeLinks = filterUrls(extractInternalLinks(homeHtmlEarly, origin), origin);
     typed.other = [...homeLinks, ...typed.other];
   }
-  let { urls: toAnalyze, planned } = selectPages(homepage, typed);
+  const select = () => {
+    if (!leads) return selectPages(homepage, typed);
+    const known = new Set([...leadTyped.service, ...leadTyped.location, ...leadTyped.other]);
+    leadTyped = completeLeadTypes({ ...leadTyped, other: [...leadTyped.other, ...typed.other.filter((u) => !known.has(u))] });
+    return selectLeadPages(homepage, leadTyped);
+  };
+  let { urls: toAnalyze, planned } = select() as { urls: string[]; planned: Map<string, string> };
 
   // Fallback link-crawl: sitemap absent/blocat -> link-uri interne din primele pagini descoperite.
   if (toAnalyze.length < MIN_PAGES) {
@@ -855,7 +872,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
       discovered = discovered.concat(filterUrls(extractInternalLinks(await readText(seed), origin), origin));
     }
     typed.other = [...typed.other, ...discovered];
-    ({ urls: toAnalyze, planned } = selectPages(homepage, typed));
+    ({ urls: toAnalyze, planned } = select() as { urls: string[]; planned: Map<string, string> });
   }
 
   // The small SEO checks (redirects, www, sitemap sample, sort parameter) before the page burst, like llms.txt.
@@ -874,7 +891,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
   );
   const failedTypes = pages.slice(1).filter((p) => !p.ok).map((p) => planned.get(p.url) ?? "other");
   if (failedTypes.length > 0 && Date.now() < fetchDeadline) {
-    const refill = replacementsFor(failedTypes, typed, new Set(toAnalyze));
+    const refill = leads ? replacementsFor(failedTypes as LeadPageType[], leadTyped, new Set(toAnalyze)) : replacementsFor(failedTypes as PageType[], typed, new Set(toAnalyze));
     pages.push(...fetched(await mapWithConcurrency(refill.urls, profile.concurrency, readPage, fetchDeadline)));
     refill.planned.forEach((t, u) => planned.set(u, t));
   }
@@ -882,7 +899,11 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
 
   const analyzedPages = pages.filter(p => p.ok);
   const normUrl = (u: string) => u.replace(/\/$/, "");
-  const pageType = new Map(analyzedPages.slice(1).map((p) => [normUrl(p.url), classifyFetchedPage(p.html, planned.get(normUrl(p.url)) ?? "other")]));
+  // A lead page is typed against the site's own template: the least map and hours signal any page read carries.
+  const template = analyzedPages.map((p) => leadPageSignals(p.html)).reduce((a, b) => ({ map: Math.min(a.map, b.map), hours: Math.min(a.hours, b.hours) }), { map: Infinity, hours: Infinity });
+  const leadPageType = new Map(leads ? analyzedPages.slice(1).map((p) => [normUrl(p.url), classifyFetchedLeadPage(p.url, p.html, (planned.get(normUrl(p.url)) ?? "other") as LeadPageType, template)]) : []);
+  const leadPages = leads ? { service: [...leadPageType].filter(([, t]) => t === "service").map(([u]) => u), location: [...leadPageType].filter(([, t]) => t === "location").map(([u]) => u) } : undefined;
+  const pageType = new Map(leads ? [] : analyzedPages.slice(1).map((p) => [normUrl(p.url), classifyFetchedPage(p.html, (planned.get(normUrl(p.url)) ?? "other") as PageType)]));
   const products = [...pageType].filter(([, t]) => t === "product").map(([u]) => u);
   const categories = [...pageType].filter(([, t]) => t === "category").map(([u]) => u);
   const homepageData = analyzedPages[0] ?? pages[0] ?? { url: homepage, html: "", status: 0, headers: {}, ok: false };
@@ -919,7 +940,6 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
   const social = computeSocialChecks(homepageData);
   const securitate = computeSecurityChecks(homepageData);
 
-  const siteKind = decideSiteKind(homeHtmlEarly, homepage, opts.kind);
   const isEcom = siteKind ? siteKind.type === "ecom" : detectEcom(analyzedPages.map((p) => p.html).join("\n").toLowerCase());
   const productSignal = isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
   const ux = isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
@@ -956,6 +976,7 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind } = {}): 
     aiChecks,
     isEcom,
     ...(siteKind ? { siteKind } : {}),
+    ...(leadPages ? { leadPages } : {}),
     productSignal,
     ux,
     seo,

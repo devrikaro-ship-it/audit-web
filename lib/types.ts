@@ -34,6 +34,7 @@ export type AuditData = {
   aiChecks?: PageCheck[];          // GEO / AI search: AI crawlers, llms.txt, entity links (older reports have none)
   isEcom?: boolean;
   siteKind?: SiteKindInfo;         // shop or lead site, who decided, and the scan's evidence (2026-09-25)
+  leadPages?: { service: string[]; location: string[] }; // lead sites: the service and location pages read
   productSignal?: ProductSignal;   // product titles and descriptions, shown in the SEO rubric (shops only)
   ux?: UxAudit;                    // UX/UI by page type (shops only)
   seo?: SeoComponent[];            // Part 1: the ten SEO components (2026-09-24); absent on older reports

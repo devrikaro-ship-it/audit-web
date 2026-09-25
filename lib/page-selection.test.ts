@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyFetchedPage, classifySitemap, collectTypedUrls, mapWithConcurrency, PAGE_BUDGET, replacementsFor, sampleEvenly, selectPages } from "./page-selection";
+import { classifyFetchedLeadPage, classifyFetchedPage, classifySitemap, collectLeadUrls, collectTypedUrls, selectLeadPages, mapWithConcurrency, PAGE_BUDGET, replacementsFor, sampleEvenly, selectPages } from "./page-selection";
 import { PROFILES, profileFor } from "./platform-knowledge";
 
 const O = "https://shop.example";
@@ -168,5 +168,65 @@ describe("mapWithConcurrency", () => {
     }, Date.now() + 60);
     expect(started.length).toBeLessThan(6);
     expect(out.filter((x) => x === undefined).length).toBe(6 - started.length);
+  });
+});
+
+describe("lead sites: the pages that bring contacts (spec 2026-09-25 §2.4)", () => {
+  const D = "https://clinica.ro";
+  const urlset = (paths: string[]) => `<urlset>${paths.map((p) => `<url><loc>${D}${p}</loc></url>`).join("")}</urlset>`;
+  // dentalview.ro, 2026-09-25: the service sitemap holds one article; services and locations sit in the page sitemap.
+  const files: Record<string, string> = {
+    [`${D}/post-sitemap1.xml`]: urlset(["/cum-alegi-un-implant/", "/ce-este-un-cbct/"]),
+    [`${D}/page-sitemap.xml`]: urlset(["/", "/radiografie-panoramica/", "/radiografie-dentara-vitan/", "/contact/", "/cariera/", "/pret-ct-dentar/", "/tomografia-dentara/"]),
+    [`${D}/service-sitemap.xml`]: urlset(["/articole/specialitate/recuperare-cardiovasculara/"]),
+  };
+  const index = `<sitemapindex>${Object.keys(files).map((u) => `<sitemap><loc>${u}</loc></sitemap>`).join("")}</sitemapindex>`;
+  const fetchText = async (u: string) => files[u] ?? "";
+
+  it("leaves articles out, by the sitemap they are listed in and by their path", async () => {
+    const t = await collectLeadUrls(index, fetchText, `${D}/sitemap_index.xml`);
+    const all = [...t.service, ...t.location, ...t.other];
+    expect(all.some((u) => /implant|ce-este-un-cbct|articole/.test(u))).toBe(false);
+    expect(all).toContain(`${D}/radiografie-dentara-vitan/`);
+  });
+
+  it("puts contact and prices first among untyped pages and the company's information pages last", async () => {
+    const t = await collectLeadUrls(index, fetchText, `${D}/sitemap_index.xml`);
+    expect(t.other.slice(0, 2).sort()).toEqual([`${D}/contact/`, `${D}/pret-ct-dentar/`]);
+    expect(t.other.at(-1)).toBe(`${D}/cariera/`);
+  });
+
+  it("types pages by a services or locations sitemap and by the path family of typed pages", async () => {
+    const f: Record<string, string> = {
+      [`${D}/servicii-sitemap.xml`]: urlset(["/servicii/implant/", "/servicii/albire/"]),
+      [`${D}/locatii-sitemap.xml`]: urlset(["/clinici/vitan/"]),
+      [`${D}/page-sitemap.xml`]: urlset(["/servicii/coroane/", "/despre-noi/"]),
+    };
+    const idx = `<sitemapindex>${Object.keys(f).map((u) => `<sitemap><loc>${u}</loc></sitemap>`).join("")}</sitemapindex>`;
+    const t = await collectLeadUrls(idx, async (u) => f[u] ?? "", `${D}/sitemap_index.xml`);
+    expect(t.service.sort()).toEqual([`${D}/servicii/albire/`, `${D}/servicii/coroane/`, `${D}/servicii/implant/`]);
+    expect(t.location).toEqual([`${D}/clinici/vitan/`]);
+    expect(t.other).toEqual([`${D}/despre-noi/`]);
+  });
+
+  it("selects within the lead quotas, home first, never past the budget", () => {
+    const many = (p: string, n: number) => Array.from({ length: n }, (_, i) => `${D}/${p}-${i}`);
+    const { urls, planned } = selectLeadPages(`${D}/`, { service: many("s", 50), location: many("l", 40), other: many("o", 30) });
+    expect(urls[0]).toBe(D);
+    expect(urls.length).toBe(PAGE_BUDGET);
+    const count = (t: string) => [...planned.values()].filter((v) => v === t).length;
+    expect([count("service"), count("location"), count("other")]).toEqual([30, 20, 9]);
+  });
+
+  it("an untyped page is a location only with a map or opening hours above the site's template", () => {
+    const template = { map: 0, hours: 0 };
+    const withMap = '<iframe src="https://www.google.com/maps/embed?pb=1"></iframe> Luni - Vineri 8-20';
+    expect(classifyFetchedLeadPage(`${D}/radiografie-dentara-vitan/`, withMap, "other", template)).toBe("location");
+    expect(classifyFetchedLeadPage(`${D}/radiografie-panoramica/`, "<p>Radiografie panoramica</p>", "other", template)).toBe("service");
+    // A footer map on every page is the template, not the page.
+    expect(classifyFetchedLeadPage(`${D}/radiografie-panoramica/`, withMap, "other", { map: 1, hours: 1 })).toBe("service");
+    expect(classifyFetchedLeadPage(`${D}/contact/`, withMap, "other", template)).toBe("other");
+    expect(classifyFetchedLeadPage(`${D}/cariera/`, "<p>Cariera</p>", "other", template)).toBe("other");
+    expect(classifyFetchedLeadPage(`${D}/clinici/vitan/`, "<p>x</p>", "location", template)).toBe("location");
   });
 });
