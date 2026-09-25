@@ -223,6 +223,33 @@ export const UX_SIGNAL_BEFORE_2026_09_24: Record<string, string> = {
   "breadcrumbs (stii unde esti)": UX_SIGNALS.cat_trail.found,
   "fara breadcrumbs": UX_SIGNALS.cat_trail.missing,
 };
+// ── Part 2 as a ✓/✗ checklist (spec 2026-09-25 §4), both kinds of site. A shop's rows are its UX signals (title from
+// UX_SIGNALS.found, fix from UX_SIGNALS.fix); the speed rows and a lead site's rows are worded here. ──
+export const UX_GROUPS: Record<string, string> = {
+  viteza: "Viteza pe mobil", home: UX_PAGES.home, categorie: UX_PAGES.categorie, produs: UX_PAGES.produs, filtre: UX_PAGES.filtre,
+  serviciu: "Pagina de serviciu", contact: "Contact si programare", incredere: "Incredere",
+};
+export const UX_ROWS: Record<string, { title: string; fix: string }> = {
+  viteza_scor: { title: "Scor de viteza pe mobil de cel putin 70", fix: UX_SITE.pagespeed_mobile.fix },
+  viteza_lcp: { title: "Continutul principal apare in sub 2,5 s pe telefon", fix: UX_SITE.lcp.fix },
+  lead_home_offer: { title: "Titlul mare spune ce oferi", fix: "Pune sus pe prima pagina un titlu mare care spune ce servicii oferi si unde." },
+  lead_home_phone: { title: "Telefonul se vede sus, fara derulare", fix: "Pune telefonul, ca legatura pe care se poate apasa, in antetul paginii, vizibil si pe telefon." },
+  lead_home_cta: { title: "Buton de programare sau de contact pe prima pagina", fix: "Pune pe prima pagina un buton vizibil de programare sau de cerere de oferta." },
+  srv_explains: { title: "Serviciul e explicat pe pagina", fix: "Explica pe fiecare pagina de serviciu ce este, cui ii foloseste, cum decurge si cat dureaza." },
+  srv_price: { title: "Pretul sau pretul de pornire e afisat", fix: "Afiseaza pe fiecare pagina de serviciu pretul sau pretul de la care porneste." },
+  srv_cta: { title: "Buton de programare sau de contact pe pagina serviciului", fix: "Pune pe fiecare pagina de serviciu un buton de programare sau de cerere de oferta, sus si la final." },
+  srv_related: { title: "Legaturi catre servicii inrudite", fix: "Adauga pe fiecare pagina de serviciu legaturi catre 2-3 servicii inrudite." },
+  ct_form_short: { title: "Formular scurt de contact, cu cel mult cinci campuri", fix: "Pastreaza in formular doar ce iti trebuie ca sa suni inapoi: nume, telefon, serviciul dorit." },
+  ct_call: { title: "Telefon pe care se poate apasa ca sa suni", fix: "Fa telefonul o legatura pe care se poate apasa, ca vizitatorul de pe telefon sa sune dintr-o atingere." },
+  ct_chat: { title: "WhatsApp sau chat pe site", fix: "Adauga un buton de WhatsApp sau un chat, pentru cei care nu vor sa sune." },
+  ct_map: { title: "Harta si adresa", fix: "Pune pe pagina de contact si pe fiecare locatie harta si adresa scrisa." },
+  ct_hours: { title: "Programul afisat", fix: "Afiseaza programul zi cu zi pe pagina de contact si pe fiecare locatie." },
+  tr_reviews: { title: "Recenzii sau pareri ale clientilor", fix: "Afiseaza pe site recenzii reale ale clientilor, cu numele si nota lor." },
+  tr_team: { title: "Echipa prezentata", fix: "Prezinta echipa: medicii sau specialistii, cu poza si experienta." },
+  tr_certs: { title: "Certificari sau parteneri", fix: "Arata certificarile, acreditarile si partenerii, cu sigla lor." },
+  tr_photos: { title: "Poze reale ale locului si ale echipei", fix: "Foloseste poze facute la tine, nu poze cumparate: locul, echipa, aparatura." },
+};
+
 // How to fix each thing a page type is missing, keyed by the signal as the report shows it.
 export const UX_FIX: Record<string, string> = Object.fromEntries(Object.values(UX_SIGNALS).map((x) => [x.missing, x.fix]));
 
@@ -297,7 +324,7 @@ export const UI = {
   part2Eyebrow: "Partea 2",
   part2Title: "UX / UI: cat de usor se cumpara",
   part2Lead: "Ce traieste un vizitator de la prima pagina pana la cos: cat asteapta, cum gaseste produsul si ce il ajuta sa decida.",
-  speedLabel: "Viteza pe mobil",
+  speedLabel: UX_GROUPS.viteza,
   uxTitle: "UX / UI: {score}/100",
   speedUnmeasured: "De verificat: viteza nu a putut fi masurata din afara site-ului in momentul auditului.",
   speedLcpBefore: "Continutul principal apare in ",

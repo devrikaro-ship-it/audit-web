@@ -4,7 +4,7 @@ import { CHECKS } from "./problems-db";
 import { statusScore, verdict, type Verdict } from "./scoring";
 import type { AuditData, CheckResult, PageCheck, SeoComponent, UxField } from "./types";
 import { componentScore, rowPass, seoScore as tenScore } from "./seo-score";
-import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, fill, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_SIGNAL_BEFORE_2026_09_24, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
+import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, fill, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_GROUPS, UX_ROWS, UX_SIGNAL_BEFORE_2026_09_24, UX_SIGNALS, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
 export { PAGE_COPY } from "./copy-registry";
 
 export type Tone = "good" | "warn" | "bad";
@@ -25,7 +25,7 @@ export type Deck = {
   pages: number;
   score: number;
   seo: { score: number; zones: Zone[]; pills: string[]; problems: Problem[]; product: ProductSlide | null; ai: AiCard[] | null; checklist: CheckRow[]; standard: StdGroup[] | null };
-  ux: { score: number | null; speed: { mobile: string; desktop: string; lcp: string }; pages: UxPage[]; checklist: CheckRow[] };
+  ux: { score: number | null; speed: { mobile: string; desktop: string; lcp: string }; pages: UxPage[]; checklist: CheckRow[]; standard: StdGroup[] | null };
   first: { title: string; text: string } | null;
 };
 export type ProductSlide = { checked: number; weakTitles: number; missingMeta: number; pairs: { label: string; value: string }[] };
@@ -116,6 +116,39 @@ function tenComponents(seo: SeoComponent[], leads = false) {
   return { score: tenScore(seo), zones, pills: Object.values(STAGES), problems, checklist: [], standard };
 }
 
+// Part 2 from its ✓/✗ rows (reports from 2026-09-25): the groups as page types with their score, what passes and
+// what fails, and every row in the standard checklist.
+const uxCopy = (id: string): { title: string; fix: string } | null => {
+  if (UX_ROWS[id]) return UX_ROWS[id];
+  const signal = (UX_SIGNALS as Record<string, { found: string; fix: string }>)[id];
+  return signal ? { title: cap(signal.found), fix: signal.fix } : null;
+};
+function uxFromRows(groups: SeoComponent[]) {
+  const named = groups.filter((g) => UX_GROUPS[g.id]);
+  const rowsOf = (g: SeoComponent) => g.rows.filter((r) => uxCopy(r.id));
+  const pages: UxPage[] = named.filter((g) => g.id !== "viteza").map((g) => {
+    const score = componentScore(g);
+    return {
+      id: g.id, name: UX_GROUPS[g.id], score,
+      verdict: score === null ? cap(WORD.verify) : VERDICT_LABEL[verdict(score)],
+      tone: score === null ? "warn" : toneOf(score),
+      found: rowsOf(g).filter((r) => rowPass(r) === true).map((r) => uxCopy(r.id)!.title),
+      missing: rowsOf(g).filter((r) => rowPass(r) === false).map((r) => uxCopy(r.id)!.title),
+    };
+  });
+  const standard: StdGroup[] = named.map((g) => ({
+    name: UX_GROUPS[g.id], score: componentScore(g),
+    rows: rowsOf(g).map((r): StdRow => {
+      const copy = uxCopy(r.id)!;
+      const pass = rowPass(r);
+      const result = r.total > 1 ? fill(WORD.ratio, { ok: r.ok, t: r.total }) : pass ? WORD.yes : WORD.no;
+      if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, note: r.total === 0 ? WORD.notMeasured : copy.fix };
+      return pass ? { state: "ok", title: copy.title, result, note: "" } : { state: "fail", title: copy.title, result, note: copy.fix };
+    }),
+  }));
+  return { score: tenScore(groups), pages, standard };
+}
+
 export function buildDeck(data: AuditData): Deck {
   const cr = withLegacySpeed(data.checksRezultate);
   const ai = data.aiChecks ?? [];
@@ -182,7 +215,9 @@ export function buildDeck(data: AuditData): Deck {
 
   const domain = data.domain.replace(/^www\./, "");
   // With the ten components the overall score is the mean of the two parts, recomputed so a stored report agrees.
-  const overall = ten ? (data.ux ? Math.round((ten.score + data.ux.scor) / 2) : ten.score) : data.scor;
+  const uxStd = data.uxStd?.length ? uxFromRows(data.uxStd) : null;
+  const uxScore = uxStd ? uxStd.score : data.ux?.scor;
+  const overall = ten ? (uxScore !== undefined ? Math.round((ten.score + uxScore) / 2) : ten.score) : data.scor;
   return {
     domain,
     cover: fill(verdict(overall) === "bun" ? UI.coverGood : UI.coverLosing, { domain }),
@@ -191,11 +226,18 @@ export function buildDeck(data: AuditData): Deck {
     seo: ten
       ? { ...ten, product: null, ai: null }
       : { score: seoScore, zones, pills: zones.map((z) => z.name), problems: problems.slice(0, 4), product, ai: ai.length ? aiCards(ai) : null, checklist: seoChecklist, standard: null },
-    ux: {
+    ux: uxStd ? {
+      score: uxStd.score,
+      speed: { mobile: measured("pagespeed_mobile"), desktop: measured("pagespeed_desktop"), lcp: measured("lcp") },
+      pages: uxStd.pages,
+      checklist: [],
+      standard: uxStd.standard,
+    } : {
       score: data.ux ? data.ux.scor : null,
       speed: { mobile: measured("pagespeed_mobile"), desktop: measured("pagespeed_desktop"), lcp: measured("lcp") },
       pages: uxPages,
       checklist: uxChecklist,
+      standard: null,
     },
     first,
   };

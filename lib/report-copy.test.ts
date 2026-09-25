@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ReportDeck } from "@/components/report-deck";
-import { computeAiChecks, computeContinutChecks, computeKeywordsChecks, computeSeoChecks, computeStructuraChecks, computeUxAudit } from "./audit-engine";
+import { computeAiChecks, computeContinutChecks, computeKeywordsChecks, computeSeoChecks, computeStructuraChecks, computeUxAudit, computeUxStandard } from "./audit-engine";
 import { computeSeoComponents } from "./seo-components";
 import { buildDeck, PAGE_COPY } from "./report-deck";
 import * as REGISTRY from "./copy-registry";
@@ -39,6 +39,7 @@ const data: AuditData = {
 // The same shop with the ten SEO components: every one of them failing, some rows unmeasured or unconfirmed.
 const tenData: AuditData = {
   ...data,
+  uxStd: computeUxStandard("ecom", pages, { categories: [pages[1].url], products: [pages[2].url, pages[3].url], services: [], locations: [] }, null, "s.ro"),
   seo: computeSeoComponents({
     origin: "https://s.ro", requested: [...pages, { ...pages[0], url: "https://s.ro/x", status: 500, ok: false }], pages,
     categories: [pages[1].url], products: [pages[2].url, pages[3].url],
@@ -52,6 +53,7 @@ const tenData: AuditData = {
 const leadData: AuditData = {
   ...data,
   siteKind: { type: "leads", by: "scan", confidence: "high", evidence: null },
+  uxStd: computeUxStandard("leads", pages, { categories: [], products: [], services: [pages[1].url, pages[2].url], locations: [pages[3].url] }, { score: 40, lcp: "4,2 s" } as never, "s.ro"),
   seo: computeSeoComponents({
     origin: "https://s.ro", requested: pages, pages, categories: [], products: [],
     robotsTxt: "User-agent: *\nDisallow: /categorie/", sitemapXml: "<urlset></urlset>", listed: { categories: 0, products: 0, other: 3 },
@@ -82,6 +84,9 @@ describe("the report speaks the shop owner's language", () => {
     // The lead report is really rendered in its own words.
     expect(text).toContain("Google stie ca e o afacere locala, cu adresa si telefon");
     expect(text).toContain("Exista, are paginile de servicii si de locatii, doar pagini valide, date");
+    // Part 2 as ✓/✗ rows, both kinds.
+    expect(text).toContain("Formular scurt de contact, cu cel mult cinci campuri");
+    expect(text).toContain("Grila de produse cu poza si pret");
     expect(text).toContain("Paginile raspund corect");
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
   });

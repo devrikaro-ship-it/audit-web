@@ -218,11 +218,19 @@ export function ReportDeck({ data, createdAt, phone = false }: { data: AuditData
       </>),
     });
   }
-  const uxPages = paginateChecklist(d.ux.checklist);
-  uxPages.forEach((pg, i) => slides.push({
-    eyebrow: UI.uxChecklistEyebrow,
-    body: (<><h2>{UI.uxChecklistTitle}{uxPages.length > 1 ? fill(UI.checklistPage, { i: i + 1, n: uxPages.length }) : ""}</h2><Checklist {...pg} /></>),
-  }));
+  if (d.ux.standard) {
+    const uxStdPages = paginateStandard(d.ux.standard);
+    uxStdPages.forEach((groups, i) => slides.push({
+      eyebrow: UI.uxChecklistEyebrow,
+      body: (<><h2>{UI.uxChecklistTitle}{uxStdPages.length > 1 ? fill(UI.checklistPage, { i: i + 1, n: uxStdPages.length }) : ""}</h2><StandardChecklist groups={groups} /></>),
+    }));
+  } else {
+    const uxPages = paginateChecklist(d.ux.checklist);
+    uxPages.forEach((pg, i) => slides.push({
+      eyebrow: UI.uxChecklistEyebrow,
+      body: (<><h2>{UI.uxChecklistTitle}{uxPages.length > 1 ? fill(UI.checklistPage, { i: i + 1, n: uxPages.length }) : ""}</h2><Checklist {...pg} /></>),
+    }));
+  }
 
   slides.push({
     cls: "contact", eyebrow: UI.contactEyebrow, src: UI.contactSource,

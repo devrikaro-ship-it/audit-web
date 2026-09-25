@@ -38,6 +38,7 @@ export type AuditData = {
   productSignal?: ProductSignal;   // product titles and descriptions, shown in the SEO rubric (shops only)
   ux?: UxAudit;                    // UX/UI by page type (shops only)
   seo?: SeoComponent[];            // Part 1: the ten SEO components (2026-09-24); absent on older reports
+  uxStd?: SeoComponent[];          // Part 2 as ✓/✗ rows by group, both kinds (2026-09-25); absent on older reports
 };
 
 // A measured row: ok of total (total 0 = not measured); verify = observed but not confirmable ("de verificat").
