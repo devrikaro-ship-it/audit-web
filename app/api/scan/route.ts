@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { detectPlatform, detectEcom } from "@/lib/site-signals";
+import { BROWSER_UA } from "@/lib/net";
 
 // Quick scan (~2-5 s) of the raw homepage for the funnel's "here is what we found" card: platform and whether it
 // is a shop. The full audit runs separately. Detection comes from lib/site-signals, the same as the audit.
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
     const res = await fetch(origin, {
       signal: ctrl.signal,
       redirect: "follow",
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; DevrikaAudit/1.0)" },
+      headers: { "User-Agent": BROWSER_UA },
     });
     html = await res.text();
   } catch {

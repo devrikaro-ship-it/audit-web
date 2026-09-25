@@ -2,14 +2,14 @@
 // hop is counted. A 403/429 is the shop limiting our server, never a finding about the shop: it is left out.
 import { isNoindex } from "./audit-engine";
 import { parseCanonical } from "./parse-page";
+import { BROWSER_UA } from "./net";
 import type { SeoProbes } from "./seo-components";
 
 type Hop = { status: number; location: string | null };
 type Fetcher = (url: string, method: "HEAD" | "GET") => Promise<Hop & { html?: string; headers?: Record<string, string> }>;
 
-const UA = "Mozilla/5.0 (compatible; DevrikaAudit/1.0; +https://audit.devrika.ro)";
 export const liveFetcher: Fetcher = async (url, method) => {
-  const r = await fetch(url, { method, redirect: "manual", headers: { "user-agent": UA }, signal: AbortSignal.timeout(10000) });
+  const r = await fetch(url, { method, redirect: "manual", headers: { "user-agent": BROWSER_UA }, signal: AbortSignal.timeout(10000) });
   return {
     status: r.status, location: r.headers.get("location"),
     html: method === "GET" ? await r.text() : undefined,

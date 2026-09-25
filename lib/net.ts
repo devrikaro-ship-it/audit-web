@@ -118,38 +118,50 @@ async function interogheaza(
   return rows;
 }
 
+// One real-browser identity for every request to an audited site (Darwin, siteFetch.js, 10-08: a shop answered 429
+// to a request without a browser user agent and 200 to one with it, so two identities read two different sites).
+export const BROWSER_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+
 async function fetchWithTimeout(url: string, timeout = FETCH_TIMEOUT): Promise<Response> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeout);
   try {
     return await fetch(url, {
       signal: ctrl.signal,
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; AuditBot/1.0)" },
+      headers: { "User-Agent": BROWSER_UA },
     });
   } finally {
     clearTimeout(timer);
   }
 }
 
-// Shops rate-limit bursts (Shopify answers 429 to parallel sitemap and page requests). Wait what the server asks,
-// bounded, then retry; without this the audit silently reads empty sitemaps and skips pages.
-const RATE_LIMIT_RETRIES = 2;
-const RATE_LIMIT_MAX_WAIT_MS = 4000;
-
-async function fetchRespectingRateLimit(url: string, timeout = FETCH_TIMEOUT): Promise<Response> {
+// "Not now" is not "no": a rate limit (429), a server error (5xx) or a timeout is retried after a short pause, or
+// what Retry-After asks, bounded; 403 and 404 are not, insisting does not make a page exist (Darwin, siteFetch.js).
+// Without this the audit silently reads empty sitemaps and skips pages.
+const RETRY_PAUSES_MS = [1000, 2500];
+const RETRY_MAX_WAIT_MS = 4000;
+const pause = (ms: number) => new Promise((done) => setTimeout(done, Math.min(Math.max(ms, 0), RETRY_MAX_WAIT_MS)));
+async function fetchWithRetry(url: string, timeout = FETCH_TIMEOUT): Promise<Response> {
   for (let attempt = 0; ; attempt++) {
-    const r = await fetchWithTimeout(url, timeout);
-    if (r.status !== 429 || attempt >= RATE_LIMIT_RETRIES) return r;
+    const last = attempt >= RETRY_PAUSES_MS.length;
+    let r: Response;
+    try {
+      r = await fetchWithTimeout(url, timeout);
+    } catch (e) {
+      if (last) throw e;
+      await pause(RETRY_PAUSES_MS[attempt]);
+      continue;
+    }
+    if (last || (r.status !== 429 && r.status < 500)) return r;
     void r.body?.cancel();
     const retryAfter = Number(r.headers.get("retry-after"));
-    const waitMs = Number.isFinite(retryAfter) && r.headers.has("retry-after") ? retryAfter * 1000 : 1000 * (attempt + 1);
-    await new Promise((done) => setTimeout(done, Math.min(Math.max(waitMs, 0), RATE_LIMIT_MAX_WAIT_MS)));
+    await pause(r.headers.has("retry-after") && Number.isFinite(retryAfter) ? retryAfter * 1000 : RETRY_PAUSES_MS[attempt]);
   }
 }
 
 export async function fetchText(url: string): Promise<string> {
   try {
-    const r = await fetchRespectingRateLimit(url);
+    const r = await fetchWithRetry(url);
     return r.ok ? r.text() : "";
   } catch { return ""; }
 }
@@ -164,7 +176,7 @@ export type PageData = {
 
 export async function fetchPage(url: string): Promise<PageData> {
   try {
-    const r = await fetchRespectingRateLimit(url, 10000);
+    const r = await fetchWithRetry(url, 10000);
     const html = r.ok ? await r.text() : "";
     const headers: Record<string, string> = {};
     r.headers.forEach((v, k) => { headers[k.toLowerCase()] = v; });

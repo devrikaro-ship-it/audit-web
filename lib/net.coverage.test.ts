@@ -77,23 +77,29 @@ describe("network helpers in the public output graph", () => {
   });
 
   it("returns text, page metadata, timing, and their recoverable failures", async () => {
+    // A network error is retried twice (lib/net.ts fetchWithRetry), so an offline site consumes three answers; the
+    // pauses run on a fake clock.
+    vi.useFakeTimers();
+    const offline = () => new Error("offline");
     vi.stubGlobal("fetch", vi.fn()
       .mockResolvedValueOnce(new Response("text", { status: 200 }))
       .mockResolvedValueOnce(new Response("ignored", { status: 404 }))
-      .mockRejectedValueOnce(new Error("offline"))
+      .mockRejectedValueOnce(offline()).mockRejectedValueOnce(offline()).mockRejectedValueOnce(offline())
       .mockResolvedValueOnce(new Response("<html></html>", { status: 200, headers: { "X-Test": "yes" } }))
       .mockResolvedValueOnce(new Response("ignored", { status: 404 }))
-      .mockRejectedValueOnce(new Error("offline"))
+      .mockRejectedValueOnce(offline()).mockRejectedValueOnce(offline()).mockRejectedValueOnce(offline())
       .mockResolvedValueOnce(new Response("", { status: 200 }))
-      .mockRejectedValueOnce(new Error("offline")));
-    await expect(fetchText("https://example.test/one")).resolves.toBe("text");
-    await expect(fetchText("https://example.test/two")).resolves.toBe("");
-    await expect(fetchText("https://example.test/three")).resolves.toBe("");
-    await expect(fetchPage("https://example.test/page")).resolves.toMatchObject({ html: "<html></html>", status: 200, headers: { "x-test": "yes" }, ok: true });
-    await expect(fetchPage("https://example.test/missing")).resolves.toMatchObject({ html: "", status: 404, ok: false });
-    await expect(fetchPage("https://example.test/offline")).resolves.toMatchObject({ status: 0, ok: false });
-    await expect(measureTTFB("https://example.test/timing")).resolves.toEqual(expect.any(Number));
-    await expect(measureTTFB("https://example.test/offline")).resolves.toBeNull();
+      .mockRejectedValueOnce(offline()));
+    const settle = async <T>(p: Promise<T>) => { await vi.runAllTimersAsync(); return p; };
+    await expect(settle(fetchText("https://example.test/one"))).resolves.toBe("text");
+    await expect(settle(fetchText("https://example.test/two"))).resolves.toBe("");
+    await expect(settle(fetchText("https://example.test/three"))).resolves.toBe("");
+    await expect(settle(fetchPage("https://example.test/page"))).resolves.toMatchObject({ html: "<html></html>", status: 200, headers: { "x-test": "yes" }, ok: true });
+    await expect(settle(fetchPage("https://example.test/missing"))).resolves.toMatchObject({ html: "", status: 404, ok: false });
+    await expect(settle(fetchPage("https://example.test/offline"))).resolves.toMatchObject({ status: 0, ok: false });
+    await expect(settle(measureTTFB("https://example.test/timing"))).resolves.toEqual(expect.any(Number));
+    await expect(settle(measureTTFB("https://example.test/offline"))).resolves.toBeNull();
+    vi.useRealTimers();
   });
 
   it("probes fulfilled, rejected, false feeds and every PSI response shape", async () => {
