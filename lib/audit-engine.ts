@@ -9,6 +9,7 @@ import { appendObservation, pathPrefixes, readObservations } from "./observation
 import { fetchPagesWithProbe, looksBlocked, openBrowserFetcher, openWithRetry, type PageFetcher } from "./browser-fetch";
 import { fetchText, fetchPage, measureTTFB, probeProductFeed, fetchPSI, UNAVAILABLE, type PageData, type PSIResult } from "./net";
 import { computeSeoComponents, seoScore } from "./seo-components";
+import { UX_SIGNALS } from "./copy-registry";
 import { runSeoProbes } from "./seo-probes";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
@@ -699,20 +700,20 @@ export function computeUxAudit(
 
   // 2. Homepage (mereu prezent)
   fields.push(uxField("home", "Analiza homepage", [
-    { ok: countH1(home) >= 1, g: "mesaj clar la inceputul paginii", l: "fara un mesaj clar la inceputul paginii" },
-    { ok: hasNavUi(home), g: "meniu de navigare", l: "meniu greu de gasit" },
-    { ok: countInternalLinks(home, domain) >= 10, g: "categorii si cai spre produse", l: "putine cai spre categorii/produse" },
-    { ok: hasViewport, g: "adaptat pentru mobil", l: "nu e adaptat pentru mobil" },
+    { ok: countH1(home) >= 1, g: UX_SIGNALS.home_message.found, l: UX_SIGNALS.home_message.missing },
+    { ok: hasNavUi(home), g: UX_SIGNALS.home_menu.found, l: UX_SIGNALS.home_menu.missing },
+    { ok: countInternalLinks(home, domain) >= 10, g: UX_SIGNALS.home_paths.found, l: UX_SIGNALS.home_paths.missing },
+    { ok: hasViewport, g: UX_SIGNALS.home_mobile.found, l: UX_SIGNALS.home_mobile.missing },
   ], "Homepage-ul e prima impresie. Fara un mesaj clar, meniu vizibil si cale rapida spre produse, vizitatorul pleaca in cateva secunde.",
     "Refacem homepage-ul: hero cu mesaj clar, meniu si categorii vizibile, cale directa spre produse."));
 
   // 3. Pagina categorie
   if (catPage) {
     fields.push(uxField("categorie", "Analiza pagina categorie", [
-      { ok: priceCount(catPage) >= 3 || contentImageCount(catPage) >= 6, g: "grila de produse cu poza si pret", l: "grila de produse neclara (poza/pret)" },
-      { ok: hasBreadcrumbs(catPage), g: "traseul paginii (stii unde esti)", l: "fara traseul paginii (stii unde esti)" },
-      ...(paginationState(catPage) === null ? [] : [{ ok: paginationState(catPage) === true, g: "paginare", l: "fara paginare vizibila" }]),
-      { ok: hasIntroText(catPage), g: "text de intro pe categorie", l: "fara text de intro (pierzi si SEO)" },
+      { ok: priceCount(catPage) >= 3 || contentImageCount(catPage) >= 6, g: UX_SIGNALS.cat_grid.found, l: UX_SIGNALS.cat_grid.missing },
+      { ok: hasBreadcrumbs(catPage), g: UX_SIGNALS.cat_trail.found, l: UX_SIGNALS.cat_trail.missing },
+      ...(paginationState(catPage) === null ? [] : [{ ok: paginationState(catPage) === true, g: UX_SIGNALS.cat_pagination.found, l: UX_SIGNALS.cat_pagination.missing }]),
+      { ok: hasIntroText(catPage), g: UX_SIGNALS.cat_intro.found, l: UX_SIGNALS.cat_intro.missing },
     ], "Pagina de categorie e locul unde clientul alege. Fara grila clara, breadcrumbs si text de context, se pierde si pleaca.",
       "Structuram pagina de categorie: grila poza+pret, breadcrumbs, paginare, text de intro optimizat."));
   } else {
@@ -724,12 +725,12 @@ export function computeUxAudit(
   // 4. Pagina produs
   if (prodPage) {
     fields.push(uxField("produs", "Analiza pagina produs", [
-      { ok: contentImageCount(prodPage) >= 3, g: "imagini multiple", l: "prea putine imagini de produs" },
-      { ok: priceCount(prodPage) >= 1 && hasStockSignal(prodPage), g: "pret + stoc", l: "pret sau stoc neclar" },
-      { ok: hasAddToCart(prodPage), g: "buton 'Adauga in cos' clar", l: "buton de comanda greu de gasit" },
-      { ok: countWords(prodPage) >= 200, g: "descriere de produs", l: "descriere subtire" },
-      { ok: hasReviewsUi(prodPage), g: "recenzii / rating", l: "fara recenzii pe produs" },
-      { ok: hasRelatedUi(prodPage), g: "produse similare", l: "fara produse similare" },
+      { ok: contentImageCount(prodPage) >= 3, g: UX_SIGNALS.prod_images.found, l: UX_SIGNALS.prod_images.missing },
+      { ok: priceCount(prodPage) >= 1 && hasStockSignal(prodPage), g: UX_SIGNALS.prod_price.found, l: UX_SIGNALS.prod_price.missing },
+      { ok: hasAddToCart(prodPage), g: UX_SIGNALS.prod_cart.found, l: UX_SIGNALS.prod_cart.missing },
+      { ok: countWords(prodPage) >= 200, g: UX_SIGNALS.prod_description.found, l: UX_SIGNALS.prod_description.missing },
+      { ok: hasReviewsUi(prodPage), g: UX_SIGNALS.prod_reviews.found, l: UX_SIGNALS.prod_reviews.missing },
+      { ok: hasRelatedUi(prodPage), g: UX_SIGNALS.prod_related.found, l: UX_SIGNALS.prod_related.missing },
     ], "Pagina de produs e locul deciziei de cumparare. Imagini, pret, stoc, buton clar, descriere, recenzii si recomandari — fiecare care lipseste scade comenzile.",
       "Completam pagina de produs: galerie, pret+stoc vizibil, buton clar, descriere, recenzii, produse similare."));
   } else {
@@ -741,8 +742,8 @@ export function computeUxAudit(
   // 5. Filtre & sortare (din categorie daca exista, altfel din tot corpus-ul)
   const filterHtml = catPage || pages.map(p => p.html).join("\n");
   fields.push(uxField("filtre", "Filtre & sortare", [
-    { ok: hasFiltersUi(filterHtml), g: "filtre (marime/culoare/pret/brand)", l: "fara filtre pe categorii" },
-    { ok: hasSortUi(filterHtml), g: "optiuni de sortare", l: "fara sortare (pret, popularitate)" },
+    { ok: hasFiltersUi(filterHtml), g: UX_SIGNALS.filters.found, l: UX_SIGNALS.filters.missing },
+    { ok: hasSortUi(filterHtml), g: UX_SIGNALS.sort.found, l: UX_SIGNALS.sort.missing },
   ], "Catalog fara filtre si sortare = clientul nu-si gaseste rapid produsul si pleaca. Filtrele cresc direct rata de gasire si comenzile.",
     "Implementam filtre (marime, culoare, pret, brand) + sortare pe categorii."));
 

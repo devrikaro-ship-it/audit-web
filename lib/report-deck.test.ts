@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildDeck, paginateChecklist, paginateStandard, type CheckRow, type StdGroup } from "./report-deck";
 import type { AuditData, PageCheck } from "./types";
+import { ROWS } from "./copy-registry";
 
 const check = (id: string, correctCount: number, total: number, unit?: string): PageCheck =>
   ({ id, label: id, correctCount, total, unit, problema: `problema ${id}`, fix: `fix ${id}\nsecond line` });
@@ -45,7 +46,7 @@ describe("buildDeck", () => {
     const rows = buildDeck(base()).seo.checklist;
     expect(rows.find((r) => r.title === "Text repetat intre pagini")).toEqual({ done: false, title: "Text repetat intre pagini", note: "Scrie text propriu pentru fiecare pagina, incepand cu categoriile si produsele cele mai vandute.", result: "5 din 60 pagini" });
     expect(rows.find((r) => r.title === "Conexiune securizata (lacatul din browser)")).toMatchObject({ done: true, result: "da" });
-    expect(rows.find((r) => r.title === "Stele (nota clientilor) afisate in Google")).toMatchObject({ done: false, result: "2 din 46 pagini de produs" });
+    expect(rows.find((r) => r.title === ROWS.schema_rating.title)).toMatchObject({ done: false, result: "2 din 46 pagini de produs" });
   });
 
   it("an unmeasured value is 'de verificat', never a finding, and never the first thing to fix", () => {

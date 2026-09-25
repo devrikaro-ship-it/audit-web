@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -5,6 +7,7 @@ import { ReportDeck } from "@/components/report-deck";
 import { computeAiChecks, computeContinutChecks, computeKeywordsChecks, computeSeoChecks, computeStructuraChecks, computeUxAudit } from "./audit-engine";
 import { computeSeoComponents } from "./seo-components";
 import { buildDeck, PAGE_COPY } from "./report-deck";
+import * as REGISTRY from "./copy-registry";
 import type { AuditData } from "./types";
 import type { PageData } from "./net";
 
@@ -83,6 +86,68 @@ describe("the report speaks the shop owner's language", () => {
     expect(open.length).toBeGreaterThan(20);
     expect(open.filter((r) => !r.note || pageNames.includes(r.note)).map((r) => r.title)).toEqual([]);
     }
+  });
+});
+
+// THE REGISTER (operator, 2026-09-25): every sentence the report shows comes from lib/copy-registry.ts, and one thing
+// has one wording. Its texts are templates whose {placeholders} carry measured numbers, names or other entries.
+const registryTexts = (): string[] => {
+  const out: string[] = [];
+  const walk = (v: unknown): void => {
+    if (typeof v === "string") out.push(v);
+    else if (Array.isArray(v)) v.forEach(walk);
+    else if (v && typeof v === "object") Object.values(v).forEach(walk);
+  };
+  Object.values(REGISTRY).forEach((v) => { if (typeof v !== "function") walk(v); });
+  return out;
+};
+const escape = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const templates = () => registryTexts().filter((t) => /[a-z]{2}/i.test(t)).map((t) =>
+  new RegExp(`^${escape(t.trim()).replace(/\\\{\w+\\\}/g, "(.+?)")}$`, "is"));
+// What is not wording: numbers with their units, scores, page counts, the slide counter, the audited domain.
+const DATA = /^([\d\s.,/%—·:+()×✓✗?<>-]|ms\b|s\b|px\b)*$/;
+const DOMAIN = /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i;
+const segments = (html: string) => html.replace(/<style[\s\S]*?<\/style>/g, " ").split(/<[^>]+>/)
+  .map((t) => t.replace(/&amp;/g, "&").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim())
+  .filter(Boolean);
+// A text is known when it is data, an entry, or a template whose every placeholder is filled with something known
+// (a template made only of placeholders, "{n} {what}", therefore accepts nothing on its own).
+// Entries are matched whatever the case of their first letter (a sentence starts with a capital).
+const outsideRegistry = (html: string) => {
+  const ts = templates();
+  const known = (raw: string, depth = 2): boolean => {
+    const t = raw.trim();
+    if (!t || DATA.test(t) || DOMAIN.test(t)) return true;
+    for (const v of [t, t.charAt(0).toLowerCase() + t.slice(1), t.charAt(0).toUpperCase() + t.slice(1)]) {
+      for (const re of ts) {
+        const m = re.exec(v);
+        if (m && (m.length === 1 || (depth > 0 && m.slice(1).every((g) => known(g, depth - 1))))) return true;
+      }
+    }
+    // Two known texts side by side: "<a> · <b>", or a title followed by its page counter "(1/4)".
+    if (depth > 0 && t.includes(" · ") && t.split(" · ").every((p) => known(p, depth - 1))) return true;
+    const paren = t.lastIndexOf(" (");
+    if (depth > 0 && paren > 0 && known(t.slice(0, paren), depth - 1) && known(t.slice(paren), depth - 1)) return true;
+    return false;
+  };
+  return [...new Set(segments(html).filter((t) => !known(t)))];
+};
+
+describe("the report speaks only from its register", () => {
+  it("every visible text of a report, old or with the ten components, desktop or phone, comes from the register", () => {
+    for (const d of [data, tenData]) for (const phone of [false, true]) {
+      expect(outsideRegistry(renderToStaticMarkup(createElement(ReportDeck, { data: d, createdAt: Date.UTC(2026, 8, 24), phone })))).toEqual([]);
+    }
+  });
+
+  it("one thing, one wording: no sentence is written twice in the register", () => {
+    // A second entry for the same thing points at the first (ROWS.x.fix), so a sentence appears as text only once.
+    // Codes are not wording: the stage letter and the kind of result.
+    const src = readFileSync(path.join(process.cwd(), "lib/copy-registry.ts"), "utf8").replace(/^\s*\/\/.*$/gm, "");
+    const literals = [...src.matchAll(/(\w+:\s*)?"((?:[^"\\]|\\.)*)"/g)].filter((m) => !/^(stage|kind):/.test(m[1] ?? "") && m[2]).map((m) => m[2].toLowerCase());
+    const seen = new Map<string, number>();
+    for (const t of literals) seen.set(t, (seen.get(t) ?? 0) + 1);
+    expect([...seen].filter(([, n]) => n > 1).map(([t]) => t)).toEqual([]);
   });
 });
 
