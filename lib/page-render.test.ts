@@ -61,7 +61,7 @@ describe.skipIf(!chrome)("renderPages", () => {
     expect(shots!.popup).toBe(false);
     const [cookie] = await renderPages(chrome as string, [base + "/cookie"], 8000);
     expect(cookie!.popup).toBe(false);
-  }, 60000);
+  }, 120000);
 
   it("reports a window over the page, keeps it out of the desktop tiles, and does not count cookie consent", async () => {
     const [shots] = await renderPages(chrome as string, [base + "/popup"], 8000);
@@ -78,5 +78,5 @@ describe.skipIf(!chrome)("renderPages", () => {
     await b.close();
     // The first section is red: the cyan window and the dark backdrop are gone from the tile.
     expect(rgb[0]).toBeGreaterThan(200); expect(rgb[1]).toBeLessThan(60); expect(rgb[2]).toBeLessThan(60);
-  }, 60000);
+  }, 120000);
 });

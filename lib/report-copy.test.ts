@@ -187,6 +187,29 @@ const outsideRegistry = (html: string) => {
   return [...new Set(segments(html).filter((t) => !known(t)))];
 };
 
+// A lead report whose home page was judged by the AI: a section present, one missing, design judged "rau".
+const aiSays = { seen: "fotografii de stoc cu zambete generice in primul ecran", problem: "Vizitatorul nu vede clinica reala si nu are incredere.", fix: "Pune in primul ecran o poza reala a clinicii si un buton de programare." };
+const withAi: AuditData = { ...leadData, uxStd: leadData.uxStd!.map((g) => g.id !== "home" ? g : { ...g, rows: [...g.rows,
+  { id: "st_leads_home_hero", ok: 1, total: 1, evaluated: true },
+  { id: "st_leads_home_echipa", ok: 0, total: 1, evaluated: true },
+  { id: "ai_home_design", ok: 0, total: 1, evaluated: true, ai: { grade: "rau" as const, ...aiSays } },
+  { id: "ai_home_content", ok: 1, total: 1, evaluated: true, ai: { grade: "bun" as const, seen: "titlul 'Radiografii fara griji, in 10 centre'", problem: "", fix: "" } },
+] }) };
+
+describe("Part 2 judged by the AI", () => {
+  it("shows the AI rows by grade with what it saw, the impact and the fix, and a missing section with its problem", () => {
+    const text = visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: withAi })));
+    expect(text).toContain("Designul paginii e doar decor, nu duce spre programare");
+    expect(text).toContain(`Ce am vazut: ${aiSays.seen} Impact negativ: ${aiSays.problem}`);
+    expect(text).toContain(`Cum se repara: ${aiSays.fix}`);
+    expect(text).toContain("Textele si dovezile paginii aduc programari");
+    expect(text).toContain("Echipa nu apare pe prima pagina");
+    expect(text).toMatch(/Rau · evaluat pe capturi/);
+    expect(text).toMatch(/Structura · (Bun|De reglat|Rau)/);
+    expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
+  });
+});
+
 describe("every rule says its problem, why it is bad and why it is good", () => {
   it("each shop row and each lead row, with lead overrides laid over the shop row", () => {
     const missing: string[] = [];
