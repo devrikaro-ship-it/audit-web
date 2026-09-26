@@ -1,132 +1,104 @@
-# Part 2 as a checklist per page type — design, text, experience, selling
+# Part 2 as a checklist per page type — structure, aspect, text, experience, selling
 
-> **Status:** draft for the operator's approval, 2026-09-26 (second version). Operator's direction (2026-09-26):
-> fewer overlapping rules; judge first how the site looks (modern or not), whether texts are short and easy to read,
-> the overall experience, and whether the structure and texts are made to sell or only present information; and
-> judge it per page type, each with its own checklist. It replaces the first draft of eleven technical rules.
+> **Status:** approved by the operator 2026-09-26 (third version). His direction: fewer overlapping technical rules
+> (the small measured rules — button in the first screen, contrast, sticky button, variant buttons, form fields — were
+> rejected as low impact); judge each page type on its structure (the sections that lead to a sale), how modern it
+> looks, how short and readable its texts are, the overall experience, and whether texts are made to sell. AI
+> evaluation on screenshots (key copied from darwin-backend with his approval).
 
 ## 1. The shape
 
-Part 2 becomes one checklist per page type, each grouped under the same four questions:
+Each page type is judged on five questions, in this order:
 
-1. **Aspect** — does the page look modern and cared for?
-2. **Text** — are the texts short and easy to read on a phone?
-3. **Experienta** — can a visitor do what he came for without effort?
-4. **Vanzare** — are structure and texts made to sell (or to bring a contact), or do they only present information?
+1. **Structura** — does the page have the sections that lead to a sale, in a sensible order?
+2. **Aspect** — does it look modern and cared for?
+3. **Text** — are the texts short and easy to read?
+4. **Experienta** — can a visitor do what he came for without effort?
+5. **Vanzare** — are texts and proof made to sell (or to bring a contact)?
 
 | Kind | Page types |
 |---|---|
 | Shop | Home page · Category · Product |
 | Lead site | Home page · Service · Contact |
 
-Speed on mobile stays its own group (measured by PageSpeed). Today's rows (menu, filters, reviews, phone link, map,
-hours, ...) move into the page type and question they belong to; nothing measured today is lost.
+Speed on mobile stays its own group. Today's rows stay under the question they answer (increment 1, a195d4b).
 
-## 2. Who judges what
+## 2. Structure: the sections each page type needs
 
-Each row says how it is judged, and the report labels it:
+A section missing is a ✗ row with its problem, negative impact and fix; the hero is also checked to come first.
 
-1. **Masurat** — computed from the page code or the rendered page: positions, sizes, counts, lengths. Same result
-   every run.
-2. **Evaluat pe capturi** — judged by an AI vision model on phone and desktop screenshots and on the page text,
-   against a fixed list of observable signs per row. It must quote the text or name the element its verdict rests
-   on; without that evidence the row is "de verificat". Temperature 0, same prompt, same screenshots → same answer.
+**Shop**
 
-Screenshots: real Chrome (already on the server for the PDFs) at 390 × 844 (phone) and 1440 × 900 (desktop), one
-page per type (the first page read of that type), full first screen plus the whole page scaled.
-
-## 3. The checklists
-
-### Shop
-
-**Home page**
-
-| Question | Row | Judged |
+| Home page | Category | Product |
 |---|---|---|
-| Aspect | The design looks current: airy spacing, at most two or three fonts, consistent colours, sharp photos, no dated patterns (auto-rotating slider, tiny text, crowded side columns) | Evaluat |
-| Text | The main heading has at most 10 words; no paragraph is longer than 4 lines on a phone | Masurat |
-| Experienta | The first screen says what is sold and to whom; the category menu is visible; nothing covers the page on arrival | Evaluat + Masurat |
-| Vanzare | The heading speaks of the customer's benefit, not of the company; proof near the top (reviews, delivery, returns, number of customers); paths to the best-selling categories and products | Evaluat + Masurat |
+| 1. Hero: a heading with the benefit and a button to the products | 1. Heading and a short intro | 1. Photo gallery |
+| 2. Trust bar: delivery, returns, payment, guarantee | 2. Filters and sorting | 2. Name, price, rating |
+| 3. Main categories with pictures | 3. Product grid with price, discount, rating, stock | 3. Variants and the buy button |
+| 4. Popular products | 4. A buying guide or FAQ at the end | 4. Delivery (cost, time), returns, guarantee next to the button |
+| 5. Why buy from us | 5. Related categories or products | 5. Benefits as bullets |
+| 6. Reviews and proof | | 6. Description and specifications |
+| 7. Footer with contact, delivery, returns, payments | | 7. Reviews |
+| | | 8. Similar products or bought together |
 
-**Category**
+**Lead site**
 
-| Question | Row | Judged |
+| Home page | Service | Contact |
 |---|---|---|
-| Aspect | A clean product grid with photos of the same size and style | Evaluat |
-| Text | A short intro (2–3 sentences) that helps choosing | Masurat + Evaluat |
-| Experienta | Filters and sorting visible on a phone; each product shows photo, price and rating | Masurat |
-| Vanzare | The list highlights what helps deciding: discount, stock, fast delivery, reviews | Evaluat |
+| 1. Hero: the result for the client, where, a booking button or phone | 1. Hero: the service, the result, the button | 1. Heading and what happens next ("te sunam in 24 de ore") |
+| 2. Trust bar: years, clients, Google rating | 2. Who it is for, what problem it solves | 2. A short form |
+| 3. The main services | 3. Benefits | 3. Phone, WhatsApp, e-mail |
+| 4. Why us | 4. How it goes, step by step | 4. Map, address, opening hours |
+| 5. Results (before/after, cases) | 5. Price or "de la" | 5. Reviews next to the form |
+| 6. The team | 6. Results (before/after) | |
+| 7. Reviews | 7. Reviews | |
+| 8. How working together goes | 8. FAQ and objections | |
+| 9. FAQ | 9. A final call to act | |
+| 10. A final call to act and contact | 10. Related services | |
 
-**Product**
+## 3. The four other questions
 
-| Question | Row | Judged |
+Judged per page type by the AI on the screenshots and the page text, each against observable signs:
+
+| Question | Shop | Lead site |
 |---|---|---|
-| Aspect | Large, sharp photos with a consistent background; the buy button stands out | Evaluat + Masurat (contrast) |
-| Text | The description is short and scannable: bullets, short paragraphs | Masurat |
-| Experienta | Photo, price and buy button in the first phone screen; sizes/colours as buttons; the buy button stays at hand while scrolling | Masurat |
-| Vanzare | The text sells benefits, not only specifications; next to the button: delivery, returns, stock, reviews | Evaluat + Masurat |
+| Aspect | airy spacing, two or three fonts at most, consistent colours, sharp product photos, no dated patterns | the same, with real photos of the place and team, not stock pictures |
+| Text | headings and texts short, readable at a glance; descriptions as bullets | the same on service pages; no walls of text |
+| Experienta | the first screen says what is sold and to whom; the way to the products and to the cart is obvious | the first screen says what is offered, where, and how to book; booking one tap away |
+| Vanzare | why buy here (price, delivery, guarantee, choice) is clear; proof near the button; descriptions sell benefits | the heading states the client's result; proof (reviews, years, team, results); objections answered; a promise of what happens next |
 
-### Lead site
+## 4. How it is judged
 
-**Home page**
+1. Real Chrome (already on the server for the PDFs) renders the first page read of each type at 390 × 844 (phone)
+   and 1440 × 900 (desktop); the screenshots are the phone first screen, the phone full page (scaled to a readable
+   height) and the desktop first screen.
+2. One call per page type to Claude (`claude-opus-5`, fallback `"default"`), with the three screenshots, the page's
+   readable text and a fixed prompt listing the page type's sections and each question's signs. Structured output:
+   for each section present or missing (and whether the hero comes first), for each question a verdict (bun /
+   de-reglat / rau), the evidence (quoted text or the element named) and one problem sentence. Plain Romanian, no
+   diacritics, no technical terms (the report's jargon list is in the prompt).
+3. A verdict without evidence, a failed call, or no API key: the row is "de verificat" and counts in no score.
+4. The calls run alongside the PageSpeed step; the audit takes about 20–30 s more.
 
-| Question | Row | Judged |
-|---|---|---|
-| Aspect | The design looks current, with real photos of the place and the team, not stock pictures | Evaluat |
-| Text | The main heading has at most 10 words; no paragraph is longer than 4 lines on a phone | Masurat |
-| Experienta | The first screen says what is offered and where, with the phone or the booking button | Masurat + Evaluat |
-| Vanzare | The heading states the result for the client; proof (reviews, years, team, results); a call to act after each section | Evaluat + Masurat |
+## 5. In the report
 
-**Service**
-
-| Question | Row | Judged |
-|---|---|---|
-| Aspect | Real pictures of the service or its results | Evaluat |
-| Text | Structured by subheadings and bullets; short paragraphs | Masurat |
-| Experienta | A booking/contact button in the first screen and at the end; links to related services | Masurat |
-| Vanzare | The text answers what it is, for whom, how it goes, how much it costs, what result; it answers objections (price, pain, duration); proof (reviews, before/after) | Evaluat |
-
-**Contact**
-
-| Question | Row | Judged |
-|---|---|---|
-| Aspect | The page is tidy, the ways to reach you are grouped, not scattered | Evaluat |
-| Text | Short, plain instructions | Masurat |
-| Experienta | A short form (fields of 16 px or more, no drop-downs), a click-to-call phone, map and address, opening hours, WhatsApp or chat | Masurat |
-| Vanzare | A promise of what happens next ("te sunam in 24 de ore"); proof next to the form | Evaluat |
-
-Every row, like every row since a6dba91, has: the rule as a title, the problem stated directly, the negative
-impact, the positive impact and the fix.
-
-## 4. In the report
-
-1. Part 2: one slide per page type with its four questions and a Bun / De reglat / Rau per question, then its
-   checklist; speed stays first. The Part 2 score is the share of ✓ over all measured and evaluated rows.
-2. An evaluated row carries "Evaluat pe capturi" next to its result and the evidence in its explanation; a measured
-   row carries "Masurat".
-3. Reports saved before are unchanged.
-
-## 5. What it needs
-
-1. An API key for a vision model (Anthropic or OpenAI) in the audit app's environment on Coolify. Cost: a few cents
-   per audit (six screenshots and the texts of three pages). Time: about 20–30 s more per audit, run alongside the
-   PageSpeed step.
-2. Without the key, the evaluated rows are "de verificat" and the measured rows still run.
+1. Each page type opens with its five questions and their verdicts, then its checklist grouped by question; the
+   structure rows list the sections.
+2. An evaluated row is labelled "Evaluat pe capturi" and shows what was seen; a measured row "Masurat".
+3. The Part 2 score counts every measured and evaluated row. Reports saved before are unchanged.
 
 ## 6. Testing
 
-1. Measured rows: local fixture pages, one passing and one failing per row, each seen failing with its fault put back.
-2. Evaluated rows: the same screenshots evaluated three times must give the same verdicts; a page built to fail each
-   row (a dated design, a wall of text, a heading about the company) must fail it with the right evidence.
-3. Production audits of dentalview.ro, magazinfitness.ro and diente.ro, every ✗ checked by hand against the
-   screenshots saved with the audit.
+1. The client stubbed: the prompt carries the page type's sections and signs; a missing evidence becomes "de
+   verificat"; an API error or a missing key leaves rows "de verificat"; the output lands in the right rows.
+2. A real call on built pages (one complete, one missing sections, one dated with walls of text), three runs each,
+   the same verdicts every run.
+3. Production audits of dentalview.ro, magazinfitness.ro, diente.ro, every ✗ checked by hand against the saved
+   screenshots; the audit duration before and after.
 
 ## 7. Sources
 
-NN/g visual design principles https://www.nngroup.com/articles/principles-visual-design/ · NN/g homepage principles
-https://www.nngroup.com/articles/homepage-design-principles/ · NN/g auto-forwarding carousels
-https://www.nngroup.com/articles/auto-forwarding/ · Baymard product page https://baymard.com/research/product-page ·
-Baymard product lists https://baymard.com/research/ecommerce-product-lists · Baymard cart abandonment
-https://baymard.com/lists/cart-abandonment-rate · CXL CTA contrast https://cxl.com/blog/which-color-converts-the-best/
-· font sizes https://www.learnui.design/blog/mobile-desktop-website-font-size-guidelines.html · Spiegel Research
-Center reviews https://spiegel.medill.northwestern.edu/how-online-reviews-influence-sales/
+NN/g visual design https://www.nngroup.com/articles/principles-visual-design/ · NN/g homepage
+https://www.nngroup.com/articles/homepage-design-principles/ · Baymard product page
+https://baymard.com/research/product-page · Baymard product lists https://baymard.com/research/ecommerce-product-lists
+· Baymard cart abandonment https://baymard.com/lists/cart-abandonment-rate · Spiegel reviews
+https://spiegel.medill.northwestern.edu/how-online-reviews-influence-sales/

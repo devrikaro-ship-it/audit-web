@@ -21,25 +21,22 @@
   speed first.
 - Tests: every UX row has a question; a report renders the four question headings for each page type, both kinds.
 
-### Increment 2 — rendered capture and new measured rows
+### Increment 2 — screenshots of each page type
 
-- `lib/page-render.ts`: real Chrome (findChrome) at 390 × 844 and 1440 × 900 on one page per type; returns
-  screenshots (kept for increment 3 and saved with the audit) and measured facts.
-- New measured rows: heading ≤ 10 words; no paragraph over 4 lines on a phone; primary action in the first screen;
-  primary action contrast (text ≥ 4.5 : 1, background ≥ 3 : 1); primary action still visible after two screens of
-  scrolling; variants as buttons (shop product); contact form fields ≥ 16 px and no drop-down (lead contact).
-- Runs alongside the PageSpeed step; a page that cannot be rendered makes its rows "de verificat".
-- Tests: local fixture pages rendered by real Chrome, one passing and one failing per row.
+- `lib/page-render.ts`: real Chrome (findChrome) renders the first page read of each type at 390 × 844 and
+  1440 × 900: phone first screen, phone full page scaled, desktop first screen (JPEG), plus the readable text.
+- Runs alongside the PageSpeed step; a page that cannot be rendered leaves its evaluated rows "de verificat".
+- The small measured rules of the first plan are dropped (operator, 2026-09-26: low impact).
+- Tests: a local fixture page rendered by real Chrome gives three images of the right sizes and its text.
 
-### Increment 3 — AI evaluation
+### Increment 3 — AI evaluation: structure and the four questions
 
-- `lib/design-eval.ts`: `@anthropic-ai/sdk`, model `claude-opus-5`, `fallbacks: "default"`, structured output (Zod)
-  per page type: for each of the four questions a verdict (bun / de-reglat / rau), the evidence (quoted text or the
-  element named) and the problem sentence; no evidence → "de verificat".
-- Rows `<page>_ai_<question>`, labelled "Evaluat pe capturi"; measured rows labelled "Masurat".
-- Without `ANTHROPIC_API_KEY` or on an API error, evaluated rows are "de verificat".
-- Tests: the client stubbed (schema, prompt contents, fallback to "de verificat"); a real call on the fixture pages
-  run by hand three times for consistency.
+- `lib/design-eval.ts`: `@anthropic-ai/sdk`, `claude-opus-5`, `fallbacks: "default"`, Zod structured output per page
+  type: each section present or missing (hero first or not), each question's verdict, evidence and problem.
+- Rows: one per section (`st_<kind>_<page>_<section>`, question Structura) and one per question
+  (`ai_<page>_<question>`), labelled "Evaluat pe capturi"; register copy for every section, both kinds.
+- No key, an API error or a verdict without evidence: "de verificat".
+- Tests: the client stubbed (prompt contents, rows, fallbacks); real calls on built pages three times.
 
 ### Increment 4 — verification
 
