@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { ReportDeck } from "@/components/report-deck";
 import { computeAiChecks, computeContinutChecks, computeKeywordsChecks, computeSeoChecks, computeStructuraChecks, computeUxAudit, computeUxStandard } from "./audit-engine";
 import { computeSeoComponents } from "./seo-components";
-import { buildDeck, PAGE_COPY } from "./report-deck";
+import { buildDeck, PAGE_COPY, UX_QUESTION_OF } from "./report-deck";
 import * as REGISTRY from "./copy-registry";
 import type { AuditData } from "./types";
 import type { PageData } from "./net";
@@ -201,6 +201,13 @@ describe("every rule says its problem, why it is bad and why it is good", () => 
     const shop = tenData.seo!.flatMap((c) => c.rows).map((r) => r.id).filter((id) => !REGISTRY.ROWS[id]);
     const lead = leadData.seo!.flatMap((c) => c.rows).map((r) => r.id).filter((id) => !REGISTRY.ROWS[id] && !REGISTRY.ROWS_LEADS[id]);
     expect([...shop, ...lead]).toEqual([]);
+  });
+
+  it("every UX rule outside speed answers one of the four questions, and each page type shows them as headings", () => {
+    const rows = [tenData, leadData].flatMap((d) => (d.uxStd ?? []).filter((c) => c.id !== "viteza").flatMap((c) => c.rows)).map((r) => r.id);
+    expect(rows.filter((id) => !UX_QUESTION_OF[id])).toEqual([]);
+    const text = [tenData, leadData].map((d) => visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: d })))).join(" ");
+    for (const q of Object.values(REGISTRY.UX_QUESTIONS)) expect(text).toMatch(new RegExp(`${q} · (Bun|De reglat|Rau|De verificat)`));
   });
 
   it("every UX rule, shop signal or lead row, says its problem and both impacts", () => {

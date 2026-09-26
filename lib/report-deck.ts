@@ -4,7 +4,7 @@ import { CHECKS } from "./problems-db";
 import { statusScore, verdict, type Verdict } from "./scoring";
 import type { AuditData, CheckResult, PageCheck, SeoComponent, UxField } from "./types";
 import { componentScore, rowPass, seoScore as tenScore } from "./seo-score";
-import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, countOf, fill, NOUN, UNIT_ONE, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_GROUPS, UX_ROWS, UX_SIGNAL_BEFORE_2026_09_24, UX_SIGNALS, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
+import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, countOf, fill, NOUN, UNIT_ONE, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_GROUPS, UX_QUESTIONS, UX_ROWS, UX_SIGNAL_BEFORE_2026_09_24, type UxQuestion, UX_SIGNALS, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
 export { PAGE_COPY } from "./copy-registry";
 
 export type Tone = "good" | "warn" | "bad";
@@ -16,7 +16,7 @@ export type UxPage = { id: string; name: string; score: number | null; verdict: 
 
 // The standard SEO checklist: the same rows in the same order for every shop, grouped by component, each ✓, ✗ or
 // "de verificat" (operator, 2026-09-24).
-export type StdRow = { state: "ok" | "fail" | "verify"; title: string; result: string; note: string; problem?: string };
+export type StdRow = { state: "ok" | "fail" | "verify"; title: string; result: string; note: string; problem?: string; question?: string };
 export type StdGroup = { name: string; score: number | null; rows: StdRow[] };
 
 export type Deck = {
@@ -139,6 +139,17 @@ function tenComponents(seo: SeoComponent[], leads = false) {
 
 // Part 2 from its ✓/✗ rows (reports from 2026-09-25): the groups as page types with their score, what passes and
 // what fails, and every row in the standard checklist.
+// Which of the four questions each UX rule answers (spec 2026-09-26 §3); a rule not listed counts as experience.
+export const UX_QUESTION_OF: Record<string, UxQuestion> = {
+  home_message: "experienta", home_menu: "experienta", home_paths: "vanzare", home_mobile: "aspect",
+  cat_grid: "experienta", cat_trail: "experienta", cat_pagination: "experienta", cat_intro: "text", filters: "experienta", sort: "experienta",
+  prod_images: "aspect", prod_price: "vanzare", prod_cart: "experienta", prod_description: "text", prod_reviews: "vanzare", prod_related: "vanzare",
+  lead_home_offer: "experienta", lead_home_phone: "experienta", lead_home_cta: "vanzare",
+  tr_reviews: "vanzare", tr_team: "vanzare", tr_certs: "vanzare", tr_photos: "aspect",
+  srv_explains: "vanzare", srv_price: "vanzare", srv_cta: "experienta", srv_related: "experienta",
+  ct_form_short: "experienta", ct_call: "experienta", ct_chat: "experienta", ct_map: "experienta", ct_hours: "experienta",
+};
+
 type UxCopy = { title: string; fix: string; bad: string; problem: string; good: string };
 const uxCopy = (id: string): UxCopy | null => {
   if (UX_ROWS[id]) return UX_ROWS[id];
@@ -165,17 +176,26 @@ function uxFromRows(groups: SeoComponent[]) {
       missing: rowsOf(g).filter((r) => rowPass(r) === false).map(bad),
     };
   });
+  // A page type's rows ordered by the four questions, each question headed by its verdict (spec 2026-09-26 §1).
+  const order = Object.keys(UX_QUESTIONS) as UxQuestion[];
+  const byQuestion = (g: SeoComponent) => g.id === "viteza" ? rowsOf(g)
+    : [...rowsOf(g)].sort((a, b) => order.indexOf(UX_QUESTION_OF[a.id] ?? "experienta") - order.indexOf(UX_QUESTION_OF[b.id] ?? "experienta"));
+  const headOf = (g: SeoComponent, q: UxQuestion) => {
+    const score = componentScore({ id: q, rows: rowsOf(g).filter((r) => (UX_QUESTION_OF[r.id] ?? "experienta") === q) });
+    return fill(UI.questionHead, { question: UX_QUESTIONS[q], verdict: score === null ? cap(WORD.verify) : VERDICT_LABEL[verdict(score)] });
+  };
   const standard: StdGroup[] = named.map((g) => ({
     name: UX_GROUPS[g.id], score: componentScore(g),
-    rows: rowsOf(g).map((r): StdRow => {
-      const copy = uxCopy(r.id)!;
-      const pass = rowPass(r);
-      const result = r.total > 1 ? fill(WORD.ratio, { ok: r.ok, t: r.total }) : pass ? WORD.yes : WORD.no;
-      if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, problem: fill(UI.checkVerify, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
-      return pass ? { state: "ok", title: copy.title, result, note: fill(UI.whyGoodLine, { why: copy.good }) }
-        : { state: "fail", title: bad(r), result: WORD.repair, problem: fill(UI.whyBadLine, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
-    }),
+    rows: byQuestion(g).map((r): StdRow => ({ ...row(r), ...(g.id === "viteza" ? {} : { question: headOf(g, UX_QUESTION_OF[r.id] ?? "experienta") }) })),
   }));
+  function row(r: SeoComponent["rows"][number]): StdRow {
+    const copy = uxCopy(r.id)!;
+    const pass = rowPass(r);
+    const result = r.total > 1 ? fill(WORD.ratio, { ok: r.ok, t: r.total }) : pass ? WORD.yes : WORD.no;
+    if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, problem: fill(UI.checkVerify, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
+    return pass ? { state: "ok", title: copy.title, result, note: fill(UI.whyGoodLine, { why: copy.good }) }
+      : { state: "fail", title: bad(r), result: WORD.repair, problem: fill(UI.whyBadLine, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
+  }
   return { score: tenScore(groups), pages, standard };
 }
 
@@ -278,6 +298,7 @@ export function buildDeck(data: AuditData): Deck {
 // PDF: 8 such rows overflow a slide by 20 px, so a slide holds 7.4 units).
 const ROW_WITH_NOTE = 1;
 const ROW_WITH_PROBLEM = 1.5;
+const QUESTION_HEAD = 0.5;
 const ROW_WITHOUT_NOTE = 0.62;
 const DONE_LABEL = 0.5;
 const DONE_LINE = 0.65; // one line of the two-column block; a long value can wrap
@@ -318,7 +339,7 @@ export function paginateStandard(groups: StdGroup[], capacity = 7.4): StdGroup[]
       used += GROUP_HEAD;
       const take: StdRow[] = [];
       for (const r of rows) {
-        const h = r.problem ? ROW_WITH_PROBLEM : r.note ? ROW_WITH_NOTE : ROW_WITHOUT_NOTE;
+        const h = (r.problem ? ROW_WITH_PROBLEM : r.note ? ROW_WITH_NOTE : ROW_WITHOUT_NOTE) + (r.question && r.question !== take[take.length - 1]?.question ? QUESTION_HEAD : 0);
         if (take.length && used + h > capacity) break;
         take.push(r);
         used += h;

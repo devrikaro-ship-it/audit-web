@@ -827,6 +827,11 @@ export function computeUxStandard(
         yes("lead_home_phone", phoneBeforeHeading(home)),
         yes("lead_home_cta", ASK_CONTROL.test(home)),
         yes("home_mobile", viewport),
+        // Trust is judged where a visitor forms his first opinion (spec 2026-09-26 §3): the home page.
+        yes("tr_reviews", anyPage(REVIEWS, true) || anyPage(/aggregateRating/i)),
+        yes("tr_team", anyPage(TEAM, true)),
+        yes("tr_certs", anyPage(CERTS, true)),
+        uxRow("tr_photos", 0, 1, true),
       ] },
       { id: "serviciu", rows: [
         onPages("srv_explains", services, (p) => (own.get(norm(p.url)) ?? 0) >= 200),
@@ -843,12 +848,6 @@ export function computeUxStandard(
         yes("ct_chat", anyPage(CHAT)),
         yes("ct_map", pages.some((p) => MAP.test(p.html) && /\b(str|strada|bd|bdul|bulevardul|calea|sos|soseaua|aleea|piata|intrarea|splaiul)\.?\s+[A-Z0-9]/i.test(readableOf(p.html)))),
         yes("ct_hours", anyPage(HOURS, true) || anyPage(/openingHours/i)),
-      ] },
-      { id: "incredere", rows: [
-        yes("tr_reviews", anyPage(REVIEWS, true) || anyPage(/aggregateRating/i)),
-        yes("tr_team", anyPage(TEAM, true)),
-        yes("tr_certs", anyPage(CERTS, true)),
-        uxRow("tr_photos", 0, 1, true),
       ] },
     ];
   }
@@ -870,6 +869,9 @@ export function computeUxStandard(
       on(cat, "cat_trail", () => hasBreadcrumbs(cat)),
       ...(pagination === null ? [] : [yes("cat_pagination", pagination)]),
       on(cat, "cat_intro", () => hasIntroText(cat)),
+      // Filters and sorting belong to the category page they serve (spec 2026-09-26 §3).
+      yes("filters", hasFiltersUi(filterHtml)),
+      yes("sort", hasSortUi(filterHtml)),
     ] },
     { id: "produs", rows: [
       on(prod, "prod_images", () => contentImageCount(prod) >= UX_LIMITS.productImages),
@@ -878,10 +880,6 @@ export function computeUxStandard(
       on(prod, "prod_description", () => countWords(prod) >= 200),
       on(prod, "prod_reviews", () => hasReviewsUi(prod)),
       on(prod, "prod_related", () => hasRelatedUi(prod)),
-    ] },
-    { id: "filtre", rows: [
-      yes("filters", hasFiltersUi(filterHtml)),
-      yes("sort", hasSortUi(filterHtml)),
     ] },
   ];
 }

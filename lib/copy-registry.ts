@@ -262,6 +262,10 @@ export const UX_GROUPS: Record<string, string> = {
   viteza: "Viteza pe mobil", home: UX_PAGES.home, categorie: UX_PAGES.categorie, produs: UX_PAGES.produs, filtre: UX_PAGES.filtre,
   serviciu: cap(NOUN.servicePage[0]), contact: "Contact si programare", incredere: "Incredere",
 };
+// The four questions every page type is judged on (spec 2026-09-26 §1), in the order the checklist shows them.
+export const UX_QUESTIONS = { aspect: "Aspect", text: "Text", experienta: "Experienta", vanzare: "Vanzare" } as const;
+export type UxQuestion = keyof typeof UX_QUESTIONS;
+
 export type UxRowCopy = { title: string; fix: string; bad: string; problem: string; good: string };
 export const UX_ROWS: Record<string, UxRowCopy> = {
   viteza_scor: { title: "Google da vitezei pe telefon cel putin 70 din 100", fix: UX_SITE.pagespeed_mobile.fix, bad: "Google da vitezei pe telefon sub 70 din 100", problem: "Pe telefon pagina se misca greu, iar fiecare secunda in plus pleaca vizitatori si scade vanzarile.", good: "Pagina se deschide repede pe telefon si vizitatorii raman." },
@@ -358,6 +362,7 @@ export const UI = {
   // A ✗ row of the checklist says what is wrong, why it matters, then how to fix it.
   // A rule that fails is named by its problem, with its count; under it, why that is bad and how to fix it.
   // A rule that passes says why that is good.
+  questionHead: "{question} · {verdict}",
   whyBadLine: "Impact negativ: {why}",
   whyGoodLine: "Impact pozitiv: {why}",
   countOf: "{fail} din {total}",

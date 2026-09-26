@@ -15,13 +15,14 @@ function StandardChecklist({ groups }: { groups: StdGroup[] }) {
     <table className="check std"><tbody>
       {groups.flatMap((g, gi) => [
         <tr className="group" key={`g${gi}`}><td colSpan={2}>{g.name}</td><td className="res">{g.score === null ? WORD.verify : fill(UI.scoreOf100, { score: g.score })}</td></tr>,
-        ...g.rows.map((r, i) => (
+        ...g.rows.flatMap((r, i) => [
+          ...(r.question && r.question !== g.rows[i - 1]?.question ? [<tr className="question" key={`${gi}-q${i}`}><td colSpan={3}>{r.question}</td></tr>] : []),
           <tr className={r.state} key={`${gi}-${i}`}>
             <td className={`box ${r.state}`}><span>{MARK[r.state]}</span></td>
             <td className="what"><b>{r.title}</b>{r.problem && <small className={`problem ${r.state}`}>{r.problem}</small>}{r.note && <small>{r.note}</small>}</td>
             <td className="res">{r.result}</td>
-          </tr>
-        )),
+          </tr>,
+        ]),
       ])}
     </tbody></table>
   );
