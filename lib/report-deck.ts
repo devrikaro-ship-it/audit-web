@@ -95,14 +95,14 @@ function tenComponents(seo: SeoComponent[], leads = false) {
   const result = (r: SeoComponent["rows"][number]) => (copyOf(r.id).unit ? fill(WORD.outOf, { ok: r.ok, t: r.total, unit: copyOf(r.id).unit }) : r.ok === r.total ? WORD.yes : WORD.no);
   const fault = (r: SeoComponent["rows"][number]) => (copyOf(r.id).unit ? fill(UI.faultOn, { fail: r.total - r.ok, t: r.total, unit: copyOf(r.id).unit }) : UI.faultNot);
   // Why a component scored what it did: its score is the share of its measured checks that pass (seo-score.ts).
-  const why = (c: SeoComponent): string => {
+  const why = (c: SeoComponent, i: number): string => {
     const own = c.rows.filter((r) => known(r.id));
     const judged = own.filter((r) => rowPass(r) !== null);
     const failing = judged.filter((r) => rowPass(r) === false);
     const unmeasured = own.length - judged.length;
     if (judged.length === 0) return WORD.notMeasured;
     const listed = failing.slice(0, 2).map((r) => fill(UI.whyFault, { title: copyOf(r.id).title, fault: fault(r) })).join("; ");
-    const faults = failing.length > 2 ? fill(UI.whyMoreFaults, { faults: listed, k: failing.length - 2 }) : listed;
+    const faults = failing.length > 2 ? fill(UI.whyMoreFaults, { faults: listed, k: countOf(failing.length - 2, NOUN.rule), i: i + 1 }) : listed;
     const ok = judged.length - failing.length, n = judged.length;
     // Each verdict has its own sentence; the verdict is the one the pill shows (scoring.ts).
     const v = verdict(componentScore(c) ?? 0);
@@ -112,7 +112,7 @@ function tenComponents(seo: SeoComponent[], leads = false) {
       : fill(ok === 0 ? UI.whyBadNone : UI.whyBad, { ok, n, faults });
     return unmeasured ? fill(UI.whyUnmeasured, { text, v: countOf(unmeasured, NOUN.check) }) : text;
   };
-  const zones: Zone[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({ name: fill(UI.numbered, { i: i + 1, name: component(c.id).name }), what: component(c.id).what, score: componentScore(c), why: why(c) }));
+  const zones: Zone[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({ name: fill(UI.numbered, { i: i + 1, name: component(c.id).name }), what: component(c.id).what, score: componentScore(c), why: why(c, i) }));
   const rows = seo.flatMap((c) => c.rows).filter((r) => known(r.id));
   const faults = rows.filter((r) => rowPass(r) === false);
   const problems: Problem[] = faults.slice(0, 4).map((r) => ({

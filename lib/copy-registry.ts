@@ -60,7 +60,7 @@ export const COMPONENTS: Record<string, ComponentCopy> = {
 // after round hundreds).
 export const NOUN = {
   page: ["pagina", "pagini"], category: ["categorie", "categorii"], product: ["produs", "produse"],
-  service: ["serviciu", "servicii"], location: ["locatie", "locatii"], check: ["verificare", "verificari"],
+  service: ["serviciu", "servicii"], location: ["locatie", "locatii"], check: ["verificare", "verificari"], rule: ["regula", "reguli"],
 } as const;
 export const countOf = (n: number, [one, many]: readonly [string, string]): string =>
   n === 1 ? `1 ${one}` : `${n}${n >= 20 && (n % 100 === 0 || n % 100 >= 20) ? " de " : " "}${many}`;
@@ -346,7 +346,7 @@ export const UI = {
   whyBad: "De ce e rau: trec doar {ok} din {n} verificari. De reparat: {faults}.",
   whyBadNone: "De ce e rau: nu trece nicio verificare din {n}. De reparat: {faults}.",
   whyFault: "{title}: {fault}",
-  whyMoreFaults: "{faults} si inca {k}",
+  whyMoreFaults: "{faults}; plus inca {k}, in checklist la componenta {i}",
   // A rule that fails is always said to fail, next to it: never a count that reads like praise.
   faultOn: "nu e indeplinit pe {fail} din {t} {unit}",
   faultNot: "nu e indeplinit",
