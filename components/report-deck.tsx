@@ -18,7 +18,7 @@ function StandardChecklist({ groups }: { groups: StdGroup[] }) {
         ...g.rows.map((r, i) => (
           <tr className={r.state} key={`${gi}-${i}`}>
             <td className={`box ${r.state}`}><span>{MARK[r.state]}</span></td>
-            <td className="what"><b>{r.title}</b>{r.problem && <small className="problem">{r.problem}</small>}{r.note && <small>{r.note}</small>}</td>
+            <td className="what"><b>{r.title}</b>{r.problem && <small className={`problem ${r.state}`}>{r.problem}</small>}{r.note && <small>{r.note}</small>}</td>
             <td className="res">{r.result}</td>
           </tr>
         )),

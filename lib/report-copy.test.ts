@@ -88,6 +88,8 @@ describe("the report speaks the shop owner's language", () => {
     expect(text).toContain("Tot site-ul se deschide pe conexiune securizata (https): nu e indeplinit");
     // More failing rules than the line names: it says how many and where they are, never a bare "si inca 3".
     expect(text).toContain("plus inca 3 reguli, in checklist la componenta 9");
+    // A row we could not measure says what is at stake and how to fix it, not only that we could not measure it.
+    expect(text).toMatch(/Titlurile au 15-65 de caractere De verificat: nu am putut masura asta din afara site-ului\. Daca nu e indeplinit: Un titlu prea scurt[^.]*\. Cum se repara: Tine titlurile intre 15 si 65 de caractere/);
     // A ✗ row of the checklist says what is wrong and why, before how to fix it.
     expect(text).toMatch(/Paginile citite se deschid fara eroare Problema: Nu e indeplinit pe 1 din 5 pagini\. Unele pagini citite raspund cu eroare: nu exista sau serverul da gres\. Cum se repara: /);
     // Part 2 as ✓/✗ rows, both kinds.

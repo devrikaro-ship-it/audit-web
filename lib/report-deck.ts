@@ -128,7 +128,7 @@ function tenComponents(seo: SeoComponent[], leads = false) {
     rows: c.rows.filter((r) => known(r.id)).map((r): StdRow => {
       const copy = copyOf(r.id);
       const pass = rowPass(r);
-      if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, note: r.total === 0 ? WORD.notMeasured : copy.fix };
+      if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, problem: fill(UI.checkVerify, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
       return pass ? { state: "ok", title: copy.title, result: result(r), note: "" }
         : { state: "fail", title: copy.title, result: result(r), problem: fill(UI.checkProblem, { fault: cap(fault(r)), why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
     }),
@@ -162,7 +162,7 @@ function uxFromRows(groups: SeoComponent[]) {
       const copy = uxCopy(r.id)!;
       const pass = rowPass(r);
       const result = r.total > 1 ? fill(WORD.ratio, { ok: r.ok, t: r.total }) : pass ? WORD.yes : WORD.no;
-      if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, note: r.total === 0 ? WORD.notMeasured : copy.fix };
+      if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, problem: UI.checkVerifyBare, note: fill(UI.problemsFix, { fix: copy.fix }) };
       const fault = r.total > 1 ? fill(UI.faultOn, { fail: r.total - r.ok, t: r.total, unit: NOUN.page[1] }) : UI.faultNot;
       return pass ? { state: "ok", title: copy.title, result, note: "" }
         : { state: "fail", title: copy.title, result, problem: fill(UI.checkProblemBare, { fault: cap(fault) }), note: fill(UI.problemsFix, { fix: copy.fix }) };

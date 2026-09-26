@@ -150,6 +150,7 @@ html:has(.deck.phone){font-size:15px}
 .deck .check td.what b{display:block}
 .deck .check td.what small{color:var(--muted);font-size:.88rem}
 .deck .check td.what small.problem{color:var(--bad)}
+.deck .check td.what small.problem.verify{color:var(--warn)}
 .deck .check.std td.what small{display:block;margin-top:.15rem}
 .deck .check td.res{color:var(--ink-2);white-space:nowrap;text-align:right;font-family:var(--f-num);font-weight:600}
 .deck .check tr.done td.what b{color:var(--muted);font-weight:500}

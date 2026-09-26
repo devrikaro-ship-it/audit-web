@@ -353,6 +353,9 @@ export const UI = {
   // A ✗ row of the checklist says what is wrong, why it matters, then how to fix it.
   checkProblem: "Problema: {fault}. {why}",
   checkProblemBare: "Problema: {fault}.",
+  // A row we could not measure says so, what happens if the rule is not met, and how to fix it.
+  checkVerify: "De verificat: nu am putut masura asta din afara site-ului. Daca nu e indeplinit: {why}",
+  checkVerifyBare: "De verificat: nu am putut masura asta din afara site-ului.",
   whyUnmeasured: "{text} Nu am putut masura din afara site-ului: {v}.",
   thScore: "Scor",
   thVerdict: "Verdict",
