@@ -262,8 +262,8 @@ export const UX_GROUPS: Record<string, string> = {
   viteza: "Viteza pe mobil", home: UX_PAGES.home, categorie: UX_PAGES.categorie, produs: UX_PAGES.produs, filtre: UX_PAGES.filtre,
   serviciu: cap(NOUN.servicePage[0]), contact: "Contact si programare", incredere: "Incredere",
 };
-// The four questions every page type is judged on (spec 2026-09-26 §1), in the order the checklist shows them.
-export const UX_QUESTIONS = { aspect: "Aspect", text: "Text", experienta: "Experienta", vanzare: "Vanzare" } as const;
+// The three criteria every page type is judged on (operator, 2026-09-26): does each lead to a sale, or is it filler?
+export const UX_QUESTIONS = { structura: "Structura", design: "Design", content: "Content" } as const;
 export type UxQuestion = keyof typeof UX_QUESTIONS;
 
 export type UxRowCopy = { title: string; fix: string; bad: string; problem: string; good: string };

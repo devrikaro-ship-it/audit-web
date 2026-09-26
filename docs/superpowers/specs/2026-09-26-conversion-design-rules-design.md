@@ -1,4 +1,4 @@
-# Part 2 as a checklist per page type — structure, aspect, text, experience, selling
+# Part 2 as a checklist per page type — structure, design, content: do they sell or fill?
 
 > **Status:** approved by the operator 2026-09-26 (third version). His direction: fewer overlapping technical rules
 > (the small measured rules — button in the first screen, contrast, sticky button, variant buttons, form fields — were
@@ -8,20 +8,23 @@
 
 ## 1. The shape
 
-Each page type is judged on five questions, in this order:
+> Operator, 2026-09-26 (latest): pages are judged on three criteria — structure, design, content — and for each the
+> question is whether it leads toward a sale or is only filler. It replaces the five questions of the second version
+> (aspect and experience are design; text and selling are content).
 
-1. **Structura** — does the page have the sections that lead to a sale, in a sensible order?
-2. **Aspect** — does it look modern and cared for?
-3. **Text** — are the texts short and easy to read?
-4. **Experienta** — can a visitor do what he came for without effort?
-5. **Vanzare** — are texts and proof made to sell (or to bring a contact)?
+1. **Structura** — does the page have the sections that lead to a sale, in a sensible order, or sections that fill
+   space?
+2. **Design** — does the look (modern, cared for) and the ease of use push the visitor to the next step, or is it
+   decoration?
+3. **Content** — do the texts and the proof sell (benefits, reasons, answers to objections), or do they only present
+   information?
 
 | Kind | Page types |
 |---|---|
 | Shop | Home page · Category · Product |
 | Lead site | Home page · Service · Contact |
 
-Speed on mobile stays its own group. Today's rows stay under the question they answer (increment 1, a195d4b).
+Speed on mobile stays its own group. Today's rows sit under the criterion they belong to.
 
 ## 2. Structure: the sections each page type needs
 
@@ -55,16 +58,15 @@ A section missing is a ✗ row with its problem, negative impact and fix; the he
 | 9. FAQ | 9. A final call to act | |
 | 10. A final call to act and contact | 10. Related services | |
 
-## 3. The four other questions
+## 3. Design and content: the signs judged
 
-Judged per page type by the AI on the screenshots and the page text, each against observable signs:
+Judged per page type by the AI on the screenshots and the page text; each verdict says whether the criterion leads
+to a sale or is filler, with the evidence.
 
-| Question | Shop | Lead site |
+| Criterion | Shop | Lead site |
 |---|---|---|
-| Aspect | airy spacing, two or three fonts at most, consistent colours, sharp product photos, no dated patterns | the same, with real photos of the place and team, not stock pictures |
-| Text | headings and texts short, readable at a glance; descriptions as bullets | the same on service pages; no walls of text |
-| Experienta | the first screen says what is sold and to whom; the way to the products and to the cart is obvious | the first screen says what is offered, where, and how to book; booking one tap away |
-| Vanzare | why buy here (price, delivery, guarantee, choice) is clear; proof near the button; descriptions sell benefits | the heading states the client's result; proof (reviews, years, team, results); objections answered; a promise of what happens next |
+| Design | modern and cared for (airy spacing, two or three fonts, consistent colours, sharp product photos, no dated patterns); the first screen says what is sold and to whom; the way to the products and the cart is obvious | the same, with real photos of the place and team; the first screen says what is offered, where, and how to book; booking one tap away |
+| Content | short, readable texts; why buy here (price, delivery, guarantee, choice); descriptions sell benefits; proof near the button | short, readable texts; the heading states the client's result; proof (reviews, years, team, results); objections answered; a promise of what happens next |
 
 ## 4. How it is judged
 
@@ -72,16 +74,16 @@ Judged per page type by the AI on the screenshots and the page text, each agains
    and 1440 × 900 (desktop); the screenshots are the phone first screen, the phone full page (scaled to a readable
    height) and the desktop first screen.
 2. One call per page type to Claude (`claude-opus-5`, fallback `"default"`), with the three screenshots, the page's
-   readable text and a fixed prompt listing the page type's sections and each question's signs. Structured output:
-   for each section present or missing (and whether the hero comes first), for each question a verdict (bun /
-   de-reglat / rau), the evidence (quoted text or the element named) and one problem sentence. Plain Romanian, no
+   readable text and a fixed prompt listing the page type's sections and each criterion's signs. Structured output:
+   for each section present or missing (and whether the hero comes first), for design and content a verdict (bun /
+   de-reglat / rau: leads to a sale, partly, or filler), the evidence (quoted text or the element named) and one problem sentence. Plain Romanian, no
    diacritics, no technical terms (the report's jargon list is in the prompt).
 3. A verdict without evidence, a failed call, or no API key: the row is "de verificat" and counts in no score.
 4. The calls run alongside the PageSpeed step; the audit takes about 20–30 s more.
 
 ## 5. In the report
 
-1. Each page type opens with its five questions and their verdicts, then its checklist grouped by question; the
+1. Each page type opens with its three criteria and their verdicts, then its checklist grouped by criterion; the
    structure rows list the sections.
 2. An evaluated row is labelled "Evaluat pe capturi" and shows what was seen; a measured row "Masurat".
 3. The Part 2 score counts every measured and evaluated row. Reports saved before are unchanged.

@@ -139,16 +139,16 @@ function tenComponents(seo: SeoComponent[], leads = false) {
 
 // Part 2 from its ✓/✗ rows (reports from 2026-09-25): the groups as page types with their score, what passes and
 // what fails, and every row in the standard checklist.
-// Which of the four questions each UX rule answers (spec 2026-09-26 §3); a rule not listed counts as experience.
+// Which of the three criteria each UX rule belongs to (operator, 2026-09-26); a rule not listed counts as design.
 export const UX_QUESTION_OF: Record<string, UxQuestion> = {
-  home_message: "experienta", home_menu: "experienta", home_paths: "vanzare", home_mobile: "aspect",
-  cat_grid: "experienta", cat_trail: "experienta", cat_pagination: "experienta", cat_intro: "text", filters: "experienta", sort: "experienta",
-  prod_images: "aspect", prod_price: "vanzare", prod_cart: "experienta", prod_description: "text", prod_reviews: "vanzare", prod_related: "vanzare",
-  lead_home_offer: "experienta", lead_home_phone: "experienta", lead_home_cta: "vanzare",
-  tr_reviews: "vanzare", tr_team: "vanzare", tr_certs: "vanzare", tr_photos: "aspect",
-  srv_explains: "vanzare", srv_price: "vanzare", srv_cta: "experienta", srv_related: "experienta",
-  ct_form_short: "experienta", ct_call: "experienta", ct_chat: "experienta", ct_map: "experienta", ct_hours: "experienta",
-};
+  home_message: "content", home_menu: "structura", home_paths: "structura", home_mobile: "design",
+  cat_grid: "design", cat_trail: "structura", cat_pagination: "structura", cat_intro: "content", filters: "design", sort: "design",
+  prod_images: "design", prod_price: "content", prod_cart: "design", prod_description: "content", prod_reviews: "content", prod_related: "structura",
+  lead_home_offer: "content", lead_home_phone: "design", lead_home_cta: "design",
+  tr_reviews: "content", tr_team: "content", tr_certs: "content", tr_photos: "design",
+  srv_explains: "content", srv_price: "content", srv_cta: "design", srv_related: "structura",
+  ct_form_short: "design", ct_call: "design", ct_chat: "design", ct_map: "design", ct_hours: "content",
+}
 
 type UxCopy = { title: string; fix: string; bad: string; problem: string; good: string };
 const uxCopy = (id: string): UxCopy | null => {
@@ -176,17 +176,17 @@ function uxFromRows(groups: SeoComponent[]) {
       missing: rowsOf(g).filter((r) => rowPass(r) === false).map(bad),
     };
   });
-  // A page type's rows ordered by the four questions, each question headed by its verdict (spec 2026-09-26 §1).
+  // A page type's rows ordered by the three criteria, each criterion headed by its verdict (operator, 2026-09-26).
   const order = Object.keys(UX_QUESTIONS) as UxQuestion[];
   const byQuestion = (g: SeoComponent) => g.id === "viteza" ? rowsOf(g)
-    : [...rowsOf(g)].sort((a, b) => order.indexOf(UX_QUESTION_OF[a.id] ?? "experienta") - order.indexOf(UX_QUESTION_OF[b.id] ?? "experienta"));
+    : [...rowsOf(g)].sort((a, b) => order.indexOf(UX_QUESTION_OF[a.id] ?? "design") - order.indexOf(UX_QUESTION_OF[b.id] ?? "design"));
   const headOf = (g: SeoComponent, q: UxQuestion) => {
-    const score = componentScore({ id: q, rows: rowsOf(g).filter((r) => (UX_QUESTION_OF[r.id] ?? "experienta") === q) });
+    const score = componentScore({ id: q, rows: rowsOf(g).filter((r) => (UX_QUESTION_OF[r.id] ?? "design") === q) });
     return fill(UI.questionHead, { question: UX_QUESTIONS[q], verdict: score === null ? cap(WORD.verify) : VERDICT_LABEL[verdict(score)] });
   };
   const standard: StdGroup[] = named.map((g) => ({
     name: UX_GROUPS[g.id], score: componentScore(g),
-    rows: byQuestion(g).map((r): StdRow => ({ ...row(r), ...(g.id === "viteza" ? {} : { question: headOf(g, UX_QUESTION_OF[r.id] ?? "experienta") }) })),
+    rows: byQuestion(g).map((r): StdRow => ({ ...row(r), ...(g.id === "viteza" ? {} : { question: headOf(g, UX_QUESTION_OF[r.id] ?? "design") }) })),
   }));
   function row(r: SeoComponent["rows"][number]): StdRow {
     const copy = uxCopy(r.id)!;
