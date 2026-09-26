@@ -94,8 +94,7 @@ function tenComponents(seo: SeoComponent[], leads = false) {
   const copyOf = (id: string) => ({ ...ROWS[id], ...(leads ? ROWS_LEADS[id] : {}) }) as RowCopy;
   const result = (r: SeoComponent["rows"][number]) => (copyOf(r.id).unit ? fill(WORD.outOf, { ok: r.ok, t: r.total, unit: copyOf(r.id).unit }) : r.ok === r.total ? WORD.yes : WORD.no);
   // The problem of a failing rule, with how many it concerns: "robots.txt blocheaza 6 din 40 de adrese: ...".
-  const unitCount = (t: number, unit: string) => (t === 1 ? `1 ${UNIT_ONE[unit] ?? unit}` : countOf(t, [UNIT_ONE[unit] ?? unit, unit]));
-  const bad = (r: SeoComponent["rows"][number]) => fill(copyOf(r.id).bad, { n: fill(UI.countOf, { fail: r.total - r.ok, total: unitCount(r.total, copyOf(r.id).unit) }) });
+  const bad = (r: SeoComponent["rows"][number]) => fill(copyOf(r.id).bad, { n: countIn(r.total - r.ok, r.total, copyOf(r.id).unit) });
   // Why a component scored what it did: its score is the share of its measured checks that pass (seo-score.ts).
   const why = (c: SeoComponent, i: number): string => {
     const own = c.rows.filter((r) => known(r.id));
@@ -140,14 +139,22 @@ function tenComponents(seo: SeoComponent[], leads = false) {
 
 // Part 2 from its ✓/✗ rows (reports from 2026-09-25): the groups as page types with their score, what passes and
 // what fails, and every row in the standard checklist.
-const uxCopy = (id: string): { title: string; fix: string } | null => {
+type UxCopy = { title: string; fix: string; bad: string; problem: string; good: string };
+const uxCopy = (id: string): UxCopy | null => {
   if (UX_ROWS[id]) return UX_ROWS[id];
-  const signal = (UX_SIGNALS as Record<string, { found: string; fix: string }>)[id];
-  return signal ? { title: cap(signal.found), fix: signal.fix } : null;
+  const signal = (UX_SIGNALS as Record<string, { found: string; fix: string; bad: string; problem: string; good: string }>)[id];
+  return signal ? { title: cap(signal.found), fix: signal.fix, bad: signal.bad, problem: signal.problem, good: signal.good } : null;
 };
+// A count as its row's unit reads: "11 din 12 pagini de servicii", singular for one.
+function countIn(fail: number, total: number, unit: string): string {
+  const one = UNIT_ONE[unit] ?? unit;
+  return fill(UI.countOf, { fail, total: total === 1 ? `1 ${one}` : countOf(total, [one, unit]) });
+}
 function uxFromRows(groups: SeoComponent[]) {
   const named = groups.filter((g) => UX_GROUPS[g.id]);
   const rowsOf = (g: SeoComponent) => g.rows.filter((r) => uxCopy(r.id));
+  // A rule measured on several pages (a lead site's service pages) counts them; the others are yes or no.
+  const bad = (r: SeoComponent["rows"][number]) => fill(uxCopy(r.id)!.bad, { n: countIn(r.total - r.ok, r.total, NOUN.servicePage[1]) });
   const pages: UxPage[] = named.filter((g) => g.id !== "viteza").map((g) => {
     const score = componentScore(g);
     return {
@@ -155,7 +162,7 @@ function uxFromRows(groups: SeoComponent[]) {
       verdict: score === null ? cap(WORD.verify) : VERDICT_LABEL[verdict(score)],
       tone: score === null ? "warn" : toneOf(score),
       found: rowsOf(g).filter((r) => rowPass(r) === true).map((r) => uxCopy(r.id)!.title),
-      missing: rowsOf(g).filter((r) => rowPass(r) === false).map((r) => uxCopy(r.id)!.title),
+      missing: rowsOf(g).filter((r) => rowPass(r) === false).map(bad),
     };
   });
   const standard: StdGroup[] = named.map((g) => ({
@@ -164,10 +171,9 @@ function uxFromRows(groups: SeoComponent[]) {
       const copy = uxCopy(r.id)!;
       const pass = rowPass(r);
       const result = r.total > 1 ? fill(WORD.ratio, { ok: r.ok, t: r.total }) : pass ? WORD.yes : WORD.no;
-      if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, problem: UI.checkVerifyBare, note: fill(UI.problemsFix, { fix: copy.fix }) };
-      const fault = r.total > 1 ? fill(UI.faultOn, { fail: r.total - r.ok, t: r.total, unit: NOUN.page[1] }) : UI.faultNot;
-      return pass ? { state: "ok", title: copy.title, result, note: "" }
-        : { state: "fail", title: copy.title, result, problem: fill(UI.checkProblemBare, { fault: cap(fault) }), note: fill(UI.problemsFix, { fix: copy.fix }) };
+      if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, problem: fill(UI.checkVerify, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
+      return pass ? { state: "ok", title: copy.title, result, note: fill(UI.whyGoodLine, { why: copy.good }) }
+        : { state: "fail", title: bad(r), result: WORD.repair, problem: fill(UI.whyBadLine, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
     }),
   }));
   return { score: tenScore(groups), pages, standard };

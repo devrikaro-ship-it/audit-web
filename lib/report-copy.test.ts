@@ -94,8 +94,9 @@ describe("the report speaks the shop owner's language", () => {
     expect(text).toMatch(/1 din 5 pagini nu se deschid: dau eroare sau nu mai exista Impact negativ: Un client sau Google care ajunge pe o pagina cu eroare pleaca[^.]*\. Cum se repara: /);
     expect(text).toMatch(/Site-ul are fisierul robots\.txt, cu regulile pentru Google Impact pozitiv: Google citeste site-ul dupa regulile tale si afla mai repede de paginile noi\./);
     // Part 2 as ✓/✗ rows, both kinds.
-    expect(text).toContain("Formularul de contact are cel mult cinci campuri");
-    expect(text).toContain("Lista de produse arata poza si pretul fiecarui produs");
+    // Part 2 in the same form: a failing rule named by its problem, then its impact and its fix.
+    expect(text).toMatch(/Site-ul nu are un formular scurt de contact, de cel mult cinci campuri Impact negativ: Un formular lung[^.]*\. Cum se repara: /);
+    expect(text).toContain("Lista de produse nu arata poza si pretul fiecarui produs");
     expect(text).toContain("Paginile se deschid corect");
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
     // Counts as Romanian writes them: "4 pagini", never "4 de pagini" (1-19 and 101-119 take no "de").
@@ -200,6 +201,14 @@ describe("every rule says its problem, why it is bad and why it is good", () => 
     const shop = tenData.seo!.flatMap((c) => c.rows).map((r) => r.id).filter((id) => !REGISTRY.ROWS[id]);
     const lead = leadData.seo!.flatMap((c) => c.rows).map((r) => r.id).filter((id) => !REGISTRY.ROWS[id] && !REGISTRY.ROWS_LEADS[id]);
     expect([...shop, ...lead]).toEqual([]);
+  });
+
+  it("every UX rule, shop signal or lead row, says its problem and both impacts", () => {
+    const need = ["bad", "problem", "good"] as const;
+    const rows = { ...(REGISTRY.UX_SIGNALS as Record<string, Record<string, string>>), ...(REGISTRY.UX_ROWS as Record<string, Record<string, string>>) };
+    expect(Object.entries(rows).flatMap(([k, r]) => need.filter((f) => !r[f]).map((f) => `${k}.${f}`))).toEqual([]);
+    const ux = [tenData, leadData].flatMap((d) => (d.uxStd ?? []).flatMap((c) => c.rows)).map((r) => r.id).filter((id) => !rows[id]);
+    expect(ux).toEqual([]);
   });
 });
 
