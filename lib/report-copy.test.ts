@@ -82,16 +82,17 @@ describe("the report speaks the shop owner's language", () => {
   it("shows no technical term on a report built from the ten SEO components", () => {
     const text = [tenData, leadData].map((d) => visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: d })))).join(" ");
     // The lead report is really rendered in its own words.
-    expect(text).toContain("Google primeste adresa si telefonul afacerii");
-    // Each component says why it has its verdict; a failing rule is said to fail, never shown as a count alone.
+    expect(text).toContain("Google nu primeste adresa si telefonul afacerii");
+    // Each component says why it has its verdict; a failing rule is named by its problem, with its count.
     expect(text).toMatch(/De ce e (bun|de reglat|rau): /);
-    expect(text).toContain("Tot site-ul se deschide pe conexiune securizata (https): nu e indeplinit");
+    expect(text).toContain("De reparat: 1 din 5 pagini nu se deschid: dau eroare sau nu mai exista");
     // More failing rules than the line names: it says how many and where they are, never a bare "si inca 3".
     expect(text).toContain("plus inca 3 reguli, in checklist la componenta 9");
     // A row we could not measure says what is at stake and how to fix it, not only that we could not measure it.
-    expect(text).toMatch(/Titlurile au 15-65 de caractere De verificat: nu am putut masura asta din afara site-ului\. Daca nu e indeplinit: Un titlu prea scurt[^.]*\. Cum se repara: Tine titlurile intre 15 si 65 de caractere/);
-    // A ✗ row of the checklist says what is wrong and why, before how to fix it.
-    expect(text).toMatch(/Paginile citite se deschid fara eroare Problema: Nu e indeplinit pe 1 din 5 pagini\. Unele pagini citite raspund cu eroare: nu exista sau serverul da gres\. Cum se repara: /);
+    expect(text).toMatch(/Titlurile au 15-65 de caractere De verificat: nu am putut masura asta din afara site-ului\. Impact negativ daca nu e indeplinit: Un titlu prea scurt[^.]*\. Cum se repara: Tine titlurile intre 15 si 65 de caractere/);
+    // A ✗ row states the problem with its count, then why that is bad, then how to fix it; a ✓ row says why it is good.
+    expect(text).toMatch(/1 din 5 pagini nu se deschid: dau eroare sau nu mai exista Impact negativ: Un client sau Google care ajunge pe o pagina cu eroare pleaca[^.]*\. Cum se repara: /);
+    expect(text).toMatch(/Site-ul are fisierul robots\.txt, cu regulile pentru Google Impact pozitiv: Google citeste site-ul dupa regulile tale si afla mai repede de paginile noi\./);
     // Part 2 as ✓/✗ rows, both kinds.
     expect(text).toContain("Formularul de contact are cel mult cinci campuri");
     expect(text).toContain("Lista de produse arata poza si pretul fiecarui produs");
@@ -184,6 +185,23 @@ const outsideRegistry = (html: string) => {
   };
   return [...new Set(segments(html).filter((t) => !known(t)))];
 };
+
+describe("every rule says its problem, why it is bad and why it is good", () => {
+  it("each shop row and each lead row, with lead overrides laid over the shop row", () => {
+    const missing: string[] = [];
+    const need = ["bad", "problem", "good"] as const;
+    for (const [k, r] of Object.entries(REGISTRY.ROWS)) for (const f of need) if (!r[f]) missing.push(`${k}.${f}`);
+    for (const [k, r] of Object.entries(REGISTRY.ROWS_LEADS)) { const m = { ...REGISTRY.ROWS[k], ...r } as Record<string, string>; for (const f of need) if (!m[f]) missing.push(`lead ${k}.${f}`); }
+    expect(missing).toEqual([]);
+  });
+
+  it("every row the engine measures has its wording: a row without one would vanish from the report unseen", () => {
+    // 2026-09-26: a rewrite of the register dropped its last row (ai_profiluri); the report filtered it out silently.
+    const shop = tenData.seo!.flatMap((c) => c.rows).map((r) => r.id).filter((id) => !REGISTRY.ROWS[id]);
+    const lead = leadData.seo!.flatMap((c) => c.rows).map((r) => r.id).filter((id) => !REGISTRY.ROWS[id] && !REGISTRY.ROWS_LEADS[id]);
+    expect([...shop, ...lead]).toEqual([]);
+  });
+});
 
 describe("the report speaks only from its register", () => {
   it("every visible text of a report, old or with the ten components, desktop or phone, comes from the register", () => {

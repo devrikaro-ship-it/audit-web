@@ -4,7 +4,7 @@ import { CHECKS } from "./problems-db";
 import { statusScore, verdict, type Verdict } from "./scoring";
 import type { AuditData, CheckResult, PageCheck, SeoComponent, UxField } from "./types";
 import { componentScore, rowPass, seoScore as tenScore } from "./seo-score";
-import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, countOf, fill, NOUN, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_GROUPS, UX_ROWS, UX_SIGNAL_BEFORE_2026_09_24, UX_SIGNALS, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
+import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, countOf, fill, NOUN, UNIT_ONE, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_GROUPS, UX_ROWS, UX_SIGNAL_BEFORE_2026_09_24, UX_SIGNALS, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
 export { PAGE_COPY } from "./copy-registry";
 
 export type Tone = "good" | "warn" | "bad";
@@ -93,7 +93,9 @@ function tenComponents(seo: SeoComponent[], leads = false) {
   const known = (id: string) => !!ROWS[id] || (leads && !!ROWS_LEADS[id]);
   const copyOf = (id: string) => ({ ...ROWS[id], ...(leads ? ROWS_LEADS[id] : {}) }) as RowCopy;
   const result = (r: SeoComponent["rows"][number]) => (copyOf(r.id).unit ? fill(WORD.outOf, { ok: r.ok, t: r.total, unit: copyOf(r.id).unit }) : r.ok === r.total ? WORD.yes : WORD.no);
-  const fault = (r: SeoComponent["rows"][number]) => (copyOf(r.id).unit ? fill(UI.faultOn, { fail: r.total - r.ok, t: r.total, unit: copyOf(r.id).unit }) : UI.faultNot);
+  // The problem of a failing rule, with how many it concerns: "robots.txt blocheaza 6 din 40 de adrese: ...".
+  const unitCount = (t: number, unit: string) => (t === 1 ? `1 ${UNIT_ONE[unit] ?? unit}` : countOf(t, [UNIT_ONE[unit] ?? unit, unit]));
+  const bad = (r: SeoComponent["rows"][number]) => fill(copyOf(r.id).bad, { n: fill(UI.countOf, { fail: r.total - r.ok, total: unitCount(r.total, copyOf(r.id).unit) }) });
   // Why a component scored what it did: its score is the share of its measured checks that pass (seo-score.ts).
   const why = (c: SeoComponent, i: number): string => {
     const own = c.rows.filter((r) => known(r.id));
@@ -101,7 +103,7 @@ function tenComponents(seo: SeoComponent[], leads = false) {
     const failing = judged.filter((r) => rowPass(r) === false);
     const unmeasured = own.length - judged.length;
     if (judged.length === 0) return WORD.notMeasured;
-    const listed = failing.slice(0, 2).map((r) => fill(UI.whyFault, { title: copyOf(r.id).title, fault: fault(r) })).join("; ");
+    const listed = failing.slice(0, 2).map(bad).join("; ");
     const faults = failing.length > 2 ? fill(UI.whyMoreFaults, { faults: listed, k: countOf(failing.length - 2, NOUN.rule), i: i + 1 }) : listed;
     const ok = judged.length - failing.length, n = judged.length;
     // Each verdict has its own sentence; the verdict is the one the pill shows (scoring.ts).
@@ -116,10 +118,10 @@ function tenComponents(seo: SeoComponent[], leads = false) {
   const rows = seo.flatMap((c) => c.rows).filter((r) => known(r.id));
   const faults = rows.filter((r) => rowPass(r) === false);
   const problems: Problem[] = faults.slice(0, 4).map((r) => ({
-    title: copyOf(r.id).title,
-    count: cap(fault(r)),
+    title: bad(r),
+    count: WORD.repair,
     tone: r.ok / r.total < 0.5 ? "bad" : "warn",
-    problem: copyOf(r.id).problem,
+    problem: fill(UI.whyBadLine, { why: copyOf(r.id).problem }),
     fix: copyOf(r.id).fix,
   }));
   const standard: StdGroup[] = seo.filter((c) => COMPONENTS[c.id]).map((c, i) => ({
@@ -129,8 +131,8 @@ function tenComponents(seo: SeoComponent[], leads = false) {
       const copy = copyOf(r.id);
       const pass = rowPass(r);
       if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, problem: fill(UI.checkVerify, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
-      return pass ? { state: "ok", title: copy.title, result: result(r), note: "" }
-        : { state: "fail", title: copy.title, result: result(r), problem: fill(UI.checkProblem, { fault: cap(fault(r)), why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
+      return pass ? { state: "ok", title: copy.title, result: result(r), note: fill(UI.whyGoodLine, { why: copy.good }) }
+        : { state: "fail", title: bad(r), result: WORD.repair, problem: fill(UI.whyBadLine, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
     }),
   }));
   return { score: tenScore(seo), zones, pills: Object.values(STAGES), problems, checklist: [], standard };
