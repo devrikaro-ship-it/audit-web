@@ -1,12 +1,12 @@
 ---
 name: audit-devrika
-description: "Devrika audits — the container skill. Its branch `audit-site` is the website audit for online stores and lead sites (lead magnet): starting only from the site URL, with no account access, it reads the pages that sell and produces a public report as a 16:9 deck in two parts, SEO (including visibility in AI assistants) then UX/UI, each closing with a checklist, written for a non-technical decision maker. The Google Ads audit is the separate `audit-google-ads` skill. Use when: site audit, website audit, audit a prospect's store or site, store audit report, run the audit tool on a URL."
+description: "Devrika audits — the container skill, with two branches. `audit-site`: the website audit for online stores and lead sites (lead magnet) — from the site URL only, with no account access, it reads the pages that sell and produces a public 16:9 report deck in two parts, SEO (including visibility in AI assistants) then UX/UI, each closing with a checklist, for a non-technical decision maker. `audit-google-ads`: the self-serve, non-mutating ecommerce Google Ads audit at audit.devrika.ro/google-ads on a connected account, its report flow and its documentation. Use when: site audit, website audit, audit a prospect's store or site, store audit report, run the audit tool on a URL, the Google Ads audit at /google-ads. Not for agency MCC audits, Google Ads optimization, leads accounts or account mutations."
 user-invokable: true
 argument-hint: "[url]"
 license: MIT
 metadata:
   author: Devrika
-  version: "4.0.0"
+  version: "4.1.0"
   category: audit
 ---
 
@@ -18,9 +18,7 @@ before acting.
 | Branch | What it audits | Where |
 |---|---|---|
 | **audit-site** | a site, from its URL only: SEO and UX/UI | `audit-site/SKILL.md` |
-
-The Google Ads audit (a connected Google Ads account) is still the separate skill `audit-google-ads`
-(`~/.claude/skills/audit-google-ads`), although its code lives in the same app.
+| **audit-google-ads** | a connected ecommerce Google Ads account, read only (`/google-ads`) | `audit-google-ads/SKILL.md` |
 
 ## Where the container lives
 
@@ -30,4 +28,5 @@ symlinked as `~/.claude/skills/audit-devrika`. The code, the specs (`docs/`) and
 ## Routing
 
 1. A site audit, a report on a prospect's site, the funnel, the report deck or its PDF → `audit-site/SKILL.md`.
-2. A connected Google Ads account → the `audit-google-ads` skill.
+2. The Google Ads audit on a connected account (`/google-ads`), its report or its OAuth disclosures →
+   `audit-google-ads/SKILL.md`.

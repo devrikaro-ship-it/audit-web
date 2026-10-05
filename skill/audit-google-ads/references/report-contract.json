@@ -1,0 +1,418 @@
+{
+  "version": 1,
+  "pipeline": [
+    {
+      "kind": "source",
+      "symbol": "fetchShoppingProducts",
+      "module": "@/lib/gads-intake",
+      "operation": "fetchShoppingProducts",
+      "inclusion": "included",
+      "availability": "required-primary-optional-secondary",
+      "failureVisibility": "explicit-primary-silent-secondary",
+      "dependencies": [],
+      "effect": "The primary read enables the report; secondary short-window reads enable the catalog map.",
+      "readCategories": [
+        "shopping-product-performance"
+      ]
+    },
+    {
+      "kind": "source",
+      "symbol": "fetchTracking",
+      "module": "@/lib/gads-tracking",
+      "operation": "fetchTracking",
+      "inclusion": "included",
+      "availability": "optional-with-fallback",
+      "failureVisibility": "explicit",
+      "dependencies": [],
+      "effect": "Failure becomes an unknown tracking state and quarantines conversion-dependent conclusions.",
+      "readCategories": [
+        "conversion-tracking"
+      ]
+    },
+    {
+      "kind": "source",
+      "symbol": "fetchStructura",
+      "module": "@/lib/gads-structure",
+      "operation": "fetchStructura",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "silent",
+      "dependencies": [],
+      "effect": "Failure silently removes structure findings, blocks PMax analysis, and can remove the simulator call to action.",
+      "readCategories": [
+        "campaign-structure"
+      ]
+    },
+    {
+      "kind": "source",
+      "symbol": "fetchKeywordData",
+      "module": "@/lib/gads-keywords",
+      "operation": "fetchKeywordData",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "silent-with-specific-visibility-caveat",
+      "dependencies": [],
+      "effect": "An outer failure silently removes keyword findings; a narrower unavailable search-term view can produce a visibility caveat.",
+      "readCategories": [
+        "negative-keywords",
+        "search-terms"
+      ]
+    },
+    {
+      "kind": "source",
+      "symbol": "fetchPmaxData",
+      "module": "@/lib/gads-pmax",
+      "operation": "fetchPmaxData",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "silent",
+      "dependencies": [],
+      "effect": "Failure silently removes PMax findings.",
+      "readCategories": [
+        "performance-max"
+      ]
+    },
+    {
+      "kind": "source",
+      "symbol": "fetchShoppingData",
+      "module": "@/lib/gads-shopping",
+      "operation": "fetchShoppingData",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "silent",
+      "dependencies": [],
+      "effect": "Failure silently removes Standard Shopping findings.",
+      "readCategories": [
+        "shopping-campaigns"
+      ]
+    },
+    {
+      "kind": "source",
+      "symbol": "fetchSearchData",
+      "module": "@/lib/gads-search",
+      "operation": "fetchSearchData",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "silent",
+      "dependencies": [],
+      "effect": "Failure silently removes Search findings.",
+      "readCategories": [
+        "search-campaigns"
+      ]
+    },
+    {
+      "kind": "source",
+      "symbol": "citesteAn",
+      "module": "@/lib/gads-an",
+      "operation": "citesteAn",
+      "inclusion": "included",
+      "availability": "optional-with-fallback",
+      "failureVisibility": "server-log-only",
+      "dependencies": [],
+      "effect": "Failure is logged on the server and the report falls back to available structure totals.",
+      "readCategories": [
+        "annual-account-totals"
+      ]
+    },
+    {
+      "kind": "analysis",
+      "symbol": "analizeazaCuvinte",
+      "module": "@/lib/gads-keywords",
+      "operation": "analizeazaCuvinte",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "not-applicable",
+      "dependencies": [
+        "fetchKeywordData",
+        "fetchShoppingProducts"
+      ],
+      "effect": "Produces negative-keyword and paid search-term findings when keyword data exists."
+    },
+    {
+      "kind": "analysis",
+      "symbol": "analizeazaPmax",
+      "module": "@/lib/gads-pmax",
+      "operation": "analizeazaPmax",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "not-applicable",
+      "dependencies": [
+        "fetchPmaxData",
+        "fetchStructura"
+      ],
+      "effect": "Produces PMax findings only when both raw PMax data and account structure exist."
+    },
+    {
+      "kind": "analysis",
+      "symbol": "analizeazaSearch",
+      "module": "@/lib/gads-search",
+      "operation": "analizeazaSearch",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "not-applicable",
+      "dependencies": [
+        "fetchSearchData"
+      ],
+      "effect": "Produces Search campaign and responsive-ad findings when Search data exists."
+    },
+    {
+      "kind": "analysis",
+      "symbol": "analizeazaShopping",
+      "module": "@/lib/gads-shopping",
+      "operation": "analizeazaShopping",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "not-applicable",
+      "dependencies": [
+        "fetchShoppingData",
+        "fetchTracking"
+      ],
+      "effect": "Produces Standard Shopping findings and receives tracking reliability."
+    },
+    {
+      "kind": "analysis",
+      "symbol": "audit",
+      "module": "@/lib/gads-audit",
+      "operation": "audit",
+      "inclusion": "included",
+      "availability": "required",
+      "failureVisibility": "not-applicable",
+      "dependencies": [
+        "fetchShoppingProducts"
+      ],
+      "effect": "Classifies product performance against the derived break-even threshold."
+    },
+    {
+      "kind": "analysis",
+      "symbol": "breakEvenRoas",
+      "module": "@/lib/gads-audit",
+      "operation": "breakEvenRoas",
+      "inclusion": "included",
+      "availability": "required",
+      "failureVisibility": "not-applicable",
+      "dependencies": [],
+      "effect": "Derives the break-even return threshold from the supplied gross margin."
+    },
+    {
+      "kind": "analysis",
+      "symbol": "bugetLunarDin",
+      "module": "@/lib/gads-an",
+      "operation": "bugetLunarDin",
+      "inclusion": "included",
+      "availability": "optional-with-fallback",
+      "failureVisibility": "not-applicable",
+      "dependencies": [
+        "citesteAn",
+        "fetchStructura"
+      ],
+      "effect": "Derives monthly spend from annual totals or falls back to structure spend."
+    },
+    {
+      "kind": "analysis",
+      "symbol": "buildReport",
+      "module": "@/lib/gads-findings",
+      "operation": "buildReport",
+      "inclusion": "included",
+      "availability": "required",
+      "failureVisibility": "not-applicable",
+      "dependencies": [
+        "audit",
+        "fetchTracking",
+        "analizeazaCuvinte",
+        "analizeazaPmax",
+        "analizeazaShopping",
+        "analizeazaSearch",
+        "citesteAn"
+      ],
+      "effect": "Combines required product evidence and whichever optional analyses exist."
+    },
+    {
+      "kind": "analysis",
+      "symbol": "roasImbunatatit",
+      "module": "@/lib/calc",
+      "operation": "roasImbunatatit",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "not-applicable",
+      "dependencies": [
+        "bugetLunarDin"
+      ],
+      "effect": "Calculates the labeled simulator projection used by the report call to action."
+    },
+    {
+      "kind": "analysis",
+      "symbol": "segmenteaza",
+      "module": "@/lib/gads-findings",
+      "operation": "segmenteaza",
+      "inclusion": "included",
+      "availability": "optional",
+      "failureVisibility": "not-applicable",
+      "dependencies": [
+        "audit",
+        "fetchTracking",
+        "fetchShoppingProducts"
+      ],
+      "effect": "Builds catalog-map segments for successful short-window product reads."
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "navigation",
+      "inclusion": "included",
+      "rendering": "always-on-success",
+      "dependencies": [],
+      "effect": "Keeps the report navigation visible on every successful report.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "renders every unconditional report surface"
+      }
+    },
+    {
+      "id": "demo-banner",
+      "inclusion": "included",
+      "rendering": "conditional",
+      "dependencies": [
+        "isDemo"
+      ],
+      "projection": [
+        "demo"
+      ],
+      "guard": "demoBanner",
+      "predicate": "isDemo",
+      "effect": "Labels simulated demo data when demo mode is active.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "renders the demo banner only in demo mode"
+      }
+    },
+    {
+      "id": "headline-summary",
+      "inclusion": "included",
+      "rendering": "always-on-success",
+      "dependencies": [],
+      "effect": "Shows the account, evidence window, headline, and summary after the primary report input succeeds.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "keeps the gradient headline and white summary as sibling parts"
+      }
+    },
+    {
+      "id": "money-findings",
+      "inclusion": "included",
+      "rendering": "always-on-success",
+      "dependencies": [],
+      "effect": "Shows every non-quarantined finding, including MEASURED, ESTIMATE, and SIMULATION tiers.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "renders all evidence tiers inside money findings"
+      }
+    },
+    {
+      "id": "catalog-map",
+      "inclusion": "included",
+      "rendering": "conditional",
+      "dependencies": [
+        "catalogCount"
+      ],
+      "projection": [
+        "hartiCatalog.length"
+      ],
+      "guard": "catalogMap",
+      "predicate": "catalogCount>=1",
+      "effect": "Shows catalog performance when at least one secondary short-window catalog read succeeds.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "renders the catalog map at one and many windows but not zero"
+      }
+    },
+    {
+      "id": "account-settings",
+      "inclusion": "included",
+      "rendering": "conditional",
+      "dependencies": [
+        "repairPointCount"
+      ],
+      "projection": [
+        "rep.puncte.length"
+      ],
+      "guard": "accountSettings",
+      "predicate": "repairPointCount>=1",
+      "effect": "Shows repair points when the combined report contains at least one account-setting finding.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "exercises account, simulator, and contact availability branches"
+      }
+    },
+    {
+      "id": "unsupported-conclusions",
+      "inclusion": "included",
+      "rendering": "conditional",
+      "dependencies": [
+        "quarantinedCount"
+      ],
+      "projection": [
+        "nejudecabile.length"
+      ],
+      "guard": "unsupportedConclusions",
+      "predicate": "quarantinedCount>=1",
+      "effect": "Shows conclusions quarantined by tracking or another evidence gate.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "exercises both unsupported-conclusion guard branches"
+      }
+    },
+    {
+      "id": "simulator-call-to-action",
+      "inclusion": "included",
+      "rendering": "conditional",
+      "dependencies": [
+        "hasStructure",
+        "currentRoas"
+      ],
+      "projection": [
+        "Boolean(structura)",
+        "structura?.roasCont??0"
+      ],
+      "guard": "simulator",
+      "predicate": "hasStructure&&currentRoas>0",
+      "effect": "Offers the separate simulator when structure and current account return are available.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "exercises account, simulator, and contact availability branches"
+      }
+    },
+    {
+      "id": "contact-form",
+      "inclusion": "included",
+      "rendering": "always-on-success",
+      "dependencies": [],
+      "effect": "Shows the contact path after findings on every successful report.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "renders every unconditional report surface"
+      }
+    },
+    {
+      "id": "honesty-and-caveats",
+      "inclusion": "included",
+      "rendering": "always-on-success",
+      "dependencies": [],
+      "effect": "Defines evidence labels and lists the caveats the current report actually produces.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "renders every unconditional report surface"
+      }
+    },
+    {
+      "id": "catalog-unavailable-recovery",
+      "inclusion": "included",
+      "rendering": "alternative",
+      "dependencies": [],
+      "effect": "Replaces the report when the primary catalog read fails.",
+      "evidence": {
+        "type": "render-test",
+        "testName": "renders the alternative recovery surface when the primary catalog read fails"
+      }
+    }
+  ]
+}
