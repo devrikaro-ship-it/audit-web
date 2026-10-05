@@ -1,5 +1,4 @@
 import { href } from "@/shared/route-table";
-import { type GadsReportSnapshot } from "@/modules/google-ads/model/data/report-delivery";
 import { publicOAuthAttributes } from "@/shared/public-contract/oauth-contract";
 import ReportingDashboard from "@/modules/google-ads/view/reporting-dashboard";
 import { reportTimestamp } from "@/modules/google-ads/controller/show-portal";

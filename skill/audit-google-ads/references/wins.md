@@ -16,14 +16,14 @@ rejects ungoverned platform calls and visible surfaces, and runs the rendered bo
 Use the full catalog as the population and attach performance from the latest 365 days by product item ID. This
 keeps products with no impressions visible and makes the invisible-product share measurable.
 
-Verified by `lib/gads-intake.test.ts`.
+Verified by `modules/google-ads/tests/gads-intake.test.ts`.
 
 ## Derive break-even return from margin
 
 Ask for approximate gross margin and derive break-even ROAS. This gives the user an input they can
 reasonably know and prevents an invented account target from governing the audit.
 
-Verified by `lib/gads-audit.test.ts` and the margin step in `app/google-ads/marja/`.
+Verified by `modules/google-ads/tests/gads-audit.test.ts` and the margin step in `app/google-ads/marja/`.
 
 ## Render the real report in tests
 

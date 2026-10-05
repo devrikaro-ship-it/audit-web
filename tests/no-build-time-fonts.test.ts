@@ -14,7 +14,7 @@ describe("fonts come from the app", () => {
     const root = process.cwd();
     const offenders = ["app", "components", "lib", "modules", "shared"].flatMap((d) => files(path.join(root, d)))
       .filter((f) => /next\/font\/google|fonts\.googleapis\.com/.test(readFileSync(f, "utf8").replace(/\/\/.*$|\/\*[\s\S]*?\*\//gm, "")))
-      .map((f) => path.relative(root, f)).filter((f) => f !== "lib/no-build-time-fonts.test.ts");
+      .map((f) => path.relative(root, f)).filter((f) => f !== "tests/no-build-time-fonts.test.ts");
     expect(offenders).toEqual([]);
   });
 

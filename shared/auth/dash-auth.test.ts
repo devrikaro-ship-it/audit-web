@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { dashCredentials, basicAuthOk } from "./dash-auth";
+import { dashCredentials, basicAuthOk } from "@/shared/auth/dash-auth";
 
 const antet = (u: string, p: string) => `Basic ${Buffer.from(`${u}:${p}`).toString("base64")}`;
 

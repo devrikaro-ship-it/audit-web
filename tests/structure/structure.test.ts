@@ -22,6 +22,8 @@ describe("structure rules on fixtures", () => {
     ok("modules/site-audit/view/deck.tsx", `import { useState } from "react";\nimport { show } from "../controller/show";`);
     bad("modules/site-audit/view/deck.tsx", `import { load } from "../model/data/audit-repository";`, 2);
     bad("modules/site-audit/view/deck.tsx", `import { jsonStore } from "@/shared/storage/json-file";`, 2);
+    ok("modules/dashboard/view/report.tsx", `import { ReportingDashboard } from "@/modules/google-ads";`);
+    bad("modules/dashboard/view/report.tsx", `import { readLeads } from "@/modules/google-ads/model/data/leads";`, 2);
   });
   it("rule 3: the model touches no network, disk, environment or React", () => {
     ok("modules/site-audit/model/score.ts", `import { WORD } from "@/shared/copy";\nimport type { X } from "./data/x";`);

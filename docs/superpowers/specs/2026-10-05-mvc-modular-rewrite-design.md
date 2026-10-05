@@ -54,7 +54,8 @@ Each rule is enforced by a test that reads the imports and fails when the rule i
 
 1. A route file in `app/` whose address is bound in `routes.ts` imports only `@/routes` (and Next itself); it may
    also hold Next's literal segment config (`dynamic`, `runtime`) and its `metadata`, which Next reads statically.
-2. A file in `view/` imports no `model/data/` file and no storage.
+2. A file in `view/` imports no `model/data/` file and no storage. It may import another module's door (`index.ts`)
+   to show that module's view (the dashboard shows the Google Ads report view); data files stay closed by rule 4.
 3. A file in `model/` outside `model/data/` touches no network, disk, process environment or React.
 4. A module imports another module only through its `index.ts`.
 5. `shared/` imports no module and not `routes.ts`.
@@ -91,16 +92,18 @@ audit.devrika.io, then the dashboard login), reads each address's `access` from 
 
 ## 5. The audit contract
 
-Every audit module exports from its `index.ts`:
+Amended while building plan 4: the contract holds what its consumer, the dashboard, uses. Every audit module exports
+it from its `index.ts` (`siteAudit.audit`, `googleAds.audit`; type in `shared/audit-contract.ts`):
 
 1. `name`;
-2. `routes` — its register entries;
-3. `start(input)` → the audit id;
-4. `steps` — the progress steps the waiting screen shows;
-5. `report(id)` → the report content, or "not found";
-6. `dashboardRow(id)` → its row in the agency dashboard.
+2. `channel` — the label the dashboard shows ("Audit site", "Audit Google Ads");
+3. `filter` — the dashboard filter id, also the prefix of each row key ("site", "gads");
+4. `prospects()` — the module's audits as dashboard rows.
 
-The dashboard lists every module that implements the contract; it imports no audit module's internals.
+`routes/audits.ts` lists the audit modules and `routes/dashboard.ts` gives the list to the dashboard, which imports no
+audit module by name: a new audit is one more line in `routes/audits.ts`. Start, waiting-screen steps and the report
+stay each module's own addresses: the Google Ads audit has no waiting-screen steps, so a contract requiring them would
+be false for one of its two members.
 
 ## 6. Storage
 

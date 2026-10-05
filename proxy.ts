@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { dashCredentials } from "@/lib/dash-auth";
-import { dashboardAccessOk, dashboardOrigin } from "@/lib/dashboard-session";
+import { dashCredentials } from "@/shared/auth/dash-auth";
+import { dashboardAccessOk, dashboardOrigin } from "@/shared/auth/dashboard-session";
 import { routeForHost } from "@/shared/host-routing";
 import { accessFor } from "@/shared/route-table";
 

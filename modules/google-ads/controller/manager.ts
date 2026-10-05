@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import path from "node:path";
 import { notFound } from "next/navigation";
-import { dashboardAccessOk } from "@/lib/dashboard-session";
+import { dashboardAccessOk } from "@/shared/auth/dashboard-session";
 import { listLeads, type GadsLead } from "@/modules/google-ads/model/data/leads";
 import { openReportSnapshot } from "@/modules/google-ads/model/data/report-delivery";
 import { readStoredReportSnapshot, reportStorageDirectory } from "@/modules/google-ads/model/data/report-snapshot";

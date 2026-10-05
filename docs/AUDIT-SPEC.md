@@ -2,8 +2,8 @@
 
 > **Autoritate:** daca codul si acest fisier se contrazic, castiga acest fisier
 > (sau schimbam fisierul explicit, nu codul pe furis).
-> **Se citeste INAINTE** de a atinge raportul: `lib/report-deck.ts`, `components/report-deck.tsx`,
-> `lib/audit-engine.ts`, `lib/css-detect.ts`.
+> **Se citeste INAINTE** de a atinge raportul: `modules/site-audit/model/report-deck.ts`, `modules/site-audit/view/report-deck.tsx`,
+> `modules/site-audit/model/steps/`, `modules/site-audit/model/checks/`, `lib/css-detect.ts`.
 > **Last update:** 2026-09-24 — the report is a 16:9 deck in two parts (Part 1 SEO, Part 2 UX/UI), each closing with a checklist, no sales pitch; SEO gains the AI visibility zone (operator decision). 2026-09-23 — the cold audit analyses the site only: two rubrics, SEO and UX/UI (operator decision). Tracking, Google Ads and the revenue simulation are removed; see `docs/superpowers/specs/2026-09-23-site-audit-only-design.md`. <!-- LANG: pending full translation to EN -->
 
 ---
@@ -40,11 +40,11 @@ in the style of the YTS Dental growth plan. Order: cover · "Pe scurt" · **Part
 problems on pages, product pages, AI visibility, SEO checklist) · **Part 2 UX/UI** (opener, speed and page-type
 scores, found/missing per page type, UX/UI checklist) · contact slide. A checklist lists the open items first
 (checkbox, pages affected, first line of the fix), then "Deja in regula" in a compact block; it spans as many slides
-as it needs. Content: `buildDeck` in `lib/report-deck.ts` (pure, tested); layout: `components/report-deck.tsx`.
+as it needs. Content: `buildDeck` in `modules/site-audit/model/report-deck.ts` (pure, tested); layout: `modules/site-audit/view/report-deck.tsx`.
 Design: `docs/superpowers/specs/2026-09-24-report-deck-design.md`.
 
 ### 3.1 SEO
-> **2026-09-24 (operator):** Part 1 becomes ten components in dependency order (can the site be read -> does Google understand it -> can AI assistants use it), defined in `docs/superpowers/specs/2026-09-24-seo-ten-components-design.md`. The engine measures them (`lib/seo-components.ts`, `lib/seo-probes.ts`, stored as `seo`); the report renders them (`tenComponents` in `lib/report-deck.ts`, wording in `lib/seo-copy.ts`): the ten as the table, the first four faults in chain order, every row in the checklist. The overall score is the mean of the SEO and UX/UI scores. The six zones below stay for reports saved before.
+> **2026-09-24 (operator):** Part 1 becomes ten components in dependency order (can the site be read -> does Google understand it -> can AI assistants use it), defined in `docs/superpowers/specs/2026-09-24-seo-ten-components-design.md`. The engine measures them (`modules/site-audit/model/seo-components.ts`, `modules/site-audit/model/data/seo-probes.ts`, stored as `seo`); the report renders them (`tenComponents` in `modules/site-audit/model/report-deck.ts`, wording in `lib/seo-copy.ts`): the ten as the table, the first four faults in chain order, every row in the checklist. The overall score is the mean of the SEO and UX/UI scores. The six zones below stay for reports saved before.
 
 **6 zones** (5 defined by Vlad, the 6th added 2026-09-24 from devrika-seo pillar 9):
 1. **SEO Tehnic (On-page):** Title, Meta description, H1, Canonical, structura URL, indexare (noindex meta / X-Robots-Tag), continut mixt (http resources on https)
@@ -66,7 +66,7 @@ Design: `docs/superpowers/specs/2026-09-24-report-deck-design.md`.
 4. **Analiza pagina produs** — imagini multiple, pret+stoc, "Adauga in cos", descriere, recenzii, produse similare
 5. **Filtre & sortare** — marime / culoare / pret / brand + optiuni de sortare
 Fiecare camp: status bun/partial/slab (necunoscut cand tipul de pagina lipseste din crawl, exclus din medie) + semnale gasit/lipsa in limbaj de client. Scor rubrica = media campurilor cu status != necunoscut.
-**Cod:** `lib/audit-engine.ts` (`computeUxAudit` + detectori) -> `UxAudit`/`UxField` in `lib/types.ts`; render: the Part 2 slides of the deck (`components/report-deck.tsx`). ✅ construit.
+**Cod:** `modules/site-audit/model/steps/`, `modules/site-audit/model/checks/` (`computeUxAudit` + detectori) -> `UxAudit`/`UxField` in `modules/site-audit/model/types.ts`; render: the Part 2 slides of the deck (`modules/site-audit/view/report-deck.tsx`). ✅ construit.
 
 ## 4. EXCLUS explicit (NU apar in raport)
 
@@ -85,7 +85,7 @@ Fiecare camp: status bun/partial/slab (necunoscut cand tipul de pagina lipseste 
 
 1. **Nu putem confirma -> "de verificat", NICIODATA "lipsa".** Universal, la toate campurile (adoptat ca default).
 2. **Fara diacritice** in textele din raport (client-facing).
-3. Fiecare problema tradusa in limbaj de client (durere + bani + loc in Google). Enforced 2026-09-24: every word the report shows about a check comes from `PAGE_COPY` / `SEO_SITE` / `UX_SITE` in `lib/report-deck.ts`; the engine's `label`, `problema`, `fix` and site values are technical notes and never render. `lib/report-copy.test.ts` renders a report where every check fails and fails on any technical term, and fails when the engine emits a check with no client wording.
+3. Fiecare problema tradusa in limbaj de client (durere + bani + loc in Google). Enforced 2026-09-24: every word the report shows about a check comes from `PAGE_COPY` / `SEO_SITE` / `UX_SITE` in `modules/site-audit/model/report-deck.ts`; the engine's `label`, `problema`, `fix` and site values are technical notes and never render. `modules/site-audit/tests/report-copy.test.ts` renders a report where every check fails and fails on any technical term, and fails when the engine emits a check with no client wording.
 4. Ends with the contact slide; the checklists describe the fixes, they do not sell them (2026-09-24).
 
 ## 6. Praguri verdict + scor
@@ -102,8 +102,8 @@ Cover (domain, overall score, the two parts) · "Pe scurt" (scores and the first
 
 ## 8. Parametri de detectie
 
-- **Pages analysed (2026-09-23):** budget 60 including the homepage, target at least 50 (`PAGE_BUDGET`, `MIN_PAGES`). The pages that sell come first, never sitemap order: 15 categories + 35 products + at most 5 other pages; unused space goes to products, then categories, then other. Child sitemaps are typed by name (product / category / other), products are sampled evenly across the catalogue, and a page counts as a product only by its content; a category-sitemap URL stays a category. Code: `lib/page-selection.ts`. Design: `docs/superpowers/specs/2026-09-23-site-audit-page-selection-design.md`.
-- **Platform reading profiles (2026-09-23):** the platform is detected from the homepage first; its curated profile (`lib/platform-knowledge/<platform>.json`: sitemap entry points, sitemap and URL signals per page type, site-language sitemaps, polite concurrency, traps, observed problems) decides how the site is read. Unknown platforms use `generic.json`. Dead pages (404) are replaced by untried URLs of the same type. Shops that refuse the server (homepage 403/challenge, or 30%+ of pages 403/429) are read through the BrightData browser (`lib/browser-fetch.ts`); page fetching is bounded to 30 s (`PAGE_FETCH_BUDGET_MS`). An 8-page probe decides early whether to switch to the browser. After every audit one observation is logged per platform and the learned pace and URL rules (behind the 5-domain gate) feed the next audits (`lib/observations.ts`, `lib/learning.ts`). Every finished audit is saved, with or without contact; the agency dashboard (`/dashboard`, on both domains) lists all audits with a sales status. The report PDF is printed by Chromium installed in the image (`nixpacks.toml`). Design: `docs/superpowers/specs/2026-09-23-platform-knowledge-base-design.md`.
+- **Pages analysed (2026-09-23):** budget 60 including the homepage, target at least 50 (`PAGE_BUDGET`, `MIN_PAGES`). The pages that sell come first, never sitemap order: 15 categories + 35 products + at most 5 other pages; unused space goes to products, then categories, then other. Child sitemaps are typed by name (product / category / other), products are sampled evenly across the catalogue, and a page counts as a product only by its content; a category-sitemap URL stays a category. Code: `modules/site-audit/model/page-selection.ts`. Design: `docs/superpowers/specs/2026-09-23-site-audit-page-selection-design.md`.
+- **Platform reading profiles (2026-09-23):** the platform is detected from the homepage first; its curated profile (`modules/site-audit/model/platform-knowledge/<platform>.json`: sitemap entry points, sitemap and URL signals per page type, site-language sitemaps, polite concurrency, traps, observed problems) decides how the site is read. Unknown platforms use `generic.json`. Dead pages (404) are replaced by untried URLs of the same type. Shops that refuse the server (homepage 403/challenge, or 30%+ of pages 403/429) are read through the BrightData browser (`modules/site-audit/model/data/browser-fetch.ts`); page fetching is bounded to 30 s (`PAGE_FETCH_BUDGET_MS`). An 8-page probe decides early whether to switch to the browser. After every audit one observation is logged per platform and the learned pace and URL rules (behind the 5-domain gate) feed the next audits (`modules/site-audit/model/data/observations.ts`, `modules/site-audit/model/data/learning.ts`). Every finished audit is saved, with or without contact; the agency dashboard (`/dashboard`, on both domains) lists all audits with a sales status. The report PDF is printed by Chromium installed in the image (`nixpacks.toml`). Design: `docs/superpowers/specs/2026-09-23-platform-knowledge-base-design.md`.
 - **BrightData browser:** used only to read shops that refuse the server (see Platform reading profiles below).
 - **Crawl:** fetch + PageSpeed; fallback link-crawl daca sitemap slab.
 
@@ -131,7 +131,7 @@ Removed with `/cald`, `lib/warm-report.ts` and the `docs/ads-research/` playbook
 
 **Operational — REZOLVAT (2026-07-07), verificat live pe audit.devrika.ro:** `PAGESPEED_API_KEY` + `BRIGHTDATA_CDP` setate in env Coolify; audit de productie da viteza reala (90/100) + BrightData ruleaza de pe Hetzner (durata ~53s, obiect `css` prezent). Restrictia de zona BrightData la IP Hetzner **NU** e blocanta — conexiunea CDP merge de pe server. **De reglat dupa date reale:** constantele din `roi-sim.ts` (CPC_BENCH, tinte conversie) — usor de schimbat, sus in fisier.
 
-Cod atins la partea 11: `app/audit-seo/page.tsx`, `app/start/page.tsx`, `app/api/audit/route.ts`, `app/api/scan/route.ts` (nou), `lib/roi-sim.ts` (nou), `lib/types.ts`, `lib/audit-store.ts`, `lib/audit-engine.ts`, `components/report-renderer.tsx`, `app/r/preview/page.tsx` (mock).
+Cod atins la partea 11: `app/audit-seo/page.tsx`, `app/start/page.tsx`, `app/api/audit/route.ts`, `app/api/scan/route.ts` (nou), `lib/roi-sim.ts` (nou), `modules/site-audit/model/types.ts`, `modules/site-audit/controller/audit-jobs.ts`, `modules/site-audit/model/steps/`, `modules/site-audit/model/checks/`, `modules/site-audit/view/report-deck.tsx`, `app/r/preview/page.tsx` (mock).
 
 ---
 
@@ -145,15 +145,15 @@ Cod atins la partea 11: `app/audit-seo/page.tsx`, `app/start/page.tsx`, `app/api
 Audit de calitate (skill `improve-codebase-architecture` + ESLint). Aplicate TOATE cele 7 refactoruri identificate (tsc/eslint verzi, verificate live), + plasa de teste. Inainte: zero teste, paleta+praguri+detectie duplicate in mai multe locuri, `runAudit` god-function fara seam.
 
 - **Teste:** `vitest` (script `npm test`), teste in `lib/**/*.test.ts` — **39 teste, 6 fisiere** (roi-sim, site-signals, scoring, audit-request, parse-page, net). Interfata = suprafata de test; fiecare modul nou e testat pur.
-- **`lib/site-signals.ts`:** sursa UNICA pentru amprenta site-ului (platforma / ecom / tracking-in-HTML). Inlocuieste detectia duplicata din `app/api/scan` + `computeConversieAudit` (nu se mai pot contrazice).
-- **`lib/scoring.ts`:** pragurile de verdict din §6 (70/40) + mapari scor↔status, intr-un singur loc. Inainte copiate in ~7 locuri (renderer + engine).
-- **`lib/audit-store.ts` (adancit):** detine tot CICLUL DE VIATA al job-ului (`startJob`/`finalizeJob`/`getJobView`); race-ul audit/finalize + calculul roiSim + persistenta traiesc aici, nu in ruta. `app/api/audit/route.ts` e subtire (doar coerce). `runAudit` nu mai calculeaza roiSim (o singura casa pentru leviere = `tryFinalize`).
-- **`lib/theme.ts` (design tokens):** paleta `C` + fonturi (Sora/Inter) + gradient brand intr-un singur loc; ambele renderere (RECE `report-renderer` + CALD `warm-report-renderer`) importa de aici, nu mai hardcodeaza hex.
-- **`lib/audit-request.ts` (contract tipat):** wire-type discriminat (`AuditRequestBody`) + `parseAuditRequest` centralizeaza coerce-ul (numere din string, convRate "nu stiu"→null) si validarea. Clientul din `app/start` se leaga prin `satisfies AuditRequestBody`.
-- **`lib/parse-page.ts` (model pagina parsata):** cele 12 parsere HTML pure (title/meta/canonical/h1/jsonld/imagini/linkuri/cuvinte/breadcrumb/faq) extrase din mijlocul engine-ului; string → valoare, testabile izolat.
-- **`lib/net.ts` (seam de retea):** SINGURUL loc care atinge `fetch()` — `fetchText`/`fetchPage`/`measureTTFB`/`probeProductFeed`/`fetchPSI` + tipurile `PageData`/`PSIResult`. Mockabil in teste (mock pe global.fetch) si chokepoint unde s-ar adauga o garda SSRF (validare IP) daca e nevoie. `runAudit` nu mai defineste primitive HTTP inline.
+- **`modules/site-audit/model/site-signals.ts`:** sursa UNICA pentru amprenta site-ului (platforma / ecom / tracking-in-HTML). Inlocuieste detectia duplicata din `app/api/scan` + `computeConversieAudit` (nu se mai pot contrazice).
+- **`modules/site-audit/model/scoring.ts`:** pragurile de verdict din §6 (70/40) + mapari scor↔status, intr-un singur loc. Inainte copiate in ~7 locuri (renderer + engine).
+- **`modules/site-audit/controller/audit-jobs.ts` (adancit):** detine tot CICLUL DE VIATA al job-ului (`startJob`/`finalizeJob`/`getJobView`); race-ul audit/finalize + calculul roiSim + persistenta traiesc aici, nu in ruta. `app/api/audit/route.ts` e subtire (doar coerce). `runAudit` nu mai calculeaza roiSim (o singura casa pentru leviere = `tryFinalize`).
+- **`shared/theme.ts` (design tokens):** paleta `C` + fonturi (Sora/Inter) + gradient brand intr-un singur loc; ambele renderere (RECE `report-renderer` + CALD `warm-report-renderer`) importa de aici, nu mai hardcodeaza hex.
+- **`modules/site-audit/model/audit-request.ts` (contract tipat):** wire-type discriminat (`AuditRequestBody`) + `parseAuditRequest` centralizeaza coerce-ul (numere din string, convRate "nu stiu"→null) si validarea. Clientul din `app/start` se leaga prin `satisfies AuditRequestBody`.
+- **`modules/site-audit/model/parse-page.ts` (model pagina parsata):** cele 12 parsere HTML pure (title/meta/canonical/h1/jsonld/imagini/linkuri/cuvinte/breadcrumb/faq) extrase din mijlocul engine-ului; string → valoare, testabile izolat.
+- **`modules/site-audit/model/data/net.ts` (seam de retea):** SINGURUL loc care atinge `fetch()` — `fetchText`/`fetchPage`/`measureTTFB`/`probeProductFeed`/`fetchPSI` + tipurile `PageData`/`PSIResult`. Mockabil in teste (mock pe global.fetch) si chokepoint unde s-ar adauga o garda SSRF (validare IP) daca e nevoie. `runAudit` nu mai defineste primitive HTTP inline.
 
-**Neatacat (constient):** garda SSRF (scan/audit fac fetch pe URL-uri arbitrare server-side — chokepoint pregatit in `lib/net.ts`, dar validarea de IP nu e pusa); componenta comuna `FindingCard` intre RECE↔CALD (design tokens impartasite, dar structura cardului inca dublata).
+**Neatacat (constient):** garda SSRF (scan/audit fac fetch pe URL-uri arbitrare server-side — chokepoint pregatit in `modules/site-audit/model/data/net.ts`, dar validarea de IP nu e pusa); componenta comuna `FindingCard` intre RECE↔CALD (design tokens impartasite, dar structura cardului inca dublata).
 
 **Deploy productie (2026-07-07):** cele 3 commituri (refactor + landing/funnel/simulare + fix PSI) pushate pe `main` -> redeploy Coolify. Env-uri productie complete: `PAGESPEED_API_KEY` + `BRIGHTDATA_CDP`. Ramas doar `CALD_TOKEN` (amanat — CALD merge deschis fara el). Gotcha env Coolify (POST valoare prin argv node = gol) in [[infra_hetzner_coolify]].
 

@@ -26,6 +26,6 @@ or open `/start` on https://audit.devrika.io. Report at `/r/<id>`, PDF at `/r/<i
 2. `audit-site/SKILL.md` — how the website audit runs.
 3. `audit-google-ads/SKILL.md` — how the Google Ads audit runs.
 4. `docs/AUDIT-SPEC.md` — the report structure (single source; when code and spec disagree, the spec wins).
-5. `lib/platform-knowledge/` — how each platform is read.
+5. `modules/site-audit/model/platform-knowledge/` — how each platform is read.
 
 — Devrika Agency · devrika.ro

@@ -19,7 +19,7 @@ const collectFiles = (directory) => {
   }
 };
 collectFiles(routeRoot);
-const registryPath = path.join(appRoot, "lib/gads-read-disclosure.ts");
+const registryPath = path.join(appRoot, "shared/public-contract/read-disclosure.ts");
 const program = ts.createProgram([...routeFiles, registryPath], compilerOptions);
 const checker = program.getTypeChecker();
 const failures = [];

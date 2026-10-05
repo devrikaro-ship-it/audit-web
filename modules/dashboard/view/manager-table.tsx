@@ -1,8 +1,9 @@
 "use client";
 
+import { href } from "@/shared/route-table";
 import { useState } from "react";
-import type { ManagerAccount } from "@/modules/google-ads/controller/manager";
-import styles from "./manager.module.css";
+import type { ManagerAccount } from "@/modules/google-ads";
+import styles from "@/modules/dashboard/view/manager.module.css";
 
 function comparison(actual: number | null, target: number | null, maximum = false) {
   if (actual === null || target === null) return { label: "Unavailable", tone: "neutral" };
@@ -33,26 +34,26 @@ export default function ManagerTable({ accounts }: { accounts: ManagerAccount[] 
         <div><h2>Client reports</h2><p>Latest saved report for each store.</p></div>
         <label className={styles.search}>Search stores or contacts<input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Store, account ID, name or email" /></label>
       </div>
-      {accounts.length === 0 ? <div className={styles.empty}><h3>No saved reports yet</h3><p>Generated reports appear here automatically. Contact details are optional.</p><a href="/google-ads">Open reporting</a></div> : <>
+      {accounts.length === 0 ? <div className={styles.empty}><h3>No saved reports yet</h3><p>Generated reports appear here automatically. Contact details are optional.</p><a href={href("gadsLanding")}>Open reporting</a></div> : <>
         <div className={styles.tableScroll}>
           <table className={styles.table}>
             <caption className={styles.srOnly}>Registered stores and their latest report. Select a store to open its report.</caption>
             <thead><tr><th>Store</th><th>Contact</th><th>Reporting</th><th>Latest report</th><th>ROAS vs target</th><th>CPA vs target</th><th><span className={styles.srOnly}>Open report</span></th></tr></thead>
             <tbody>{rows.map((row) => {
-              const href = `/dashboard/google-ads/reports/${encodeURIComponent(row.id)}`;
+              const reportHref = href("dashboardGadsReport", { id: row.id });
               const roas = comparison(row.roas, row.minimumRoas);
               const cpa = comparison(row.cpa, row.maximumCpa, true);
               return <tr key={row.id} onClick={(event) => {
                 if ((event.target as HTMLElement).closest("a,button,input,select") || window.getSelection()?.toString()) return;
-                window.location.assign(href);
+                window.location.assign(reportHref);
               }}>
-                <td><a className={styles.storeLink} href={href}>{row.name}</a><small>{row.website || "Website not provided"}</small><small>{row.customerId || "Account ID unavailable"}</small></td>
+                <td><a className={styles.storeLink} href={reportHref}>{row.name}</a><small>{row.website || "Website not provided"}</small><small>{row.customerId || "Account ID unavailable"}</small></td>
                 <td><span className={styles.contactName}>{row.contact.name || "Name not provided"}</span><small>{row.contact.email || "Email not provided"}</small><small>{row.contact.phone || "Phone not provided"}</small></td>
                 <td><span className={`${styles.badge} ${row.reporting === "Active" ? styles.positive : styles.neutral}`}>{row.reporting}</span><small>Recurring reporting</small></td>
                 <td><span className={`${styles.badge} ${row.available ? styles.neutral : styles.negative}`}>{row.available ? "Available" : "Unavailable"}</span><small>{date(row.generatedAt)}</small><small>{row.period ? `${row.period.from} – ${row.period.to}` : "Period unavailable"}</small><small>{row.reportCount} saved {row.reportCount === 1 ? "report" : "reports"}</small></td>
                 <td><strong className={styles.metric}>{ratio(row.roas)}</strong><small>Target ≥ {ratio(row.minimumRoas)}</small><span className={`${styles.badge} ${styles[roas.tone]}`}>{roas.label}</span></td>
                 <td><strong className={styles.metric}>{amount(row.cpa, row.currency)}</strong><small>Target ≤ {amount(row.maximumCpa, row.currency)}</small><span className={`${styles.badge} ${styles[cpa.tone]}`}>{cpa.label}</span></td>
-                <td><a className={styles.openLink} href={href} aria-label={`Open report for ${row.name}`}>↗</a></td>
+                <td><a className={styles.openLink} href={reportHref} aria-label={`Open report for ${row.name}`}>↗</a></td>
               </tr>;
             })}</tbody>
           </table>

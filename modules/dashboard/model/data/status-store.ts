@@ -1,7 +1,7 @@
 // Sales status per dashboard row, kept apart from the audit records so a status change never rewrites an audit.
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { isLeadStatus, type LeadStatus } from "./dashboard-rows";
+import { isLeadStatus, type LeadStatus } from "@/modules/dashboard/model/rows";
 
 const FILE = process.env.DASHBOARD_STATUS_FILE
   || path.join(path.dirname(process.env.LEADS_FILE || path.join(process.cwd(), "data", "x")), "dashboard-status.json");

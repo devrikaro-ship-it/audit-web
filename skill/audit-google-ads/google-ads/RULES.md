@@ -31,7 +31,7 @@ MCC scripts, GAQL one-liners, or separate collector/report agents.
    regardless of their order or whether one value would be valid by itself.
 5. Every public calculation or projection entry that accepts a margin applies the same rule before
    invoking a formula.
-6. The evidence threshold for judging a product is owned by `lib/gads-audit.ts` and must not be
+6. The evidence threshold for judging a product is owned by `modules/google-ads/model/audit.ts` and must not be
    duplicated in this documentation.
 
 ## Classification order
@@ -88,7 +88,7 @@ not display product ROAS as a verdict.
 Run from `~/seo-audit`:
 
 ```bash
-npm test -- lib/gads-audit.test.ts lib/gads-intake.test.ts app/google-ads/raport/page.test.tsx
+npm test -- modules/google-ads/tests/gads-audit.test.ts modules/google-ads/tests/gads-intake.test.ts app/google-ads/raport/page.test.tsx
 npm run lint
 npm run build
 python3 ~/.claude/skills/audit-devrika/audit-google-ads/scripts/check_report_coverage.py \

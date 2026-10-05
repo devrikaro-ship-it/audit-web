@@ -4,9 +4,11 @@ import type { RouteId } from "@/shared/route-table";
 import { routes as siteAudit } from "./site-audit";
 import { routes as googleAds } from "./google-ads";
 import { routes as publicPages } from "./public";
+import { routes as dashboard } from "./dashboard";
 
 export const routes = {
   ...siteAudit,
   ...googleAds,
   ...publicPages,
-} satisfies Partial<Record<RouteId, unknown>>;
+  ...dashboard,
+} satisfies Record<RouteId, unknown>;

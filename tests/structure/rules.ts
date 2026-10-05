@@ -119,7 +119,10 @@ export function checkFile(file: string, source: string, bound: Set<string>): str
   if (where.kind === "module" && where.layer === "view") {
     for (const i of imports) {
       if (i.typeOnly || i.target.endsWith(".css")) continue;
+      // Another module's door is allowed: a view may show another module's view (composition); its data files stay
+      // closed by rule 4.
       const ok = inModule(i.target, where.module!, "view/") || inModule(i.target, where.module!, "controller/")
+        || /^modules\/[^/]+$/.test(i.target)
         || (inModule(i.target, where.module!, "model/") && !inModule(i.target, where.module!, "model/data/"))
         || under(i.target, VIEW_SHARED) || VIEW_PACKAGES.includes(i.target);
       if (!ok) say(2, `imports ${i.spec}`);

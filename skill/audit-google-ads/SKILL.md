@@ -21,12 +21,12 @@ The live application and its tests are authoritative:
 
 - Repository: `~/seo-audit`
 - User flow: `app/google-ads/`
-- Product intake: `lib/gads-intake.ts`
-- Product classification: `lib/gads-audit.ts`
-- Client-facing findings: `lib/gads-findings.ts`
-- Tracking safety gate: `lib/gads-tracking.ts`
-- Account and campaign checks: `lib/gads-structure.ts`, `lib/gads-pmax.ts`,
-  `lib/gads-shopping.ts`, `lib/gads-search.ts`, `lib/gads-keywords.ts`
+- Product intake: `modules/google-ads/model/data/intake.ts`
+- Product classification: `modules/google-ads/model/audit.ts`
+- Client-facing findings: `modules/google-ads/model/findings.ts`
+- Tracking safety gate: `modules/google-ads/model/data/tracking.ts`
+- Account and campaign checks: `modules/google-ads/model/data/structure.ts`, `modules/google-ads/model/data/pmax.ts`,
+  `modules/google-ads/model/data/shopping.ts`, `modules/google-ads/model/data/search.ts`, `modules/google-ads/model/data/keywords.ts`
 - Rendered report test: `app/google-ads/raport/page.test.tsx`
 - Simulator: `app/google-ads/impreuna/`
 - Contact path: `app/google-ads/raport/ContactForm.tsx`

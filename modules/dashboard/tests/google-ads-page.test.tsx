@@ -58,7 +58,7 @@ it("groups registered reports by account and uses the latest signed measured per
   const unregistered = { id: "contact-only", createdAt: 400, nume: "Do not list", email: "contact@example.test" };
   const contents = JSON.stringify([older, other, latest, unregistered]);
   await writeFile(ledger, contents);
-  const Page = (await import("./page")).default;
+  const Page = (await import("@/app/(dashboard)/dashboard/google-ads/page")).default;
   const html = renderToStaticMarkup(await Page());
   const document = parse(html);
   const rows = Array.from(document.querySelectorAll("tbody tr"));
@@ -77,7 +77,7 @@ it("groups registered reports by account and uses the latest signed measured per
 
 it("refuses manager access before reading a broken ledger, while valid access renders a truthful empty directory", async () => {
   await writeFile(ledger, "[]");
-  const Page = (await import("./page")).default;
+  const Page = (await import("@/app/(dashboard)/dashboard/google-ads/page")).default;
   const html = renderToStaticMarkup(await Page());
   expect(html).toContain("No saved reports yet");
   expect(html).toContain("Generated reports appear here automatically. Contact details are optional.");
@@ -96,7 +96,7 @@ it("does not merge missing account identifiers or treat zero spend and invalid s
   await writeFile(zero.snapshotPath!, sealReportSnapshot(snapshot));
   await writeFile(invalid.snapshotPath!, "forged.snapshot");
   await writeFile(ledger, JSON.stringify([zero, invalid]));
-  const Page = (await import("./page")).default;
+  const Page = (await import("@/app/(dashboard)/dashboard/google-ads/page")).default;
   const document = parse(renderToStaticMarkup(await Page()));
   const rows = Array.from(document.querySelectorAll("tbody tr"));
   expect(rows).toHaveLength(2);
@@ -111,7 +111,7 @@ it("compares unrounded measured ROAS against the signed target, including exact 
   const equal = await record("equal", "3333333333", 300, 500);
   const below = await record("fractional", "4444444444", 200, 499.999);
   await writeFile(ledger, JSON.stringify([equal, below]));
-  const Page = (await import("./page")).default;
+  const Page = (await import("@/app/(dashboard)/dashboard/google-ads/page")).default;
   const rows = Array.from(parse(renderToStaticMarkup(await Page())).querySelectorAll("tbody tr"));
   expect(rows[0].textContent).toContain("At target");
   expect(rows[1].textContent).toContain("Below target");
@@ -122,7 +122,7 @@ it("opens the exact account-scoped history and refuses cross-account, unknown, u
   const latest = await record("latest", "1111111111", 300, 600);
   const other = await record("other", "2222222222", 200, 900);
   await writeFile(ledger, JSON.stringify([older, latest, other]));
-  const Page = (await import("./reports/[id]/page")).default;
+  const Page = (await import("@/app/(dashboard)/dashboard/google-ads/reports/[id]/page")).default;
   const open = (id: string, report?: string) => Page({ params: Promise.resolve({ id }), searchParams: Promise.resolve({ report }) });
   const html = renderToStaticMarkup(await open("latest", "older"));
   const document = parse(html);
@@ -143,7 +143,7 @@ it("opens the exact account-scoped history and refuses cross-account, unknown, u
 it("refuses another report's valid signed file when its ledger path is cross-linked", async () => {
   const first = await record("first", "1111111111", 300, 300);
   const second = await record("second", "2222222222", 200, 900);
-  const Page = (await import("./reports/[id]/page")).default;
+  const Page = (await import("@/app/(dashboard)/dashboard/google-ads/reports/[id]/page")).default;
   const open = () => Page({ params: Promise.resolve({ id: "first" }), searchParams: Promise.resolve({}) });
   await writeFile(ledger, JSON.stringify([first, second]));
   expect(parse(renderToStaticMarkup(await open())).querySelector(".targetTile strong")?.textContent).toBe("3×");
@@ -151,7 +151,7 @@ it("refuses another report's valid signed file when its ledger path is cross-lin
   const html = renderToStaticMarkup(await open());
   expect(html).toContain("Report unavailable");
   expect(parse(html).querySelector(".targetTile")).toBeNull();
-  const Directory = (await import("./page")).default;
+  const Directory = (await import("@/app/(dashboard)/dashboard/google-ads/page")).default;
   const rows = Array.from(parse(renderToStaticMarkup(await Directory())).querySelectorAll("tbody tr"));
   expect(rows[0].textContent).toContain("Unavailable");
   expect(rows[0].textContent).not.toContain("9.00×");

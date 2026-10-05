@@ -39,7 +39,7 @@ const sourceModule = (symbol) => {
 const domainIdentity = (node) => {
   const symbol = resolveFinalSymbol(node);
   const module = sourceModule(symbol);
-  if (!module || !(module.startsWith("@/lib/gads-") || module === "@/lib/calc")) return undefined;
+  if (!module || !(module.startsWith("@/lib/gads-") || module === "@/modules/google-ads/model/calc")) return undefined;
   return { symbol, module, operation: symbol.getName() };
 };
 const namespaceContainsDomain = (node) => {
@@ -52,7 +52,7 @@ const namespaceContainsDomain = (node) => {
       final = checker.getAliasedSymbol(final);
     }
     const module = sourceModule(final);
-    return module?.startsWith("@/lib/gads-") || module === "@/lib/calc";
+    return module?.startsWith("@/lib/gads-") || module === "@/modules/google-ads/model/calc";
   }));
 };
 for (const statement of page.statements) {

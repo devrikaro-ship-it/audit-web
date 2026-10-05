@@ -1,7 +1,7 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { basicAuthOk, dashCredentials, type DashCred } from "./dash-auth";
+import { basicAuthOk, dashCredentials, type DashCred } from "@/shared/auth/dash-auth";
 
 export const DASHBOARD_COOKIE = "dashboard_session";
 export const DASHBOARD_MAX_AGE = 8 * 60 * 60;

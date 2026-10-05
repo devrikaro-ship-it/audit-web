@@ -13,10 +13,10 @@ fs.mkdirSync(path.join(fixtureRoot, "lib"), { recursive: true });
 fs.symlinkSync(path.join(realAppRoot, "node_modules"), path.join(fixtureRoot, "node_modules"), "dir");
 fs.writeFileSync(path.join(fixtureRoot, "package.json"), JSON.stringify({ private: true }));
 fs.writeFileSync(path.join(fixtureRoot, "tsconfig.json"), JSON.stringify({ compilerOptions: { target: "ES2022", moduleResolution: "Bundler", module: "ESNext", baseUrl: ".", paths: { "@/*": ["./*"] } } }));
-fs.writeFileSync(path.join(fixtureRoot, "lib/net.ts"), `export function googleAdsSearch(_customerId: string, _query: string) { return Promise.resolve([]); }\n`);
+fs.writeFileSync(path.join(fixtureRoot, "modules/site-audit/model/data/net.ts"), `export function googleAdsSearch(_customerId: string, _query: string) { return Promise.resolve([]); }\n`);
 fs.writeFileSync(path.join(fixtureRoot, "lib/gads-source.ts"), `import { googleAdsSearch } from "./net";\nexport function fetchKnown() { return googleAdsSearch("1", "SELECT customer.id FROM customer"); }\n`);
 fs.writeFileSync(path.join(fixtureRoot, "lib/gads-other.ts"), `import { googleAdsSearch } from "./net";\nexport function fetchOther() { return googleAdsSearch("1", "SELECT customer.time_zone FROM customer"); }\n`);
-fs.writeFileSync(path.join(fixtureRoot, "lib/gads-read-disclosure.ts"), `
+fs.writeFileSync(path.join(fixtureRoot, "shared/public-contract/read-disclosure.ts"), `
 export const googleAdsReadRegistry = {
   fetchKnown: { module: "@/lib/gads-source", operation: "fetchKnown", readCategories: ["account"] },
 } as const;

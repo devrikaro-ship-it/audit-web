@@ -1,7 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
-import { LEAD_STATUSES } from "@/lib/dashboard-rows";
-import { updateLeadStatus } from "./actions";
+import { LEAD_STATUSES } from "@/modules/dashboard/model/rows";
+import { updateLeadStatus } from "@/modules/dashboard/controller/actions";
 
 export default function StatusSelect({ rowKey, status }: { rowKey: string; status: string }) {
   const [value, setValue] = useState(status);

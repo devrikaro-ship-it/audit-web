@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { listStatuses, setStatus } from "./dashboard-status";
+import { listStatuses, setStatus } from "@/modules/dashboard/model/data/status-store";
 
 describe("dashboard status store", () => {
   const file = path.join(mkdtempSync(path.join(tmpdir(), "dash-status-")), "status.json");
