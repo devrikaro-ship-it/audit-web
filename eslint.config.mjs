@@ -13,6 +13,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     ".superpowers/**",
+    // The skill folder holds documentation and the skill's own Node scripts, not app code.
+    "skill/**",
   ]),
 ]);
 
