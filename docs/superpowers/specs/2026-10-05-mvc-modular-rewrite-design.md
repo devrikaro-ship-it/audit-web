@@ -27,7 +27,8 @@ The Part 2 AI evaluation is finished after the rewrite, inside the new structure
 Module first, then M/V/C inside each module, so adding an audit is adding one folder.
 
 ```
-app/                         only the address map: each page.tsx / route.ts is 3–5 lines that call shared/routes.ts
+routes.ts                    the composition root: binds every address to its module's controller
+app/                         only the address map: each page.tsx / route.ts is 3–5 lines that call routes.ts
   (site-audit)/  (google-ads)/  (dashboard)/  (public)/      route groups: they do not appear in the URL
 modules/
   <module>/
@@ -37,7 +38,7 @@ modules/
     view/         the screens, drawn only from what the controller returns
     index.ts      the module's only door to the outside
 shared/
-  routes.ts       the single address register
+  route-table.ts  the single address register as plain data: path, module, access, host — imports nothing
   auth/  storage/  net/  copy/  theme/  ui/
 ```
 
@@ -51,22 +52,36 @@ subfolder only so the rules can be tested without the network.
 
 Each rule is enforced by a test that reads the imports and fails when the rule is broken.
 
-1. A file in `app/` imports only `shared/routes.ts` (and Next itself).
+1. A route file in `app/` whose address is bound in `routes.ts` imports only `@/routes` (and Next itself); it may
+   also hold Next's literal segment config (`dynamic`, `runtime`) and its `metadata`, which Next reads statically.
 2. A file in `view/` imports no `model/data/` file and no storage.
 3. A file in `model/` outside `model/data/` touches no network, disk, process environment or React.
 4. A module imports another module only through its `index.ts`.
-5. `shared/` imports no module.
-6. Every address under `app/` has exactly one register entry, and every register entry has its file under `app/`.
+5. `shared/` imports no module and not `routes.ts`.
+6. Every address under `app/` has exactly one entry in `shared/route-table.ts`, and every entry has its file under
+   `app/`; when the rewrite ends, every entry is bound in `routes.ts` (checked by the type `Record<RouteId, …>`).
 7. No link in `modules/` or `app/` is a hand-written path: links come from `href(route, params)`.
 
 ## 4. The address register
 
-`shared/routes.ts` holds one entry per address:
+The register is two files, so that `shared/` never depends on a module and `proxy.ts` (which runs before every
+request) does not load the whole app:
+
+1. `shared/route-table.ts` — plain data, one entry per address, importing nothing:
 
 ```ts
-siteReport:    { path: "/r/[id]",    module: "site-audit", controller: showReport, access: "public" }
-dashboardHome: { path: "/dashboard", module: "dashboard",  controller: listAudits, access: "agency" }
+siteReport:    { path: "/r/[id]",    module: "site-audit", access: "public", onSiteHost: true }
+dashboardHome: { path: "/dashboard", module: "dashboard",  access: "agency", onSiteHost: true }
 ```
+
+2. `routes.ts` at the project root — the only file that sees every module; it binds each entry to its controller:
+
+```ts
+export const routes = { siteReport: siteAudit.controllers.showReport, /* … */ } satisfies Record<RouteId, Controller>;
+```
+
+`onSiteHost` replaces the hand-kept path list in `lib/host-routing.ts`: the addresses served on audit.devrika.ro are
+the entries that say so (static assets stay listed in host routing, they are not addresses of the app).
 
 `access` is one of `public`, `agency` (the dashboard login), `gads-session` (a connected Google Ads visitor). Access is
 enforced in one place: `proxy.ts`, which already runs before every address (host routing between audit.devrika.ro and
