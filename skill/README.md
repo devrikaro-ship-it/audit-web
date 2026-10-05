@@ -1,9 +1,16 @@
-# Devrika website audit — Claude Code skill
+# Devrika audits — Claude Code skill
 
-Audit of an online store's **website**, from the URL only: two rubrics, **SEO** and **UX/UI**, in a public report
-that ends with the Devrika CTA. The Google Ads audit is a separate product (`audit-google-ads`).
+`audit-devrika` is the container skill of the Devrika audits; each audit is a branch in its own folder:
 
-The skill is the `skill/` folder of the `audit-web` app (`~/seo-audit`); the engine, report and PDF live in the
+```
+skill/                      ← audit-devrika (container)
+├── SKILL.md                ← what the container holds and where each request goes
+└── audit-site/SKILL.md     ← the website audit: SEO and UX/UI, from the URL only
+```
+
+The Google Ads audit is still the separate skill `audit-google-ads`.
+
+The container is the `skill/` folder of the `audit-web` app (`~/seo-audit`); the engine, report and PDF live in the
 app. Installed as a symlink: `~/.claude/skills/audit-devrika` → `~/seo-audit/skill/`.
 
 ## Run
@@ -16,8 +23,9 @@ or open `/start` on https://audit.devrika.io. Report at `/r/<id>`, PDF at `/r/<i
 
 ## Sources
 
-1. `SKILL.md` — how the skill runs the audit.
-2. `docs/AUDIT-SPEC.md` — the report structure (single source; when code and spec disagree, the spec wins).
-3. `lib/platform-knowledge/` — how each platform is read.
+1. `SKILL.md` — the container and its routing.
+2. `audit-site/SKILL.md` — how the website audit runs.
+3. `docs/AUDIT-SPEC.md` — the report structure (single source; when code and spec disagree, the spec wins).
+4. `lib/platform-knowledge/` — how each platform is read.
 
 — Devrika Agency · devrika.ro
