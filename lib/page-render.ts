@@ -1,15 +1,17 @@
 // Screenshots of one page per type for the AI evaluation of structure, design and content (spec 2026-09-26 §4):
 // the phone first screen, and the desktop page in up to three tiles so every section is visible at a readable size.
 // popup: a window that covered part of the page (a newsletter, a wheel of fortune), cookie consent excepted.
-export type PageShots = { url: string; phoneTop: Buffer; desktopTiles: Buffer[]; text: string; popup: boolean };
+// pageHeight / shownHeight: how much of the desktop page the tiles show, so the evaluation knows what it did not see.
+export type PageShots = { url: string; phoneTop: Buffer; desktopTiles: Buffer[]; text: string; popup: boolean; pageHeight: number; shownHeight: number };
 
 export const RENDER = {
   phone: { width: 390, height: 844, scale: 2 },
   desktop: { width: 1440, height: 900 },
   tileHeight: 1800,      // desktop px per tile; the API scales images to about 1568 px on the long edge
-  maxTiles: 3,
-  textChars: 8000,       // readable text sent with the screenshots
-  settleMs: 3000,        // after the page is parsed: third-party scripts can hold "load" back for long; this lets the
+  maxTiles: 4,
+  tileMs: 700,           // after scrolling to a tile, for lazy images to load
+  textChars: 12000,      // readable text sent with the screenshots: it covers the sections below the last tile
+  settleMs: 2000,        // after the page is parsed: third-party scripts can hold "load" back for long; this lets the
                          // first screen, sliders and images settle
 } as const;
 
@@ -56,54 +58,66 @@ async function hideOverlays(page: import("playwright-core").Page, withText: bool
 
 const PHONE_UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1";
 
-// Every page is rendered in its own context, one after the other, in one browser. A page that fails yields null and
-// its evaluated rows become "de verificat".
-export async function renderPages(chromePath: string, urls: string[], timeoutMs = 30000): Promise<(PageShots | null)[]> {
+type Browser = import("playwright-core").Browser;
+
+// One page: the phone and the desktop views at the same time, each in its own context. A failure yields null and the
+// page's evaluated rows become "de verificat".
+async function renderOne(browser: Browser, url: string, timeoutMs: number): Promise<PageShots | null> {
+  const phoneView = async () => {
+    const phone = await browser.newContext({ viewport: { width: RENDER.phone.width, height: RENDER.phone.height }, deviceScaleFactor: RENDER.phone.scale, isMobile: true, hasTouch: true, userAgent: PHONE_UA });
+    try {
+      const p = await phone.newPage();
+      await p.goto(url, { waitUntil: "domcontentloaded", timeout: timeoutMs });
+      await p.waitForTimeout(RENDER.settleMs);
+      await clearConsent(p);
+      const popup = await hideOverlays(p, false);
+      return { phoneTop: await p.screenshot({ type: "jpeg", quality: 70 }), popup };
+    } finally { await phone.close(); }
+  };
+  // The desktop page is photographed one tile at a time, scrolled into view, so lazy images and reveal animations
+  // have run, as they have for a visitor.
+  const desktopView = async () => {
+    const desktop = await browser.newContext({ viewport: { width: RENDER.desktop.width, height: RENDER.tileHeight } });
+    try {
+      const d = await desktop.newPage();
+      await d.goto(url, { waitUntil: "domcontentloaded", timeout: timeoutMs });
+      await d.waitForTimeout(RENDER.settleMs);
+      await clearConsent(d);
+      const pageHeight = await d.evaluate(() => document.documentElement.scrollHeight);
+      const height = Math.min(pageHeight, RENDER.tileHeight * RENDER.maxTiles);
+      const desktopTiles: Buffer[] = [];
+      let popup = false;
+      for (let y = 0; y < height && desktopTiles.length < RENDER.maxTiles; y += RENDER.tileHeight) {
+        // The page stops scrolling at its end: the last tile is cut from where the window really is, read after the
+        // wait (a page with smooth scrolling is still moving right after the call; magazinfitness.ro, 2026-09-26).
+        await d.evaluate((top: number) => window.scrollTo({ top, behavior: "instant" }), y);
+        await d.waitForTimeout(RENDER.tileMs);
+        if (await hideOverlays(d, true)) popup = true;
+        const at = await d.evaluate(() => window.scrollY);
+        const h = Math.min(RENDER.tileHeight, height - y);
+        const top = Math.max(0, Math.min(y - at, RENDER.tileHeight - h));
+        desktopTiles.push(await d.screenshot({ type: "jpeg", quality: 70, clip: { x: 0, y: top, width: RENDER.desktop.width, height: h } }));
+      }
+      const text = (await d.evaluate(() => document.body.innerText)).replace(/\s+\n/g, "\n").replace(/\n{3,}/g, "\n\n").slice(0, RENDER.textChars);
+      return { desktopTiles, text, popup, pageHeight, shownHeight: height };
+    } finally { await desktop.close(); }
+  };
+  try {
+    const [phone, desktop] = await Promise.all([phoneView(), desktopView()]);
+    return { url, phoneTop: phone.phoneTop, desktopTiles: desktop.desktopTiles, text: desktop.text, popup: phone.popup || desktop.popup, pageHeight: desktop.pageHeight, shownHeight: desktop.shownHeight };
+  } catch {
+    return null;
+  }
+}
+
+// A browser that renders pages on demand, all at once: each caller gets its page's shots as soon as they are ready.
+export async function openRenderer(chromePath: string, timeoutMs = 30000): Promise<{ render: (url: string) => Promise<PageShots | null>; close: () => Promise<void> }> {
   const { chromium } = await import("playwright-core");
   const browser = await chromium.launch({ executablePath: chromePath, headless: true, args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"] });
-  try {
-    const out: (PageShots | null)[] = [];
-    for (const url of urls) {
-      try {
-        const phone = await browser.newContext({ viewport: { width: RENDER.phone.width, height: RENDER.phone.height }, deviceScaleFactor: RENDER.phone.scale, isMobile: true, hasTouch: true, userAgent: PHONE_UA });
-        const p = await phone.newPage();
-        await p.goto(url, { waitUntil: "domcontentloaded", timeout: timeoutMs });
-        await p.waitForTimeout(RENDER.settleMs);
-        await clearConsent(p);
-        const popupOnPhone = await hideOverlays(p, false);
-        const phoneTop = await p.screenshot({ type: "jpeg", quality: 70 });
-        await phone.close();
+  return { render: (url) => renderOne(browser, url, timeoutMs), close: () => browser.close() };
+}
 
-        // The desktop page is photographed one tile at a time, scrolled into view, so lazy images and reveal
-        // animations have run, as they have for a visitor.
-        const desktop = await browser.newContext({ viewport: { width: RENDER.desktop.width, height: RENDER.tileHeight } });
-        const d = await desktop.newPage();
-        await d.goto(url, { waitUntil: "domcontentloaded", timeout: timeoutMs });
-        await d.waitForTimeout(RENDER.settleMs);
-        await clearConsent(d);
-        const height = Math.min(await d.evaluate(() => document.documentElement.scrollHeight), RENDER.tileHeight * RENDER.maxTiles);
-        const desktopTiles: Buffer[] = [];
-        let popupOnDesktop = false;
-        for (let y = 0; y < height && desktopTiles.length < RENDER.maxTiles; y += RENDER.tileHeight) {
-          // The page stops scrolling at its end: the last tile is cut from where the window really is, read after the
-          // wait (a page with smooth scrolling is still moving right after the call; magazinfitness.ro, 2026-09-26).
-          await d.evaluate((top: number) => window.scrollTo({ top, behavior: "instant" }), y);
-          await d.waitForTimeout(1200);
-          if (await hideOverlays(d, true)) popupOnDesktop = true;
-          const at = await d.evaluate(() => window.scrollY);
-          const h = Math.min(RENDER.tileHeight, height - y);
-          const top = Math.max(0, Math.min(y - at, RENDER.tileHeight - h));
-          desktopTiles.push(await d.screenshot({ type: "jpeg", quality: 70, clip: { x: 0, y: top, width: RENDER.desktop.width, height: h } }));
-        }
-        const text = (await d.evaluate(() => document.body.innerText)).replace(/\s+\n/g, "\n").replace(/\n{3,}/g, "\n\n").slice(0, RENDER.textChars);
-        await desktop.close();
-        out.push({ url, phoneTop, desktopTiles, text, popup: popupOnPhone || popupOnDesktop });
-      } catch {
-        out.push(null);
-      }
-    }
-    return out;
-  } finally {
-    await browser.close();
-  }
+export async function renderPages(chromePath: string, urls: string[], timeoutMs = 30000): Promise<(PageShots | null)[]> {
+  const r = await openRenderer(chromePath, timeoutMs);
+  try { return await Promise.all(urls.map(r.render)); } finally { await r.close(); }
 }

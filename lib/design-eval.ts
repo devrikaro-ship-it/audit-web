@@ -109,7 +109,10 @@ const SYSTEM = `You judge web pages for a sales audit of Romanian businesses. Fo
 For every section listed, say whether the page has it. For design and content give a grade: "bun" when it clearly leads the visitor toward buying or contacting, "de-reglat" when it does so only partly, "rau" when it is decoration or filler that does not lead toward a sale.
 
 Rules:
-- "seen" must quote a short piece of text from the page or name an element visible on the screenshots. If you cannot point to something, leave "seen" empty.
+- For a section that is present, "seen" must quote its heading or a short piece of its text, or name it as visible on the screenshots; if you cannot point to it, leave "seen" empty. For a missing section, "seen" may be empty.
+- For design and content, "seen" must quote text or name an element; if you cannot point to something, leave it empty.
+- A section counts as present only when it shows real content. An empty section — a heading with nothing under it, a widget that did not load — counts as missing; say what you saw in "seen".
+- A window that covers the page after it opens makes design at most "de-reglat".
 - "problem" is one sentence on what the problem costs the business (a lost visitor, a postponed order); empty when the grade is "bun".
 - "fix" is one concrete sentence the owner can act on; empty when the grade is "bun".
 - Write in plain Romanian WITHOUT diacritics, for a shop or clinic owner. Use no technical terms: not SEO, H1, meta, schema, CTA, hero, above the fold, UX, UI, landing, bounce, conversion rate.
@@ -124,6 +127,9 @@ function prompt(kind: Kind, page: PageKind, shots: PageShots): string {
     `Design, signs of a page that sells: ${SIGNS[kind].design}.`,
     `Content, signs of a page that sells: ${SIGNS[kind].content}.`,
     `A window covered the page after it opened: ${shots.popup ? "yes" : "no"}.`,
+    shots.shownHeight < shots.pageHeight
+      ? `The desktop screenshots show the top ${shots.shownHeight} px of a ${shots.pageHeight} px page: judge the sections below from the page text, which covers the whole page.`
+      : "The desktop screenshots show the whole page.",
     `Page text:\n${shots.text}`,
   ].join("\n\n");
 }
@@ -137,7 +143,8 @@ export function rowsFromVerdict(kind: Kind, page: PageKind, v: VerdictOutput): S
   const sections = (SECTIONS[kind][page] ?? []).map((s): SeoRow => {
     const id = `st_${kind}_${page}_${s.id}`;
     const got = said.get(s.id);
-    if (!got || !got.seen.trim()) return { id, ok: 0, total: 1, verify: true, evaluated: true };
+    // A section said to be there must be pointed at; a missing one cannot be quoted, so its absence is the finding.
+    if (!got || (got.present && !got.seen.trim())) return { id, ok: 0, total: 1, verify: true, evaluated: true };
     const pass = got.present && (s.id !== "hero" || v.hero_first);
     return { id, ok: pass ? 1 : 0, total: 1, evaluated: true };
   });
@@ -176,17 +183,23 @@ export function evalClient(apiKey = process.env.ANTHROPIC_API_KEY): Client | nul
   return apiKey ? new Anthropic({ apiKey, timeout: 120_000, maxRetries: 1 }) : null;
 }
 
-// The whole evaluation of an audit: one page per type photographed, then each judged, in parallel. Off (null) without
-// an API key or a browser — a local run or a test; a page type without a page read is left out.
+// The whole evaluation of an audit: one page per type photographed and judged, all at once, each page judged as soon
+// as it is photographed. Off (null) without an API key or a browser — a local run or a test; a page type without a
+// page read is left out.
+type Renderer = { render: (url: string) => Promise<PageShots | null>; close: () => Promise<void> };
 export async function evaluateDesign(
   kind: Kind,
   targets: Partial<Record<PageKind, string>>,
-  deps: { client: Client | null; chrome: string | null; render?: typeof import("./page-render").renderPages },
+  deps: { client: Client | null; chrome: string | null; open?: (chrome: string) => Promise<Renderer> },
 ): Promise<Map<PageKind, SeoRow[]> | null> {
   if (!deps.client || !deps.chrome) return null;
   const pages = (Object.entries(targets) as [PageKind, string | undefined][]).filter((e): e is [PageKind, string] => !!e[1]);
-  const render = deps.render ?? (await import("./page-render")).renderPages;
-  const shots = await render(deps.chrome, pages.map(([, u]) => u)).catch(() => pages.map(() => null));
-  const rows = await Promise.all(pages.map(([page], i) => evaluatePage(deps.client!, kind, page, shots[i] ?? null)));
-  return new Map(pages.map(([page], i) => [page, rows[i]]));
+  const open = deps.open ?? (async (chrome: string) => (await import("./page-render")).openRenderer(chrome));
+  const renderer = await open(deps.chrome).catch(() => null);
+  try {
+    const rows = await Promise.all(pages.map(async ([page, url]) => evaluatePage(deps.client!, kind, page, renderer ? await renderer.render(url).catch(() => null) : null)));
+    return new Map(pages.map(([page], i) => [page, rows[i]]));
+  } finally {
+    await renderer?.close().catch(() => {});
+  }
 }

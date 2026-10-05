@@ -59,6 +59,7 @@ describe.skipIf(!chrome)("renderPages", () => {
     expect(rgb[0]).toBeGreaterThan(200); expect(rgb[1]).toBeLessThan(60); expect(rgb[2]).toBeGreaterThan(200);
     expect(dead).toBeNull();
     expect(shots!.popup).toBe(false);
+    expect([shots!.pageHeight, shots!.shownHeight]).toEqual([4000, 4000]);
     const [cookie] = await renderPages(chrome as string, [base + "/cookie"], 8000);
     expect(cookie!.popup).toBe(false);
   }, 120000);
