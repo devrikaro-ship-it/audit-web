@@ -14,6 +14,8 @@ import { countOf, fill, NOUN, PROGRESS, SITE_KIND, UX_SIGNALS, WORD, type Progre
 import { hasRobotsRules } from "./robots-rules";
 import { runSeoProbes } from "./seo-probes";
 import { UX_LIMITS } from "./seo-limits";
+import { evalClient, evaluateDesign } from "./design-eval";
+import { findChrome } from "./find-chrome";
 
 const MIN_PAGES = 50;        // tinta minima de pagini analizate
 const LLM_CRAWLERS = ["GPTBot", "ClaudeBot", "PerplexityBot", "OAI-SearchBot", "CCBot", "Googlebot-Extended"];
@@ -1072,6 +1074,13 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?:
   step("viteza", "running");
   const homepageData = analyzedPages[0] ?? pages[0] ?? { url: homepage, html: "", status: 0, headers: {}, ok: false };
 
+  const isEcom = siteKind ? siteKind.type === "ecom" : detectEcom(analyzedPages.map((p) => p.html).join("\n").toLowerCase());
+  // Part 2's AI evaluation (spec 2026-09-26): one page per type photographed and judged while PageSpeed runs.
+  const contactPage = analyzedPages.find((p) => { try { return /contact/i.test(new URL(p.url).pathname); } catch { return false; } })?.url;
+  const designEval = evaluateDesign(isEcom ? "ecom" : "leads",
+    isEcom ? { home: homepageData.url, categorie: categories[0], produs: products[0] } : { home: homepageData.url, serviciu: leadPages?.service[0], contact: contactPage },
+    { client: isEcom || leadPages ? evalClient() : null, chrome: findChrome() }).catch(() => null);
+
   // Phase 3: PSI + TTFB + feed produse (parallel, homepage/origin only)
   const [mobileResult, desktopResult, ttfbResult, feedResult] = await Promise.allSettled([
     fetchPSI(origin, "mobile"),
@@ -1117,12 +1126,15 @@ export async function runAudit(rawUrl: string, opts: { kind?: SiteKind; onStep?:
   const social = computeSocialChecks(homepageData);
   const securitate = computeSecurityChecks(homepageData);
 
-  const isEcom = siteKind ? siteKind.type === "ecom" : detectEcom(analyzedPages.map((p) => p.html).join("\n").toLowerCase());
   const productSignal = isEcom ? computeProductSignal(analyzedPages, products, hasProductFeed) : undefined;
   // Part 2 as ✓/✗ rows for both kinds (spec 2026-09-25 §4); its score is the share of ✓. A shop keeps its page
   // fields for the page-type slide.
   const uxKind = isEcom ? "ecom" : leadPages ? "leads" : null;
-  const uxStd = uxKind ? computeUxStandard(uxKind, analyzedPages, { categories, products, services: leadPages?.service ?? [], locations: leadPages?.location ?? [] }, mobile, domain) : undefined;
+  const uxRules = uxKind ? computeUxStandard(uxKind, analyzedPages, { categories, products, services: leadPages?.service ?? [], locations: leadPages?.location ?? [] }, mobile, domain) : undefined;
+  // The evaluated rows join the page type they judge.
+  const judged = await designEval;
+  const uxStd = uxRules && judged ? [...uxRules.map((g) => ({ ...g, rows: [...g.rows, ...(judged.get(g.id as never) ?? [])] })),
+    ...[...judged].filter(([page]) => !uxRules.some((g) => g.id === page)).map(([page, rows]) => ({ id: page, rows }))] : uxRules;
   const uxFields = isEcom ? computeUxAudit(analyzedPages, { homepage, categories, products }, mobile, domain) : undefined;
   const ux = uxStd ? { scor: seoScore(uxStd), fields: uxFields?.fields ?? [] } : undefined;
   // The overall score is the mean of the two parts the cover shows (docs/superpowers/specs/2026-09-24-seo-ten-...).

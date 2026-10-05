@@ -43,7 +43,9 @@ export type AuditData = {
 };
 
 // A measured row: ok of total (total 0 = not measured); verify = observed but not confirmable ("de verificat").
-export type SeoRow = { id: string; ok: number; total: number; verify?: boolean };
+// An AI-evaluated row (spec 2026-09-26 §4) also carries its grade and what the model saw, wrote and advised.
+export type AiJudgement = { grade: "bun" | "de-reglat" | "rau"; seen: string; problem: string; fix: string };
+export type SeoRow = { id: string; ok: number; total: number; verify?: boolean; ai?: AiJudgement; evaluated?: boolean };
 export type SeoComponent = { id: string; rows: SeoRow[] };
 
 // ── UX / UI — analiza pe tipuri de pagina (spec 3.3): viteza + home + categorie + produs + filtre ──

@@ -4,7 +4,7 @@ import { CHECKS } from "./problems-db";
 import { statusScore, verdict, type Verdict } from "./scoring";
 import type { AuditData, CheckResult, PageCheck, SeoComponent, UxField } from "./types";
 import { componentScore, rowPass, seoScore as tenScore } from "./seo-score";
-import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, countOf, fill, NOUN, UNIT_ONE, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_GROUPS, UX_QUESTIONS, UX_ROWS, UX_SIGNAL_BEFORE_2026_09_24, type UxQuestion, UX_SIGNALS, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
+import { AI_CARDS, cap, COMPONENTS, COMPONENTS_LEADS, countOf, fill, NOUN, UNIT_ONE, LEGACY_ZONES, PAGE_COPY, ROWS, ROWS_LEADS, SEO_SITE, STAGES, UI, UNIT, UX_FIX, UX_PAGES, UX_GROUPS, UX_AI, UX_QUESTIONS, UX_ROWS, UX_SECTIONS, UX_SIGNAL_BEFORE_2026_09_24, type UxQuestion, UX_SIGNALS, UX_SITE, VERDICT, WORD, type RowCopy, type SiteCopy } from "./copy-registry";
 export { PAGE_COPY } from "./copy-registry";
 
 export type Tone = "good" | "warn" | "bad";
@@ -150,9 +150,16 @@ export const UX_QUESTION_OF: Record<string, UxQuestion> = {
   ct_form_short: "design", ct_call: "design", ct_chat: "design", ct_map: "design", ct_hours: "content",
 }
 
+// The AI rows name their criterion; the section rows are structure (lib/design-eval.ts).
+export const questionOf = (id: string): UxQuestion =>
+  id.startsWith("st_") ? "structura" : /^ai_.+_design$/.test(id) ? "design" : /^ai_.+_content$/.test(id) ? "content" : UX_QUESTION_OF[id] ?? "design";
+const aiCriterion = (id: string) => (id.endsWith("_content") ? "content" : "design") as "design" | "content";
+const GRADES = ["bun", "de-reglat", "rau"] as const;
+
 type UxCopy = { title: string; fix: string; bad: string; problem: string; good: string };
 const uxCopy = (id: string): UxCopy | null => {
   if (UX_ROWS[id]) return UX_ROWS[id];
+  if (UX_SECTIONS[id]) return UX_SECTIONS[id];
   const signal = (UX_SIGNALS as Record<string, { found: string; fix: string; bad: string; problem: string; good: string }>)[id];
   return signal ? { title: cap(signal.found), fix: signal.fix, bad: signal.bad, problem: signal.problem, good: signal.good } : null;
 };
@@ -161,9 +168,9 @@ function countIn(fail: number, total: number, unit: string): string {
   const one = UNIT_ONE[unit] ?? unit;
   return fill(UI.countOf, { fail, total: total === 1 ? `1 ${one}` : countOf(total, [one, unit]) });
 }
-function uxFromRows(groups: SeoComponent[]) {
+function uxFromRows(groups: SeoComponent[], kind: "ecom" | "leads" = "ecom") {
   const named = groups.filter((g) => UX_GROUPS[g.id]);
-  const rowsOf = (g: SeoComponent) => g.rows.filter((r) => uxCopy(r.id));
+  const rowsOf = (g: SeoComponent) => g.rows.filter((r) => uxCopy(r.id) || r.id.startsWith("ai_"));
   // A rule measured on several pages (a lead site's service pages) counts them; the others are yes or no.
   const bad = (r: SeoComponent["rows"][number]) => fill(uxCopy(r.id)!.bad, { n: countIn(r.total - r.ok, r.total, NOUN.servicePage[1]) });
   const pages: UxPage[] = named.filter((g) => g.id !== "viteza").map((g) => {
@@ -172,29 +179,40 @@ function uxFromRows(groups: SeoComponent[]) {
       id: g.id, name: UX_GROUPS[g.id], score,
       verdict: score === null ? cap(WORD.verify) : VERDICT_LABEL[verdict(score)],
       tone: score === null ? "warn" : toneOf(score),
-      found: rowsOf(g).filter((r) => rowPass(r) === true).map((r) => uxCopy(r.id)!.title),
-      missing: rowsOf(g).filter((r) => rowPass(r) === false).map(bad),
+      found: rowsOf(g).filter((r) => !r.id.startsWith("ai_") && rowPass(r) === true).map((r) => uxCopy(r.id)!.title),
+      missing: rowsOf(g).filter((r) => !r.id.startsWith("ai_") && rowPass(r) === false).map(bad),
     };
   });
   // A page type's rows ordered by the three criteria, each criterion headed by its verdict (operator, 2026-09-26).
   const order = Object.keys(UX_QUESTIONS) as UxQuestion[];
   const byQuestion = (g: SeoComponent) => g.id === "viteza" ? rowsOf(g)
-    : [...rowsOf(g)].sort((a, b) => order.indexOf(UX_QUESTION_OF[a.id] ?? "design") - order.indexOf(UX_QUESTION_OF[b.id] ?? "design"));
+    : [...rowsOf(g)].sort((a, b) => order.indexOf(questionOf(a.id)) - order.indexOf(questionOf(b.id)));
   const headOf = (g: SeoComponent, q: UxQuestion) => {
-    const score = componentScore({ id: q, rows: rowsOf(g).filter((r) => (UX_QUESTION_OF[r.id] ?? "design") === q) });
+    const score = componentScore({ id: q, rows: rowsOf(g).filter((r) => questionOf(r.id) === q) });
     return fill(UI.questionHead, { question: UX_QUESTIONS[q], verdict: score === null ? cap(WORD.verify) : VERDICT_LABEL[verdict(score)] });
   };
   const standard: StdGroup[] = named.map((g) => ({
     name: UX_GROUPS[g.id], score: componentScore(g),
-    rows: byQuestion(g).map((r): StdRow => ({ ...row(r), ...(g.id === "viteza" ? {} : { question: headOf(g, UX_QUESTION_OF[r.id] ?? "design") }) })),
+    rows: byQuestion(g).map((r): StdRow => ({ ...row(r), ...(g.id === "viteza" ? {} : { question: headOf(g, questionOf(r.id)) }) })),
   }));
   function row(r: SeoComponent["rows"][number]): StdRow {
+    const how = (result: string) => (r.evaluated ? fill(UI.withHow, { result, how: UI.aiEvaluated }) : result);
+    // Design and content as judged by the AI: the title by grade, then what it saw, the impact and the fix it gave.
+    if (r.id.startsWith("ai_")) {
+      const titles = UX_AI[aiCriterion(r.id)][kind];
+      if (!r.ai || r.verify) return { state: "verify", title: titles[0], result: how(WORD.verify), problem: UI.checkVerifyBare, note: "" };
+      const verdictOf = VERDICT_LABEL[r.ai.grade === "rau" ? "slab" : r.ai.grade];
+      const title = titles[GRADES.indexOf(r.ai.grade)];
+      const seen = fill(UI.aiSeen, { seen: r.ai.seen });
+      return r.ai.grade === "bun" ? { state: "ok", title, result: how(verdictOf), note: seen }
+        : { state: "fail", title, result: how(verdictOf), problem: `${seen} ${fill(UI.whyBadLine, { why: r.ai.problem })}`, note: fill(UI.problemsFix, { fix: r.ai.fix }) };
+    }
     const copy = uxCopy(r.id)!;
     const pass = rowPass(r);
     const result = r.total > 1 ? fill(WORD.ratio, { ok: r.ok, t: r.total }) : pass ? WORD.yes : WORD.no;
-    if (pass === null) return { state: "verify", title: copy.title, result: WORD.verify, problem: fill(UI.checkVerify, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
-    return pass ? { state: "ok", title: copy.title, result, note: fill(UI.whyGoodLine, { why: copy.good }) }
-      : { state: "fail", title: bad(r), result: WORD.repair, problem: fill(UI.whyBadLine, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
+    if (pass === null) return { state: "verify", title: copy.title, result: how(WORD.verify), problem: fill(UI.checkVerify, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
+    return pass ? { state: "ok", title: copy.title, result: how(result), note: fill(UI.whyGoodLine, { why: copy.good }) }
+      : { state: "fail", title: bad(r), result: how(WORD.repair), problem: fill(UI.whyBadLine, { why: copy.problem }), note: fill(UI.problemsFix, { fix: copy.fix }) };
   }
   return { score: tenScore(groups), pages, standard };
 }
@@ -265,7 +283,7 @@ export function buildDeck(data: AuditData): Deck {
 
   const domain = data.domain.replace(/^www\./, "");
   // With the ten components the overall score is the mean of the two parts, recomputed so a stored report agrees.
-  const uxStd = data.uxStd?.length ? uxFromRows(data.uxStd) : null;
+  const uxStd = data.uxStd?.length ? uxFromRows(data.uxStd, data.siteKind?.type === "leads" ? "leads" : "ecom") : null;
   const uxScore = uxStd ? uxStd.score : data.ux?.scor;
   const overall = ten ? (uxScore !== undefined ? Math.round((ten.score + uxScore) / 2) : ten.score) : data.scor;
   return {
