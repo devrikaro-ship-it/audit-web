@@ -1,5 +1,5 @@
 import Link from "next/link";
-import "../dvk.css";
+import "@/app/dvk.css";
 import "./landing.css";
 
 export const metadata = {

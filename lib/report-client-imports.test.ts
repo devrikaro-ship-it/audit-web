@@ -31,6 +31,6 @@ function serverImports(entry: string): string[] {
 
 describe("the report page imports no server-only code", () => {
   it("components/report-deck.tsx and app/r/[id]/page.tsx reach no node: module or playwright", () => {
-    expect([...serverImports(path.join(ROOT, "components/report-deck.tsx")), ...serverImports(path.join(ROOT, "app/r/[id]/page.tsx"))]).toEqual([]);
+    expect([...serverImports(path.join(ROOT, "components/report-deck.tsx")), ...serverImports(path.join(ROOT, "app/(site-audit)/r/[id]/page.tsx"))]).toEqual([]);
   });
 });

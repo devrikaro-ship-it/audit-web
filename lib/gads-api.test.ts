@@ -124,7 +124,7 @@ describe("cine cheama Google Ads", () => {
   });
 
   it("validates the account time zone before sealing and routes failures back to selection", () => {
-    const action = readFileSync(join("app", "google-ads", "conturi", "actions.ts"), "utf8");
+    const action = readFileSync(join("app", "(google-ads)", "google-ads", "conturi", "actions.ts"), "utf8");
     expect(action.indexOf("fetchCustomerTimeZone")).toBeLessThan(action.indexOf("seal({"));
     expect(action).toMatch(/fetchCustomerTimeZone[\s\S]*\.catch\(\(\) => redirect\(/);
     expect(action).toContain("/google-ads/conturi?eroare=cont");

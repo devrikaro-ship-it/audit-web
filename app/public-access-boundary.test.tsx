@@ -4,15 +4,15 @@ import path from "node:path";
 import ts from "typescript";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import HubPage, { metadata as hubMetadata } from "@/app/hub/page";
-import PrivacyPage, { metadata as privacyMetadata } from "@/app/confidentialitate/page";
-import TermsPage, { metadata as termsMetadata } from "@/app/termeni/page";
-import LandingPage, { metadata as landingMetadata } from "@/app/google-ads/page";
-import ConnectPage, { metadata as connectMetadata } from "@/app/google-ads/connect/page";
-import { metadata as accountPickerMetadata } from "@/app/google-ads/conturi/page";
-import { metadata as marginMetadata } from "@/app/google-ads/marja/page";
-import { metadata as reportMetadata } from "@/app/google-ads/raport/page";
-import { metadata as simulatorMetadata } from "@/app/google-ads/impreuna/page";
+import HubPage, { metadata as hubMetadata } from "@/app/(public)/hub/page";
+import PrivacyPage, { metadata as privacyMetadata } from "@/app/(public)/confidentialitate/page";
+import TermsPage, { metadata as termsMetadata } from "@/app/(public)/termeni/page";
+import LandingPage, { metadata as landingMetadata } from "@/app/(google-ads)/google-ads/page";
+import ConnectPage, { metadata as connectMetadata } from "@/app/(google-ads)/google-ads/connect/page";
+import { metadata as accountPickerMetadata } from "@/app/(google-ads)/google-ads/conturi/page";
+import { metadata as marginMetadata } from "@/app/(google-ads)/google-ads/marja/page";
+import { metadata as reportMetadata } from "@/app/(google-ads)/google-ads/raport/page";
+import { metadata as simulatorMetadata } from "@/app/(google-ads)/google-ads/impreuna/page";
 import {
   publicLocalizedBranchRegistry,
   publicOAuthClauseFacts,
@@ -553,7 +553,7 @@ describe("public Google Ads access boundary", () => {
     const registeredApiSources = Object.values(publicOAuthInfrastructureRegistry)
       .filter(({ kind }) => kind.endsWith("-emitter"))
       .map(({ source }) => source)
-      .filter((source) => source.startsWith("app/api/google-ads/"))
+      .filter((source) => source.startsWith("app/(google-ads)/api/google-ads/"))
       .sort();
     expect(registeredApiSources).toEqual(apiSources);
 
@@ -710,7 +710,7 @@ describe("public Google Ads access boundary", () => {
   });
 
   it("uses native same-page navigation for the report example", () => {
-    const source = fs.readFileSync(path.join(process.cwd(), "app/google-ads/page.tsx"), "utf8");
+    const source = fs.readFileSync(path.join(process.cwd(), "app/(google-ads)/google-ads/page.tsx"), "utf8");
 
     expect(source).toContain('<a href="#report-preview"');
     expect(source).not.toContain('<Link href="#report-preview"');
@@ -743,7 +743,7 @@ describe("public Google Ads access boundary", () => {
   });
 
   it("shows every landing example vertically without horizontal table scrolling", () => {
-    const source = fs.readFileSync(path.join(process.cwd(), "app/google-ads/page.tsx"), "utf8");
+    const source = fs.readFileSync(path.join(process.cwd(), "app/(google-ads)/google-ads/page.tsx"), "utf8");
     const html = renderToStaticMarkup(<LandingPage />);
 
     expect(source).not.toContain("overflow-x-auto");

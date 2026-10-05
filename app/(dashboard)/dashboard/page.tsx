@@ -9,7 +9,7 @@ import { PROFILES } from "@/lib/platform-knowledge";
 import { approveLearning } from "./actions";
 import { buildRows, dashboardKpis, type DashboardRow } from "@/lib/dashboard-rows";
 import StatusSelect from "./StatusSelect";
-import "../dvk.css";
+import "@/app/dvk.css";
 import "./dashboard.css";
 
 export const dynamic = "force-dynamic";

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import "@/app/r/report-deck.css";
+import "@/app/(site-audit)/r/report-deck.css";
 import { buildDeck, paginateChecklist, paginateStandard, toneOf, VERDICT_LABEL, type CheckRow, type StdGroup, type StdRow } from "@/lib/report-deck";
 import { verdict } from "@/lib/scoring";
 import { cap, CONTACT, countOf, fill, MONTHS, NOUN, UI, UI_LEADS, WORD } from "@/lib/copy-registry";

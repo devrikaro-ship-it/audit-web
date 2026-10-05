@@ -3,7 +3,7 @@ import { listPortalReports } from "@/lib/gads-leads";
 import { openReportSnapshot, type GadsReportSnapshot } from "@/lib/gads-report-delivery";
 import { readStoredReportSnapshot } from "@/lib/gads-report-snapshot";
 import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
-import ReportingDashboard from "@/app/google-ads/raport/ReportingDashboard";
+import ReportingDashboard from "@/app/(google-ads)/google-ads/raport/ReportingDashboard";
 import {
   buildGoogleAdsReportV2,
   type GoogleAdsReportV2ViewModel,

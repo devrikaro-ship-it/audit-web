@@ -21,8 +21,8 @@ const request = (route: string, body = "", headers: Record<string, string> = {})
 
 it("redirects anonymous navigation to login and accepts a valid session until logout revokes replay", async () => {
   const { proxy } = await import("../proxy");
-  const { POST: login } = await import("../app/dashboard/login/submit/route");
-  const { POST: logout } = await import("../app/dashboard/logout/route");
+  const { POST: login } = await import("../app/(dashboard)/dashboard/login/submit/route");
+  const { POST: logout } = await import("../app/(dashboard)/dashboard/logout/route");
   const anonymous = await proxy(request("/dashboard/google-ads?view=latest"));
   expect(anonymous.status).toBe(307);
   expect(anonymous.headers.get("location")).toBe(origin + "/dashboard/login?next=%2Fdashboard%2Fgoogle-ads%3Fview%3Dlatest");
@@ -43,7 +43,7 @@ it("redirects anonymous navigation to login and accepts a valid session until lo
 });
 
 it("refuses bad credentials and cross-site forms without granting a cookie, and confines return paths", async () => {
-  const { POST } = await import("../app/dashboard/login/submit/route");
+  const { POST } = await import("../app/(dashboard)/dashboard/login/submit/route");
   const good = "username=manager&password=test-only%3Apassword";
   const bad = await POST(request("/dashboard/login/submit", "username=manager&password=wrong"));
   expect(bad.status).toBe(303);
@@ -79,7 +79,7 @@ it("rejects forged and expired sessions, credential changes, and unavailable pro
 });
 
 it("bounds repeated login attempts while allowing the first valid login", async () => {
-  const { POST } = await import("../app/dashboard/login/submit/route");
+  const { POST } = await import("../app/(dashboard)/dashboard/login/submit/route");
   expect((await POST(request("/dashboard/login/submit", "username=manager&password=test-only%3Apassword"))).status).toBe(303);
   let response;
   for (let attempt = 0; attempt < 25; attempt++) response = await POST(request("/dashboard/login/submit", "username=manager&password=wrong"));
@@ -91,8 +91,8 @@ it("uses the configured public origin behind the production proxy and refuses sp
   vi.stubEnv("NODE_ENV", "production");
   vi.stubEnv("PUBLIC_URL", origin);
   const { proxy } = await import("../proxy");
-  const { POST: login } = await import("../app/dashboard/login/submit/route");
-  const { POST: logout } = await import("../app/dashboard/logout/route");
+  const { POST: login } = await import("../app/(dashboard)/dashboard/login/submit/route");
+  const { POST: logout } = await import("../app/(dashboard)/dashboard/logout/route");
   const backend = (route: string, body?: string, cookie?: string) => new NextRequest("http://localhost:3000" + route, { method: body ? "POST" : "GET", body, headers: { origin, "content-type": "application/x-www-form-urlencoded", "x-forwarded-host": "attacker.example", ...(cookie ? { cookie } : {}) } });
   const anonymous = await proxy(backend("/dashboard/google-ads"));
   expect(anonymous.headers.get("location")).toBe(origin + "/dashboard/login?next=%2Fdashboard%2Fgoogle-ads");
@@ -111,7 +111,7 @@ it("serves the dashboard on the second configured origin when the request comes 
   vi.stubEnv("PUBLIC_URL", origin);
   const second = "https://audit.second.test";
   vi.stubEnv("SITE_AUDIT_ORIGIN", second);
-  const { POST: login } = await import("../app/dashboard/login/submit/route");
+  const { POST: login } = await import("../app/(dashboard)/dashboard/login/submit/route");
   const from = (host: string, originHeader: string) => new NextRequest("http://localhost:3000/dashboard/login/submit", { method: "POST", body: "username=manager&password=test-only%3Apassword", headers: { origin: originHeader, "content-type": "application/x-www-form-urlencoded", "x-forwarded-host": host } });
   const ok = await login(from("audit.second.test", second));
   expect(ok.status).toBe(303);

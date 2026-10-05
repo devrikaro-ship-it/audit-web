@@ -1,5 +1,5 @@
 import Link from "next/link";
-import "../dvk.css";
+import "@/app/dvk.css";
 
 // Romanian home page of audit.devrika.ro (operator, 2026-09-23): the three audits, only the website audit open,
 // with its own link to the website-audit landing. The English /hub on .io stays the page declared to Google.

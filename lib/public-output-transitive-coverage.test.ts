@@ -25,8 +25,8 @@ import { fetchPmaxData } from "./gads-pmax";
 import { fetchSearchData } from "./gads-search";
 import { fetchShoppingData } from "./gads-shopping";
 import { fetchTracking } from "./gads-tracking";
-import HubPage from "@/app/hub/page";
-import GoogleAdsLanding from "@/app/google-ads/page";
+import HubPage from "@/app/(public)/hub/page";
+import GoogleAdsLanding from "@/app/(google-ads)/google-ads/page";
 
 const auth = { accessToken: "access", developerToken: "developer", loginCustomerId: "root" };
 
