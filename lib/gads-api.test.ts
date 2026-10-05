@@ -1,6 +1,6 @@
 // LANG: pending full translation to EN
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 // 19.08.2026: auditul a picat pe cont real cu "listare conturi esuata: 404 <!DOCTYPE html>".
@@ -132,13 +132,13 @@ describe("cine cheama Google Ads", () => {
 
   it("nimeni in afara de lib/gads-api.ts nu mai scrie versiunea de mana", () => {
     const rada = (dir: string): string[] =>
-      readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+      !existsSync(dir) ? [] : readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
         const p = join(dir, e.name);
         if (e.isDirectory()) return rada(p);
         return /\.tsx?$/.test(e.name) && !e.name.endsWith(".test.ts") ? [p] : [];
       });
     const detinator = join("lib", "gads-api.ts"); // acolo e locul ei, plus exemplul de curl din comentariu
-    const vinovate = [...rada("lib"), ...rada("app")]
+    const vinovate = [...rada("lib"), ...rada("app"), ...rada("modules"), ...rada("shared")]
       .filter((f) => f !== detinator)
       .filter((f) => /googleads\.googleapis\.com\/v\d+/.test(readFileSync(f, "utf8")));
     expect(vinovate).toEqual([]);

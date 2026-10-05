@@ -9,7 +9,7 @@ export default defineConfig({
   resolve: { alias: { "@": root } },
   test: {
     environment: "node",
-    include: ["lib/**/*.test.ts", "app/**/*.test.tsx"],
+    include: ["lib/**/*.test.ts", "app/**/*.test.tsx", "modules/**/*.test.{ts,tsx}", "shared/**/*.test.{ts,tsx}", "tests/**/*.test.{ts,tsx}"],
     coverage: {
       provider: "v8",
       include: manifest.files,
