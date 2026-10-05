@@ -1,11 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { listAudits } from "@/lib/leads-store";
+import { listAudits } from "@/modules/site-audit";
 import { managerAccounts, requireManagerAccess } from "@/lib/gads-manager";
 import { listStatuses } from "@/lib/dashboard-status";
-import { readObservations, summarizeByPlatform } from "@/lib/observations";
-import { candidateKey, computeLearning, readApprovals, MIN_DOMAINS } from "@/lib/learning";
-import { PROFILES } from "@/lib/platform-knowledge";
+import { readObservations, summarizeByPlatform } from "@/modules/site-audit";
+import { candidateKey, computeLearning, readApprovals, MIN_DOMAINS } from "@/modules/site-audit";
+import { PROFILES } from "@/modules/site-audit";
 import { approveLearning } from "./actions";
 import { buildRows, dashboardKpis, type DashboardRow } from "@/lib/dashboard-rows";
 import StatusSelect from "./StatusSelect";

@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
-export default function AuditPage() {
-  redirect("/start");
-}
+import { routes } from "@/routes";
+
+export default routes.siteAuditAlias;

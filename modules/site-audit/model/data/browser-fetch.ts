@@ -1,0 +1,52 @@
+// Reading a shop through the real browser (BrightData, residential EU IP) when it blocks or rate-limits the
+// server's datacenter IP. Measured 2026-09-23 from the Hetzner server: spishop.ro and vegis.ro answer 403,
+// invictusmedical.ro accepts about 2 requests per 7 s; from a residential IP the same stores read 58-60 pages.
+// The homepage is opened once (it clears the anti-bot challenge), then every other URL is fetched from inside
+// that page, with the same IP and cookies.
+
+import type { PageData } from "@/modules/site-audit/model/data/net";
+
+export type PageFetcher = {
+  fetchText: (url: string) => Promise<string>;
+  fetchPage: (url: string) => Promise<PageData>;
+  homeHtml: string;
+  close: () => Promise<void>;
+};
+
+// BrightData zone credentials take the exit country as a zone suffix (zone-name-country-ro).
+function withCountry(cdp: string, country: string): string {
+  if (!country || cdp.includes("-country-")) return cdp;
+  return cdp.replace(/(zone-[a-z0-9_]+)(:)/i, `$1-country-${country}$2`);
+}
+
+type InPageResult = { status: number; ok: boolean; html: string; headers: Record<string, string> };
+
+export async function openBrowserFetcher(origin: string, cdpRaw = process.env.BRIGHTDATA_CDP): Promise<PageFetcher | null> {
+  if (!cdpRaw) return null;
+  const { chromium } = await import("playwright-core");
+  const browser = await chromium.connectOverCDP(withCountry(cdpRaw, "ro"), { timeout: 60000 });
+  try {
+    const page = await browser.newPage();
+    await page.goto(origin + "/", { waitUntil: "domcontentloaded", timeout: 45000 });
+    const homeHtml = await page.content();
+    const inPage = (url: string) => page.evaluate(async (u: string): Promise<InPageResult> => {
+      try {
+        const r = await fetch(u, { credentials: "include", redirect: "follow" });
+        const headers: Record<string, string> = {};
+        r.headers.forEach((v, k) => { headers[k.toLowerCase()] = v; });
+        return { status: r.status, ok: r.ok, html: r.ok ? await r.text() : "", headers };
+      } catch {
+        return { status: 0, ok: false, html: "", headers: {} };
+      }
+    }, url).catch((): InPageResult => ({ status: 0, ok: false, html: "", headers: {} }));
+    return {
+      homeHtml,
+      fetchPage: async (url) => ({ url, ...(await inPage(url)) }),
+      fetchText: async (url) => { const r = await inPage(url); return r.ok ? r.html : ""; },
+      close: () => browser.close().catch(() => {}),
+    };
+  } catch (e) {
+    await browser.close().catch(() => {});
+    throw e;
+  }
+}

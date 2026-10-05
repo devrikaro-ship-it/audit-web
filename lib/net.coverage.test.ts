@@ -1,12 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import {
-  fetchPSI,
-  fetchPage,
-  fetchText,
-  googleAdsSearch,
-  measureTTFB,
-  probeProductFeed,
-} from "./net";
+import { googleAdsSearch } from "@/lib/net";
+import { fetchPSI, fetchPage, fetchText, measureTTFB, probeProductFeed } from "@/modules/site-audit/model/data/net";
 
 const auth = { accessToken: "access", developerToken: "developer", loginCustomerId: "123-456" };
 

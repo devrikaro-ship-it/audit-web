@@ -19,7 +19,7 @@
 // intrebarea feed-only vs complet e inca deschisa (n=1 pe flota) — un audit livrat unui strain
 // nu are voie sa prezinte o preferinta de casa nedovedita drept defect.
 
-import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { googleAdsSearch, type GoogleAdsAuth } from "@/lib/net";
 import type { Campanie } from "./gads-structure";
 
 export type GrupAnunturi = {

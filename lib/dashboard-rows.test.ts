@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildRows, dashboardKpis, DEFAULT_STATUS } from "./dashboard-rows";
-import type { StoredAudit } from "./leads-store";
+import type { StoredAudit } from "@/modules/site-audit/model/data/audit-repository";
 import type { ManagerAccount } from "./gads-manager";
 
 const audit = (id: string, createdAt: number, extra: Partial<StoredAudit> = {}): StoredAudit =>

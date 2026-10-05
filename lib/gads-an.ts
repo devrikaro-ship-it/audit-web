@@ -7,7 +7,7 @@
 // randamentul afisat era al ultimei luni, nu al anului. Cifra pe care prospectul o compara cu
 // interfata trebuie sa fie cifra din interfata.
 
-import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { googleAdsSearch, type GoogleAdsAuth } from "@/lib/net";
 import { dateRange, WINDOW_DAYS } from "./gads-intake";
 
 export type TotaluriAn = { cost: number; valoare: number; roas: number | null };

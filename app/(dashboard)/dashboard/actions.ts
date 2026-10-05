@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { requireManagerAccess } from "@/lib/gads-manager";
 import { setStatus } from "@/lib/dashboard-status";
-import { approveCandidate } from "@/lib/learning";
+import { approveCandidate } from "@/modules/site-audit";
 
 export async function updateLeadStatus(key: string, status: string): Promise<{ ok: boolean }> {
   await requireManagerAccess();

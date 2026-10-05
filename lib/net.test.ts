@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { fetchText, fetchPage, fetchPSI } from "./net";
+import { fetchText, fetchPage, fetchPSI } from "@/modules/site-audit/model/data/net";
 
 // Seam-ul de retea e mockabil: mock pe global.fetch, fara sa atingem reteaua reala.
 function mockFetch(impl: (url: string) => Response | Promise<Response>) {

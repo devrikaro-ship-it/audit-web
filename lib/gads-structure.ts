@@ -14,7 +14,7 @@
 //   pmax/rules.md  — campaign.primary_status + reasons: LIMITED strangulaza livrarea si nu
 //                    apare in niciun raport de performanta.
 
-import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { googleAdsSearch, type GoogleAdsAuth } from "@/lib/net";
 
 export type Campanie = {
   nume: string;

@@ -12,7 +12,7 @@
 // not `product_type_level1`, which is merchant-authored free text and cannot support a
 // language-independent general rule.
 
-import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { googleAdsSearch, type GoogleAdsAuth } from "@/lib/net";
 import type { Product } from "./gads-audit";
 
 /** The primary evidence window contains the latest 365 account-calendar dates. */

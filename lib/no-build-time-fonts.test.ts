@@ -3,7 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 // The production build must not reach the network for fonts: a failed Google Fonts fetch failed it (2026-09-25).
-// Fonts are served from public/fonts (app/fonts.css, app/r/report-deck.css).
+// Fonts are served from public/fonts (app/fonts.css, modules/site-audit/view/report-deck.css).
 const files = (dir: string): string[] => !existsSync(dir) ? [] : readdirSync(dir).flatMap((f) => {
   const p = path.join(dir, f);
   return statSync(p).isDirectory() ? files(p) : /\.(tsx?|css)$/.test(f) ? [p] : [];

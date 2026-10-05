@@ -11,7 +11,7 @@
 // Verificat pe cont real (DeHome, 06-08-2026): cuvantul "dehome" era negativ si bloca 30 din
 // 40 de produse ale magazinului.
 
-import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { googleAdsSearch, type GoogleAdsAuth } from "@/lib/net";
 import type { Product } from "./gads-audit";
 
 export type NegativToxic = {

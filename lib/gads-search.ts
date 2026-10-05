@@ -14,7 +14,7 @@
 // Verificat live (06-08-2026): DeHome si Granox sunt CURATE aici — RSA in fiecare grup activ,
 // nicio reclama veche care sa livreze, AI Max nepornit. Modulul a fost validat pe cazul negativ.
 
-import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { googleAdsSearch, type GoogleAdsAuth } from "@/lib/net";
 
 /** Tipurile scoase din uz de Google, care nu mai livreaza ca inainte. */
 const RECLAME_VECHI = new Set(["EXPANDED_TEXT_AD", "EXPANDED_DYNAMIC_SEARCH_AD"]);

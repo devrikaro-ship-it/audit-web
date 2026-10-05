@@ -21,7 +21,7 @@
 // Verificat live (06-08-2026): Granox — 2.862 de produse cu afisari la ~63 de vanzari pe luna
 // (diluare 45), si doua campanii Shopping active amandoua pe prioritate 2.
 
-import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { googleAdsSearch, type GoogleAdsAuth } from "@/lib/net";
 
 export type CampanieShopping = {
   nume: string;

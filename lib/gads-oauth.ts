@@ -9,7 +9,7 @@
 // `prompt=consent`, Google trimite refresh token DOAR la prima autorizare, iar un prospect
 // care revine a doua oara ar ramane fara — bug clasic, greu de reprodus la testare.
 
-import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { googleAdsSearch, type GoogleAdsAuth } from "@/lib/net";
 import { demoOn } from "./gads-demo";
 import { gadsApiUrl } from "./gads-api";
 import { validateCurrencyCode } from "./gads-session";

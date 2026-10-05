@@ -10,7 +10,7 @@
 // acuzatie falsa. Verificat pe puria (06-08-2026): 3 din 4 conversii principale erau
 // YouTube/Directions, while the account reported zero value on 1,236 RON over 365 days.
 
-import { googleAdsSearch, type GoogleAdsAuth } from "./net";
+import { googleAdsSearch, type GoogleAdsAuth } from "@/lib/net";
 
 /** Categorii care NU sunt vanzare — daca sunt principale, bidding-ul invata gresit. */
 export const NOT_A_SALE = new Set([
