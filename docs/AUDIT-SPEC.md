@@ -27,7 +27,7 @@ Raport de audit pentru un **prospect ecom netehnic**. E instrument de **vanzare*
 ## 2. One product among two
 
 Devrika has two audit products (operator, 2026-09-23): this **website audit** (`/r/<id>` + PDF, skill
-`audit-devrika`) and the **Google Ads audit** (`/google-ads`, skill `audit-google-ads`). The former cold/warm
+`audit-devrika`) and the **Google Ads audit** (`/google-ads`, branch `skill/audit-google-ads/`). The former cold/warm
 modes and the `/cald` warm report are retired. Orchestration: `skill/audit-site/SKILL.md` (branch of the `audit-devrika` container, `skill/SKILL.md`).
 
 ---

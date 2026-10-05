@@ -56,7 +56,7 @@ type PublicOAuthOracle = {
 };
 const externalRomanianOraclePath = path.resolve(
   process.cwd(),
-  "../.claude/skills/audit-google-ads/references/public-oauth-oracle.json",
+  "skill/audit-google-ads/references/public-oauth-oracle.json",
 );
 const publicOAuthOracle = JSON.parse(fs.readFileSync(
   path.resolve(process.cwd(), "docs/testing/public-oauth-oracle.en.json"),
