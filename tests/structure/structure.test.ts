@@ -12,7 +12,9 @@ const bad = (file: string, source: string, rule: number, bound = none) =>
 describe("structure rules on fixtures", () => {
   it("rule 1: a bound address file calls routes.ts and Next only", () => {
     const bound = new Set(["siteReport"]);
-    ok("app/(site-audit)/r/[id]/page.tsx", `import { routes } from "@/routes";\nexport default routes.siteReport;`, bound);
+    ok("app/(site-audit)/r/[id]/page.tsx", `import { routes } from "@/routes/site-audit";\nexport default routes.siteReport;`, bound);
+    bad("app/(site-audit)/r/[id]/page.tsx", `import { routes } from "@/routes/google-ads";\nexport default routes.siteReport;`, 1, bound);
+    bad("app/(site-audit)/r/[id]/page.tsx", `import { routes } from "@/routes";\nexport default routes.siteReport;`, 1, bound);
     bad("app/(site-audit)/r/[id]/page.tsx", `import { getAudit } from "@/lib/leads-store";`, 1, bound);
     ok("app/(site-audit)/r/[id]/page.tsx", `import { getAudit } from "@/lib/leads-store";`);   // not bound yet
   });
@@ -27,6 +29,8 @@ describe("structure rules on fixtures", () => {
     bad("modules/site-audit/model/score.ts", `const k = process.env.KEY;`, 3);
     bad("modules/site-audit/model/score.ts", `await fetch("https://x");`, 3);
     ok("modules/site-audit/model/data/repo.ts", `import { promises } from "node:fs";\nconst k = process.env.KEY;`);
+    ok("modules/site-audit/model/score.ts", `import { type Row, type Col } from "./data/rows";`);
+    bad("modules/site-audit/model/score.ts", `import { type Row, load } from "./data/rows";`, 3);
   });
   it("rule 4: another module only through its index", () => {
     ok("modules/dashboard/controller/list.ts", `import { siteAudit } from "@/modules/site-audit";`);
@@ -35,6 +39,7 @@ describe("structure rules on fixtures", () => {
   it("rule 5: shared depends on no module", () => {
     bad("shared/ui/button.tsx", `import { x } from "@/modules/site-audit";`, 5);
     bad("shared/auth/session.ts", `import { routes } from "@/routes";`, 5);
+    bad("shared/auth/session.ts", `import { routes } from "@/routes/site-audit";`, 5);
   });
   it("rule 7: no hand-written address", () => {
     bad("modules/site-audit/view/deck.tsx", "const a = `/r/${id}`;", 7);
@@ -59,10 +64,9 @@ function walk(dir: string): string[] {
 describe("structure rules on the repository", () => {
   const root = process.cwd();
   const rel = (p: string) => path.relative(root, p);
-  const routesFile = path.join(root, "routes.ts");
-  const bound = boundRouteIds(fs.existsSync(routesFile) ? fs.readFileSync(routesFile, "utf8") : null);
-  const files = [...walk(path.join(root, "modules")), ...walk(path.join(root, "shared")), ...walk(path.join(root, "app")),
-    ...(fs.existsSync(routesFile) ? [routesFile] : [])];
+  const routeFiles = walk(path.join(root, "routes"));
+  const bound = new Set(routeFiles.filter((f) => !f.endsWith("index.ts")).flatMap((f) => [...boundRouteIds(fs.readFileSync(f, "utf8"))]));
+  const files = [...walk(path.join(root, "modules")), ...walk(path.join(root, "shared")), ...walk(path.join(root, "app")), ...routeFiles];
 
   it("rules 1-5 and 7 hold in every file", () => {
     expect(files.flatMap((f) => checkFile(rel(f), fs.readFileSync(f, "utf8"), bound))).toEqual([]);

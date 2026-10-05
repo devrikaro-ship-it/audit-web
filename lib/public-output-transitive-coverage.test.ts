@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 const search = vi.hoisted(() => ({ implementation: vi.fn() }));
 
-vi.mock("./net", () => ({
+vi.mock("@/modules/google-ads/model/data/google-ads-api", () => ({
   googleAdsSearch: (...args: unknown[]) => search.implementation(...args),
 }));
 
@@ -16,15 +16,15 @@ import {
   missingConfig,
   oauthConfig,
   validateCustomerTimeZone,
-} from "./gads-oauth";
-import { fetchShoppingProducts } from "./gads-intake";
-import { citesteAn } from "./gads-an";
-import { fetchStructura } from "./gads-structure";
-import { fetchKeywordData, fetchKeywords } from "./gads-keywords";
-import { fetchPmaxData } from "./gads-pmax";
-import { fetchSearchData } from "./gads-search";
-import { fetchShoppingData } from "./gads-shopping";
-import { fetchTracking } from "./gads-tracking";
+} from "@/modules/google-ads/model/data/oauth";
+import { fetchShoppingProducts } from "@/modules/google-ads/model/data/intake";
+import { citesteAn } from "@/modules/google-ads/model/data/an";
+import { fetchStructura } from "@/modules/google-ads/model/data/structure";
+import { fetchKeywordData, fetchKeywords } from "@/modules/google-ads/model/data/keywords";
+import { fetchPmaxData } from "@/modules/google-ads/model/data/pmax";
+import { fetchSearchData } from "@/modules/google-ads/model/data/search";
+import { fetchShoppingData } from "@/modules/google-ads/model/data/shopping";
+import { fetchTracking } from "@/modules/google-ads/model/data/tracking";
 import HubPage from "@/app/(public)/hub/page";
 import GoogleAdsLanding from "@/app/(google-ads)/google-ads/page";
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { listAudits } from "@/modules/site-audit";
-import { managerAccounts, requireManagerAccess } from "@/lib/gads-manager";
+import { managerAccounts, requireManagerAccess } from "@/modules/google-ads/controller/manager";
 import { listStatuses } from "@/lib/dashboard-status";
 import { readObservations, summarizeByPlatform } from "@/modules/site-audit";
 import { candidateKey, computeLearning, readApprovals, MIN_DOMAINS } from "@/modules/site-audit";

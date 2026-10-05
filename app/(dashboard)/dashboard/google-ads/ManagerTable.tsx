@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ManagerAccount } from "@/lib/gads-manager";
+import type { ManagerAccount } from "@/modules/google-ads/controller/manager";
 import styles from "./manager.module.css";
 
 function comparison(actual: number | null, target: number | null, maximum = false) {

@@ -1,4 +1,4 @@
-import { routes } from "@/routes";
+import { routes } from "@/routes/site-audit";
 
 export const metadata = {
   title: "Audit gratuit pentru magazine online — Devrika",

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { managerAccountKey, readManagerReport, registeredReports, requireManagerAccess } from "@/lib/gads-manager";
-import ReportingDashboard from "@/app/(google-ads)/google-ads/raport/ReportingDashboard";
+import { managerAccountKey, readManagerReport, registeredReports, requireManagerAccess } from "@/modules/google-ads/controller/manager";
+import ReportingDashboard from "@/modules/google-ads/view/reporting-dashboard";
 import styles from "../../manager.module.css";
 
 export const dynamic = "force-dynamic";

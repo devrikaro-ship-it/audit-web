@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { managerAccounts, requireManagerAccess } from "@/lib/gads-manager";
+import { managerAccounts, requireManagerAccess } from "@/modules/google-ads/controller/manager";
 import ManagerTable from "./ManagerTable";
 import styles from "./manager.module.css";
 

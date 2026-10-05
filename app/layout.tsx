@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { publicOAuthProjection } from "@/lib/gads-public-oauth-contract";
+import { publicOAuthProjection } from "@/shared/public-contract/oauth-contract";
 import "./fonts.css";
 import "./globals.css";
 

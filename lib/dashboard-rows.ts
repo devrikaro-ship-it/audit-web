@@ -1,7 +1,7 @@
 // One agency dashboard for every audit (operator, 2026-09-23): website audits and Google Ads reports as one list
 // of prospects, each with a sales status the team moves through the Devrika selling process.
 import type { StoredAudit } from "@/modules/site-audit/model/data/audit-repository";
-import type { ManagerAccount } from "./gads-manager";
+import type { ManagerAccount } from "@/modules/google-ads/controller/manager";
 import { SITE_KIND, SITE_KIND_BY } from "@/modules/site-audit/model/copy-registry";
 
 // Same stages as the team's selling process in the CRM (setter -> closer -> closing).

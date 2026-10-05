@@ -4,8 +4,8 @@ import path from "node:path";
 import os from "node:os";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import type { GadsLead } from "@/lib/gads-leads";
-import type { GadsReportSnapshot } from "@/lib/gads-report-delivery";
+import type { GadsLead } from "@/modules/google-ads/model/data/leads";
+import type { GadsReportSnapshot } from "@/modules/google-ads/model/data/report-delivery";
 
 const access = vi.hoisted(() => ({ allowed: true }));
 vi.mock("next/headers", () => ({ headers: async () => new Headers(access.allowed ? { authorization: `Basic ${btoa("manager:local-test-pass")}` } : {}) }));
@@ -31,7 +31,7 @@ function fixtureSnapshot(revenue = 600): GadsReportSnapshot {
 }
 
 async function record(id: string, customerId: string, createdAt: number, revenue: number, active?: boolean): Promise<GadsLead> {
-  const { sealReportSnapshot } = await import("@/lib/gads-report-delivery");
+  const { sealReportSnapshot } = await import("@/modules/google-ads/model/data/report-delivery");
   const snapshotPath = path.join(directory, "reports", `report-${id}.snapshot`);
   await writeFile(snapshotPath, sealReportSnapshot(fixtureSnapshot(revenue)));
   return { id, customerId, createdAt, nume: `Owner ${id}`, email: "same-owner@example.test", telefon: "123456789", customerName: `Store ${customerId}`, reportId: `report-${id}`, snapshotPath, reportToken: "private-report-token", portalToken: "private-portal-token", serviceReportsEnabled: active, breakEvenRoas: 100 };
@@ -90,7 +90,7 @@ it("refuses manager access before reading a broken ledger, while valid access re
 it("does not merge missing account identifiers or treat zero spend and invalid signatures as below target", async () => {
   const zero = await record("zero", "", 300, 0);
   const invalid = await record("invalid", "", 200, 600);
-  const { sealReportSnapshot } = await import("@/lib/gads-report-delivery");
+  const { sealReportSnapshot } = await import("@/modules/google-ads/model/data/report-delivery");
   const snapshot = fixtureSnapshot(0);
   snapshot.reportV2!.periods.selected.spend = 0;
   await writeFile(zero.snapshotPath!, sealReportSnapshot(snapshot));

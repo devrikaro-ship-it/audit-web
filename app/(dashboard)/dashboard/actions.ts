@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { requireManagerAccess } from "@/lib/gads-manager";
+import { requireManagerAccess } from "@/modules/google-ads/controller/manager";
 import { setStatus } from "@/lib/dashboard-status";
 import { approveCandidate } from "@/modules/site-audit";
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildRows, dashboardKpis, DEFAULT_STATUS } from "./dashboard-rows";
 import type { StoredAudit } from "@/modules/site-audit/model/data/audit-repository";
-import type { ManagerAccount } from "./gads-manager";
+import type { ManagerAccount } from "@/modules/google-ads/controller/manager";
 
 const audit = (id: string, createdAt: number, extra: Partial<StoredAudit> = {}): StoredAudit =>
   ({ id, url: `https://${id}.ro`, domain: `${id}.ro`, scor: 72, createdAt, data: {} as StoredAudit["data"], ...extra });

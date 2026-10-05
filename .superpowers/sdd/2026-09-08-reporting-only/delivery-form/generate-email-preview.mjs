@@ -1,7 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildReportEmailPayload } from "../../../../lib/gads-report-email.ts";
+import { buildReportEmailPayload } from "@/modules/google-ads/model/data/report-email";
 
 const previewDirectory = path.dirname(fileURLToPath(import.meta.url));
 const pdf = Buffer.from("%PDF-1.4\nsynthetic audit preview\n%%EOF");

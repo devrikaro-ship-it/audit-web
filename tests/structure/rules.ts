@@ -9,7 +9,7 @@ export type Place = { kind: "app" | "routes" | "shared" | "module" | "other"; mo
 
 export function placeOf(file: string): Place {
   const p = file.split(path.sep).join("/");
-  if (p === "routes.ts") return { kind: "routes" };
+  if (p.startsWith("routes/")) return { kind: "routes", module: p.slice("routes/".length).replace(/\.ts$/, "") };
   if (p.startsWith("app/")) return { kind: "app" };
   if (p.startsWith("shared/")) return { kind: "shared" };
   const m = p.match(/^modules\/([^/]+)\/(.*)$/);
@@ -31,7 +31,12 @@ export function importsOf(file: string, source: string): Imported[] {
   const out: Imported[] = [];
   const add = (spec: string, typeOnly: boolean) => out.push({ spec, target: resolve(file, spec), typeOnly });
   const visit = (node: ts.Node) => {
-    if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) add(node.moduleSpecifier.text, !!node.importClause?.isTypeOnly);
+    // A declaration is type-only when written "import type" or when every name it brings is a type ({ type A, type B }).
+    if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
+      const c = node.importClause;
+      const named = c?.namedBindings && ts.isNamedImports(c.namedBindings) ? c.namedBindings.elements : null;
+      add(node.moduleSpecifier.text, !!c && (c.isTypeOnly || (!c.name && !!named && named.length > 0 && named.every((e) => e.isTypeOnly))));
+    }
     else if (ts.isExportDeclaration(node) && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) add(node.moduleSpecifier.text, node.isTypeOnly);
     else if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword && node.arguments[0] && ts.isStringLiteral(node.arguments[0])) add(node.arguments[0].text, false);
     ts.forEachChild(node, visit);
@@ -40,7 +45,7 @@ export function importsOf(file: string, source: string): Imported[] {
   return out;
 }
 
-const PURE_SHARED = ["shared/copy", "shared/theme", "shared/route-table"];
+const PURE_SHARED = ["shared/copy", "shared/theme", "shared/route-table", "shared/public-contract"];
 const VIEW_SHARED = [...PURE_SHARED, "shared/ui"];
 const VIEW_PACKAGES = ["react", "react-dom", "next/link", "next/navigation", "next/image"];
 const MODEL_PACKAGES = ["zod"];
@@ -62,6 +67,7 @@ function handWrittenPaths(source: string): string[] {
   return hits;
 }
 
+// The addresses bound in the binding files (routes/<module>.ts; routes/index.ts only gathers them).
 export function boundRouteIds(routesSource: string | null): Set<string> {
   if (!routesSource) return new Set();
   const sf = ts.createSourceFile("routes.ts", routesSource, ts.ScriptTarget.Latest, true);
@@ -94,11 +100,11 @@ export function checkFile(file: string, source: string, bound: Set<string>): str
   if (where.kind === "module" || where.kind === "routes" || where.kind === "app") {
     for (const i of imports) {
       const m = i.target.match(/^modules\/([^/]+)(\/.*)?$/);
-      if (m && m[1] !== where.module && m[2] && m[2] !== "/index" && m[2] !== "/index.ts") say(4, `imports ${i.spec} past the index of ${m[1]}`);
+      if (m && (where.kind !== "module" || m[1] !== where.module) && m[2] && m[2] !== "/index" && m[2] !== "/index.ts") say(4, `imports ${i.spec} past the index of ${m[1]}`);
     }
   }
   // Rule 5: shared depends on no module and not on routes.ts.
-  if (where.kind === "shared") for (const i of imports) if (i.target.startsWith("modules/") || i.target === "routes") say(5, `imports ${i.spec}`);
+  if (where.kind === "shared") for (const i of imports) if (i.target.startsWith("modules/") || i.target === "routes" || i.target.startsWith("routes/")) say(5, `imports ${i.spec}`);
   // Rule 3: the model touches no network, disk, environment or React.
   if (where.kind === "module" && where.layer === "model") {
     for (const i of imports) {
@@ -121,8 +127,10 @@ export function checkFile(file: string, source: string, bound: Set<string>): str
   }
   // Rule 1: a bound address file calls routes.ts and Next only.
   const id = where.kind === "app" ? appRouteId(file) : null;
+  // ...and only its own module's binding file, so a page loads its own module only.
   if (id && bound.has(id)) {
-    for (const i of imports) if (!i.typeOnly && i.target !== "routes" && i.target !== "next" && !i.target.startsWith("next/")) say(1, `imports ${i.spec}`);
+    const own = `routes/${ROUTE_TABLE[id as keyof typeof ROUTE_TABLE].module}`;
+    for (const i of imports) if (!i.typeOnly && i.target !== own && i.target !== "next" && !i.target.startsWith("next/")) say(1, `imports ${i.spec}`);
   }
   // Rule 7: no hand-written address in a module or a bound address file.
   if (where.kind === "module" || (id && bound.has(id))) for (const h of handWrittenPaths(source)) say(7, `writes the address ${h} by hand`);

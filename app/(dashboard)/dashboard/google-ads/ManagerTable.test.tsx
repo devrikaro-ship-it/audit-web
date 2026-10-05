@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, it } from "vitest";
-import type { ManagerAccount } from "@/lib/gads-manager";
+import type { ManagerAccount } from "@/modules/google-ads/controller/manager";
 import ManagerTable from "./ManagerTable";
 
 afterEach(cleanup);

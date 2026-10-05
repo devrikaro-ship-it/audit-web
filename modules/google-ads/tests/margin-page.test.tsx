@@ -1,0 +1,86 @@
+import { expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
+import { GROSS_MARGIN_ERROR } from "@/modules/google-ads/model/data/session";
+import { normalizePublicOutput } from "@/app/public-output-goldens";
+
+let sessionVariant: "valid" | "missing" | "account" | "timezone" | "currency" = "valid";
+let demoEnabled = false;
+let productCount = 0;
+let productCategory: string | undefined;
+let measuredAov: number | null = 500;
+
+vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => ({ value: "session" }) }) }));
+vi.mock("next/navigation", () => ({ redirect: (url: string) => { throw new Error(`REDIRECT ${url}`); } }));
+vi.mock("next/link", () => ({ default: ({ children }: { children: React.ReactNode }) => <a>{children}</a> }));
+vi.mock("@/modules/google-ads/model/data/session", async (original) => ({
+  ...(await original<Record<string, unknown>>()),
+  SESSION_COOKIE: "gads_session",
+  unseal: () => sessionVariant === "missing" ? null : ({ refreshToken: "token", customerId: sessionVariant === "account" ? undefined : "123", customerTimeZone: sessionVariant === "timezone" ? undefined : "Europe/Bucharest", currencyCode: sessionVariant === "currency" ? undefined : "EUR", exp: 9e12 }),
+}));
+vi.mock("@/modules/google-ads/model/data/oauth", () => ({ accessTokenFrom: async () => "access", oauthConfig: () => ({ developerToken: "dev" }) }));
+vi.mock("@/modules/google-ads/model/data/intake", () => ({ fetchShoppingProducts: async () => ({ products: Array.from({ length: productCount }, () => ({ title: "Product", category: productCategory })) }) }));
+vi.mock("@/modules/google-ads/model/data/an", () => ({
+  aggregatePurchaseBaseline: () => ({ averageOrderValue: measuredAov }),
+  readPurchaseBaseline: async () => ({ averageOrderValue: measuredAov }),
+}));
+vi.mock("@/modules/google-ads/model/data/demo", () => ({ demoOn: () => demoEnabled, demoData: () => ({ products: Array.from({ length: productCount }, () => ({ title: "Product", category: productCategory })) }) }));
+vi.mock("@/modules/google-ads/view/margin-form", () => ({
+  default: ({ initialAverageOrderValue, measured, currencyCode }: { initialAverageOrderValue: number; measured: boolean; currencyCode: string }) => (
+    <form data-test="margin-retry" data-aov={initialAverageOrderValue} data-measured={String(measured)} data-currency={currencyCode} />
+  ),
+}));
+
+it("renders the margin explanation and retry path after invalid submission", async () => {
+  const MarginPage = (await import("@/app/(google-ads)/google-ads/marja/page")).default;
+  const html = renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({ eroare: "marja" }) }));
+  expect(html).toContain(GROSS_MARGIN_ERROR);
+  expect(html).toContain('data-public-oauth-surface="margin:error"');
+  expect(html).toContain('data-test="margin-retry"');
+  expect(normalizePublicOutput(html)).toMatchSnapshot("margin:error");
+});
+
+it("renders the normal margin state through the canonical contract", async () => {
+  const MarginPage = (await import("@/app/(google-ads)/google-ads/marja/page")).default;
+  const html = renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({}) }));
+  expect(html).toContain('data-public-oauth-surface="margin:normal"');
+  expect(html).toContain('data-aov="500"');
+  expect(html).toContain('data-measured="true"');
+  expect(html).toContain('data-currency="EUR"');
+  expect(html).toContain("cost of goods in that order");
+  expect(html).toContain("Let&#x27;s set the point where your Google Ads campaigns start making or losing money");
+  expect(html).toContain("We do not ask for invoices or access your accounting records");
+  expect(normalizePublicOutput(html)).toMatchSnapshot("margin:normal");
+});
+
+it("falls back to a manual AOV when Purchase data is unavailable", async () => {
+  measuredAov = null;
+  const MarginPage = (await import("@/app/(google-ads)/google-ads/marja/page")).default;
+  const html = renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({}) }));
+  expect(html).toContain('data-aov="300"');
+  expect(html).toContain('data-measured="false"');
+  measuredAov = 500;
+});
+
+it.each([
+  ["missing", "/google-ads/connect?eroare=sesiune"],
+  ["account", "/google-ads/conturi"],
+  ["timezone", "/google-ads/conturi"],
+  ["currency", "/google-ads/conturi"],
+] as const)("refuses the %s margin session boundary", async (variant, destination) => {
+  sessionVariant = variant;
+  const MarginPage = (await import("@/app/(google-ads)/google-ads/marja/page")).default;
+  await expect(MarginPage({ searchParams: Promise.resolve({}) })).rejects.toThrow(`REDIRECT ${destination}`);
+  sessionVariant = "valid";
+});
+
+it("executes demo and populated catalog branches", async () => {
+  demoEnabled = true;
+  productCount = 2;
+  const MarginPage = (await import("@/app/(google-ads)/google-ads/marja/page")).default;
+  expect(renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({}) }))).toBeTruthy();
+  demoEnabled = false;
+  productCategory = "436";
+  expect(renderToStaticMarkup(await MarginPage({ searchParams: Promise.resolve({}) }))).toBeTruthy();
+  productCount = 0;
+  productCategory = undefined;
+});

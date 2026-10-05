@@ -24,9 +24,9 @@ import {
   publicOAuthStatement,
   publicOAuthSurfaceRegistry,
   projectPublicOAuth,
-} from "@/lib/gads-public-oauth-contract";
-import { GADS_LOCALIZED_COPY } from "@/lib/gads-localized-copy";
-import { SCOPE } from "@/lib/gads-oauth";
+} from "@/shared/public-contract/oauth-contract";
+import { GADS_LOCALIZED_COPY } from "@/shared/public-contract/localized-copy";
+import { SCOPE } from "@/modules/google-ads/model/data/oauth";
 import nextConfig from "@/next.config";
 import { normalizePublicMetadata, normalizePublicOutput } from "@/app/public-output-goldens";
 import { publicOutputStateDefinitions } from "@/app/public-output-state-contract";
@@ -258,7 +258,7 @@ function expressionUsesProjection(node: ts.Node): boolean {
   const visit = (candidate: ts.Node) => {
     if (ts.isIdentifier(candidate) && candidate.text === "publicOAuthProjection") {
       const symbol = finalSymbol(sourceChecker.getSymbolAtLocation(candidate));
-      found = Boolean(symbol?.declarations?.some((declaration) => path.relative(process.cwd(), declaration.getSourceFile().fileName) === "lib/gads-public-oauth-contract.ts"));
+      found = Boolean(symbol?.declarations?.some((declaration) => path.relative(process.cwd(), declaration.getSourceFile().fileName) === "shared/public-contract/oauth-contract.ts"));
     }
     if (!found) ts.forEachChild(candidate, visit);
   };
@@ -375,6 +375,56 @@ function responseBodyEmitters(sourceFile: ts.SourceFile): ts.Node[] {
   return emitters;
 }
 
+
+// The code that answers an address (spec 2026-10-05 §4). A page or route file only names its route binding, so the
+// code that runs for it is found by following that binding (routes/<module>.ts -> the module door -> the controller):
+// the files on that path, then everything the controller imports. A file that is not bound yet is its own code.
+function routeImplementation(source: string, exportName = "default"): { chain: string[]; code: string[] } {
+  const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
+  if (!sourceFile) throw new Error(`Source outside the TypeScript program: ${source}`);
+  const moduleSymbol = sourceChecker.getSymbolAtLocation(sourceFile);
+  const exported = moduleSymbol && sourceChecker.getExportsOfModule(moduleSymbol).find((symbol) => symbol.name === exportName);
+  const declaration = exported?.declarations?.[0];
+  const bound = declaration && (ts.isExportAssignment(declaration) ? declaration.expression
+    : ts.isVariableDeclaration(declaration) ? declaration.initializer : undefined);
+  if (!bound || !ts.isPropertyAccessExpression(bound) || !/^@\/routes\//.test(sourceFile.text.match(/from "(@\/routes\/[^"]+)"/)?.[1] ?? "")) {
+    return { chain: [], code: reachableSourceGraph([source]) };
+  }
+  const chain = new Set<string>();
+  let target: ts.Expression = bound;
+  let symbol: ts.Symbol | undefined;
+  for (let step = 0; step < 12; step++) {
+    // routes.gadsStartApi.GET: the binding is the object that holds GET
+    const name = ts.isPropertyAccessExpression(target) ? (ts.isPropertyAccessExpression(target.expression) ? target.expression.name : target.name) : target;
+    symbol = finalSymbol(sourceChecker.getSymbolAtLocation(name));
+    const next = symbol?.valueDeclaration ?? symbol?.declarations?.[0];
+    if (!next) break;
+    chain.add(path.relative(process.cwd(), next.getSourceFile().fileName));
+    if (ts.isPropertyAssignment(next)) { target = next.initializer; continue; }
+    if (ts.isShorthandPropertyAssignment(next)) {
+      symbol = finalSymbol(sourceChecker.getShorthandAssignmentValueSymbol(next));
+      const decl = symbol?.valueDeclaration ?? symbol?.declarations?.[0];
+      if (decl) chain.add(path.relative(process.cwd(), decl.getSourceFile().fileName));
+      break;
+    }
+    break;
+  }
+  const controller = [...chain].pop();
+  if (!controller || !controller.includes("/controller/")) throw new Error(`Unresolved route binding: ${source}`);
+  return { chain: [source, ...[...chain].filter((f) => f !== controller)], code: reachableSourceGraph([controller]) };
+}
+const routeImplementationText = (pageSource: string) => {
+  const { code } = routeImplementation(pageSource);
+  const controller = code[0];
+  const viewRoot = controller.replace(/\/controller\/[^/]+$/, "/view/");
+  return code.filter((source) => source === controller || source.startsWith(viewRoot))
+    .map((source) => fs.readFileSync(path.join(process.cwd(), source), "utf8")).join("\n");
+};
+const runsFor = (source: string, exportName = "default") => {
+  const { chain, code } = routeImplementation(source, exportName);
+  return [...new Set([...chain, ...code])];
+};
+
 const reachableOutputManifestPath = path.join(process.cwd(), "app/public-output-reachable-files.json");
 
 describe("public Google Ads access boundary", () => {
@@ -461,7 +511,7 @@ describe("public Google Ads access boundary", () => {
     for (const clauseId of Object.keys(localizedClauseOracle) as Array<keyof typeof localizedClauseOracle>) {
       expect(projectOAuthClauses(clauseId)).toBe(localizedClauseOracle[clauseId]);
     }
-    const contractSource = sourceProgram.getSourceFile(path.join(process.cwd(), "lib/gads-public-oauth-contract.ts"))!;
+    const contractSource = sourceProgram.getSourceFile(path.join(process.cwd(), "shared/public-contract/oauth-contract.ts"))!;
     const fullClauseMappings: ts.PropertyAssignment[] = [];
     const visit = (node: ts.Node) => {
       if (ts.isPropertyAssignment(node)) {
@@ -475,7 +525,7 @@ describe("public Google Ads access boundary", () => {
   });
 
   it("maps every executable public-output state to exactly one reviewed snapshot", () => {
-    const snapshotCorpus = walkSource(path.join(process.cwd(), "app"))
+    const snapshotCorpus = [...walkSource(path.join(process.cwd(), "app")), ...walkSource(path.join(process.cwd(), "modules"))]
       .filter((source) => source.endsWith(".snap"))
       .map((source) => fs.readFileSync(path.join(process.cwd(), source), "utf8"))
       .join("\n");
@@ -543,7 +593,7 @@ describe("public Google Ads access boundary", () => {
 
     for (const [surface, registration] of Object.entries(publicOAuthSurfaceRegistry)) {
       const source = pageEntries.find((entry) => entry.route === registration.route)?.source ?? "";
-      const sourceText = fs.readFileSync(path.join(process.cwd(), source), "utf8");
+      const sourceText = routeImplementationText(source);
       expect(sourceText, source).toMatch(new RegExp(`publicOAuthAttributes\\("${surface}|registeredPublicOAuthAttributes\\.${surface}`));
     }
 
@@ -594,7 +644,7 @@ describe("public Google Ads access boundary", () => {
       return route.startsWith("/google-ads") || ["/", "/hub", "/confidentialitate", "/termeni"].includes(route);
     });
     for (const source of publicMetadataSources) {
-      for (const reachable of reachableSourceGraph([source])) {
+      for (const reachable of runsFor(source)) {
         if (reachable.endsWith(".json")) throw new Error(`Unregistered public JSON emitter: ${reachable}`);
         const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), reachable));
         if (!sourceFile) throw new Error(`Source is outside the TypeScript program: ${reachable}`);
@@ -610,7 +660,7 @@ describe("public Google Ads access boundary", () => {
     const apiRoots = Object.values(publicOAuthInfrastructureRegistry)
       .filter(({ kind }) => kind === "redirect-emitter")
       .map(({ source }) => source);
-    for (const source of reachableSourceGraph(apiRoots)) {
+    for (const source of [...new Set(apiRoots.flatMap((root) => routeImplementation(root, "GET").code))]) {
       if (source.endsWith(".json")) throw new Error(`Unregistered public JSON emitter: ${source}`);
       const sourceFile = sourceProgram.getSourceFile(path.join(process.cwd(), source));
       if (!sourceFile) throw new Error(`Source is outside the TypeScript program: ${source}`);
@@ -624,7 +674,7 @@ describe("public Google Ads access boundary", () => {
       normalizeNextRoute(source.replace(/\/layout\.tsx$/, "/page.tsx")).startsWith("/google-ads") ||
       ["/", "/hub", "/confidentialitate", "/termeni"].includes(normalizeNextRoute(source.replace(/\/layout\.tsx$/, "/page.tsx")))
     ));
-    const observed = reachableSourceGraph(publicPageSources).sort();
+    const observed = [...new Set(publicPageSources.flatMap((source) => runsFor(source)))].sort();
     if (process.env.UPDATE_PUBLIC_OUTPUT_REACHABLE_FILES === "1") {
       fs.writeFileSync(reachableOutputManifestPath, `${JSON.stringify({ files: observed }, null, 2)}\n`);
     }
@@ -710,7 +760,7 @@ describe("public Google Ads access boundary", () => {
   });
 
   it("uses native same-page navigation for the report example", () => {
-    const source = fs.readFileSync(path.join(process.cwd(), "app/(google-ads)/google-ads/page.tsx"), "utf8");
+    const source = routeImplementationText("app/(google-ads)/google-ads/page.tsx");
 
     expect(source).toContain('<a href="#report-preview"');
     expect(source).not.toContain('<Link href="#report-preview"');
@@ -743,7 +793,7 @@ describe("public Google Ads access boundary", () => {
   });
 
   it("shows every landing example vertically without horizontal table scrolling", () => {
-    const source = fs.readFileSync(path.join(process.cwd(), "app/(google-ads)/google-ads/page.tsx"), "utf8");
+    const source = routeImplementationText("app/(google-ads)/google-ads/page.tsx");
     const html = renderToStaticMarkup(<LandingPage />);
 
     expect(source).not.toContain("overflow-x-auto");
