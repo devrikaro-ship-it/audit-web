@@ -30,7 +30,9 @@ export type GadsLead = {
 };
 
 const FILE = process.env.GADS_LEADS_FILE
-  || path.join(path.dirname(process.env.LEADS_FILE || path.join(process.cwd(), "data", "x")), "gads-leads.json");
+  || (process.env.LEADS_FILE
+    ? path.join(path.dirname(process.env.LEADS_FILE), "gads-leads.json")
+    : path.join(process.cwd(), "data", "gads-leads.json"));
 const LOCK = `${FILE}.lock`;
 
 declare global {
