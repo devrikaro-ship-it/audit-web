@@ -17,7 +17,8 @@ export function findChrome(env: Record<string, string | undefined> = process.env
   if (known) return known;
   for (const dir of (env.PATH ?? "").split(path.delimiter).filter(Boolean)) {
     for (const name of ON_PATH) {
-      const candidate = path.join(dir, name);
+      // Browser executables are provided by the host at runtime, not bundled app assets.
+      const candidate = path.join(/* turbopackIgnore: true */ dir, name);
       if (exists(candidate)) return candidate;
     }
   }

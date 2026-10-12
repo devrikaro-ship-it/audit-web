@@ -1,5 +1,16 @@
 # Domain split — September 23, 2026
 
+> Superseded on October 12, 2026: hostname routing was removed from the app.
+> Configure domain-specific redirects and rewrites in hosting/Traefik instead.
+> Production `/` now serves `/hub` on every domain unless hosting rewrites it;
+> `/audituri` remains available for a host-level Romanian home-page rewrite.
+> `proxy.ts` only protects dashboard routes. `PUBLIC_URL` remains the canonical
+> origin for OAuth/report links, and `SITE_AUDIT_ORIGIN` remains an optional
+> second allowed dashboard origin. Removing that variable does not redirect
+> traffic. The routing and rollback instructions below are historical, not
+> current deployment instructions. No hosting configuration was changed as
+> part of the application cleanup.
+
 Operator decision: audit.devrika.ro opens on a Romanian three-audit page (`/audituri`, only the website audit open, with its own link to the landing `/audit-seo`); audit.devrika.io keeps the three-audit home page
 (only the website audit open; Google Ads and Meta Ads shown as coming soon).
 

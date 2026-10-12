@@ -4,7 +4,9 @@ import path from "node:path";
 import type { PendingReportClaim } from "./gads-pending-report";
 
 export function reportStorageDirectory(): string {
-  return process.env.GADS_REPORTS_DIR || path.join(path.dirname(process.env.GADS_LEADS_FILE || path.join(process.cwd(), "data", "gads-leads.json")), "gads-reports");
+  return process.env.GADS_REPORTS_DIR || (process.env.GADS_LEADS_FILE
+    ? path.join(path.dirname(process.env.GADS_LEADS_FILE), "gads-reports")
+    : path.join(process.cwd(), "data", "gads-reports"));
 }
 
 function resolveStoredSnapshot(snapshotPath: string): string {
@@ -27,7 +29,7 @@ async function writeExactFile(target: string, contents: string): Promise<void> {
     await link(temporary, target);
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-    const existing = await readFile(target, "utf8");
+    const existing = await readFile(/* turbopackIgnore: true */ target, "utf8");
     if (existing !== contents) throw new Error("Refusing to overwrite immutable report snapshot");
   } finally {
     await unlink(temporary).catch(() => undefined);
@@ -48,7 +50,7 @@ export async function promotePendingReportSnapshot(claim: PendingReportClaim, re
   if (!claim.signedSnapshot || !claim.pendingSnapshotPath) throw new Error("Pending report snapshot is unavailable");
   const expectedDigest = createHash("sha256").update(claim.signedSnapshot).digest("hex");
   if (expectedDigest !== claim.snapshotDigest) throw new Error("Pending report snapshot digest changed");
-  const pendingBytes = await readFile(claim.pendingSnapshotPath, "utf8");
+  const pendingBytes = await readFile(/* turbopackIgnore: true */ claim.pendingSnapshotPath, "utf8");
   if (pendingBytes !== claim.signedSnapshot) throw new Error("Pending report snapshot changed after claim");
   const directory = reportStorageDirectory();
   await mkdir(directory, { recursive: true });
@@ -58,5 +60,6 @@ export async function promotePendingReportSnapshot(claim: PendingReportClaim, re
 }
 
 export async function readStoredReportSnapshot(snapshotPath: string): Promise<string> {
-  return readFile(resolveStoredSnapshot(snapshotPath), "utf8");
+  // Snapshots are generated on the persistent runtime volume, not shipped in the bundle.
+  return readFile(/* turbopackIgnore: true */ resolveStoredSnapshot(snapshotPath), "utf8");
 }
