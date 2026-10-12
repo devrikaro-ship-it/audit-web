@@ -1,5 +1,18 @@
 # Audit Devrika
 
+## Domain routing
+
+Configure domain-specific redirects and rewrites in the hosting/reverse proxy layer.
+The app serves the same routes on every domain: production `/` serves `/hub`, while
+development `/` serves the developer index. To show the Romanian home page on a
+particular domain, configure a host-level rewrite from `/` to `/audituri`.
+
+`proxy.ts` protects `/dashboard` only; it does not route by hostname. `PUBLIC_URL`
+still configures the canonical public URLs used for OAuth and report delivery.
+`SITE_AUDIT_ORIGIN` remains an optional second allowed origin for dashboard login
+and logout validation; it no longer enables domain routing. Keep it configured
+when serving the dashboard on a second domain.
+
 ## Variabile de mediu
 
 Auditul pe cont Google Ads conectat (`/google-ads`):

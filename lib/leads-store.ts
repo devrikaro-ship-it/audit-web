@@ -20,6 +20,7 @@ export type StoredAudit = {
   data: AuditData;
 };
 
+// Persistent records are runtime data on the deployment volume, not build assets.
 const FILE = process.env.LEADS_FILE || path.join(process.cwd(), "data", "audits.json");
 
 declare global {
@@ -32,7 +33,7 @@ declare global {
 async function load(): Promise<StoredAudit[]> {
   if (global.__leadsCache) return global.__leadsCache;
   try {
-    const raw = await fs.readFile(FILE, "utf8");
+    const raw = await fs.readFile(/* turbopackIgnore: true */ FILE, "utf8");
     global.__leadsCache = JSON.parse(raw) as StoredAudit[];
   } catch {
     global.__leadsCache = [];

@@ -19,6 +19,22 @@ const request = (route: string, body = "", headers: Record<string, string> = {})
   method: body ? "POST" : "GET", headers: { origin, "content-type": "application/x-www-form-urlencoded", ...headers }, body: body || undefined,
 });
 
+it("passes public requests through on either configured domain without redirects or rewrites", async () => {
+  vi.stubEnv("PUBLIC_URL", origin);
+  vi.stubEnv("SITE_AUDIT_ORIGIN", "https://audit.second.test");
+  const { proxy } = await import("../proxy");
+  for (const host of ["dashboard.example.test", "audit.second.test"]) {
+    for (const route of ["/", "/audit-seo", "/google-ads", "/confidentialitate", "/api/google-ads/callback?code=test"]) {
+      const response = await proxy(new NextRequest("http://localhost:3000" + route, {
+        headers: { "x-forwarded-host": host },
+      }));
+      expect(response.headers.get("x-middleware-next")).toBe("1");
+      expect(response.headers.has("location")).toBe(false);
+      expect(response.headers.has("x-middleware-rewrite")).toBe(false);
+    }
+  }
+});
+
 it("redirects anonymous navigation to login and accepts a valid session until logout revokes replay", async () => {
   const { proxy } = await import("../proxy");
   const { POST: login } = await import("../app/dashboard/login/submit/route");
