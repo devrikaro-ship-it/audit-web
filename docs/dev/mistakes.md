@@ -510,3 +510,12 @@ build error naming `internal/font/google`, passing on a retry. Repair: the ten w
 in public/fonts, app/fonts.css declares them with Google's unicode ranges and sets the same CSS variables;
 lib/no-build-time-fonts.test.ts fails on any `next/font/google` or Google Fonts stylesheet. Side effect accepted: the
 arrow "→" is outside Google's latin range and falls back to the system font.
+
+## 2026-11-10 — A local review route for one client nearly shipped as a public page
+
+Symptom: releasing the report v2 commits failed two access-boundary tests: `/google-ads/portal/local-fitness-review-v2`
+was a new public route outside the registered list. Measured cause: the route was written for a local design review
+with a fixed token of one client's report population; it lived in `app/`, so the build would have served it in
+production to anyone with the address. Recognition signal: a page under `app/` whose path or constants name a client
+or a "local" review. Repair: the route and its tests were removed from the release (464c98d); review-only pages stay
+out of `app/` or behind the demo switch, and the access-boundary test is the gate that catches the next one.
