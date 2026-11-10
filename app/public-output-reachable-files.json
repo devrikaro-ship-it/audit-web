@@ -11,6 +11,7 @@
     "app/google-ads/marja/page.tsx",
     "app/google-ads/page.tsx",
     "app/google-ads/portal/[token]/page.tsx",
+    "app/google-ads/portal/portal-report.tsx",
     "app/google-ads/raport/CatalogPePerformanta.tsx",
     "app/google-ads/raport/ContactForm.tsx",
     "app/google-ads/raport/ReportingDashboard.tsx",

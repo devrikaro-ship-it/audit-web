@@ -10,7 +10,7 @@ import {
   type ReportProductInputV2,
 } from "@/lib/gads-report-metrics";
 import { listPortalReports } from "@/lib/gads-leads";
-import { publicOAuthAttributes } from "@/lib/gads-public-oauth-contract";
+import type { HTMLAttributes } from "react";
 import { readStoredReportSnapshot } from "@/lib/gads-report-snapshot";
 import ReportingDashboard from "@/app/google-ads/raport/ReportingDashboard";
 import { notFound } from "next/navigation";
@@ -28,6 +28,7 @@ export type PortalReportProps = {
   presentation: "classic" | "sidebar";
   portalPath: string;
   searchParams: PortalSearchParams;
+  surfaceAttributes: HTMLAttributes<HTMLElement>;
   fallback?: PortalReportFallback;
 };
 
@@ -98,12 +99,13 @@ export async function PortalReport({
   presentation,
   portalPath,
   searchParams,
+  surfaceAttributes,
   fallback,
 }: PortalReportProps) {
   const { report: requestedReportId } = await searchParams;
   const leads = await listPortalReports(token);
   if (!leads.length && fallback) {
-    return PortalReport({ ...fallback, searchParams });
+    return PortalReport({ ...fallback, searchParams, surfaceAttributes });
   }
   if (!leads.length) notFound();
 
@@ -123,7 +125,7 @@ export async function PortalReport({
   const report = reportViewFromSnapshot(selected.snapshot, selected.lead.createdAt);
 
   return (
-    <main {...publicOAuthAttributes("client-portal")}>
+    <main {...surfaceAttributes}>
       <ReportingDashboard
         report={report}
         presentation={presentation}
