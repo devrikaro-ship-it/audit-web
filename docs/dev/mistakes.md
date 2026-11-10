@@ -339,3 +339,47 @@ Symptom: the operator generated a MagazinFitness.ro Google Ads report, then saw 
 ## 2026-09-09 — Preserve the closed public module graph during lifecycle repairs
 
 Symptom: the first final suite had 597 passing tests and one failing public-reachability inventory check. Measured cause: automatic persistence introduced a runtime module outside the declared 54-file graph. Recognition signal: focused lifecycle tests pass while the graph inventory reports an additional reachable file. Repair: consolidate persistence into the existing pending-report lifecycle module, preserving the graph guard and manifest unchanged. Witness the graph failure, then confirm 107 focused checks and all 598 repository tests pass.
+# 2026-09-10 — Local report verification used a different host and tab than the operator-visible page
+
+**Symptom.** The operator-visible report tab showed `ERR_CONNECTION_RESET` at
+`http://localhost:3128/google-ads/portal/local-fitness-review` after the report had been declared open and
+working. A separate controlled tab at the numeric loopback address rendered the report correctly.
+
+**Measured cause.** The local Next.js server listened only on `127.0.0.1:3128`. One browser tab retained the
+`localhost` URL created during the stale-server interval, while final verification inspected another tab at
+`127.0.0.1`. The reported success therefore proved the server and the second tab, not the exact page visible to
+the operator.
+
+**Recognition signal.** Browser discovery shows two tabs for the same route with different hosts, or the
+operator's screenshot URL differs from the URL in the verification receipt. A healthy `curl` to one host does
+not prove a browser tab using the other host.
+
+**Repair.** Claim the exact operator-visible tab, navigate it to the listener's declared host, and verify the
+title plus the required report tabs in that same tab. Keep that exact tab as the deliverable. For future local
+handoffs, use the server's printed URL consistently and compare the visible tab URL before claiming success.
+
+**Class.** A result verified in a sibling browser tab is not proof of the user's visible result. Local host,
+port, route, and tab identity are all part of the witness.
+
+## 2026-09-11 — Authentication mutation routes validated proxy configuration but not the request address
+
+**Symptom.** Focused authentication HTTP tests passed, yet password enrollment and logout accepted a valid
+session, origin, and CSRF value when `X-Forwarded-For` was absent or malformed, then changed credentials or
+revoked the session.
+
+**Measured cause.** The two authenticated mutation handlers called the helper that validates
+`CLIENT_TRUSTED_PROXY_HOPS`, but never called the separate helper that parses and validates the current
+request's forwarding chain. Configuration validity was therefore mistaken for request validity.
+
+**Recognition signal.** A security property is enforced on login/bootstrap handlers but sibling authenticated
+mutation handlers call only a configuration parser. Search every route that mutates authentication state and
+verify it consumes the same request-derived source-address guard before the mutation.
+
+**Repair.** Resolve and validate the canonical request source IP on password enrollment and logout before
+opening a mutation path. Add separate negative cases for missing and malformed forwarding chains on both
+handlers, assert zero credential/session mutation, then remove the guard to witness those tests fail before
+restoring it.
+
+**Class.** Validating a security control's configuration does not validate the request governed by that
+control. Cross-cutting request guards must be exercised at every mutation entry point, including already
+authenticated ones.
