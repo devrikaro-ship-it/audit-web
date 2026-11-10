@@ -383,3 +383,13 @@ restoring it.
 **Class.** Validating a security control's configuration does not validate the request governed by that
 control. Cross-cutting request guards must be exercised at every mutation entry point, including already
 authenticated ones.
+
+## 2026-11-10 — A branch called locally verified did not build once its uncommitted pages were saved
+
+Symptom: the client portal branch was declared verified locally on 2026-09-11, yet `npm run build` failed on
+`app/client/page.tsx` after its uncommitted files were committed on 2026-11-10: `listOwnedReports` was called with a
+bare token string instead of `{ sessionToken }`. Measured cause: the pages were written after the last verified
+revision and never built; the verification covered committed code only. Recognition signal: `git status` shows
+untracked files under `app/` on a branch whose docs claim a verified state. Repair: run `npm run build` on the tree
+with every working file included before calling a branch verified, and before proposing it for release. The portal also
+keeps the deny-all entitlement default, so no client can open a report live until an entitlement provider exists.
