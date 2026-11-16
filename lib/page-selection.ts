@@ -174,9 +174,10 @@ export function replacementsFor<K extends string>(failed: K[], typed: Record<K, 
 }
 
 // Prices as the visitor reads them: tags removed first, since themes often put the currency in its own element
-// ("29 <small>lei</small>").
+// ("29 <small>lei</small>"). A non-breaking space between amount and currency is a space too: WooCommerce writes
+// "664,05&nbsp;<span>lei</span>" (a WooCommerce shop, 2026-11-16: 32 of 49 product prices were missed).
 export function priceCount(html: string): number {
-  return (html.replace(/<[^>]+>/g, " ").match(/\d[\d.\s]*[.,]?\d*\s*(lei|ron|€|eur)\b/gi) ?? []).length;
+  return (html.replace(/<[^>]+>/g, " ").replace(/&nbsp;|&#160;|&#xa0;|\u00a0/gi, " ").match(/\d[\d.\s]*[.,]?\d*\s*(lei|ron|€|eur)\b/gi) ?? []).length;
 }
 export function hasAddToCart(html: string): boolean {
   return /add[-_ ]?to[-_ ]?cart|adaug[aă]\s+[iî]n\s+co[sș]|single_add_to_cart|comanda\s+rapida|cumpar[aă]\s+acum|buy\s+now/i.test(html);

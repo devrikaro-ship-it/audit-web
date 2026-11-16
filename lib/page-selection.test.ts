@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyFetchedLeadPage, classifyFetchedPage, classifySitemap, collectLeadUrls, collectTypedUrls, completeLeadTypes, leadTemplate, selectLeadPages, mapWithConcurrency, LEAD_PAGE_BUDGET, PAGE_BUDGET, replacementsFor, sampleEvenly, selectPages } from "./page-selection";
+import { classifyFetchedLeadPage, classifyFetchedPage, classifySitemap, collectLeadUrls, collectTypedUrls, completeLeadTypes, leadTemplate, selectLeadPages, mapWithConcurrency, LEAD_PAGE_BUDGET, PAGE_BUDGET, priceCount, replacementsFor, sampleEvenly, selectPages } from "./page-selection";
 import { PROFILES, profileFor } from "./platform-knowledge";
 
 const O = "https://shop.example";
@@ -253,5 +253,12 @@ describe("lead sites: the pages that bring contacts (spec 2026-09-25 §2.4)", ()
 
   it("pages under a services section are services before any page is read", () => {
     expect(completeLeadTypes({ service: [], location: [], other: [`${D}/servicii/curatenie-birouri/`, `${D}/media/`] })).toEqual({ service: [`${D}/servicii/curatenie-birouri/`], location: [], other: [`${D}/media/`] });
+  });
+});
+
+describe("priceCount", () => {
+  it("reads a WooCommerce price whose currency follows a non-breaking space", () => {
+    const html = '<p class="price"><span class="woocommerce-Price-amount amount"><bdi>664,05&nbsp;<span class="woocommerce-Price-currencySymbol">lei</span></bdi></span></p>';
+    expect(priceCount(html)).toBe(1);
   });
 });
