@@ -20,6 +20,11 @@ before acting.
 | **audit-site** | a site, from its URL only: SEO and UX/UI | `audit-site/SKILL.md` |
 | **audit-google-ads** | a connected ecommerce Google Ads account, read only (`/google-ads`) | `audit-google-ads/SKILL.md` |
 
+## Common to every shop audit
+
+The conclusions of a shop audit follow `conclusions-standard.md`: each conclusion comes from one metric or checklist
+row, against the shop thresholds defined there once.
+
 ## Where the container lives
 
 The container is the `skill/` folder of the web app `audit-web` (`~/seo-audit`, repo `devrikaro-ship-it/audit-web`),
