@@ -37,3 +37,9 @@ house value.
 | 10 | AOV (average order value) | GA4 and shop orders | no threshold; reported as a value |
 
 Window: the last 30 days up to yesterday. A metric whose data cannot be read is shown as "to read", never guessed.
+
+## What the section does not show
+
+Raw totals (sessions, orders, revenue) and sessions by channel are not shown in the Context Analytics section: they
+carry no threshold and no conclusion reads them (operator, 2026-11-16, on a shop audit report: "astea nu au sens
+aici").
