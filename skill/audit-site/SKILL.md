@@ -28,7 +28,7 @@ remove rubrics or fields on your own.
    OpenCart, Magento, generic) — sitemap signals, pace, traps and observed problems, each with its test store.
    Adding a platform = adding a profile file.
 2. Decides the kind of site, a shop or a lead site (`lib/site-kind.ts`), and selects the pages by type: for a shop
-   15 categories + 35 products + at most 5 other pages, for a lead site its services and locations; never sitemap
+   20 categories + 50 products + at most 5 other pages (operator standard 2026-11-16), for a lead site its services and locations; never sitemap
    order (`lib/page-selection.ts`); dead pages are replaced by pages of the same type.
 3. When a site refuses the server (403, challenge, or 30%+ of pages 403/429), reads it through the BrightData
    browser (`lib/browser-fetch.ts`). Page fetching is bounded to 30 s.

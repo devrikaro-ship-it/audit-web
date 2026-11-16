@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyFetchedLeadPage, classifyFetchedPage, classifySitemap, collectLeadUrls, collectTypedUrls, completeLeadTypes, leadTemplate, selectLeadPages, mapWithConcurrency, PAGE_BUDGET, replacementsFor, sampleEvenly, selectPages } from "./page-selection";
+import { classifyFetchedLeadPage, classifyFetchedPage, classifySitemap, collectLeadUrls, collectTypedUrls, completeLeadTypes, leadTemplate, selectLeadPages, mapWithConcurrency, LEAD_PAGE_BUDGET, PAGE_BUDGET, replacementsFor, sampleEvenly, selectPages } from "./page-selection";
 import { PROFILES, profileFor } from "./platform-knowledge";
 
 const O = "https://shop.example";
@@ -62,8 +62,8 @@ describe("selectPages", () => {
     const count = (t: string) => [...planned.values()].filter((v) => v === t).length;
     expect(urls).toHaveLength(PAGE_BUDGET);
     expect(urls[0]).toBe(O);
-    expect(count("category")).toBe(15);
-    expect(count("product")).toBeGreaterThanOrEqual(30);
+    expect(count("category")).toBe(20);
+    expect(count("product")).toBeGreaterThanOrEqual(50);
     expect(count("other")).toBeLessThanOrEqual(5);
   });
 });
@@ -215,7 +215,7 @@ describe("lead sites: the pages that bring contacts (spec 2026-09-25 §2.4)", ()
     const many = (p: string, n: number) => Array.from({ length: n }, (_, i) => `${D}/${p}-${i}`);
     const { urls, planned } = selectLeadPages(`${D}/`, { service: many("s", 50), location: many("l", 40), other: many("o", 30) });
     expect(urls[0]).toBe(D);
-    expect(urls.length).toBe(PAGE_BUDGET);
+    expect(urls.length).toBe(LEAD_PAGE_BUDGET);
     const count = (t: string) => [...planned.values()].filter((v) => v === t).length;
     expect([count("service"), count("location"), count("other")]).toEqual([30, 20, 9]);
   });

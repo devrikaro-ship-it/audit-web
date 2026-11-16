@@ -10,9 +10,12 @@ export type TypedUrls = Record<PageType, string[]>;
 export type LeadPageType = "service" | "location" | "other";
 export type LeadTypedUrls = Record<LeadPageType, string[]>;
 
-export const PAGE_BUDGET = 60; // including the homepage
-export const PAGE_QUOTAS: Record<PageType, number> = { category: 15, product: 35, other: 5 };
+// Operator standard 2026-11-16: a shop is read on 50 products and 20 categories.
+export const PAGE_QUOTAS: Record<PageType, number> = { category: 20, product: 50, other: 5 };
 export const LEAD_QUOTAS: Record<LeadPageType, number> = { service: 30, location: 20, other: 9 };
+const budgetOf = (quotas: Record<string, number>) => 1 + Object.values(quotas).reduce((s, n) => s + n, 0); // + homepage
+export const PAGE_BUDGET = budgetOf(PAGE_QUOTAS);
+export const LEAD_PAGE_BUDGET = budgetOf(LEAD_QUOTAS);
 const OVERFLOW_ORDER: PageType[] = ["product", "category", "other"];
 const LEAD_ORDER: LeadPageType[] = ["service", "location", "other"];
 const MAX_SELLING_SITEMAPS = 10; // per type
@@ -130,7 +133,7 @@ function selectByQuota<K extends string>(homepage: string, typed: Record<K, stri
   }
   const take = {} as Record<K, number>;
   for (const t of overflow) take[t] = Math.min(quotas[t], pools[t].length);
-  let spare = PAGE_BUDGET - 1 - overflow.reduce((s, t) => s + take[t], 0);
+  let spare = budgetOf(quotas) - 1 - overflow.reduce((s, t) => s + take[t], 0);
   for (const t of overflow) {
     const extra = Math.min(spare, pools[t].length - take[t]);
     take[t] += extra;
