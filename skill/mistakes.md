@@ -53,5 +53,6 @@
 - Recognise it: `gh repo view --json visibility` answers PUBLIC and a grep of `skill/` for the client's name or
   domain finds hits.
 - Fix: the skill names no client; the client's data and figures stay in its own folder, and the report template
-  reads them from a data file kept there. Earlier commits still hold the names; rewriting history is a destructive
-  git operation and waits for the operator.
+  reads them from a data file kept there. The history was rewritten with `git filter-repo --replace-text` and
+  `--replace-message` and force pushed, with the operator's approval (2026-11-16); a bundle of the history before
+  the rewrite is kept in the client's folder. A force push is a hard stop: it is asked first.
