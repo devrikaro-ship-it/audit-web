@@ -38,6 +38,14 @@ In each table the problems come first, from large impact to small, then what is 
 Impact is coloured only on a problem ("Mare" red, "Mediu" amber, "Mic" grey); on a good conclusion it is grey, so colour
 always means something to fix. A conclusion that does not apply shows no impact ("-").
 
+## Every checklist row and metric carries an impact
+
+Each setting of the checklist and each metric of the Context Analytics table shows its impact on sales if it is
+wrong: "Mare", "Mediu" or "Mic", with the same meaning and colours as on the conclusions; a row that does not apply,
+or a metric with no threshold, shows "-" (operator, 2026-11-16, on a shop audit report: "la fiecare linie vreau
+sa spui daca impactul e mic mediu sau mare"). For example: "Value and currency are real" is "Mare" whether it is
+correct or not; the colour only appears when it is wrong.
+
 ## The shop thresholds
 
 One threshold per metric, the same for every shop. The values were chosen from the ranges of published ecommerce
