@@ -35,7 +35,8 @@ dupa daca e bine sau nu si impact daca e mic mediu sau mare"):
    traffic or the spend; "Mic" when it is hygiene with little effect on sales.
 
 In each table the problems come first, from large impact to small, then what is good, then what does not apply.
-Impact is coloured only on problems; on a good conclusion it is grey, so colour always means something to fix.
+Impact is coloured only on a problem ("Mare" red, "Mediu" amber, "Mic" grey); on a good conclusion it is grey, so colour
+always means something to fix. A conclusion that does not apply shows no impact ("-").
 
 ## The shop thresholds
 
