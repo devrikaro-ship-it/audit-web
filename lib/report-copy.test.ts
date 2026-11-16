@@ -247,7 +247,7 @@ describe("the report speaks only from its register", () => {
     for (const d of [data, tenData, leadData]) for (const phone of [false, true]) {
       expect(outsideRegistry(renderToStaticMarkup(createElement(ReportDeck, { data: d, createdAt: Date.UTC(2026, 8, 24), phone })))).toEqual([]);
     }
-  });
+  }, 30_000); // six full report renders: about 1 s alone, 5.9 s once measured under the parallel full suite
 
   it("one thing, one wording: no sentence is written twice in the register", () => {
     // A second entry for the same thing points at the first (ROWS.x.fix), so a sentence appears as text only once.
