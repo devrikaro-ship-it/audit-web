@@ -24,6 +24,19 @@ the threshold, the consequence and a link to the section it comes from. No concl
 in its own section (operator, 2026-11-16, on a shop audit report: "astea cu concluziile cele mai importante trebuie
 la inceput").
 
+## Every conclusion carries a verdict and an impact
+
+Each conclusion, in every table, shows two labels (operator, 2026-11-16, on a shop audit report: "fiecare sa scrie
+dupa daca e bine sau nu si impact daca e mic mediu sau mare"):
+
+1. Verdict: "Bine", "Problema", or "Nu se aplica" when its checklist rows are not applicable.
+2. Impact on sales: "Mare" when it changes how many orders come or how much a visit or a click sells (cancellations,
+   conversion, add to cart, phone speed, which campaign spends on a product); "Mediu" when it touches a part of the
+   traffic or the spend; "Mic" when it is hygiene with little effect on sales.
+
+In each table the problems come first, from large impact to small, then what is good, then what does not apply.
+Impact is coloured only on problems; on a good conclusion it is grey, so colour always means something to fix.
+
 ## The shop thresholds
 
 One threshold per metric, the same for every shop. The values were chosen from the ranges of published ecommerce
