@@ -35,3 +35,12 @@
 - Recognise it: a summary or conclusion quoting one value from a source cell that holds two values.
 - Fix: a summary keeps every qualifier of its source cell ("in test", "for real visitors"); the row now reads
   "in test ... 6.4 s ... (for real visitors, 2.4 s)".
+
+## A conclusion marked good while its checklist row was wrong (2026-11-16)
+
+- Symptom: "Categories are fine (20 of 21)" carried the verdict "Bine" while the checklist row "Text on the category
+  page" was "Gresit"; the final check caught it.
+- Cause: the conclusion's verdict was set from its wording ("in order") instead of from its checklist rows.
+- Recognise it: a conclusion with a count short of the total ("20 of 21") marked good.
+- Fix: a conclusion's verdict is read from its rows: any wrong row makes it a problem, and the text names what is
+  missing ("one category of 21 has no text on the page").
