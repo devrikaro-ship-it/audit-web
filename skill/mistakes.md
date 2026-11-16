@@ -19,3 +19,10 @@
 - **Cause:** only `profile/accounts.json` was searched; the WooCommerce read key lives beside it, in the client folder (`clients/<client>/.wc-api.env`), and had already been used earlier in the same session.
 - **Recognise it:** a shop metric marked "to read" or an access request while the client folder holds a `.wc-api.env` (or any `*.env`).
 - **Fix:** before declaring shop data unreadable, list the client folder's env files; read the orders through `/wp-json/wc/v3/orders` (read only).
+
+## 2026-11-16 — Labels shown in capitals across the audit app
+
+- **Symptom:** audit.devrika.ro showed "FREE AUDITS FOR ONLINE STORES", "AVAILABLE", "SCANEAZA MAGAZINUL" and table headers in capitals, against the house rule of sentence case.
+- **Cause:** more than 30 rules and utilities (`text-transform:uppercase`, Tailwind `uppercase`) spread over the landing, Google Ads, report and deck styles; no rule above them cancelled it.
+- **Recognise it:** a label that reads in capitals while its source text is in sentence case.
+- **Fix:** one rule in `app/globals.css` cancels capitals and small caps on every element (`app/no-caps.test.tsx`, fails without it). The local dev server kept serving a stale stylesheet; check a change of global CSS on a production build (`next build` + `next start`).

@@ -33,3 +33,6 @@ body {
 [data-report-version="profitability-v2"] > [data-report-surface="simulator-call-to-action"] {
   display: none;
 }
+
+/* House rule: text is never shown in capitals or small caps, whatever a component or utility asks. */
+*, *::before, *::after { text-transform: none !important; font-variant-caps: normal !important; }
