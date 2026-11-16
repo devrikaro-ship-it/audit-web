@@ -25,6 +25,9 @@ before acting.
 The conclusions of a shop audit follow `conclusions-standard.md`: each conclusion comes from one metric or checklist
 row, against the shop thresholds defined there once.
 
+The report page is built from `shop-audit-report/template.html` with the client's data file, by
+`shop-audit-report/build.py`; its data shape is in `shop-audit-report/README.md`.
+
 ## Where the container lives
 
 The container is the `skill/` folder of the web app `audit-web` (`~/seo-audit`, repo `devrikaro-ship-it/audit-web`),

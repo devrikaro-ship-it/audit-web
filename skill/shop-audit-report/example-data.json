@@ -1,0 +1,38 @@
+{
+ "name": "Magazin exemplu",
+ "site": "magazin-exemplu.ro",
+ "date": "1 ianuarie 2026",
+ "foot": "Date inventate, doar pentru forma raportului.",
+ "ctxIntro": "GA4 si comenzile din magazin, ultimele 30 de zile pana ieri. Rezultate, nu setari: nu intra in scor. Pragurile sunt standardul nostru pentru magazine.",
+ "NOTE_GA4": "",
+ "P": [
+  {"n": "Google Ads", "id": "gads", "src": "google-ads-optimize", "c": [
+   {"n": "Tracking", "r": [
+    [1, "Tag Google Ads pe site", "Da", "Da", 3],
+    [0, "Valoare si moneda reale", "Da", "Nu", 3],
+    [4, "Brandul exclus", "Da", "Nu se aplica", 2]]}],
+   "k": [
+    ["Achizitia trimite valoarea 0: licitarea nu stie cat valoreaza o comanda", "Tracking", 0, 3],
+    ["Tagul e pe toate paginile", "Tracking", 1, 2]]},
+  {"n": "SEO", "id": "seo", "src": "audit-site", "c": [
+   {"n": "Titlu si meta descriere", "r": [
+    [0, "Meta descriere unica pe produs", "Da", "Nu (40 din 50 identice)", 2]]}],
+   "k": [
+    ["40 din 50 de produse au aceeasi meta descriere: in cautari arata la fel", "Titlu si meta descriere", 0, 2]]}
+ ],
+ "TOP": [
+  ["Achizitia trimite valoarea 0: licitarea nu stie cat valoreaza o comanda", "gads", "Google Ads", 0, 3]
+ ],
+ "MT": [
+  ["Rata de conversie", "Minim 1,5%", "1,1%", 0, 3],
+  ["Comenzi anulate", "Maxim 5%", "3%", 1, 3],
+  ["Valoarea medie a comenzii (AOV)", "Fara prag", "250", 4, 0]
+ ],
+ "CTX": [
+  {"n": "Telefon fata de desktop", "h": ["Dispozitiv", "Sesiuni", "Conversie"], "r": [["Telefon", "900 (90%)", "1,0%"], ["Desktop", "100 (10%)", "2,0%"]]}
+ ],
+ "CTXK": [
+  ["Conversia e 1,1%, sub pragul de 1,5%: din 1.000 de vizite ies 11 comenzi in loc de 15", "Rata de conversie", 0, 3],
+  ["Anularile sunt 3%, sub pragul de 5%", "Comenzi anulate", 1, 1]
+ ]
+}

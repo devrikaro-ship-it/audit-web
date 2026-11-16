@@ -44,3 +44,14 @@
 - Recognise it: a conclusion with a count short of the total ("20 of 21") marked good.
 - Fix: a conclusion's verdict is read from its rows: any wrong row makes it a problem, and the text names what is
   missing ("one category of 21 has no text on the page").
+
+## Client names written into a public skill (2026-11-16)
+
+- Symptom: the conclusions standard and four lessons named the audited client and quoted its order figures, in a
+  repository whose visibility is public.
+- Cause: the text was written as in a private client folder, without checking where the skill's bytes are published.
+- Recognise it: `gh repo view --json visibility` answers PUBLIC and a grep of `skill/` for the client's name or
+  domain finds hits.
+- Fix: the skill names no client; the client's data and figures stay in its own folder, and the report template
+  reads them from a data file kept there. Earlier commits still hold the names; rewriting history is a destructive
+  git operation and waits for the operator.

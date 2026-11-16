@@ -6,7 +6,9 @@
 skill/                      ← audit-devrika (container)
 ├── SKILL.md                ← what the container holds and where each request goes
 ├── audit-site/SKILL.md     ← the website audit: SEO and UX/UI, from the URL only
-└── audit-google-ads/       ← the Google Ads audit on a connected account (SKILL, SPEC, RULES, references)
+├── audit-google-ads/       ← the Google Ads audit on a connected account (SKILL, SPEC, RULES, references)
+├── conclusions-standard.md ← verdicts, impacts and shop thresholds of every shop audit
+└── shop-audit-report/      ← the shop audit page: template, build script, example data
 ```
 
 The container is the `skill/` folder of the `audit-web` app (`~/seo-audit`); the engine, report and PDF live in the
