@@ -26,3 +26,12 @@
 - **Cause:** more than 30 rules and utilities (`text-transform:uppercase`, Tailwind `uppercase`) spread over the landing, Google Ads, report and deck styles; no rule above them cancelled it.
 - **Recognise it:** a label that reads in capitals while its source text is in sentence case.
 - **Fix:** one rule in `app/globals.css` cancels capitals and small caps on every element (`app/no-caps.test.tsx`, fails without it). The local dev server kept serving a stale stylesheet; check a change of global CSS on a production build (`next build` + `next start`).
+
+## A summary row dropped the figure that softened it (2026-11-16)
+
+- Symptom: the top conclusions row said the main content appears in 6.4 s against under 2.5 s, while its own UX row
+  reads "6.4 s in test; 2.4 s for real visitors". The summary was harsher than its source; the final check caught it.
+- Cause: the row was shortened from the source cell and kept only the worse of two figures.
+- Recognise it: a summary or conclusion quoting one value from a source cell that holds two values.
+- Fix: a summary keeps every qualifier of its source cell ("in test", "for real visitors"); the row now reads
+  "in test ... 6.4 s ... (for real visitors, 2.4 s)".
