@@ -16,6 +16,14 @@ whatever the branch or the client.
 5. These are results, not settings: they are shown in their own unscored section ("Context Analytics") and never
    enter the settings score.
 
+## The most important conclusions open the report
+
+The report opens, right under the score, with "Cele mai importante concluzii": at most five conclusions, taken from
+the platform and Context Analytics conclusions, ordered by how much they cost in sales, each with its value against
+the threshold, the consequence and a link to the section it comes from. No conclusion appears there that is not also
+in its own section (operator, 2026-11-16, on a shop audit report: "astea cu concluziile cele mai importante trebuie
+la inceput").
+
 ## The shop thresholds
 
 One threshold per metric, the same for every shop. The values were chosen from the ranges of published ecommerce
