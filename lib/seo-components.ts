@@ -18,6 +18,8 @@ export type SeoProbes = {
   sitemapSample: { ok: number; total: number };  // listed money pages answering 200 with no redirect
   sortParamHandled: boolean | null;  // a category with ?sort= points back to the clean address (canonical) or is noindex
   sitemapLastmod: boolean | null;    // last-modified dates in the sitemap, or in the first child of a sitemap index
+  searchPage?: { path: string; noindex: boolean } | null;  // the shop's own search results page, when it answers 200
+  languageTwins?: { ok: number; total: number };  // language versions (hreflang) of the home page and a category with their own title
 };
 
 export type SeoInput = {
@@ -82,6 +84,36 @@ function nodesOfType(html: string, type: string): Record<string, unknown>[] {
 }
 const offersOf = (p: Record<string, unknown>) => ([] as unknown[]).concat(p.offers ?? []).filter((o): o is Record<string, unknown> => !!o && typeof o === "object");
 const priceOf = (o: Record<string, unknown>) => Number(String(o.price ?? o.lowPrice ?? "").replace(",", "."));
+
+// The page's own JSON-LD entities: top level and @graph members, not the items nested in a list.
+const topLevel = (html: string): Record<string, unknown>[] => parseJsonLD(html).flatMap((n) => ([] as unknown[]).concat(n))
+  .flatMap((n) => { const o = n as Record<string, unknown>; return Array.isArray(o?.["@graph"]) ? (o["@graph"] as Record<string, unknown>[]) : [o]; })
+  .filter((o) => !!o && typeof o === "object");
+const typesOf = (o: Record<string, unknown>) => ([] as unknown[]).concat(o["@type"] ?? []).map(String);
+const GTIN = ["gtin", "gtin8", "gtin12", "gtin13", "gtin14"];
+const hasGtin = (n: Record<string, unknown>): boolean => GTIN.some((k) => !!String(n[k] ?? "").trim())
+  || offersOf(n).some((o) => GTIN.some((k) => !!String(o[k] ?? "").trim()))
+  || ([] as unknown[]).concat(n.hasVariant ?? []).some((v) => !!v && typeof v === "object" && hasGtin(v as Record<string, unknown>));
+const brandOf = (n: Record<string, unknown>) => { const b = n.brand; return String(typeof b === "object" && b ? (b as Record<string, unknown>).name ?? "" : b ?? "").trim(); };
+// A specification table in any markup, in the page's main part: <table>, <dl>, or a spec class (as devrika-seo page-audit).
+const mainOf = (html: string) => html.match(/<main[^>]*>([\s\S]*)<\/main>/i)?.[1] ?? html;
+const hasSpecTable = (html: string) => /<table[\s>]|<dl[\s>]|class="[^"]*\bspec(s|-table|ifications)?\b/i.test(mainOf(html));
+const hasFaq = (html: string) => nodesOfType(html, "FAQPage").length > 0 || /<h[2-4][^>]*>[^<]*(intreb[aă]ri frecvente|întrebări frecvente|frequently asked|faq)/i.test(html);
+// Form fields a person fills that no label names (aria-label, aria-labelledby, title, a matching <label for>, or an
+// enclosing <label>); a bare id or a placeholder is not a label.
+export function unlabeledFields(html: string): { total: number; unlabeled: number } {
+  const attrOf = (tag: string, name: string) => tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])(.*?)\\1`, "i"))?.[2].trim() || null;
+  const labelled = new Set([...html.matchAll(/<label\b[^>]*\bfor\s*=\s*["']([^"']+)["']/gi)].map((m) => m[1]));
+  const wrapped = [...html.matchAll(/<label\b[\s\S]*?<\/label>/gi)].map((m) => [m.index ?? 0, (m.index ?? 0) + m[0].length]);
+  const fields = [...html.matchAll(/<(input|select|textarea)\b[^>]*>/gi)].filter((m) => m[1].toLowerCase() !== "input" || !["hidden", "submit", "button", "image", "reset"].includes((attrOf(m[0], "type") ?? "text").toLowerCase()));
+  const missing = fields.filter((m) => {
+    if (attrOf(m[0], "aria-label") || attrOf(m[0], "aria-labelledby") || attrOf(m[0], "title")) return false;
+    const id = attrOf(m[0], "id");
+    if (id && labelled.has(id)) return false;
+    return !wrapped.some(([a, b]) => (m.index ?? 0) > a && (m.index ?? 0) < b);
+  });
+  return { total: fields.length, unlabeled: missing.length };
+}
 
 // Numbers a visitor reads on the page: "1.299,00" and "1,299.00" both read as 1299.
 function visiblePrices(html: string): number[] {
@@ -186,6 +218,8 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
       row("www_unic", probes.variantsSameHost ? 1 : 0, probes.variantsSameHost === null ? 0 : 1),
       // A lead site has no product lists to sort.
       ...(leads ? [] : [row("parametri", probes.sortParamHandled ? 1 : 0, probes.sortParamHandled === null ? 0 : 1)]),
+      // Search results kept out of Google by noindex or by robots.txt.
+      ...(probes.searchPage ? [row("cautare_noindex", probes.searchPage.noindex || !isAllowed(robotsTxt, "Googlebot", probes.searchPage.path) ? 1 : 0, 1)] : []),
     ] },
     { id: "html", rows: leads ? (input.readWithBrowser ? [row("html_serviciu", 0, 0), row("html_contact", 0, 0), row("html_descriere_serviciu", 0, 0)] : [
       row("html_serviciu", count(services, (p) => words((p.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "").replace(/<[^>]+>/g, " ")).length > 0), services.length),
@@ -213,6 +247,7 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
       row("descriere_unica", described.length - repeated(described, (p) => parseMeta(p.html, "description")), described.length),
       row("descriere_lungime", count(described, (p) => { const n = parseMeta(p.html, "description").length; return n >= L.descMin && n <= L.descMax; }), described.length),
     ] },
+    { id: "limbi", rows: [row("limbi_proprii", probes.languageTwins?.ok ?? 0, probes.languageTwins?.total ?? 0)] },
     { id: "continut", rows: [
       row("un_titlu_mare", count(pages, (p) => countH1(p.html) === 1), pages.length),
       row("text_propriu", pages.length - duplicateTextPages(pages), pages.length),
@@ -222,6 +257,8 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
       ] : [
         row("text_categorii", count(cats, (p) => ownChars(p) >= L.ownText), cats.length),
         row("alt_imagini", count(withImages, (p) => productImages(p).every((im) => im.alt.trim().length > 0)), withImages.length),
+        row("tabel_specificatii", count(prods, (p) => hasSpecTable(p.html)), prods.length),
+        row("faq_categorii", count(cats, (p) => hasFaq(p.html)), cats.length),
       ]),
     ] },
     { id: "date_structurate", rows: leads ? [
@@ -233,6 +270,10 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
       row("schema_traseu", count(contactPages, (p) => nodesOfType(p.html, "BreadcrumbList").length > 0), contactPages.length),
     ] : [
       row("schema_firma", pages.some((p) => ["Organization", "OnlineStore", "Store", "LocalBusiness"].some((t) => nodesOfType(p.html, t).length > 0)) ? 1 : 0, pages.length ? 1 : 0),
+      row("schema_magazin", pages.some((p) => ["OnlineStore", "OnlineBusiness", "Store"].some((t) => nodesOfType(p.html, t).length > 0)) ? 1 : 0, pages.length ? 1 : 0),
+      // A category is a list of products: a Product entity of its own tells Google the page sells one product.
+      row("schema_categorie", count(cats, (p) => !topLevel(p.html).some((o) => typesOf(o).includes("Product"))), cats.length),
+      row("schema_gtin", count(prods, (p) => nodesOfType(p.html, "Product").some(hasGtin)), prods.length),
       row("schema_produs", count(prods, (p) => nodesOfType(p.html, "Product").some((n) => offersOf(n).some((o) => priceOf(o) > 0 && !!o.availability))), prods.length),
       row("schema_rating", count(prods, (p) => nodesOfType(p.html, "AggregateRating").length > 0), prods.length),
       row("schema_traseu", count(money, (p) => nodesOfType(p.html, "BreadcrumbList").length > 0), money.length),
@@ -243,6 +284,16 @@ export function computeSeoComponents(input: SeoInput): SeoComponent[] {
         return declared.some((d) => shown.some((s) => Math.abs(s - d) < 0.01));
       }), priced.length),
     ] },
+    ...(leads ? [] : [{ id: "catalog", rows: [
+      row("categorii_cu_produse", count(cats, (p) => priceCount(p.html.replace(/<script[\s\S]*?<\/script>/gi, " ")) > 0), cats.length),
+      // One brand, one spelling: names that differ only in capitals or spaces split the brand filter and the feed.
+      (() => {
+        const spellings = new Map<string, Set<string>>();
+        for (const p of prods) for (const n of nodesOfType(p.html, "Product")) { const b = brandOf(n); if (b) { const k = b.toLowerCase().replace(/\s+/g, ""); spellings.set(k, (spellings.get(k) ?? new Set()).add(b)); } }
+        return row("marca_unica", count([...spellings.values()], (s) => s.size === 1), spellings.size);
+      })(),
+    ] }]),
+    { id: "accesibilitate", rows: [(() => { const f = unlabeledFields(pages[0]?.html ?? ""); return row("etichete_formular", f.total - f.unlabeled, f.total); })()] },
     { id: "ai", rows: [
       row("ai_roboti", count(AI_SEARCH_BOTS, (b) => isAllowed(robotsTxt, b, "/")), AI_SEARCH_BOTS.length),
       row("ai_profiluri", Math.min(sameAsLinks(pages).size, 2), 2),

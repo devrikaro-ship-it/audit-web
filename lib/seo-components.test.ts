@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { componentScore, computeSeoComponents, seoScore, type SeoInput, type SeoProbes } from "./seo-components";
+import { componentScore, computeSeoComponents, seoScore, unlabeledFields, type SeoInput, type SeoProbes } from "./seo-components";
 import type { PageData } from "./net";
 import { SEO_LIMITS } from "./seo-limits";
 import { COMPONENTS, ROWS } from "./copy-registry";
@@ -19,14 +19,14 @@ function page(url: string, o: { title?: string; h1?: string; meta?: string; body
   };
 }
 
-const goodProbes: SeoProbes = { sitemapLastmod: true, httpToHttps: true, maxRedirectHops: 1, variantsSameHost: true, sitemapSample: { ok: 20, total: 20 }, sortParamHandled: true };
+const goodProbes: SeoProbes = { sitemapLastmod: true, httpToHttps: true, maxRedirectHops: 1, variantsSameHost: true, sitemapSample: { ok: 20, total: 20 }, sortParamHandled: true, searchPage: { path: "/search?q=test", noindex: true }, languageTwins: { ok: 1, total: 1 } };
 const robots = "User-agent: *\nDisallow: /cos/\nSitemap: https://s.ro/sitemap.xml";
 const sitemap = "<urlset><url><loc>https://s.ro/gantere/</loc><lastmod>2026-09-01</lastmod></url></urlset>";
 
 function goodShop(): SeoInput {
-  const home = page(`${O}/`, { title: "Magazin S - echipament fitness pentru acasa", h1: "Magazin S", meta: desc("home"), head: org, body: text("home") });
-  const cat = page(`${O}/gantere/`, { title: "Gantere reglabile si fixe | Magazin S", h1: "Gantere reglabile", meta: desc("gantere"), head: crumbs, body: text("gantere") });
-  const prod = page(`${O}/set-gantere-20kg/`, { title: "Set gantere reglabile 20 kg | Magazin S", h1: "Set gantere reglabile 20 kg", meta: desc("set"), head: productLd("Set gantere", 299, '{"shippingDetails":{"@type":"OfferShippingDetails"}}') + crumbs, body: `<span>299 lei</span><img src="/img/set.jpg" alt="Set gantere 20 kg"><img src="/img/linie.svg" alt="">${text("set")}` });
+  const home = page(`${O}/`, { title: "Magazin S - echipament fitness pentru acasa", h1: "Magazin S", meta: desc("home"), head: org, body: text("home") + `<form><label for="q">Cauta</label><input id="q" name="q"><input type="hidden" name="t"><button>Cauta</button></form>` });
+  const cat = page(`${O}/gantere/`, { title: "Gantere reglabile si fixe | Magazin S", h1: "Gantere reglabile", meta: desc("gantere"), head: crumbs, body: text("gantere") + `<span>299 lei</span><h2>Intrebari frecvente</h2>` });
+  const prod = page(`${O}/set-gantere-20kg/`, { title: "Set gantere reglabile 20 kg | Magazin S", h1: "Set gantere reglabile 20 kg", meta: desc("set"), head: productLd("Set gantere", 299, '{"shippingDetails":{"@type":"OfferShippingDetails"},"gtin13":"5901234123457"}') + crumbs, body: `<span>299 lei</span><img src="/img/set.jpg" alt="Set gantere 20 kg"><img src="/img/linie.svg" alt="">${text("set")}<table><tr><td>Greutate</td><td>20 kg</td></tr></table>` });
   return {
     origin: O, requested: [home, cat, prod], pages: [home, cat, prod], categories: [cat.url], products: [prod.url],
     robotsTxt: robots, sitemapXml: sitemap, listed: { categories: 12, products: 300, other: 4 },
@@ -40,8 +40,8 @@ describe("computeSeoComponents on a shop that does everything right", () => {
     const failing = Object.values(rowsOf(goodShop())).filter((r) => r.total > 0 && r.ok !== r.total).map((r) => r.id);
     expect(failing).toEqual([]);
   });
-  it("gives the ten components in dependency order", () => {
-    expect(computeSeoComponents(goodShop()).map((c) => c.id)).toEqual(["raspuns", "robots", "sitemap", "indexare", "html", "titlu", "descriere", "continut", "date_structurate", "ai"]);
+  it("gives the components in dependency order", () => {
+    expect(computeSeoComponents(goodShop()).map((c) => c.id)).toEqual(["raspuns", "robots", "sitemap", "indexare", "html", "titlu", "descriere", "limbi", "continut", "date_structurate", "catalog", "accesibilitate", "ai"]);
   });
 });
 
@@ -231,3 +231,45 @@ describe("the limits the report states are the limits the audit applies", () => 
   });
 });
 
+
+describe("the rows added by the client audit standard (2026-11-17) find their faults", () => {
+  it("D. search pages, language twins, category schema, store type, GTIN, specs, FAQ, empty categories, brands, labels", () => {
+    const s = goodShop();
+    s.probes = { ...goodProbes, searchPage: { path: "/search?q=test", noindex: false }, languageTwins: { ok: 0, total: 2 } };
+    s.pages[0] = page(`${O}/`, { title: "Magazin S - echipament fitness pentru acasa", h1: "Magazin S", meta: desc("home"), body: text("home") + `<input type="email" name="e" placeholder="Email">`,
+      head: `<script type="application/ld+json">{"@type":"Organization","name":"S"}</script>` });
+    s.pages[1] = page(`${O}/gantere/`, { title: "Gantere reglabile si fixe | Magazin S", h1: "Gantere reglabile", meta: desc("gantere"), body: text("gantere"),
+      head: crumbs + `<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"Gantere","offers":{"@type":"AggregateOffer","lowPrice":99}}</script>` });
+    const second = page(`${O}/gantera-5kg/`, { title: "Gantera fixa 5 kg | Magazin S", h1: "Gantera fixa 5 kg", meta: desc("g5"), body: `<span>99 lei</span>${text("g5")}`,
+      head: `<script type="application/ld+json">${JSON.stringify({ "@type": "Product", name: "Gantera", brand: { "@type": "Brand", name: "TechONE" }, offers: { "@type": "Offer", price: 99, availability: "https://schema.org/InStock" } })}</script>` });
+    const third = page(`${O}/gantera-10kg/`, { title: "Gantera fixa 10 kg | Magazin S", h1: "Gantera fixa 10 kg", meta: desc("g10"), body: `<span>149 lei</span>${text("g10")}`,
+      head: `<script type="application/ld+json">${JSON.stringify({ "@type": "Product", name: "Gantera", brand: "TechOne", offers: { "@type": "Offer", price: 149, availability: "https://schema.org/InStock" } })}</script>` });
+    s.pages = [...s.pages, second, third]; s.requested = s.pages; s.products = [s.pages[2].url, second.url, third.url];
+    const r = rowsOf(s);
+    expect(r.cautare_noindex).toMatchObject({ ok: 0, total: 1 });
+    expect(r.limbi_proprii).toMatchObject({ ok: 0, total: 2 });
+    expect(r.schema_categorie).toMatchObject({ ok: 0, total: 1 });
+    expect(r.schema_magazin).toMatchObject({ ok: 0, total: 1 });
+    expect(r.schema_gtin).toMatchObject({ ok: 1, total: 3 });
+    expect(r.tabel_specificatii).toMatchObject({ ok: 1, total: 3 });
+    expect(r.faq_categorii).toMatchObject({ ok: 0, total: 1 });
+    expect(r.categorii_cu_produse).toMatchObject({ ok: 0, total: 1 });
+    expect(r.marca_unica).toMatchObject({ ok: 0, total: 1 });
+    expect(r.etichete_formular).toMatchObject({ ok: 0, total: 1 });
+  });
+  it("a search page kept out by robots.txt passes; a site with no search page or one language is not measured", () => {
+    const s = goodShop();
+    s.robotsTxt = "User-agent: *\nDisallow: /search\nSitemap: https://s.ro/sitemap.xml";
+    s.probes = { ...goodProbes, searchPage: { path: "/search?q=test", noindex: false }, languageTwins: { ok: 0, total: 0 } };
+    expect(rowsOf(s).cautare_noindex).toMatchObject({ ok: 1, total: 1 });
+    expect(rowsOf(s).limbi_proprii).toMatchObject({ total: 0 });
+    s.probes = { ...goodProbes, searchPage: null };
+    expect(rowsOf(s).cautare_noindex).toBeUndefined();
+  });
+  it("unlabeledFields skips hidden and button inputs and does not take a bare id or a placeholder for a label", () => {
+    const html = `<form><input type="hidden" name="t"><input type="submit" value="Go"><input type="text" name="q" id="q" placeholder="Search">
+      <label for="mail">Email</label><input type="email" id="mail"><label>Name <input type="text" name="n"></label>
+      <input type="text" aria-label="City"><select name="s"></select></form>`;
+    expect(unlabeledFields(html)).toEqual({ total: 5, unlabeled: 2 });
+  });
+});

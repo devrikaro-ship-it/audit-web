@@ -77,7 +77,41 @@ export async function runSeoProbes(origin: string, listedMoney: string[], catego
     sitemapLastmod = biggest === undefined ? null : /<lastmod>/i.test(biggest);
   }
 
+  // The shop's own search results: a page per query Google may index (Shopify /search, WordPress ?s=). Judged on the
+  // first address that answers 200 with a page.
+  let searchPage: { path: string; noindex: boolean } | null = null;
+  for (const path of ["/search?q=test", "/?s=test"]) {
+    const r = await fetcher(`${origin}${path}`, "GET").catch(() => null);
+    if (r && r.status === 200 && r.html && /<html/i.test(r.html)) {
+      searchPage = { path, noindex: isNoindex({ url: `${origin}${path}`, html: r.html, status: 200, ok: true, headers: r.headers ?? {} }) };
+      break;
+    }
+  }
+
+  // Language versions: the home page and a category declare their twins (hreflang); a twin that repeats the title of
+  // the page it translates is the same page twice for Google.
+  const titleOf = (html: string) => (html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? "").replace(/\s+/g, " ").trim().toLowerCase();
+  const twins = { ok: 0, total: 0 };
+  for (const page of [`${origin}/`, category].filter((u): u is string => !!u)) {
+    const r = await fetcher(page, "GET").catch(() => null);
+    if (!r || r.status !== 200 || !r.html) continue;
+    const own = titleOf(r.html);
+    const alternates = [...r.html.matchAll(/<link\b[^>]*rel=["']alternate["'][^>]*>/gi)].map((m) => m[0])
+      .filter((tag) => /hreflang=["'](?!x-default)[^"']+["']/i.test(tag))
+      .map((tag) => tag.match(/href=["']([^"']+)["']/i)?.[1]).filter((h): h is string => !!h)
+      .map((h) => new URL(h.replace(/&amp;/g, "&"), page).href)
+      .filter((h) => h.replace(/\/$/, "") !== page.replace(/\/$/, ""));
+    for (const twin of [...new Set(alternates)].slice(0, 3)) {
+      const t = await fetcher(twin, "GET").catch(() => null);
+      if (!t || t.status !== 200 || !t.html) continue;
+      twins.total++;
+      if (titleOf(t.html) !== own) twins.ok++;
+    }
+  }
+
   return {
+    searchPage,
+    languageTwins: twins,
     sitemapLastmod,
     httpToHttps: http ? http.final.startsWith("https://") : null,
     maxRedirectHops: variants.length ? Math.max(...variants.map((v) => v.hops)) : null,

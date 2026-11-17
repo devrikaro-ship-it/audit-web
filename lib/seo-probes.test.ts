@@ -20,7 +20,7 @@ describe("runSeoProbes", () => {
       "https://s.ro/gantere/?sort=price": { status: 200, html: '<link rel="canonical" href="https://s.ro/gantere/">' },
     });
     const p = await runSeoProbes("https://s.ro", ["https://s.ro/gantere/", "https://s.ro/vechi/", "https://s.ro/limitat/"], "https://s.ro/gantere/", "", f);
-    expect(p).toEqual({ sitemapLastmod: null, httpToHttps: true, maxRedirectHops: 2, variantsSameHost: true, sitemapSample: { ok: 1, total: 2 }, sortParamHandled: true });
+    expect(p).toEqual({ sitemapLastmod: null, httpToHttps: true, maxRedirectHops: 2, variantsSameHost: true, sitemapSample: { ok: 1, total: 2 }, sortParamHandled: true, searchPage: null, languageTwins: { ok: 0, total: 0 } });
   });
 
   it("finds a www variant that stays a separate site and a sort parameter that makes a new page", async () => {
@@ -53,5 +53,21 @@ describe("runSeoProbes", () => {
     expect((await runSeoProbes("https://s.ro", [], null, index, f)).sitemapLastmod).toBe(true);
     expect((await runSeoProbes("https://s.ro", [], null, "<urlset><url><loc>x</loc></url></urlset>", f)).sitemapLastmod).toBe(false);
   });
-});
 
+  it("finds an indexable search page and language versions that copy the title, and passes the right setup", async () => {
+    const page = (title: string, head = "") => `<html><head><title>${title}</title>${head}</head><body></body></html>`;
+    const alt = '<link rel="alternate" hreflang="ro" href="https://s.ro/"><link rel="alternate" hreflang="en" href="https://s.ro/en"><link rel="alternate" hreflang="x-default" href="https://s.ro/">';
+    const bad = fake({
+      "https://s.ro/": { status: 200, html: page("Magazin S", alt) },
+      "https://s.ro/en": { status: 200, html: page("Magazin S") },
+      "https://s.ro/search?q=test": { status: 200, html: page("Cautare") },
+    });
+    expect(await runSeoProbes("https://s.ro", [], null, "", bad)).toMatchObject({ searchPage: { path: "/search?q=test", noindex: false }, languageTwins: { ok: 0, total: 1 } });
+    const good = fake({
+      "https://s.ro/": { status: 200, html: page("Magazin S", alt) },
+      "https://s.ro/en": { status: 200, html: page("S Shop") },
+      "https://s.ro/?s=test": { status: 200, html: page("Cautare", '<meta name="robots" content="noindex,follow">') },
+    });
+    expect(await runSeoProbes("https://s.ro", [], null, "", good)).toMatchObject({ searchPage: { path: "/?s=test", noindex: true }, languageTwins: { ok: 1, total: 1 } });
+  });
+});

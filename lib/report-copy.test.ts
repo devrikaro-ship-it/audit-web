@@ -79,7 +79,7 @@ describe("the report speaks the shop owner's language", () => {
     expect([...new Set(text.match(JARGON) ?? [])]).toEqual([]);
   });
 
-  it("shows no technical term on a report built from the ten SEO components", () => {
+  it("shows no technical term on a report built from the SEO components", () => {
     const text = [tenData, leadData].map((d) => visibleText(renderToStaticMarkup(createElement(ReportDeck, { data: d })))).join(" ");
     // The lead report is really rendered in its own words.
     expect(text).toContain("Google nu primeste adresa si telefonul afacerii");
@@ -87,7 +87,7 @@ describe("the report speaks the shop owner's language", () => {
     expect(text).toMatch(/De ce e (bun|de reglat|rau): /);
     expect(text).toContain("De reparat: 1 din 5 pagini nu se deschid: dau eroare sau nu mai exista");
     // More failing rules than the line names: it says how many and where they are, never a bare "si inca 3".
-    expect(text).toContain("plus inca 3 reguli, in checklist la componenta 9");
+    expect(text).toContain("plus inca 5 reguli, in checklist la componenta 10");
     // A row we could not measure says what is at stake and how to fix it, not only that we could not measure it.
     expect(text).toMatch(/Titlurile au 15-65 de caractere De verificat: nu am putut masura asta din afara site-ului\. Impact negativ daca nu e indeplinit: Un titlu prea scurt[^.]*\. Cum se repara: Tine titlurile intre 15 si 65 de caractere/);
     // A ✗ row states the problem with its count, then why that is bad, then how to fix it; a ✓ row says why it is good.
