@@ -99,5 +99,7 @@ measured. A row whose source cannot be read shows "to read" with the access it n
 | 13 | Redirects | Every address that had impressions in the last 16 months and left the sitemap answers 301 to its successor, never 404 | Search Console pages and the served status | Medium |
 | 14 | Accessibility | Every form field has a label | the served home page | Small |
 
-Rows 1-10 and 14 can be read from the URL alone; the audit-site engine measures them on its own page sample, so a
-prospect's public report carries them too (same decision).
+Rows 1, 2, 5-10 (the parts a page shows) and 14 can be read from the URL alone; the audit-site engine measures them on
+its own page sample, so a prospect's public report carries them too (same decision). Rows 3 and 4 need every page of
+the site crawled, which a prospect's audit does not do, and row 8's "every product in a category" needs the admin data:
+they stay in the client audit only.
