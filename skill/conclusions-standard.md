@@ -73,3 +73,31 @@ Window: the last 30 days up to yesterday. A metric whose data cannot be read is 
 Raw totals (sessions, orders, revenue) and sessions by channel are not shown in the Context Analytics section: they
 carry no threshold and no conclusion reads them (operator, 2026-11-16, on a shop audit report: "astea nu au sens
 aici").
+
+## The SEO checklist of a client shop audit
+
+Approved by the operator on 2026-11-17 ("1. Da si 2", decision d-20261117-6). A client audit has account access, so its
+SEO platform carries the rows the audit-site engine measures (`runAudit`, 50 products and 20 categories) and, under
+them, the fourteen rows below, measured on the whole site: every sitemap page, the internal link graph, the shop's
+admin data and Search Console. A row is correct when no page fails it; "now" shows how many pass of how many were
+measured. A row whose source cannot be read shows "to read" with the access it needs, never a guess.
+
+| # | Component | Setting (recommended) | Measured with | Impact |
+|---|---|---|---|---|
+| 1 | Language versions | Every language twin (for example /en) has its own title and description, and the hreflang links pair the twins | page-audit, every sitemap page | Medium |
+| 2 | Indexing | The shop's search results pages (`/search?q=`) carry noindex | the served page | Medium |
+| 3 | Internal links | Every sitemap page receives at least one internal link | linkgraph, uncapped | Medium |
+| 4 | Internal links | Every sitemap page is reachable from the home page in at most 3 clicks | linkgraph, uncapped | Medium |
+| 5 | Structured data | A category page declares a list (CollectionPage or ItemList), never Product | page-audit, every category | Small |
+| 6 | Structured data | The business is declared as OnlineStore, not only Organization | the home page | Small |
+| 7 | Catalogue | Every active variant carries a barcode (GTIN) | shop admin API | Medium |
+| 8 | Catalogue | No empty category, every active product in a category, every brand spelled one way | shop admin API | Medium |
+| 9 | Content | Every product page shows a specification table | page-audit, every product | Medium |
+| 10 | Content | Every category page answers its buyers' questions in an FAQ | page-audit, every category | Small |
+| 11 | Indexing | Every sitemap page is indexed (URL Inspection, at most 2,000 pages a day) | Search Console | Large |
+| 12 | Indexing | Only the current sitemap is submitted in Search Console | Search Console sitemaps | Small |
+| 13 | Redirects | Every address that had impressions in the last 16 months and left the sitemap answers 301 to its successor, never 404 | Search Console pages and the served status | Medium |
+| 14 | Accessibility | Every form field has a label | the served home page | Small |
+
+Rows 1-10 and 14 can be read from the URL alone; the audit-site engine measures them on its own page sample, so a
+prospect's public report carries them too (same decision).
