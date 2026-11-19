@@ -56,3 +56,13 @@
   reads them from a data file kept there. The history was rewritten with `git filter-repo --replace-text` and
   `--replace-message` and force pushed, with the operator's approval (2026-11-16); a bundle of the history before
   the rewrite is kept in the client's folder. A force push is a hard stop: it is asked first.
+
+## 2026-11-19: the pre-flight passed on a stale deploy conf and the gate still refused the deploy
+
+- Symptom: `deploy-checks.sh --pre` with `docs/deploy-checks.audit-web.conf` passed, then the Coolify deploy was
+  refused with "the deploy checks have not run for this tree".
+- Cause: two confs described the same app. The gate reads `~/.claude/hooks/deploy-checks.seo-audit.conf`; the repo
+  copy from 2026-08-26 had drifted (suite floor 450 vs 470, another perimeter and build marker) and nothing read it.
+- Recognise: a deploy conf in the repo whose path is not a `project` line of `~/.claude/hooks/deploy-checks.gate.conf`.
+- Fix: the repo copy and its gate pointer were removed (b92c4db); the release runs
+  `deploy-checks.sh --conf ~/.claude/hooks/deploy-checks.seo-audit.conf --pre`.
